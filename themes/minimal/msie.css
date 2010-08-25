@@ -1,0 +1,15 @@
+/*
+ * @version $Id$
+ */
+.small_inner_block {
+	height: expression( this.scrollHeight > 199 ? "200px" : "auto" ); 
+}
+
+.normal_inner_block {
+	width: 100%;
+}
+
+a.showit:hover span {
+	filter: alpha(opacity=85);
+}
+
