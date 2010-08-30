@@ -124,6 +124,7 @@ case 'update':
 	set_gedcom_setting(WT_GED_ID, 'AUTO_GENERATE_THUMBS',         safe_POST_bool('NEW_AUTO_GENERATE_THUMBS'));
 	set_gedcom_setting(WT_GED_ID, 'CALENDAR_FORMAT',              safe_POST('NEW_CALENDAR_FORMAT'));
 	set_gedcom_setting(WT_GED_ID, 'CHART_BOX_TAGS',               safe_POST('NEW_CHART_BOX_TAGS'));
+	set_gedcom_setting(WT_GED_ID, 'CHECK_MARRIAGE_RELATIONS',     safe_POST_bool('CHECK_MARRIAGE_RELATIONS'));
 	set_gedcom_setting(WT_GED_ID, 'COMMON_NAMES_ADD',             safe_POST('NEW_COMMON_NAMES_ADD'));
 	set_gedcom_setting(WT_GED_ID, 'COMMON_NAMES_REMOVE',          safe_POST('NEW_COMMON_NAMES_REMOVE'));
 	set_gedcom_setting(WT_GED_ID, 'COMMON_NAMES_THRESHOLD',       safe_POST('NEW_COMMON_NAMES_THRESHOLD', WT_REGEX_INTEGER, 40));
@@ -234,11 +235,11 @@ case 'update':
 	set_gedcom_setting(WT_GED_ID, 'WEBMASTER_USER_ID',            safe_POST('NEW_WEBMASTER_USER_ID'));
 	set_gedcom_setting(WT_GED_ID, 'WEBTREES_EMAIL',               safe_POST('NEW_WEBTREES_EMAIL'));
 	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_AUTH_MODE',       safe_POST('NEW_WELCOME_TEXT_AUTH_MODE'));
-	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_AUTH_MODE_'.WT_LOCALE, safe_POST('NEW_WELCOME_TEXT_AUTH_MODE_4'));
-	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_CUST_HEAD',       safe_POST_bool('NEW_WELCOME_TEXT_CUST_HEAD'));
+	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_AUTH_MODE_'.WT_LOCALE, safe_POST('NEW_WELCOME_TEXT_AUTH_MODE_4', WT_REGEX_UNSAFE));
+	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_CUST_HEAD',       safe_POST_bool('NEW_WELCOME_TEXT_CUST_HEAD', WT_REGEX_UNSAFE));
 	set_gedcom_setting(WT_GED_ID, 'WORD_WRAPPED_NOTES',           safe_POST_bool('NEW_WORD_WRAPPED_NOTES'));
 	set_gedcom_setting(WT_GED_ID, 'ZOOM_BOXES',                   safe_POST('NEW_ZOOM_BOXES'));
-	set_gedcom_setting(WT_GED_ID, 'title',                        safe_POST('gedcom_title'));
+	set_gedcom_setting(WT_GED_ID, 'title',                        safe_POST('gedcom_title', WT_REGEX_UNSAFE));
 
 	if (!$_POST["NEW_MEDIA_FIREWALL_ROOTDIR"]) {
 		$NEW_MEDIA_FIREWALL_ROOTDIR = $INDEX_DIRECTORY;
@@ -253,8 +254,8 @@ case 'update':
 	}
 	if (!$errors) {
 		// create the media directory
-		// if NEW_MEDIA_FIREWALL_ROOTDIR is the INDEX_DIRECTORY, PGV will have perms to create it
-		// if PGV is unable to create the directory, tell the user to create it
+		// if NEW_MEDIA_FIREWALL_ROOTDIR is the INDEX_DIRECTORY, WT will have perms to create it
+		// if WT is unable to create the directory, tell the user to create it
 		if ($_POST["NEW_USE_MEDIA_FIREWALL"]==true) {
 			if (!is_dir($NEW_MEDIA_FIREWALL_ROOTDIR.$MEDIA_DIRECTORY)) {
 				@mkdir($NEW_MEDIA_FIREWALL_ROOTDIR.$MEDIA_DIRECTORY, WT_PERM_EXE);
@@ -301,14 +302,14 @@ case 'update':
 			$httext = "";
 			if (file_exists($MEDIA_DIRECTORY.".htaccess")) {
 				$httext = implode('', file($MEDIA_DIRECTORY.".htaccess"));
-				// remove all PGV media firewall sections from the .htaccess
-				$httext = preg_replace('/\n?^[#]*\s*BEGIN PGV MEDIA FIREWALL SECTION(.*\n){10}[#]*\s*END PGV MEDIA FIREWALL SECTION\s*[#]*\n?/m', "", $httext);
+				// remove all WT media firewall sections from the .htaccess
+				$httext = preg_replace('/\n?^[#]*\s*BEGIN WT MEDIA FIREWALL SECTION(.*\n){10}[#]*\s*END WT MEDIA FIREWALL SECTION\s*[#]*\n?/m', "", $httext);
 				// comment out any existing lines that set ErrorDocument 404
 				$httext = preg_replace('/^(ErrorDocument\s*404(.*))\n?/', "#$1\n", $httext);
 				$httext = preg_replace('/[^#](ErrorDocument\s*404(.*))\n?/', "\n#$1\n", $httext);
 			}
-			// add new PGV media firewall section to the end of the file
-			$httext .= "\n######## BEGIN PGV MEDIA FIREWALL SECTION ##########";
+			// add new WT media firewall section to the end of the file
+			$httext .= "\n######## BEGIN WT MEDIA FIREWALL SECTION ##########";
 			$httext .= "\n################## DO NOT MODIFY ###################";
 			$httext .= "\n## THERE MUST BE EXACTLY 11 LINES IN THIS SECTION ##";
 			$httext .= "\n<IfModule mod_rewrite.c>";
@@ -318,7 +319,7 @@ case 'update':
 			$httext .= "\n\tRewriteRule .* ".WT_SCRIPT_PATH."mediafirewall.php"." [L]";
 			$httext .= "\n</IfModule>";
 			$httext .= "\nErrorDocument\t404\t".WT_SCRIPT_PATH."mediafirewall.php";
-			$httext .= "\n########## END PGV MEDIA FIREWALL SECTION ##########";
+			$httext .= "\n########## END WT MEDIA FIREWALL SECTION ##########";
 
 			$whichFile = $MEDIA_DIRECTORY.".htaccess";
 			$fp = @fopen($whichFile, "wb");
@@ -336,8 +337,8 @@ case 'update':
 
 		if (file_exists($MEDIA_DIRECTORY.".htaccess")) {
 			$httext = implode('', file($MEDIA_DIRECTORY.".htaccess"));
-			// remove all PGV media firewall sections from the .htaccess
-			$httext = preg_replace('/\n?^[#]*\s*BEGIN PGV MEDIA FIREWALL SECTION(.*\n){10}[#]*\s*END PGV MEDIA FIREWALL SECTION\s*[#]*\n?/m', "", $httext);
+			// remove all WT media firewall sections from the .htaccess
+			$httext = preg_replace('/\n?^[#]*\s*BEGIN WT MEDIA FIREWALL SECTION(.*\n){10}[#]*\s*END WT MEDIA FIREWALL SECTION\s*[#]*\n?/m', "", $httext);
 			// comment out any lines that set ErrorDocument 404
 			$httext = preg_replace('/^(ErrorDocument\s*404(.*))\n?/', "#$1\n", $httext);
 			$httext = preg_replace('/[^#](ErrorDocument\s*404(.*))\n?/', "\n#$1\n", $httext);
