@@ -692,38 +692,31 @@ case 'addnewsource':
 	<?php
 	echo WT_JS_END;
 	?>
-	<b><?php echo i18n::translate('Create a new source'); $tabkey = 1; ?></b>
+	<b><?php echo i18n::translate('Create a new source'); ?></b>
 	<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
 		<input type="hidden" name="action" value="addsourceaction" />
 		<input type="hidden" name="pid" value="newsour" />
 		<table class="facts_table">
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('ABBR'), help_link('ABBR'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="ABBR" id="ABBR" value="" size="40" maxlength="255" /> <?php print_specialchar_link("ABBR", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="ABBR" id="ABBR" value="" size="40" maxlength="255" /> <?php print_specialchar_link("ABBR", false); ?></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('TITL'), help_link('TITL'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="TITL" id="TITL" value="" size="60" /> <?php print_specialchar_link("TITL", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="TITL" id="TITL" value="" size="60" /> <?php print_specialchar_link("TITL", false); ?></td></tr>
 			<?php if (strstr($ADVANCED_NAME_FACTS, "_HEB")!==false) { ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('_HEB'), help_link('_HEB'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="_HEB" id="_HEB" value="" size="60" /> <?php print_specialchar_link("_HEB", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="_HEB" id="_HEB" value="" size="60" /> <?php print_specialchar_link("_HEB", false); ?></td></tr>
 			<?php } ?>
 			<?php if (strstr($ADVANCED_NAME_FACTS, "ROMN")!==false) { ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('ROMN'), help_link('ROMN'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="ROMN" id="ROMN" value="" size="60" /> <?php print_specialchar_link("ROMN", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input  type="text" name="ROMN" id="ROMN" value="" size="60" /> <?php print_specialchar_link("ROMN", false); ?></td></tr>
 			<?php } ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('AUTH'), help_link('AUTH'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="AUTH" id="AUTH" value="" size="40" maxlength="255" /> <?php print_specialchar_link("AUTH", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="AUTH" id="AUTH" value="" size="40" maxlength="255" /> <?php print_specialchar_link("AUTH", false); ?></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('PUBL'), help_link('PUBL'); ?></td>
-			<td class="optionbox wrap"><textarea tabindex="<?php echo $tabkey; ?>" name="PUBL" id="PUBL" rows="5" cols="60"></textarea><br /><?php print_specialchar_link("PUBL", true); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><textarea name="PUBL" id="PUBL" rows="5" cols="60"></textarea><br /><?php print_specialchar_link("PUBL", true); ?></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('REPO'), help_link('REPO'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="REPO" id="REPO" value="" size="10" /> <?php print_findrepository_link("REPO"); echo help_link('REPO'); print_addnewrepository_link("REPO"); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="REPO" id="REPO" value="" size="10" /> <?php print_findrepository_link("REPO"); echo help_link('REPO'); print_addnewrepository_link("REPO"); ?></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('CALN'), help_link('CALN'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="CALN" id="CALN" value="" /></td></tr>
+			<td class="optionbox wrap"><input type="text" name="CALN" id="CALN" value="" /></td></tr>
 		<?php
 			if (WT_USER_IS_ADMIN) {
 				echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
@@ -842,7 +835,7 @@ case 'addnewnote':
 	<?php
 	echo WT_JS_END;
 	?>
-	<b><?php echo i18n::translate('Create a new Shared Note'); $tabkey = 1; ?></b>
+	<b><?php echo i18n::translate('Create a new Shared Note'); ?></b>
 	<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
 		<input type="hidden" name="action" value="addnoteaction" />
 		<input type="hidden" name="noteid" value="newnote" />
@@ -870,7 +863,6 @@ case 'addnewnote':
 				echo format_fact_date($event, false, true);
 				echo "</td></tr>\n";
 			}
-			$tabkey++;
 			echo "</table>";
 			echo "<br /><br />";
 			echo "<input type=\"submit\" value=\"", i18n::translate('Save'), "\" />";
@@ -941,11 +933,11 @@ case 'addnoteaction':
 	}
 	// $xref = "Test";
 	$xref = append_gedrec($newgedrec, WT_GED_ID);
-	
+
 	// Not sure if next line is needed ?? BH ?? --------
 	// $link = "note.php?nid=$xref&show_changes=yes";
 	// -------------------------------------------------
-	
+
 	if ($xref != "none") {
 		echo "<br /><br />\n".i18n::translate('New Shared Note created successfully.')." (".$xref.")<br /><br />";
 		echo "<a href=\"javascript://NOTE $xref\" onclick=\"openerpasteid('$xref'); return false;\">".i18n::translate('Paste the following ID into your editing fields to reference the newly created record ')." <b>$xref</b></a>\n";
@@ -958,7 +950,7 @@ case 'addnoteaction':
 case 'addnewnote_assisted':
 	if (isset($_REQUEST['pid'])) $pid = $_REQUEST['pid'];
 	global $pid;
-	
+
 	echo WT_JS_START;
 	?>
 		function check_form(frm) {
@@ -974,9 +966,9 @@ case 'addnewnote_assisted':
 	<?php
 	echo WT_JS_END;
 	?>
-	
+
 	<div class="center font11" style="width:100%;">
-		<b><?php echo i18n::translate('Create a new Shared Note using Assistant'); $tabkey = 1; ?></b>
+		<b><?php echo i18n::translate('Create a new Shared Note using Assistant'); ?></b>
 		<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
 			<input type="hidden" name="action" value="addnoteaction_assisted" />
 			<input type="hidden" name="noteid" value="newnote" />
@@ -995,7 +987,7 @@ case 'addnewnote_assisted':
 case 'addnoteaction_assisted':
 	require WT_ROOT.'modules/GEDFact_assistant/_CENS/addnoteaction_assisted.php';
 	break;
-	
+
 //-- add new Media Links
 case 'addmedia_links':
 	global $pid;
@@ -1014,9 +1006,9 @@ case 'addmedia_links':
 	?>
 	<!-- <form method="post" action="edit_interface.php" onsubmit="return check_form(this);"> -->
 	<form method="post" action="edit_interface.php?pid=<?php echo $pid; ?>" onsubmit="findindi()">
-		<input type="hidden" name="action" value="addmedia_links" /> 	
-		<input type="hidden" name="noteid" value="newnote" />			
-	<!--	<input type="hidden" name="pid" value="<?php // echo $pid; ?>" />		--> 
+		<input type="hidden" name="action" value="addmedia_links" />
+		<input type="hidden" name="noteid" value="newnote" />
+	<!--	<input type="hidden" name="pid" value="<?php // echo $pid; ?>" />		-->
 		<?php
 		require WT_ROOT.'modules/GEDFact_assistant/MEDIA_ctrl.php';
 		?>
@@ -1059,7 +1051,7 @@ case 'editsource':
 		$level1type = create_edit_form($gedrec, $lines++, $level0type);
 		echo "<input type=\"hidden\" name=\"linenum[]\" value=\"$i\" />\n";
 	}
-	
+
 	if (WT_USER_IS_ADMIN) {
 		echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
 		echo i18n::translate('Admin Option'), help_link('no_update_CHAN'), "</td><td class=\"optionbox wrap\">\n";
@@ -1098,7 +1090,7 @@ case 'editnote':
 	<?php
 	echo WT_JS_END;
 	?>
-	<b><?php echo i18n::translate('Edit Shared Note'); $tabkey = 1; echo "&nbsp;&nbsp;(" . $pid . ")";?></b><br /><br />
+	<b><?php echo i18n::translate('Edit Shared Note'), "&nbsp;&nbsp;(" . $pid . ")"; ?></b><br /><br />
 	<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
 		<input type="hidden" name="action" value="update" />
 		<input type="hidden" name="pid" value="<?php echo $pid; ?>" />
@@ -1115,25 +1107,26 @@ case 'editnote':
 			<tr>
 				<td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo i18n::translate('Shared note'), help_link('SHARED_NOTE'); ?></td>
 				<td class="optionbox wrap">
-					<textarea tabindex="<?php echo $tabkey; ?>" name="NOTE" id="NOTE" rows="15" cols="90"><?php
+					<textarea name="NOTE" id="NOTE" rows="15" cols="90"><?php
 						echo htmlspecialchars($note_content);
 					?></textarea><br /><?php print_specialchar_link("NOTE", true); ?>
 				</td>
 			</tr>
-			<?php $tabkey++; 
-			if (WT_USER_IS_ADMIN) {
-			echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
-			echo i18n::translate('Admin Option'), help_link('no_update_CHAN'), "</td><td class=\"optionbox wrap\">\n";
-			if ($NO_UPDATE_CHAN) {
-				echo "<input type=\"checkbox\" checked=\"checked\" name=\"preserve_last_changed\" />\n";
-			} else {
-				echo "<input type=\"checkbox\" name=\"preserve_last_changed\" />\n";
-			}
-			echo i18n::translate('Do not update the CHAN (Last Change) record'), "<br />\n";
-			$event = new Event(get_sub_record(1, "1 CHAN", $gedrec));
-			echo format_fact_date($event, false, true);
-			echo "</td></tr>\n";
-			} ?>
+			<?php
+				if (WT_USER_IS_ADMIN) {
+					echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
+					echo i18n::translate('Admin Option'), help_link('no_update_CHAN'), "</td><td class=\"optionbox wrap\">\n";
+					if ($NO_UPDATE_CHAN) {
+						echo "<input type=\"checkbox\" checked=\"checked\" name=\"preserve_last_changed\" />\n";
+					} else {
+						echo "<input type=\"checkbox\" name=\"preserve_last_changed\" />\n";
+					}
+					echo i18n::translate('Do not update the CHAN (Last Change) record'), "<br />\n";
+					$event = new Event(get_sub_record(1, "1 CHAN", $gedrec));
+					echo format_fact_date($event, false, true);
+					echo "</td></tr>\n";
+				} 
+			?>
 		</table>
 		<br /><br />
 		<input type="submit" value="<?php echo i18n::translate('Save'); ?>" />
@@ -1157,39 +1150,31 @@ case 'addnewrepository':
 	echo WT_JS_END;
 	?>
 	<b><?php echo i18n::translate('Create Repository');
-	$tabkey = 1;
 	?></b>
 	<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
 		<input type="hidden" name="action" value="addrepoaction" />
 		<input type="hidden" name="pid" value="newrepo" />
 		<table class="facts_table">
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('NAME'), help_link('edit_REPO_NAME'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="NAME" id="NAME" value="" size="40" maxlength="255" /> <?php print_specialchar_link("NAME", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="NAME" id="NAME" value="" size="40" maxlength="255" /> <?php print_specialchar_link("NAME", false); ?></td></tr>
 			<?php if (strstr($ADVANCED_NAME_FACTS, "_HEB")!==false) { ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('_HEB'), help_link('_HEB'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="_HEB" id="_HEB" value="" size="40" maxlength="255" /> <?php print_specialchar_link("_HEB", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="_HEB" id="_HEB" value="" size="40" maxlength="255" /> <?php print_specialchar_link("_HEB", false); ?></td></tr>
 			<?php } ?>
 			<?php if (strstr($ADVANCED_NAME_FACTS, "ROMN")!==false) { ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('ROMN'), help_link('ROMN'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="ROMN" id="ROMN" value="" size="40" maxlength="255" /> <?php print_specialchar_link("ROMN", false); ?></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="ROMN" id="ROMN" value="" size="40" maxlength="255" /> <?php print_specialchar_link("ROMN", false); ?></td></tr>
 			<?php } ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('ADDR'), help_link('ADDR'); ?></td>
-			<td class="optionbox wrap"><textarea tabindex="<?php echo $tabkey; ?>" name="ADDR" id="ADDR" rows="5" cols="60"></textarea><?php print_specialchar_link("ADDR", true); ?> </td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><textarea name="ADDR" id="ADDR" rows="5" cols="60"></textarea><?php print_specialchar_link("ADDR", true); ?> </td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('PHON'), help_link('PHON'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="PHON" id="PHON" value="" size="40" maxlength="255" /> </td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="PHON" id="PHON" value="" size="40" maxlength="255" /> </td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('FAX'), help_link('FAX'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="FAX" id="FAX" value="" size="40" /></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="FAX" id="FAX" value="" size="40" /></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('EMAIL'), help_link('EMAIL'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="EMAIL" id="EMAIL" value="" size="40" maxlength="255" /></td></tr>
-			<?php $tabkey++; ?>
+			<td class="optionbox wrap"><input type="text" name="EMAIL" id="EMAIL" value="" size="40" maxlength="255" /></td></tr>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('WWW'), help_link('URL'); ?></td>
-			<td class="optionbox wrap"><input tabindex="<?php echo $tabkey; ?>" type="text" name="WWW" id="WWW" value="" size="40" maxlength="255" /> </td></tr>
+			<td class="optionbox wrap"><input type="text" name="WWW" id="WWW" value="" size="40" maxlength="255" /> </td></tr>
 		<?php
 			if (WT_USER_IS_ADMIN) {
 				echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
@@ -1269,14 +1254,14 @@ case 'updateraw':
 		$success = true;
 	}
 	break;
-	
+
 //----------------------------------------------------------------------------------
 //-- reconstruct the gedcom from the incoming fields and store it in the file
 case 'update':
 	/* -----------------------------------------------------------------------------
-	 * $pids_array is a text file passed via js from the CENS GEDFact Assistant 
+	 * $pids_array is a text file passed via js from the CENS GEDFact Assistant
 	 * to the hidden field id=\"pids_array\" in the case 'add'.
-	 * The subsequent array ($cens_pids), after exploding this text file, 
+	 * The subsequent array ($cens_pids), after exploding this text file,
 	 * is an array of indi id's within the Census Transcription
 	 * If $cens_pids is set, then this allows the array to "copy" the new CENS event
 	 * using the foreach loop to these id's
@@ -1305,7 +1290,7 @@ case 'update':
 		} else if (isset($famid)) {
 			$gedrec = find_gedcom_record($famid, WT_GED_ID, true);
 		}
-		
+
 		if (WT_DEBUG) {
 			phpinfo(INFO_VARIABLES);
 			echo "<pre>$gedrec</pre>";
@@ -1467,18 +1452,18 @@ case 'update':
 
 				if (!empty($_AKA)) $newged .= "2 _AKA $_AKA\n";
 				if (!empty($_MARNM)) $newged .= "2 _MARNM $_MARNM\n";
-				
+
 				$newged = handle_updates($newged);
 				$current = $editline;
 				break;
 			}
-			
+
 		}
 		if (WT_DEBUG) {
 			echo "<br /><br />";
 			echo "<pre>$newged</pre>";
 		}
-		
+
 		replace_gedrec($pid, WT_GED_ID, $newged, $update_CHAN);
 		$success = true;
 	} // end foreach $cens_pids  -------------
@@ -2062,7 +2047,7 @@ case 'reset_media_update': // Reset sort using popup
 
 //------------------------------------------------------------------------------
 case 'reorder_media_update': // Update sort using popup
-		
+
 	if (WT_DEBUG) {
 		phpinfo(INFO_VARIABLES);
 	}
@@ -2212,7 +2197,7 @@ case 'reorder_children':
 					}
 				}
 			);
-		<?php echo WT_JS_END; 
+		<?php echo WT_JS_END;
 		if (WT_USER_IS_ADMIN) {
 			echo "<center><table width=93%><tr><td class=\"descriptionbox ", $TEXT_DIRECTION, " wrap width25\">";
 			echo i18n::translate('Admin Option'), help_link('no_update_CHAN'), "</td><td class=\"optionbox ", $TEXT_DIRECTION, " wrap\">\n";
@@ -2620,7 +2605,7 @@ case 'mod_edit_fact':
 
 
 // Redirect to new record, if requested
-if (isset($_REQUEST['goto'])) { 
+if (isset($_REQUEST['goto'])) {
 	$goto = $_REQUEST['goto'];
 }
 if (isset($_REQUEST['link'])) {

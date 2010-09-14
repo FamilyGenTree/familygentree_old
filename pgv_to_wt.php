@@ -47,10 +47,10 @@ echo
 		#container dl {margin:0 0 40px 25px;}
 		#container dt {display:inline; width: 320px; font-weight:normal;}
 		#container dd {color: #81A9CB; margin-bottom:20px;font-weight:bold;}
-		#container p {color: #81A9CB; font-size: 14px; font-style: italic; font-weight:bold; padding: 0 5px 5px; align: top;
+		#container p {color: #81A9CB; font-size: 14px; font-style: italic; font-weight:bold; padding: 0 5px 5px; align: top;}
 		h2 {color: #81A9CB;}
 		.good {color: green;}
-		.bad {color: red; font-weight: bold;}
+		.bad {color: red !important;}
 		.indifferent {color: blue;}
 	</style>';
 
@@ -95,7 +95,12 @@ if ($PGV_PATH) {
 					$error=i18n::translate('The version of %s is too new', 'PhpGedView');
 				}
 			} catch (PDOException $ex) {
-				$error=i18n::translate('The PhpGedView database configuration settings are bad: '.$ex);
+				$error=
+					/* I18N: %s is a database name/identifier */
+					i18n::translate('<b>webtrees</b> cannot connect to the PhpGedView database: %s.', $DBNAME.'@'.$DBHOST).
+					'<br/>'.
+					/* I18N: %s is an error message */
+					i18n::translate('MySQL gave the error: %s', $ex->getMessage());
 			}
 		}
 	}
@@ -104,7 +109,7 @@ if ($PGV_PATH) {
 if ($error || empty($PGV_PATH)) {
 	// Prompt for location of PhpGedView installation
 	echo '<div id="container">';
-	echo 
+	echo
 		'<h2>',
 		i18n::translate('PhpGedView to <b>webtrees</b> transfer wizard'),
 		help_link('PGV_WIZARD'),
@@ -142,7 +147,7 @@ WT_DB::exec("DELETE FROM `##user_setting`");
 WT_DB::exec("DELETE FROM `##user`");
 
 ////////////////////////////////////////////////////////////////////////////////
-if (ob_get_level() == 0) ob_start(); 
+if (ob_get_level() == 0) ob_start();
 echo '<p>config.php => wt_site_setting ...</p>'; ob_flush(); flush(); usleep(50000);
 // TODO May need to set 'DATA_DIRECTORY' to $INDEX_DIRECTORY when dealing with media??
 @set_site_setting('STORE_MESSAGES',                  $PGV_STORE_MESSAGES);
@@ -178,7 +183,7 @@ WT_DB::prepare(
 	" SELECT site_setting_name, site_setting_value FROM {$DBNAME}.{$TBLPREFIX}site_setting".
 	" WHERE site_setting_name IN ('DEFAULT_GEDCOM', 'LAST_CHANGE_EMAIL')"
 )->execute();
-	
+
 ////////////////////////////////////////////////////////////////////////////////
 
 if ($PGV_SCHEMA_VERSION>=12) {
@@ -191,7 +196,48 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 	echo '<p>pgv_gedcom_setting => wt_gedcom_setting ...</p>'; ob_flush(); flush(); usleep(50000);
 	WT_DB::prepare(
 		"INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value)".
-		" SELECT gedcom_id, setting_name, setting_value FROM {$DBNAME}.{$TBLPREFIX}gedcom_setting"
+		" SELECT gedcom_id, setting_name,".
+		"  CASE setting_name".
+		"  WHEN 'THEME_DIR' THEN".
+		"   CASE setting_value".
+		"   WHEN ''                    THEN ''".
+		"   WHEN 'themes/cloudy/'      THEN 'themes/clouds/'".
+		"   WHEN 'themes/minimal/'     THEN 'themes/minimal/'".
+		"   WHEN 'themes/simplyblue/'  THEN 'themes/colors/'".
+		"   WHEN 'themes/simplygreen/' THEN 'themes/colors/'".
+		"   WHEN 'themes/simplyred/'   THEN 'themes/colors/'".
+		"   WHEN 'themes/xenea/'       THEN 'themes/xenea/'".
+		"   ELSE 'themes/webtrees/'". // ocean, simplyred/blue/green, standard, wood
+		"  END".
+		"  WHEN 'LANGUAGE' THEN".
+		"   CASE setting_value".
+		"   WHEN 'catalan'    THEN 'ca'".
+		"   WHEN 'english'    THEN 'en_US'".
+		"   WHEN 'english-uk' THEN 'en_GB'". // PGV had the config for en_GB, but no language files
+		"   WHEN 'polish'     THEN 'pl'".
+		"   WHEN 'italian'    THEN 'it'".
+		"   WHEN 'spanish'    THEN 'es'".
+		"   WHEN 'finnish'    THEN 'fi'".
+		"   WHEN 'french'     THEN 'fr'".
+		"   WHEN 'german'     THEN 'de'".
+		"   WHEN 'danish'     THEN 'da'".
+		"   WHEN 'portuguese' THEN 'pt'".
+		"   WHEN 'hebrew'     THEN 'he'".
+		"   WHEN 'estonian'   THEN 'et'".
+		"   WHEN 'turkish'    THEN 'tr'".
+		"   WHEN 'dutch'      THEN 'nl'".
+		"   WHEN 'slovak'     THEN 'sk'".
+		"   WHEN 'norwegian'  THEN 'nn'".
+		"   WHEN 'slovenian'  THEN 'sl'".
+		"   WHEN 'hungarian'  THEN 'hu'".
+		"   WHEN 'swedish'    THEN 'sv'".
+		"   WHEN 'russian'    THEN 'ru'".
+		"   ELSE 'en_US'". // PGV supports other languages that webtrees does not (yet)
+		"  END".
+		"  ELSE setting_value".
+		"  END".
+		" FROM {$DBNAME}.{$TBLPREFIX}gedcom_setting".
+		" WHERE setting_name NOT IN ('HOME_SITE_TEXT', 'HOME_SITE_URL')"
 	)->execute();
 
 	echo '<p>pgv_user => wt_user ...</p>'; ob_flush(); flush(); usleep(50000);
@@ -215,15 +261,9 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 	WT_DB::prepare(
 		"INSERT INTO `##user_setting` (user_id, setting_name, setting_value)".
 		" SELECT user_id, setting_name,".
-		" CASE WHEN setting_value IN ('Y', 'yes') THEN 1 WHEN setting_value IN ('N', 'no') THEN 0 ELSE setting_value END".
-		" FROM {$DBNAME}.{$TBLPREFIX}user_setting".
-		" JOIN `##user` USING (user_id)".
-		" WHERE setting_name NOT IN ('email', 'firstname', 'lastname', 'language')"
-	)->execute();
-	WT_DB::prepare(
-		"INSERT INTO `##user_setting` (user_id, setting_name, setting_value)".
-		" SELECT user_id, setting_name,".
-		" CASE setting_value".
+		" CASE setting_name".
+		" WHEN 'language' THEN ".
+		"  CASE setting_value".
 		"  WHEN 'catalan'    THEN 'ca'".
 		"  WHEN 'english'    THEN 'en_US'".
 		"  WHEN 'english-uk' THEN 'en_GB'". // PGV had the config for en_GB, but no language files
@@ -246,10 +286,25 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 		"  WHEN 'swedish'    THEN 'sv'".
 		"  WHEN 'russian'    THEN 'ru'".
 		"  ELSE 'en_US'". // PGV supports other languages that webtrees does not (yet)
+		"  END".
+		" WHEN 'theme' THEN".
+		"  CASE setting_value".
+		"  WHEN ''                    THEN ''".
+		"  WHEN 'themes/cloudy/'      THEN 'themes/clouds/'".
+		"  WHEN 'themes/minimal/'     THEN 'themes/minimal/'".
+		"  WHEN 'themes/simplyblue/'  THEN 'themes/colors/'".
+		"  WHEN 'themes/simplygreen/' THEN 'themes/colors/'".
+		"  WHEN 'themes/simplyred/'   THEN 'themes/colors/'".
+		"  WHEN 'themes/xenea/'       THEN 'themes/xenea/'".
+		"  ELSE 'themes/webtrees/'". // ocean, simplyred/blue/green, standard, wood
+		" END".
+		" ELSE".
+		"  CASE".
+		"  WHEN setting_value IN ('Y', 'yes') THEN 1 WHEN setting_value IN ('N', 'no') THEN 0 ELSE setting_value END".
 		" END".
 		" FROM {$DBNAME}.{$TBLPREFIX}user_setting".
 		" JOIN `##user` USING (user_id)".
-		" WHERE setting_name IN ('language')"
+		" WHERE setting_name NOT IN ('email', 'firstname', 'lastname')"
 	)->execute();
 
 	echo '<p>pgv_user_gedcom_setting => wt_user_gedcom_setting ...</p>'; ob_flush(); flush(); usleep(50000);
@@ -287,7 +342,7 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			}
 		}
 	}
-	
+
 	// Migrate the data from pgv_users into pgv_user/pgv_user_setting/pgv_user_gedcom_setting
 	echo '<p>pgv_users => wt_user ...</p>'; ob_flush(); flush(); usleep(50000);
 	try {
@@ -353,33 +408,37 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'reg_timestamp', ".
-			" CASE WHEN u_reg_timestamp IN ('Y', 'yes') THEN 1 WHEN u_reg_timestamp IN ('N', 'no') THEN 0 ELSE u_reg_timestamp END".
+			"	SELECT user_id, 'reg_timestamp', u_reg_timestamp".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'reg_hashcode', ".
-			" CASE WHEN u_reg_hashcode IN ('Y', 'yes') THEN 1 WHEN u_reg_hashcode IN ('N', 'no') THEN 0 ELSE u_reg_hashcode END".
+			"	SELECT user_id, 'reg_hashcode', u_reg_hashcode".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
 			"	SELECT user_id, 'theme', ".
-			" CASE WHEN u_theme IN ('Y', 'yes') THEN 1 WHEN u_theme IN ('N', 'no') THEN 0 ELSE u_theme END".
+			" CASE u_theme".
+			"  WHEN ''                    THEN ''".
+			"  WHEN 'themes/cloudy/'      THEN 'themes/clouds/'".
+			"  WHEN 'themes/minimal/'     THEN 'themes/minimal/'".
+			"  WHEN 'themes/simplyblue/'  THEN 'themes/colors/'".
+			"  WHEN 'themes/simplygreen/' THEN 'themes/colors/'".
+			"  WHEN 'themes/simplyred/'   THEN 'themes/colors/'".
+			"  WHEN 'themes/xenea/'       THEN 'themes/xenea/'".
+			"  ELSE 'themes/webtrees/'". // ocean, simplyred/blue/green, standard, wood
+			" END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'loggedin', ".
-			" CASE WHEN u_loggedin IN ('Y', 'yes') THEN 1 WHEN u_loggedin IN ('N', 'no') THEN 0 ELSE u_loggedin END".
+			"	SELECT user_id, 'loggedin', 0".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'sessiontime', ".
-			" CASE WHEN u_sessiontime IN ('Y', 'yes') THEN 1 WHEN u_sessiontime IN ('N', 'no') THEN 0 ELSE u_sessiontime END".
+			"	SELECT user_id, 'sessiontime', u_sessiontime".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'contactmethod', ".
-			" CASE WHEN u_contactmethod IN ('Y', 'yes') THEN 1 WHEN u_contactmethod IN ('N', 'no') THEN 0 ELSE u_contactmethod END".
+			"	SELECT user_id, 'contactmethod', u_contactmethod".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
@@ -398,18 +457,11 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'comment', ".
-			" CASE WHEN u_comment IN ('Y', 'yes') THEN 1 WHEN u_comment IN ('N', 'no') THEN 0 ELSE u_comment END".
+			"	SELECT user_id, 'comment', u_comment".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'comment_exp', ".
-			" CASE WHEN u_comment_exp IN ('Y', 'yes') THEN 1 WHEN u_comment_exp IN ('N', 'no') THEN 0 ELSE u_comment_exp END".
-			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
-			" UNION ALL".
-			"	SELECT user_id, 'sync_gedcom', ".
-			" CASE WHEN u_sync_gedcom IN ('Y', 'yes') THEN 1 WHEN u_sync_gedcom IN ('N', 'no') THEN 0 ELSE u_sync_gedcom END".
+			"	SELECT user_id, 'comment_exp', u_comment_exp".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
@@ -418,8 +470,7 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
-			"	SELECT user_id, 'max_relation_path', ".
-			" CASE WHEN u_max_relation_path IN ('Y', 'yes') THEN 1 WHEN u_max_relation_path IN ('N', 'no') THEN 0 ELSE u_max_relation_path END".
+			"	SELECT user_id, 'max_relation_path', u_max_relation_path".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
 			" JOIN ##user ON (user_name=u_username)".
 			" UNION ALL".
@@ -545,12 +596,32 @@ foreach (get_all_gedcoms() as $ged_id=>$gedcom) {
 	@set_gedcom_setting($ged_id, 'GENERATE_UIDS',                $GENERATE_UIDS);
 	@set_gedcom_setting($ged_id, 'HIDE_GEDCOM_ERRORS',           $HIDE_GEDCOM_ERRORS);
 	@set_gedcom_setting($ged_id, 'HIDE_LIVE_PEOPLE',             $HIDE_LIVE_PEOPLE);
-	@set_gedcom_setting($ged_id, 'HOME_SITE_TEXT',               $HOME_SITE_TEXT);
-	@set_gedcom_setting($ged_id, 'HOME_SITE_URL',                $HOME_SITE_URL);
 	@set_gedcom_setting($ged_id, 'INDI_FACTS_ADD',               $INDI_FACTS_ADD);
 	@set_gedcom_setting($ged_id, 'INDI_FACTS_QUICK',             $INDI_FACTS_QUICK);
 	@set_gedcom_setting($ged_id, 'INDI_FACTS_UNIQUE',            $INDI_FACTS_UNIQUE);
-	@set_gedcom_setting($ged_id, 'LANGUAGE',                     WT_LOCALE);
+	switch ($LANGUAGE) {
+	case 'catalan':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'ca'); break;
+	case 'english-uk': @set_gedcom_setting($ged_id, 'LANGUAGE', 'en_GB'); break;
+	case 'polish':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'pl'); break;
+	case 'italian':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'it'); break;
+	case 'spanish':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'es'); break;
+	case 'finnish':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'fi'); break;
+	case 'french':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'fr'); break;
+	case 'german':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'de'); break;
+	case 'danish':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'da'); break;
+	case 'portuguese': @set_gedcom_setting($ged_id, 'LANGUAGE', 'pt'); break;
+	case 'hebrew':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'he'); break;
+	case 'estonian':   @set_gedcom_setting($ged_id, 'LANGUAGE', 'et'); break;
+	case 'turkish':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'tr'); break;
+	case 'dutch':      @set_gedcom_setting($ged_id, 'LANGUAGE', 'nl'); break;
+	case 'slovak':     @set_gedcom_setting($ged_id, 'LANGUAGE', 'sk'); break;
+	case 'norwegian':  @set_gedcom_setting($ged_id, 'LANGUAGE', 'nn'); break;
+	case 'slovenian':  @set_gedcom_setting($ged_id, 'LANGUAGE', 'sl'); break;
+	case 'hungarian':  @set_gedcom_setting($ged_id, 'LANGUAGE', 'hu'); break;
+	case 'swedish':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'sv'); break;
+	case 'russian':    @set_gedcom_setting($ged_id, 'LANGUAGE', 'ru'); break;
+	default:           @set_gedcom_setting($ged_id, 'LANGUAGE', 'en_US'); break;
+	}
 	@set_gedcom_setting($ged_id, 'LINK_ICONS',                   $LINK_ICONS);
 	@set_gedcom_setting($ged_id, 'MAX_ALIVE_AGE',                $MAX_ALIVE_AGE);
 	@set_gedcom_setting($ged_id, 'MAX_DESCENDANCY_GENERATIONS',  $MAX_DESCENDANCY_GENERATIONS);
@@ -621,7 +692,16 @@ foreach (get_all_gedcoms() as $ged_id=>$gedcom) {
 	@set_gedcom_setting($ged_id, 'SUBLIST_TRIGGER_I',            $SUBLIST_TRIGGER_I);
 	@set_gedcom_setting($ged_id, 'SURNAME_LIST_STYLE',           $SURNAME_LIST_STYLE);
 	@set_gedcom_setting($ged_id, 'SURNAME_TRADITION',            $SURNAME_TRADITION);
-	@set_gedcom_setting($ged_id, 'THEME_DIR',                    'themes/webtrees/');
+	switch ($THEME_DIR) {
+	case '':	                 @set_gedcom_setting($ged_id, 'THEME_DIR', '');
+	case 'themes/cloudy/':     @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/clouds/');
+	case 'themes/minimal/':	   @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/minimal/');
+	case 'themes/simplyblue/':
+	case 'themes/simplygreen/':
+	case 'themes/simplyred/':  @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/colors/');
+	case 'themes/xenea/':	     @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/xenea/');
+	default:                   @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/webtrees/');
+	}
 	@set_gedcom_setting($ged_id, 'THUMBNAIL_WIDTH',              $THUMBNAIL_WIDTH);
 	@set_gedcom_setting($ged_id, 'UNDERLINE_NAME_QUOTES',        $UNDERLINE_NAME_QUOTES);
 	@set_gedcom_setting($ged_id, 'USE_GEONAMES',                 $USE_GEONAMES);
@@ -930,4 +1010,4 @@ WT_DB::prepare(
 
 WT_DB::exec("COMMIT");
 
-echo '<p><b><a href="index.php">', i18n::translate('Click here to continue'), '</a></b></p>';
+echo '<p><b><a href="editgedcoms.php">', i18n::translate('Click here to continue'), '</a></b></p>';

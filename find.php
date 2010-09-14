@@ -446,7 +446,7 @@ if ($type == "facts") {
 	echo "<table class=\"list_table $TEXT_DIRECTION width100\" border=\"0\">";
 	echo "<tr><td class=\"list_label $TEXT_DIRECTION\" style=\"padding: 5px; font-weight: normal; white-space: normal;\">";
 	getPreselectedTags($preselDefault, $preselCustom);
-	?> 
+	?>
 	<?php echo WT_JS_START; ?>
 	// A class representing a default tag
 	function DefaultTag(id, name, selected) {
@@ -464,9 +464,9 @@ if ($type == "facts") {
 			o=null;
 			if(document.all) {
 				 //Old IEs handle the creation of a checkbox already checked, as far as I know, only in this way
-				try { 
-					o=document.createElement("<input type='checkbox' id='tag"+this._counter+"' "+(this.selected?"checked='checked'":"")+" />"); 
-				} catch(e) { 
+				try {
+					o=document.createElement("<input type='checkbox' id='tag"+this._counter+"' "+(this.selected?"checked='checked'":"")+" />");
+				} catch(e) {
 					o=null;
 				}
 			}
@@ -662,7 +662,7 @@ if ($action=="filter") {
 		echo "<table class=\"tabs_table $TEXT_DIRECTION width90\"><tr>";
 		// Get the famrecs with hits on names from the family table
 		// Get the famrecs with hits in the gedcom record from the family table
-		$myfamlist = pgv_array_merge(
+		$myfamlist = wt_array_merge(
 			search_fams_names($filter_array, array(WT_GED_ID), 'AND'),
 			search_fams($filter_array, array(WT_GED_ID), 'AND', true)
 		);

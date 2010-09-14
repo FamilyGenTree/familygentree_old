@@ -65,7 +65,7 @@ function import_gedcom_file($gedcom_id, $file_name) {
 	// CONCAT(import_gedcom, ?)
 	// See http://bugs.mysql.com/bug.php?id=22853 (Scheduled to be fixed in MySQL 6)
 	try {
-		WT_DB::exec("SET @@max_allowed_packet=".max($file_size*2, $max_allowed_packet));		
+		WT_DB::exec("SET @@max_allowed_packet=".max($file_size*2, $max_allowed_packet));
 	} catch (PDOException $ex) {
 		// We can only set this on MySQL 5.1.30 or earlier
 	}
@@ -119,7 +119,7 @@ case 'new_ged':
 			"UPDATE `##gedcom`".
 			" SET import_gedcom=?, import_offset=1".
 			" WHERE gedcom_id=?"
-		)->execute(array("0 HEAD\n0 @I1@ INDI\n1 NAME {$john_doe}\n1 SEX M\n1 BIRT\n2 DATE 1 JAN 1850\n2 NOTE {$note}\n0 TRLR\n", $gedcom_id));
+		)->execute(array("0 HEAD\n0 @I1@ INDI\n1 NAME {$john_doe}\n1 SEX M\n1 BIRT\n2 DATE 01 JAN 1850\n2 NOTE {$note}\n0 TRLR\n", $gedcom_id));
 	}
 	break;
 case 'upload_ged':
@@ -349,7 +349,7 @@ if (WT_USER_IS_ADMIN) {
 		'</form>',
 		'</td>',
 		'</tr></table><br/>';
-		
+
 		// display link to PGV-WT transfer wizard on first visit to this page, before any GEDCOM is loaded
 		if (count($gedcoms)==0 && get_user_count()==1) {
 			echo
@@ -359,6 +359,6 @@ if (WT_USER_IS_ADMIN) {
 				'</a>',
 				help_link('PGV_WIZARD'),
 				'</div>';
-		}		
+		}
 }
 print_footer();

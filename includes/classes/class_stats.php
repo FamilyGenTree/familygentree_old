@@ -3134,7 +3134,7 @@ class stats {
 		$counts[] = round(4095*$unknown/($max+1));
 		$chd = self::_array_to_extended_encoding($counts);
 		$chm .= 't'.$unknown.',000000,0,'.$i.',11,1';
-		$chxl .= i18n::translate_c('unknown century', 'unknown')."|1:||".i18n::translate('century')."|2:|0|";
+		$chxl .= i18n::translate_c('unknown century', 'Unknown')."|1:||".i18n::translate('century')."|2:|0|";
 		$step = $max+1;
 		for ($d=floor($max+1); $d>0; $d--) {
 			if (($max+1)<($d*10+1) && fmod(($max+1),$d)==0) {
@@ -3747,12 +3747,23 @@ class stats_ui extends stats
 	static function callBlock($params=null) {
 		if ($params === null){return '';}
 		if (isset($params[0]) && $params[0] != ''){$block = $params[0];}else{return '';}
-		if ($block=='html') return '#callBlock:html#';
 		$class_name = $block.'_WT_Module';
-		$block = new $class_name;
-		$block_id=safe_GET('block_id');
-		$content = $block->getBlock($block_id, false);
-		return $content;
+		if (class_exists($class_name) && $block!='html') {
+			// Build the config array
+			//array_shift($params);
+			//$cfg = array();
+			//foreach($params as $config) {
+			//	$bits = explode('=', $config);
+			//	if(count($bits) < 2){continue;}
+			//	$v = array_shift($bits);
+			//	$cfg[$v] = join('=', $bits);
+			//}
+			$block = new $class_name;
+			$block_id=safe_GET('block_id');
+			$content = $block->getBlock($block_id, false);
+			return $content;
+		}
+		return $block;
 	}
 
 	function totalUserMessages(){return count(getUserMessages(WT_USER_NAME));}

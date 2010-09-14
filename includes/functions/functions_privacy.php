@@ -49,8 +49,6 @@ if ($USE_RELATIONSHIP_PRIVACY) {
 	$NODE_CACHE = array();
 }
 
-//-- allow users to overide functions in privacy file
-if (!function_exists("is_dead")) {
 /**
 * check if a person is dead
 *
@@ -80,7 +78,7 @@ function is_dead($indirec, $gedcom_id) {
 	} else {
 		return false;
 	}
-	
+
 	// "1 DEAT Y" or "1 DEAT/2 DATE" or "1 DEAT/2 PLAC"
 	if (preg_match('/\n1 (?:'.WT_EVENTS_DEAT.')(?: Y|(?:\n[2-9].+)*\n2 (DATE|PLAC) )/', $indirec)) {
 		return true;
@@ -185,10 +183,7 @@ function is_dead($indirec, $gedcom_id) {
 	}
 	return false;
 }
-}
 
-//-- allow users to overide functions in privacy file
-if (!function_exists("showLivingNameById")) {
 /**
 * check if the name for a GEDCOM XRef ID should be shown
 *
@@ -218,7 +213,6 @@ function showLivingNameById($pid) {
 
 	return $SHOW_LIVING_NAMES>=$pgv_USER_ACCESS_LEVEL || canDisplayRecord($pgv_GED_ID, find_person_record($pid, $pgv_GED_ID));
 }
-}
 
 
 // Can we display a level 0 record?
@@ -233,22 +227,14 @@ function canDisplayRecord($ged_id, $gedrec) {
 
 	if ($_SESSION["wt_user"]==WT_USER_ID) {
 		// Normal operation
-		$pgv_GEDCOM            = WT_GEDCOM;
 		$pgv_GED_ID            = WT_GED_ID;
 		$pgv_USER_ID           = WT_USER_ID;
-		$pgv_USER_NAME         = WT_USER_NAME;
-		$pgv_USER_GEDCOM_ADMIN = WT_USER_GEDCOM_ADMIN;
-		$pgv_USER_CAN_ACCESS   = WT_USER_CAN_ACCESS;
 		$pgv_USER_ACCESS_LEVEL = WT_USER_ACCESS_LEVEL;
 		$pgv_USER_GEDCOM_ID    = WT_USER_GEDCOM_ID;
 	} else {
 		// We're in the middle of a Download -- get overriding information from cache
-		$pgv_GEDCOM            = $_SESSION["pgv_GEDCOM"];
 		$pgv_GED_ID            = $_SESSION["pgv_GED_ID"];
 		$pgv_USER_ID           = $_SESSION["pgv_USER_ID"];
-		$pgv_USER_NAME         = $_SESSION["pgv_USER_NAME"];
-		$pgv_USER_GEDCOM_ADMIN = $_SESSION["pgv_USER_GEDCOM_ADMIN"];
-		$pgv_USER_CAN_ACCESS   = $_SESSION["pgv_USER_CAN_ACCESS"];
 		$pgv_USER_ACCESS_LEVEL = $_SESSION["pgv_USER_ACCESS_LEVEL"];
 		$pgv_USER_GEDCOM_ID    = $_SESSION["pgv_USER_GEDCOM_ID"];
 	}
@@ -295,7 +281,7 @@ function canDisplayRecord($ged_id, $gedrec) {
 	}
 
 	// Privacy rules do not apply to admins
-	if ($pgv_USER_GEDCOM_ADMIN) {
+	if (WT_PRIV_NONE>=$pgv_USER_ACCESS_LEVEL) {
 		return $cache[$cache_key]=true;
 	}
 
@@ -368,7 +354,7 @@ function canDisplayRecord($ged_id, $gedrec) {
 	if (isset($global_facts[$type])) {
 		return $cache[$cache_key]=($global_facts[$type]>=$pgv_USER_ACCESS_LEVEL);
 	}
-	
+
 	// No restriction found - must be public:
 	return $cache[$cache_key]=true;
 }

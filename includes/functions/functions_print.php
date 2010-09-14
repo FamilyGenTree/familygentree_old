@@ -104,53 +104,35 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 				// NOTE: Start div I.$pid.$personcount.$count.links
 				$personlinks .= "<table class=\"person_box$isF\"><tr><td class=\"details1\">";
 				// NOTE: Zoom
-				if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Pedigree Chart').": ".$pid;
-				else $title = $pid." :".i18n::translate('Pedigree Chart');
-				$personlinks .= "<a href=\"".encode_url("pedigree.php?rootid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&PEDIGREE_GENERATIONS={$OLD_PGENS}&talloffset={$talloffset}&ged={$GEDCOM}")."\" title=\"$title\" $mouseAction1><b>".i18n::translate('Pedigree Tree')."</b></a>";
+				$personlinks .= "<a href=\"".encode_url("pedigree.php?rootid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&PEDIGREE_GENERATIONS={$OLD_PGENS}&talloffset={$talloffset}&ged={$GEDCOM}")."\" $mouseAction1><b>".i18n::translate('Pedigree Tree')."</b></a>";
 
 				if (file_exists(WT_ROOT.'modules/googlemap/pedigree_map.php')) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Pedigree Map').": ".$pid;
-					else $title = $pid." :".i18n::translate('Pedigree Map');
-					$personlinks .= "<br /><a href=\"".encode_url("module.php?mod=googlemap&mod_action=pedigree_map&rootid={$pid}&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Pedigree Map')."</b></a>";
+					$personlinks .= "<br /><a href=\"".encode_url("module.php?mod=googlemap&mod_action=pedigree_map&rootid={$pid}&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Pedigree Map')."</b></a>";
 				}
 				$username = WT_USER_NAME;
 				if (!empty($username)) {
 					$myid=WT_USER_GEDCOM_ID;
 					if ($myid && $myid!=$pid) {
-						if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Relationship Chart').": ".$pid;
-						else $title = $pid." :".i18n::translate('Relationship Chart');
-						$personlinks .= "<br /><a href=\"".encode_url("relationship.php?show_full={$PEDIGREE_FULL_DETAILS}&pid1={$myid}&pid2={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&pretty=2&followspouse=1&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Relationship to me')."</b></a>";
+						$personlinks .= "<br /><a href=\"".encode_url("relationship.php?show_full={$PEDIGREE_FULL_DETAILS}&pid1={$myid}&pid2={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&pretty=2&followspouse=1&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Relationship to me')."</b></a>";
 					}
 				}
 
-				if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Descendancy chart').": ".$pid;
-				else $title = $pid." :".i18n::translate('Descendancy chart');
-				$personlinks .= "<br /><a href=\"".encode_url("descendancy.php?pid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&generations={$generations}&box_width={$box_width}&ged={$GEDCOM}")."\" title=\"$title\" $mouseAction1><b>".i18n::translate('Descendancy chart')."</b></a><br />";
+				$personlinks .= "<br /><a href=\"".encode_url("descendancy.php?pid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&generations={$generations}&box_width={$box_width}&ged={$GEDCOM}")."\" $mouseAction1><b>".i18n::translate('Descendancy chart')."</b></a><br />";
 
 				if (file_exists(WT_ROOT.'ancestry.php')) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Ancestry chart').": ".$pid;
-					else $title = $pid." :".i18n::translate('Ancestry chart');
-					$personlinks .= "<a href=\"".encode_url("ancestry.php?rootid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&chart_style={$chart_style}&PEDIGREE_GENERATIONS={$OLD_PGENS}&box_width={$box_width}&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Ancestry chart')."</b></a><br />";
+					$personlinks .= "<a href=\"".encode_url("ancestry.php?rootid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&chart_style={$chart_style}&PEDIGREE_GENERATIONS={$OLD_PGENS}&box_width={$box_width}&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Ancestry chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'compact.php')) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Compact Chart').": ".$pid;
-					else $title = $pid." :".i18n::translate('Compact Chart');
-					$personlinks .= "<a href=\"".encode_url("compact.php?rootid={$pid}&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Compact Chart')."</b></a><br />";
+					$personlinks .= "<a href=\"".encode_url("compact.php?rootid={$pid}&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Compact Chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'fanchart.php') and defined("IMG_ARC_PIE") and function_exists("imagettftext")) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Circle diagram').": ".$pid;
-					else $title = $pid." :".i18n::translate('Circle diagram');
-					$personlinks .= "<a href=\"".encode_url("fanchart.php?rootid={$pid}&PEDIGREE_GENERATIONS={$OLD_PGENS}&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Circle diagram')."</b></a><br />";
+					$personlinks .= "<a href=\"".encode_url("fanchart.php?rootid={$pid}&PEDIGREE_GENERATIONS={$OLD_PGENS}&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Circle diagram')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'hourglass.php')) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Hourglass chart').": ".$pid;
-					else $title = $pid." :".i18n::translate('Hourglass chart');
-					$personlinks .= "<a href=\"".encode_url("hourglass.php?pid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&chart_style={$chart_style}&PEDIGREE_GENERATIONS={$OLD_PGENS}&box_width={$box_width}&ged={$GEDCOM}&show_spouse={$show_spouse}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Hourglass chart')."</b></a><br />";
+					$personlinks .= "<a href=\"".encode_url("hourglass.php?pid={$pid}&show_full={$PEDIGREE_FULL_DETAILS}&chart_style={$chart_style}&PEDIGREE_GENERATIONS={$OLD_PGENS}&box_width={$box_width}&ged={$GEDCOM}&show_spouse={$show_spouse}")."\" ".$mouseAction1."><b>".i18n::translate('Hourglass chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'treenav.php')) {
-					if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Interactive tree').": ".$pid;
-					else $title = $pid." :".i18n::translate('Interactive tree');
-					$personlinks .= "<a href=\"".encode_url("treenav.php?rootid={$pid}&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Interactive tree')."</b></a><br />";
+					$personlinks .= "<a href=\"".encode_url("treenav.php?rootid={$pid}&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Interactive tree')."</b></a><br />";
 				}
 
 				$fams = $person->getSpouseFamilies();
@@ -162,13 +144,9 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 						$children = $family->getChildren();
 						$num = count($children);
 						if ((!empty($spouse))||($num>0)) {
-							if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Family book chart').": ".$famid;
-							else $title = $famid." :".i18n::translate('Family book chart');
-							$personlinks .= "<a href=\"".encode_url("family.php?famid={$famid}&show_full=1&ged={$GEDCOM}")."\" title=\"$title\" ".$mouseAction1."><b>".i18n::translate('Family with spouse')."</b></a><br />";
+							$personlinks .= "<a href=\"".encode_url("family.php?famid={$famid}&show_full=1&ged={$GEDCOM}")."\" ".$mouseAction1."><b>".i18n::translate('Family with spouse')."</b></a><br />";
 							if (!empty($spouse)) {
-								if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Individual information').": ".$spouse->getXref();
-								else $title = $spouse->getXref()." :".i18n::translate('Individual information');
-								$personlinks .= "<a href=\"".encode_url($spouse->getLinkUrl())."\" title=\"$title\" $mouseAction1>";
+								$personlinks .= "<a href=\"".encode_url($spouse->getLinkUrl())."\" $mouseAction1>";
 								if ($spouse->canDisplayName()) $personlinks .= PrintReady($spouse->getFullName());
 								else $personlinks .= i18n::translate('Private');
 								$personlinks .= "</a><br />";
@@ -176,9 +154,7 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 						}
 						/* @var $child Person */
 						foreach($children as $c=>$child) {
-							if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Individual information').": ".$child->getXref();
-							else $title = $child->getXref()." :".i18n::translate('Individual information');
-							$personlinks .= "&nbsp;&nbsp;<a href=\"".encode_url($child->getLinkUrl())."\" title=\"$title\" $mouseAction1>";
+							$personlinks .= "&nbsp;&nbsp;<a href=\"".encode_url($child->getLinkUrl())."\" $mouseAction1>";
 							if ($child->canDisplayName()) $personlinks .= PrintReady($child->getFullName());
 							else $personlinks .= i18n::translate('Private');
 							$personlinks .= "<br /></a>";
@@ -318,8 +294,6 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 	//$name = PrintReady(htmlspecialchars(strip_tags($name), ENT_QUOTES, 'UTF-8'));
 	$name = PrintReady($name);
 
-	if ($TEXT_DIRECTION=="ltr") $title = i18n::translate('Individual information').": ".$pid;
-	else $title = $pid." :".i18n::translate('Individual information');
 	// add optional CSS style for each fact
 	$indirec = $person->getGedcomRecord();
 	$cssfacts = array("BIRT", "CHR", "DEAT", "BURI", "CREM", "ADOP", "BAPM", "BARM", "BASM", "BLES", "CHRA", "CONF", "FCOM", "ORDN", "NATU", "EMIG", "IMMI", "CENS", "PROB", "WILL", "GRAD", "RETI", "CAST", "DSCR", "EDUC", "IDNO",
@@ -402,7 +376,7 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 * @param boolean $use_alternate_styles
 */
 function print_header($title, $head="", $use_alternate_styles=true) {
-	global $bwidth, $HOME_SITE_URL, $HOME_SITE_TEXT, $BROWSERTYPE, $SEARCH_SPIDER, $view, $cart;
+	global $bwidth, $BROWSERTYPE, $SEARCH_SPIDER, $view, $cart;
 	global $GEDCOM, $GEDCOM_TITLE, $QUERY_STRING, $action, $query, $theme_name;
 	global $stylesheet, $print_stylesheet, $rtl_stylesheet, $headerfile, $toplinks, $THEME_DIR, $print_headerfile;
 	global $WT_IMAGES, $TEXT_DIRECTION, $ONLOADFUNCTION, $REQUIRE_AUTHENTICATION;
@@ -438,7 +412,7 @@ function print_header($title, $head="", $use_alternate_styles=true) {
 		/* keep the session id when opening new windows */
 		var sessionid = "'.session_id().'";
 		var sessionname = "'.session_name().'";
-		var accesstime = "'.time().'";
+		var accesstime = '.WT_DB::prepare("SELECT UNIX_TIMESTAMP(NOW())")->fetchOne().';
 		var plusminus = new Array();
 		plusminus[0] = new Image();
 		plusminus[0].src = "'.$WT_IMAGES["plus"].'";
@@ -1126,7 +1100,7 @@ function help_link($help_topic, $module='') {
 
 	if ($_SESSION['show_context_help']) {
 		return
-			'<a class="help" tabindex="0" href="javascript: '.$help_topic.'" onclick="helpPopup(\''.$help_topic.'\',\''.$module.'\'); return false;">&nbsp;'.
+			'<a class="help" tabindex="-1" href="javascript: '.$help_topic.'" onclick="helpPopup(\''.$help_topic.'\',\''.$module.'\'); return false;">&nbsp;'.
 			($WT_USE_HELPIMG ?  '<img src="'.$WT_IMAGES['help'].'" class="icon" width="15" height="15" alt="" />' : i18n::translate('?')).
 			'&nbsp;</a>';
 	} else {
@@ -1407,7 +1381,7 @@ function print_asso_rela_record($pid, $factrec, $linebr=false, $type='INDI') {
 	global $WT_IMAGES;
 
 	// Level 1 ASSO
-	if (preg_match('/^1 ASSO @('.WT_REGEX_XREF.')@(\n[2-9].*)*/', $factrec, $amatch)) {
+	if (preg_match('/^1 ASSO @('.WT_REGEX_XREF.')@((\n[2-9].*)*)/', $factrec, $amatch)) {
 		$person=Person::getInstance($amatch[1]);
 		$sex='';
 		if ($person) {
@@ -2015,7 +1989,7 @@ function print_findindi_link($element_id, $indiname, $asString=false, $multiple=
 	if (empty($ged)) $ged=$GEDCOM;
 	if (isset($WT_IMAGES["button_indi"])) $Link = "<img src=\"".$WT_IMAGES["button_indi"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findIndi(document.getElementById('".$element_id."'), document.getElementById('".$indiname."'), '".$multiple."', '".$ged."', '".$filter."'); findtype='individual'; return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findIndi(document.getElementById('".$element_id."'), document.getElementById('".$indiname."'), '".$multiple."', '".$ged."', '".$filter."'); findtype='individual'; return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2029,7 +2003,7 @@ function print_findplace_link($element_id, $ged='', $asString=false) {
 	$text = i18n::translate('Find Place');
 	if (isset($WT_IMAGES["button_place"])) $Link = "<img src=\"".$WT_IMAGES["button_place"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findPlace(document.getElementById('".$element_id."'), '".$ged."'); return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findPlace(document.getElementById('".$element_id."'), '".$ged."'); return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2056,7 +2030,7 @@ function print_specialchar_link($element_id, $vert, $asString=false) {
 	$text = i18n::translate('Find Special Characters');
 	if (isset($WT_IMAGES["button_keyboard"])) $Link = "<img id=\"".$element_id."_spec\" name=\"".$element_id."_spec\" src=\"".$WT_IMAGES["button_keyboard"]."\"  alt=\"".$text."\"  title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findSpecialChar(document.getElementById('".$element_id."')); updatewholename(); return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findSpecialChar(document.getElementById('".$element_id."')); updatewholename(); return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2071,7 +2045,7 @@ function print_autopaste_link($element_id, $choices, $concat=1, $name=1, $submit
 		echo $choice, "'; ";
 		if ($name) echo " updatewholename();";
 		if ($submit) echo " document.forms[0].submit();";
-		echo " return false;\">", $choice, "</a>";
+		echo " return false;\" tabindex=\"-1\">", $choice, "</a>";
 	}
 	echo "</small>";
 }
@@ -2083,7 +2057,7 @@ function print_findsource_link($element_id, $sourcename="", $asString=false, $ge
 	$text = i18n::translate('Find Source ID');
 	if (isset($WT_IMAGES["button_source"])) $Link = "<img src=\"".$WT_IMAGES["button_source"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findSource(document.getElementById('".$element_id."'), document.getElementById('".$sourcename."'), '".$ged."'); findtype='source'; return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findSource(document.getElementById('".$element_id."'), document.getElementById('".$sourcename."'), '".$ged."'); findtype='source'; return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2097,7 +2071,7 @@ function print_findnote_link($element_id, $notename="", $asString=false, $ged=''
 	$text = i18n::translate('Find Shared Note');
 	if (isset($WT_IMAGES["button_note"])) $Link = "<img src=\"".$WT_IMAGES["button_note"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findnote(document.getElementById('".$element_id."'), document.getElementById('".$notename."'), '".$ged."'); findtype='note'; return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findnote(document.getElementById('".$element_id."'), document.getElementById('".$notename."'), '".$ged."'); findtype='note'; return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2111,7 +2085,7 @@ function print_findrepository_link($element_id, $ged='', $asString=false) {
 	$text = i18n::translate('Find Repository');
 	if (isset($WT_IMAGES["button_repository"])) $Link = "<img src=\"".$WT_IMAGES["button_repository"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findRepository(document.getElementById('".$element_id."'), '".$ged."'); return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findRepository(document.getElementById('".$element_id."'), '".$ged."'); return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2125,7 +2099,7 @@ function print_findmedia_link($element_id, $choose="", $ged='', $asString=false)
 	$text = i18n::translate('Find media');
 	if (isset($WT_IMAGES["button_media"])) $Link = "<img src=\"".$WT_IMAGES["button_media"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"middle\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findMedia(document.getElementById('".$element_id."'), '".$choose."', '".$ged."'); return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findMedia(document.getElementById('".$element_id."'), '".$choose."', '".$ged."'); return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;
@@ -2139,7 +2113,7 @@ function print_findfact_link($element_id, $ged='', $asString=false) {
 	if (empty($ged)) $ged=$GEDCOM;
 	if (isset($WT_IMAGES["button_find_facts"])) $Link = "<img src=\"".$WT_IMAGES["button_find_facts"]."\" alt=\"".$text."\" title=\"".$text."\" border=\"0\" align=\"top\" />";
 	else $Link = $text;
-	$out = " <a href=\"javascript:;\" onclick=\"findFact(document.getElementById('".$element_id."'), '".$ged."'); return false;\">";
+	$out = " <a href=\"javascript:;\" onclick=\"findFact(document.getElementById('".$element_id."'), '".$ged."'); return false;\" tabindex=\"-1\">";
 	$out .= $Link;
 	$out .= "</a>";
 	if ($asString) return $out;

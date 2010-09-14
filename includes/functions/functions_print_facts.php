@@ -53,7 +53,7 @@ function expand_urls($text) {
 	// This matches far too much while a "precise" regex is several pages long.
 	// This is a compromise.
 	$URL_REGEX='((https?|ftp]):)(//([^\s/?#<>]*))?([^\s?#<>]*)(\?([^\s#<>]*))?(#[^\s?#<>]+)?';
-	
+
 	return preg_replace_callback(
 		'/'.addcslashes("(?!>)$URL_REGEX(?!</a>)", '/').'/i',
 		create_function( // Insert soft hyphens into the replaced string
@@ -79,7 +79,7 @@ function print_fact(&$eventObj, $noedit=false) {
 	if (!$eventObj->canShow()) {
 		return false;
 	}
-	
+
 	$fact = $eventObj->getTag();
 	$rawEvent = $eventObj->getDetail();
 	$event = htmlspecialchars($rawEvent, ENT_COMPAT, 'UTF-8');
@@ -168,10 +168,10 @@ function print_fact(&$eventObj, $noedit=false) {
 				echo " <div style=\"width:25px;\">";
 				$menu->printMenu();
 				echo "</div>";
-			} else { 
+			} else {
 				echo " <ul>";
 				$menu->printMenu();
-				echo "</ul>";					
+				echo "</ul>";
 			}
 		}
 		echo "</td>";
@@ -223,7 +223,7 @@ function print_fact(&$eventObj, $noedit=false) {
 	//echo "<td class=\"facts_value facts_value$styleadd\">";
 	if ((canDisplayFact($pid, WT_GED_ID, $factrec))) {
 		if (isset($resn_value)) {
-			echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />'; 
+			echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />';
 			echo help_link('RESN');
 		}
 		// -- first print TYPE for some facts
@@ -342,13 +342,17 @@ function print_fact(&$eventObj, $noedit=false) {
 		if ($ct>0) echo " - ", translate_fact('_WT_USER'), ": ", $match[1];
 		// -- Find RESN tag
 		if (isset($resn_value)) {
-			echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />'; 
+			echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />';
 			echo help_link('RESN');
 		}
 		if (preg_match("/\n2 FAMC @(.+)@/", $factrec, $match)) {
 			echo "<br/><span class=\"label\">", translate_fact('FAMC'), ":</span> ";
 			$family=Family::getInstance($match[1]);
-			echo "<a href=\"", encode_url($family->getLinkUrl()), "\">", $family->getFullName(), "</a>";
+			if ($family) { // May be a pointer to a non-existant record
+				echo '<a href="', $family->getLinkUrl(), '">', $family->getFullName(), '</a>';
+			} else {
+				echo '<span class="error">', $match[1], '</span>';
+			}
 			if (preg_match("/\n3 ADOP (HUSB|WIFE|BOTH)/", utf8_strtoupper($factrec), $match)) {
 				echo '<br/><span class="indent"><span class="label">', translate_fact('ADOP'), ':</span> ';
 				echo '<span class="field">';
@@ -442,24 +446,12 @@ function print_submitter_info($sid) {
  * find and print repository information attached to a source
  * @param string $sid  the Gedcom Xref ID of the repository to print
  */
-function print_repository_record($sid) {
-	global $TEXT_DIRECTION;
-	global $GEDCOM;
-	$ged_id=get_id_from_gedcom($GEDCOM);
-	$source = find_other_record($sid, $ged_id);
-	if (canDisplayRecord($ged_id, $source)) {
-		$ct = preg_match("/1 NAME (.*)/", $source, $match);
-		if ($ct > 0) {
-			$ct2 = preg_match("/0 @(.*)@/", $source, $rmatch);
-			if ($ct2>0) $rid = trim($rmatch[1]);
-			echo "<span class=\"field\"><a href=\"", encode_url("repo.php?rid={$rid}"), "\"><b>", PrintReady($match[1]), "</b>&nbsp;&nbsp;&nbsp;";
-			if ($TEXT_DIRECTION=="rtl") echo getRLM();
-			echo "(", $sid, ")";
-			if ($TEXT_DIRECTION=="rtl") echo getRLM();
-			echo "</a></span><br />";
-		}
-		print_address_structure($source, 1);
-		print_fact_notes($source, 1);
+function print_repository_record($xref) {
+	$repository=Repository::getInstance($xref);
+	if ($repository && $repository->canDisplayDetails()) {
+		echo '<a class="field" href="', $repository->getLinkUrl(), '">', $repository->getFullName(), '</a>';
+		print_address_structure($repository->getGedcomRecord(), 1);
+		print_fact_notes($repository->getGedcomRecord(), 1);
 	}
 }
 
@@ -907,7 +899,7 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 				if ($resn_tag > 0) $resn_value = strtolower(trim($rmatch[1]));
 				// -- Find RESN tag
 				if (isset($resn_value)) {
-					echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />'; 
+					echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />';
 					echo help_link('RESN');
 				}
 				$cs = preg_match("/$nlevel EVEN (.*)/", $srec, $cmatch);
@@ -988,7 +980,7 @@ function printSourceStructure($textSOUR) {
 		}
 		foreach($textSOUR["TEXT"] as $text) {
 			$data.="<br />&nbsp;&nbsp;<span class=\"label\">".translate_fact('TEXT').":&nbsp;</span><span class=\"field\">".PrintReady(expand_urls($text))."</span>";
-			if (!empty($text) && !empty($note_data)) $data.="<br />";	 
+			if (!empty($text) && !empty($note_data)) $data.="<br />";
 			$data.=$note_data;
 		}
 	}
@@ -1178,10 +1170,10 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 			if ( strstr($text, "|") && file_exists(WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php') ) {
 				require WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php';
 			}else{
-				$text = $centitl."".$text; 
+				$text = $centitl."".$text;
 			}
 		}
-		
+
 		$align = "";
 		if (!empty($text)) {
 			if ($TEXT_DIRECTION=="rtl" && !hasRTLText($text) && hasLTRText($text)) $align=" align=\"left\"";
@@ -1196,7 +1188,7 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 			if ($resn_tag > 0) $resn_value = strtolower(trim($rmatch[1]));
 			// -- Find RESN tag
 			if (isset($resn_value)) {
-				echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />'; 
+				echo '<img src="images/RESN_', $resn_value, '.gif" alt="', $RESN_CODES[$resn_value], '" title="', $RESN_CODES[$resn_value], '" />';
 				echo help_link('RESN');
 			}
 			echo "<br />\n";

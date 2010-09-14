@@ -116,9 +116,9 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 				if ($user_id) {
 					$content .= PrintReady(getUserFullName($user_id));
 					if ($TEXT_DIRECTION=="ltr") {
-						$content .= " " . getLRM() . " - ".htmlspecialchars($user_id,ENT_COMPAT,'UTF-8') . getLRM();
+						$content .= " " . getLRM() . " - ".htmlspecialchars(getUserEmail($user_id),ENT_COMPAT,'UTF-8') . getLRM();
 					} else {
-						$content .= " " . getRLM() . " - ".htmlspecialchars($user_id,ENT_COMPAT,'UTF-8') . getRLM();
+						$content .= " " . getRLM() . " - ".htmlspecialchars(getUserEmail($user_id),ENT_COMPAT,'UTF-8') . getRLM();
 					}
 				} else {
 					$content .= "<a href=\"mailto:".$message["from"]."\">".str_replace("@","@<span style=\"font-size:1px;\"> </span>",$message["from"])."</a>";
@@ -201,7 +201,7 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$block=get_block_setting($block_id, 'block', true);
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo i18n::translate('Add a scrollbar when block contents grow');
+		echo /* I18N: label for a yes/no option */ i18n::translate('Add a scrollbar when block contents grow');
 		echo '</td><td class="optionbox">';
 		echo edit_field_yes_no('block', $block);
 		echo '</td></tr>';

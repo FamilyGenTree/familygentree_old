@@ -39,7 +39,7 @@ define('WT_CLASS_REPORTHTML_PHP', '');
 require_once WT_ROOT."includes/classes/class_reportbase.php";
 
 /**
-* Main PGV Report Class for HTML
+* Main WT Report Class for HTML
 *
 * @package webtrees
 * @subpackage Reports
@@ -1318,7 +1318,7 @@ class FootnoteHTML extends Footnote {
 	* @param ReportBaseHTML &$html
 	*/
 	function renderFootnote(&$html) {
-		
+
 		if ($html->getCurrentStyle() != $this->styleName) {
 			$html->setCurrentStyle($this->styleName);
 		}
@@ -1355,7 +1355,7 @@ class FootnoteHTML extends Footnote {
 	/**
 	* Get the width of text
 	* Breaks up a text into lines if needed
-	* 
+	*
 	* @param ReportBaseHTML &$html
 	* @return array
 	*/

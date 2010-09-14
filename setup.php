@@ -181,10 +181,10 @@ if (empty($_POST['maxcpu']) || empty($_POST['maxmem'])) {
 	}
 	// Recommended extensions
 	foreach (array(
-		'calendar'=>i18n::translate('jewish calendar'),
-		'gd'      =>i18n::translate('creating thumbnails of images'),
-		'dom'     =>i18n::translate('exporting data in xml format'),
-		'xml'     =>i18n::translate('reporting'),
+		'calendar'=>/* I18N: a program feature */ i18n::translate('jewish calendar'),
+		'gd'      =>/* I18N: a program feature */ i18n::translate('creating thumbnails of images'),
+		'dom'     =>/* I18N: a program feature */ i18n::translate('exporting data in xml format'),
+		'xml'     =>/* I18N: a program feature */ i18n::translate('reporting'),
 	) as $extension=>$features) {
 		if (!extension_loaded($extension)) {
 			echo '<p class="bad">', i18n::translate('PHP extension "%1$s" is disabled.  Without it, the following features will not work: %2$s.  Please ask your server\'s administrator to enable it.', $extension, $features), '</p>';
@@ -193,8 +193,8 @@ if (empty($_POST['maxcpu']) || empty($_POST['maxmem'])) {
 	}
 	// Settings
 	foreach (array(
-		'file_uploads'=>i18n::translate('upload files'),
-		'date.timezone'=>i18n::translate('correct date and time in logs and messages'),
+		'file_uploads'=>/* I18N: a program feature */ i18n::translate('file upload capability'),
+		'date.timezone'=>/* I18N: a program feature */ i18n::translate('the correct date and time in logs and messages'),
 	) as $setting=>$features) {
 		if (!ini_get($setting)) {
 			echo '<p class="bad">', i18n::translate('PHP setting "%1$s" is disabled. Without it, the following features will not work: %2$s.  Please ask your server\'s administrator to enable it.', $setting, $features), '</p>';
@@ -287,7 +287,11 @@ try {
 		if (version_compare($row->value, WT_REQUIRED_MYSQL_VERSION, '<')) {
 			echo '<p class="bad">', i18n::translate('This database is only running MySQL version %s.  You cannot install webtrees here.', $row->value), '</p>';
 		} else {
-			if (version_compare($row->value, '5.1.31', '>=')) {
+			if (
+				version_compare($row->value, '5.1.31', '>=') ||
+				version_compare($row->value, '5.0.84', '>=') && version_compare($row->value, '5.0', '<')
+			) {
+				// MAX_ALLOWED_PACKET became read-only in MYSQL 5.1.31 and 5.0.84
 				foreach ($dbh->query("SELECT @@max_allowed_packet AS max_allowed_packet") as $row2) {
 					$max_allowed_packet=$row2->max_allowed_packet;
 					echo
@@ -557,11 +561,11 @@ if (empty($_POST['wtname']) || empty($_POST['wtuser']) || strlen($_POST['wtpass'
 		'</select></td><td>',
 		i18n::translate('Most servers do not use secure connections.'),
 		'</td></tr><tr><td>',
-		i18n::translate('From email address'), '</td><td>',
+		/* I18N: the "From:" header in an email */ i18n::translate('From email address'), '</td><td>',
 		'<input type="text" name="smtpfrom" size="40" value="', htmlspecialchars($_POST['smtpfrom']), '"', $_POST['smtpuse']=='exernal' ? '' : 'disabled', ' /></td><td>',
 		i18n::translate('This is used in the "From:" header when sending mails.'),
 		'</td></tr><tr><td>',
-		i18n::translate('Sender email address'), '</td><td>',
+		/* I18N: the "Sender:" header in an email */ i18n::translate('Sender email address'), '</td><td>',
 		'<input type="text" name="smtpsender" size="40" value="', htmlspecialchars($_POST['smtpsender']), '"', $_POST['smtpuse']=='exernal' ? '' : 'disabled', ' /></td><td>',
 		i18n::translate('This is used in the "Sender:" header when sending mails.  It is often the same as the "From:" header.'),
 		'</td></tr><tr><td>',
@@ -1037,7 +1041,7 @@ try {
 	}
 	echo
 		'<input type="hidden" name="action" value="download">',
-		'<input type="submit" value="'. /* I18N: %s is a filename */ i18n::translate('Download %s', WT_CONFIG_FILE).'" onclick="document.contform.contbtn.disabled=false; return true;">',
+		'<input type="submit" value="'. /* I18N: Button label/action: %s is a filename */ i18n::translate('Download %s', WT_CONFIG_FILE).'" onclick="document.contform.contbtn.disabled=false; return true;">',
 		'</form>',
 		'<p>', i18n::translate('After you have copied this file to the webserver and set the access permissions, click here to continue'), '</p>',
 		'<form name="contform" action="', WT_SCRIPT_NAME, '" method="get" onsubmit="alert(\'', i18n::translate('Reminder: you must copy %s to your webserver', WT_CONFIG_FILE), '\');return true;">',
@@ -1064,5 +1068,4 @@ function to_mb($str) {
 	if (substr($str, -1, 1)=='G') {
 		return floor(1024*substr($str, 0, strlen($str)-1));
 	}
-	
 }

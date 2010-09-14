@@ -418,10 +418,11 @@ function addMessage($message) {
 		$subject1 = "[".i18n::translate('webtrees Message').($TEXT_DIRECTION=="ltr"?"] ":" [").$message["subject"];
 		if (!$user_id_from) {
 			$email1 = i18n::translate('The following message has been sent to your webtrees user account from ');
-			if (!empty($message["from_name"]))
+			if (!empty($message["from_name"])) {
 				$email1 .= $message["from_name"]."\r\n\r\n".$message["body"];
-			else
+			} else {
 				$email1 .= $from."\r\n\r\n".$message["body"];
+			}
 		} else {
 			$email1 = i18n::translate('The following message has been sent to your webtrees user account from ');
 			$email1 .= $fromFullName."\r\n\r\n".$message["body"];
@@ -436,8 +437,9 @@ function addMessage($message) {
 			else
 				$to = getUserEmail($user_id_to);
 		}
-		if (getUserEmail($user_id_to))
+		if (getUserEmail($user_id_to)) {
 			webtreesMail($to, $from, $subject1, $email1);
+		}
 	}
 
 	i18n::init(WT_LOCALE); // restore language settings if needed

@@ -341,7 +341,7 @@ function get_indilist_surns($surn, $salpha, $marnm, $fams, $ged_id) {
 		$where[]="n_surn <> ''";
 	}
 
-	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY n_surn";
+	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY n_surn COLLATE '".i18n::$collation."'";
 
 	$list=array();
 	$rows=WT_DB::prepare($sql)->fetchAll();
@@ -380,7 +380,7 @@ function get_famlist_surns($surn, $salpha, $marnm, $ged_id) {
 		$where[]="n_surn <> ''";
 	}
 
-	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY n_surn";
+	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY n_surn COLLATE '".i18n::$collation."'";
 
 	$list=array();
 	$rows=WT_DB::prepare($sql)->fetchAll();
@@ -447,7 +447,7 @@ function get_indilist_indis($surn='', $salpha='', $galpha='', $marnm=false, $fam
 		// Match all individuals
 	}
 
-	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY CASE n_surn WHEN '@N.N.' THEN 1 ELSE 0 END, n_surn, CASE n_givn WHEN '@P.N.' THEN 1 ELSE 0 END, n_givn";
+	$sql.=" WHERE ".implode(' AND ', $where)." ORDER BY CASE n_surn WHEN '@N.N.' THEN 1 ELSE 0 END, n_surn COLLATE '".i18n::$collation."', CASE n_givn WHEN '@P.N.' THEN 1 ELSE 0 END, n_givn COLLATE '".i18n::$collation."'";
 
 	$list=array();
 	$rows=WT_DB::prepare($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -559,7 +559,7 @@ function fetch_linked_indi($xref, $link, $ged_id) {
 		" JOIN `##link` ON (i_file=l_file AND i_id=l_from)".
 		" LEFT JOIN `##name` ON (i_file=n_file AND i_id=n_id AND n_num=0)".
 		" WHERE i_file=? AND l_type=? AND l_to=?".
-		" ORDER BY n_sort"
+		" ORDER BY n_sort COLLATE '".i18n::$collation."'"
 	)->execute(array($ged_id, $link, $xref))->fetchAll(PDO::FETCH_ASSOC);
 
 	$list=array();
@@ -575,7 +575,7 @@ function fetch_linked_fam($xref, $link, $ged_id) {
 		" JOIN `##link` ON (f_file=l_file AND f_id=l_from)".
 		" LEFT JOIN `##name` ON (f_file=n_file AND f_id=n_id AND n_num=0)".
 		" WHERE f_file=? AND l_type=? AND l_to=?".
-		" ORDER BY n_sort"
+		" ORDER BY n_sort" // n_sort is not used for families.  Sorting here has no effect???
 	)->execute(array($ged_id, $link, $xref))->fetchAll(PDO::FETCH_ASSOC);
 
 	$list=array();
@@ -591,7 +591,7 @@ function fetch_linked_note($xref, $link, $ged_id) {
 		" JOIN `##link` ON (o_file=l_file AND o_id=l_from)".
 		" LEFT JOIN `##name` ON (o_file=n_file AND o_id=n_id AND n_num=0)".
 		" WHERE o_file=? AND o_type='NOTE' AND l_type=? AND l_to=?".
-		" ORDER BY n_sort"
+		" ORDER BY n_sort COLLATE '".i18n::$collation."'"
 	)->execute(array($ged_id, $link, $xref))->fetchAll(PDO::FETCH_ASSOC);
 
 	$list=array();
@@ -607,7 +607,7 @@ function fetch_linked_sour($xref, $link, $ged_id) {
 			" JOIN `##link` ON (s_file=l_file AND s_id=l_from)".
 			" LEFT JOIN `##name` ON (s_file=n_file AND s_id=n_id AND n_num=0)".
 			" WHERE s_file=? AND l_type=? AND l_to=?".
-			" ORDER BY n_sort"
+			" ORDER BY n_sort COLLATE '".i18n::$collation."'"
 		)->execute(array($ged_id, $link, $xref))->fetchAll(PDO::FETCH_ASSOC);
 
 	$list=array();
@@ -623,7 +623,7 @@ function fetch_linked_obje($xref, $link, $ged_id) {
 		" JOIN `##link` ON (m_gedfile=l_file AND m_media=l_from)".
 		" LEFT JOIN `##name` ON (m_gedfile=n_file AND m_media=n_id AND n_num=0)".
 		" WHERE m_gedfile=? AND l_type=? AND l_to=?".
-		" ORDER BY n_sort"
+		" ORDER BY n_sort COLLATE '".i18n::$collation."'"
 	)->execute(array($ged_id, $link, $xref))->fetchAll(PDO::FETCH_ASSOC);
 
 	$list=array();
@@ -837,7 +837,7 @@ function find_gedcom_record($xref, $ged_id, $pending=false) {
 	} else {
 		$gedcom=null;
 	}
-	
+
 	if (is_null($gedcom)) {
 		$gedcom=find_person_record($xref, $ged_id);
 	}
@@ -1262,7 +1262,7 @@ function search_indis_dates($day, $month, $year, $facts) {
 function search_indis_daterange($start, $end, $facts) {
 	$sql="SELECT 'INDI' AS type, i_id AS xref, i_file AS ged_id, i_gedcom AS gedrec, i_isdead, i_sex FROM `##individuals` JOIN `##dates` ON i_id=d_gid AND i_file=d_file WHERE i_file=? AND d_julianday1 BETWEEN ? AND ?";
 	$vars=array(WT_GED_ID, $start, $end);
-	
+
 	if ($facts) {
 		$facts=explode(',', $facts);
 		foreach ($facts as $key=>$value) {
@@ -1472,7 +1472,7 @@ function search_notes($query, $geds, $match, $skip) {
 	$querysql=array();
 	// Convert the query into a regular expression
 	$queryregex=array();
-	
+
 	foreach ($query as $q) {
 		$queryregex[]=preg_quote(utf8_strtoupper($q), '/');
 		$querysql[]="o_gedcom LIKE ".WT_DB::quote("%{$q}%")." COLLATE '".i18n::$collation."'";

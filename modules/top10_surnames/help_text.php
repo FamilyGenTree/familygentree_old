@@ -31,16 +31,10 @@ if (!defined('WT_WEBTREES') || !defined('WT_SCRIPT_NAME') || WT_SCRIPT_NAME!='he
 }
 
 switch ($help) {
-case 'recent_changes':
-	$title=i18n::translate('Top 10 Surnames');
-	$text=i18n::translate('This block shows a table of the 10 most frequently occurring surnames in the database.  The actual number of surnames shown in this block is configurable.  You can configure the GEDCOM to remove names from this list.');
-	$text.='<ul><li>';
-
-	// TODO: Other options of this block
-
-	$text.=i18n::translate('Add a scrollbar when block contents grow: ');
-	$text.=i18n::translate('If set to "no" the block will expand vertically to display the full list. If set to "yes" the block will be the height set in your theme\'s style sheet, with scroll bars to view long lists.');
-	$text.='</li></ul>';
+case 'top_surnames':
+	$title=i18n::translate('Top surnames block');
+	$text =i18n::translate('This block displays the most frequently occurring surnames in the database.  The configuration settings for this block allow changes to the number of names displayed, the presentation style, and the use of scroll bars with long lists.  By using the GEDCOM administration function, an administrator can also configure names to remove from this list.');
+	$text.='</p>';
 	break;
 }
 ?>

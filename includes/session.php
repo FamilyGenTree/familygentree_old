@@ -33,7 +33,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.0.1');
+define('WT_VERSION',         '1.0.2');
 define('WT_VERSION_RELEASE', ''); // 'svn', 'beta', 'rc1', '', etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 define('WT_WEBTREES_URL',    'http://webtrees.net');
@@ -121,9 +121,12 @@ require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance();
 
 // Check configuration issues that affect various versions of PHP
-if (version_compare(PHP_VERSION, '5.3', '<')) {
-	// magic quotes were deprecated in PHP5.3 and removed in PHP6.0
-	set_magic_quotes_runtime(0);
+if (version_compare(PHP_VERSION, '6.0', '<')) {
+	if (get_magic_quotes_runtime()) {
+		// Magic quotes were deprecated in PHP5.3 and removed in PHP6.0
+		// Disabling them on PHP5.3 will cause a strict-warning, so ignore errors.
+		@set_magic_quotes_runtime(false);
+	}
 	// magic_quotes_gpc can't be disabled at run-time, so clean them up as necessary.
 	if (get_magic_quotes_gpc() || ini_get('magic_quotes_sybase') && strtolower(ini_get('magic_quotes_sybase'))!='off') {
 		$in = array(&$_GET, &$_POST, &$_REQUEST, &$_COOKIE);
@@ -185,25 +188,28 @@ require WT_ROOT.'includes/classes/class_wt_db.php';
 
 set_error_handler('wt_error_handler');
 
-// Connect to the database
-try {
-	// Load our configuration file, so we can connect to the database
-	if (file_exists(WT_ROOT.'data/config.ini.php')) {
-		$dbconfig=parse_ini_file(WT_ROOT.'data/config.ini.php');
-		// Invalid/unreadable config file?
-		if (!is_array($dbconfig)) {
-			header('Location: site-unavailable.php');
-			exit;
-		}
-	} else {
-		// No config file. Set one up.
-		header('Location: setup.php');
+// Load our configuration file, so we can connect to the database
+if (file_exists(WT_ROOT.'data/config.ini.php')) {
+	$dbconfig=parse_ini_file(WT_ROOT.'data/config.ini.php');
+	// Invalid/unreadable config file?
+	if (!is_array($dbconfig)) {
+		header('Location: site-unavailable.php');
 		exit;
 	}
+} else {
+	// No config file. Set one up.
+	header('Location: setup.php');
+	exit;
+}
+
+// Connect to the database
+
+try {
 	WT_DB::createInstance($dbconfig['dbhost'], $dbconfig['dbport'], $dbconfig['dbname'], $dbconfig['dbuser'], $dbconfig['dbpass']);
 	define('WT_TBLPREFIX', $dbconfig['tblpfx']);
 	unset($dbconfig);
-	WT_DB::exec("SET NAMES 'utf8' COLLATE 'utf8_unicode_ci'");
+	// Some of the FAMILY JOIN HUSBAND JOIN WIFE queries can excede the MAX_JOIN_SIZE setting
+	WT_DB::exec("SET NAMES 'utf8' COLLATE 'utf8_unicode_ci', SQL_BIG_SELECTS=1");
 	try {
 		WT_DB::updateSchema(WT_ROOT.'includes/db_schema/', 'WT_SCHEMA_VERSION', WT_SCHEMA_VERSION);
 	} catch (PDOException $ex) {
@@ -343,7 +349,7 @@ if ($MULTI_MEDIA) {
 require WT_ROOT.'includes/functions/functions_date.php';
 
 // Use the server date to calculate privacy, etc.
-// Use the client date to show ages, etc. 
+// Use the client date to show ages, etc.
 define('WT_SERVER_JD', timestamp_to_jd(time()));
 define('WT_CLIENT_JD', timestamp_to_jd(client_time()));
 

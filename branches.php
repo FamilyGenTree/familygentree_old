@@ -144,11 +144,13 @@ function print_fams($person, $famid=null) {
 	}
 	$current = $person->getSexImage().
 		"<a target=\"_blank\" class=\"{$class}\" title=\"".$person->getXref()."\" href=\"{$person->getLinkUrl()}\">".PrintReady($person_name)."</a> ".
-		$person->getBirthDeathYears()." {$sosa}"; 
+		$person->getBirthDeathYears()." {$sosa}";
 	if ($famid && $person->getChildFamilyPedigree($famid)) {
 		$sex = $person->getSex();
-		if ($sex=="F" && isset($PEDI_CODES[$pedi]))			$label = $PEDI_CODES_F[$pedi];
-		else if ($sex=="M" && isset($PEDI_CODES[$pedi]))	$label = $PEDI_CODES_M[$pedi];
+		$famcrec = get_sub_record(1, "1 FAMC @".$famid."@", $person->getGedcomRecord());
+		$pedi = get_gedcom_value("PEDI", 2, $famcrec, '', false);
+		if ($sex=="F" && isset($PEDI_CODES_F[$pedi]))		$label = $PEDI_CODES_F[$pedi];
+		else if ($sex=="M" && isset($PEDI_CODES_M[$pedi]))	$label = $PEDI_CODES_M[$pedi];
 		else if (isset($PEDI_CODES[$pedi]))					$label = $PEDI_CODES[$pedi];
 		$current = "<span class='red'>".$label."</span> ".$current;
 	}
