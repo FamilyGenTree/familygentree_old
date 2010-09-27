@@ -186,7 +186,8 @@ if ($action=='createuser' || $action=='edituser2') {
 				$message["method"]="messaging2";
 				addMessage($message);
 				// and send a copy to the admin
-/*				$message=array();
+				/*
+				$message=array();
 				$message["to"]=WT_USER_NAME;
 				$headers="From: ".$WEBTREES_EMAIL;
 				$message["from"]=$username; // fake the from address - so the admin can "reply" to it.
@@ -204,7 +205,7 @@ if ($action=='createuser' || $action=='edituser2') {
 } else {
 	print_header(i18n::translate('User administration'));
 
-//	if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm'; Removed becasue it doesn't work here for multiple GEDCOMs. Can be reinstated when fixed (https://bugs.launchpad.net/webtrees/+bug/613235)
+// if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm'; Removed becasue it doesn't work here for multiple GEDCOMs. Can be reinstated when fixed (https://bugs.launchpad.net/webtrees/+bug/613235)
 }
 
 // Print the form to edit a user
@@ -373,9 +374,9 @@ if ($action=="edituser") {
 	<?php
 	if (get_site_setting('ALLOW_USER_THEMES')) {
 		?>
-		<tr><td class="descriptionbox wrap" valign="top" align="left"><?php echo i18n::translate('My Theme'), help_link('useradmin_user_theme'); ?></td><td class="optionbox wrap" valign="top">
+		<tr><td class="descriptionbox wrap" valign="top" align="left"><?php echo i18n::translate('Theme'), help_link('THEME'); ?></td><td class="optionbox wrap" valign="top">
 		<select name="user_theme" dir="ltr">
-		<option value=""><?php echo i18n::translate('Site Default'); ?></option>
+		<option value=""><?php echo i18n::translate('&lt;default theme&gt;'); ?></option>
 		<?php
 		foreach(get_theme_names() as $themename=>$themedir) {
 		echo "<option value=\"", $themedir, "\"";
@@ -487,7 +488,7 @@ jQuery(document).ready(function(){
 	// Then show the users
 
 	echo '<p class="center"><input TYPE="button" VALUE="', i18n::translate('Return to Administration page'), '" onclick="javascript:window.location=\'admin.php\'" /></p>',
-		 '<h2 class="center">', i18n::translate('User List'), '</h2>';
+		'<h2 class="center">', i18n::translate('User List'), '</h2>';
 	?>
 	<table class="center list_table width80 <?php echo $TEXT_DIRECTION; ?>">
 	<tr>
@@ -764,7 +765,7 @@ if ($action == "createform") {
 		echo edit_field_language('user_language', get_user_setting(WT_USER_ID, 'language'));
 		?></td></tr>
 		<?php if (get_site_setting('ALLOW_USER_THEMES')) { ?>
-			<tr><td class="descriptionbox wrap" valign="top" align="left"><?php echo i18n::translate('My Theme'), help_link('useradmin_user_theme'); ?></td><td class="optionbox wrap" valign="top">
+			<tr><td class="descriptionbox wrap" valign="top" align="left"><?php echo i18n::translate('Theme'), help_link('THEME'); ?></td><td class="optionbox wrap" valign="top">
 			<select name="new_user_theme">
 			<option value="" selected="selected"><?php echo i18n::translate('Site Default'); ?></option>
 			<?php
@@ -832,7 +833,7 @@ if ($action == "cleanup") {
 	</tr>
 	<?php
 	// Check for idle users
-//	if (!isset($month)) $month = 1;
+	//if (!isset($month)) $month = 1;
 	$month = safe_GET_integer('month', 1, 12, 6);
 	echo "<tr><td class=\"descriptionbox\">", i18n::translate('Number of months since the last login for a user\'s account to be considered inactive: '), "</td>";
 	echo "<td class=\"optionbox\"><select onchange=\"document.location=options[selectedIndex].value;\">";
@@ -943,7 +944,7 @@ if ($action == "cleanup2") {
 // Print main menu
 // NOTE: WORKING
 echo '<p class="center"><input TYPE="button" VALUE="', i18n::translate('Return to Administration page'), '" onclick="javascript:window.location=\'admin.php\'" /></p>',
-	 '<h2 class="center">', i18n::translate('User administration'), '</h2>';
+	'<h2 class="center">', i18n::translate('User administration'), '</h2>';
 ?>
 <table class="center list_table width40 <?php echo $TEXT_DIRECTION; ?>">
 	<tr>
@@ -968,13 +969,13 @@ echo '<p class="center"><input TYPE="button" VALUE="', i18n::translate('Return t
 	<tr>
 	<td class="optionbox" colspan="3">
 	<?php
-	$totusers = 0;			// Total number of users
-	$warnusers = 0;			// Users with warning
-	$applusers = 0;			// Users who have not verified themselves
-	$nverusers = 0;			// Users not verified by admin but verified themselves
-	$adminusers = 0;		// Administrators
-	$userlang = array();	// Array for user languages
-	$gedadmin = array();	// Array for gedcom admins
+	$totusers = 0;       // Total number of users
+	$warnusers = 0;      // Users with warning
+	$applusers = 0;      // Users who have not verified themselves
+	$nverusers = 0;      // Users not verified by admin but verified themselves
+	$adminusers = 0;     // Administrators
+	$userlang = array(); // Array for user languages
+	$gedadmin = array(); // Array for gedcom admins
 	foreach(get_all_users() as $user_id=>$user_name) {
 		$totusers = $totusers + 1;
 		if (((date("U") - (int)get_user_setting($user_id, 'reg_timestamp')) > 604800) && !get_user_setting($user_id, 'verified')) $warnusers++;
@@ -1056,4 +1057,3 @@ echo '<p class="center"><input TYPE="button" VALUE="', i18n::translate('Return t
 	?>
 <?php
 print_footer();
-?>

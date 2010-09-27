@@ -44,13 +44,20 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 	}
 
 	// Implement class WT_Module_Block
-	public function getBlock($block_id, $template=true) {
+	public function getBlock($block_id, $template=true, $cfg=null) {
 		global $TEXT_DIRECTION, $ctype, $WT_IMAGES, $THEME_DIR;
 
 		$num=get_block_setting($block_id, 'num', 10);
 		$infoStyle=get_block_setting($block_id, 'infoStyle', 'table');
 		$showUnknown=get_block_setting($block_id, 'showUnknown', true);
 		$block=get_block_setting($block_id, 'block', false);
+		if ($cfg) {
+			foreach (array('num', 'infoStyle', 'showUnknown', 'block') as $name) {
+				if (array_key_exists($name, $cfg)) {
+					$$name=$cfg[$name];
+				}
+			}
+		}
 
 		require_once WT_ROOT.'includes/classes/class_stats.php';
 		$stats=new Stats(WT_GEDCOM);
@@ -68,7 +75,7 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 		$content = '<div class="normal_inner_block">';
 		//Select List or Table
 		switch ($infoStyle) {
-		case "list":	// Output style 1:  Simple list style.  Better suited to left side of page.
+		case "list": // Output style 1:  Simple list style.  Better suited to left side of page.
 			if ($TEXT_DIRECTION=='ltr') $padding = 'padding-left: 15px';
 			else $padding = 'padding-right: 15px';
 			$params=array(1,$num,'rcount');
@@ -88,7 +95,7 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 				$content.='<b>'.i18n::translate('Unknown').'</b><div class="wrap" style="'.$padding.'">'.$totals.'</div><br />';
 			}
 			break;
-		case "table":	// Style 2: Tabular format.  Narrow, 2 or 3 column table, good on right side of page
+		case "table": // Style 2: Tabular format.  Narrow, 2 or 3 column table, good on right side of page
 			$params=array(1,$num,'rcount');
 			$content.='<table class="center"><tr valign="top"><td>'.$stats->commonGivenFemaleTable($params).'</td>';
 			$content.='<td>'.$stats->commonGivenMaleTable($params).'</td>';
@@ -101,7 +108,7 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 		$content .=  "</div>";
 
 		if ($template) {
-			if (get_block_setting($block_id, 'block', false)) {
+			if ($block) {
 				require $THEME_DIR.'templates/block_small_temp.php';
 			} else {
 				require $THEME_DIR.'templates/block_main_temp.php';
@@ -168,4 +175,3 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 		echo '</td></tr>';
 	}
 }
-?>

@@ -32,8 +32,8 @@
 define('WT_SCRIPT_NAME', 'reportengine.php');
 require './includes/session.php';
 
-// We have finished writing to $_SESSION, so release the lock
-session_write_close();
+// We have finished writing session data, so release the lock
+Zend_Session::writeClose();
 
 $famid=safe_GET("famid");
 $pid  =safe_GET("pid");
@@ -348,6 +348,11 @@ elseif ($action=="setup") {
 }
 //-- run the report
 elseif ($action=="run") {
+	if (strstr($report, "report_singlepage.xml")!==false){
+		$DEBUG=false;
+		$pedigree=new ReportPedigree();
+		exit;
+	}
 	//-- load the report generator
 	switch ($output) {
 		case "HTML":

@@ -98,16 +98,14 @@ if ($action=='login') {
 			}
 		}
 
-		session_write_close();
-
 		// If we've clicked login from the login page, we don't want to go back there.
 		if (substr($url, 0, 9)=='login.php') {
 			$url='index.php';
 		}
 
 		$url = str_replace("logout=1", "", $url);
-		$url .= "&";	// Simplify the preg_replace following
-		$url = preg_replace('/(&|\?)ged=.*&/', "$1", html_entity_decode(rawurldecode($url),ENT_COMPAT,'UTF-8'));	// Remove any existing &ged= parameter
+		$url .= "&"; // Simplify the preg_replace following
+		$url = preg_replace('/(&|\?)ged=.*&/', "$1", html_entity_decode(rawurldecode($url),ENT_COMPAT,'UTF-8')); // Remove any existing &ged= parameter
 		if (substr($url, -1)=="&") $url = substr($url, 0, -1);
 		$url .= "&ged=".$ged;
 		$url = str_replace(array("&&", ".php&", ".php?&"), array("&", ".php?", ".php?"), $url);
@@ -207,8 +205,7 @@ echo '</td></tr></table><br /><br />';
 </form><br /><br />
 <?php
 
-$sessname = session_name();
-if (!isset($_COOKIE[$sessname])) print "<center><div class=\"error width50\">".i18n::translate('This site uses cookies to keep track of your login status.<br /><br />Cookies do not appear to be enabled in your browser. You must enable cookies for this site before you can login.  You can consult your browser\'s help documentation for information on enabling cookies.')."</div></center><br /><br />";
+if (!isset($_COOKIE[WT_SESSION_NAME])) print "<center><div class=\"error width50\">".i18n::translate('This site uses cookies to keep track of your login status.<br /><br />Cookies do not appear to be enabled in your browser. You must enable cookies for this site before you can login.  You can consult your browser\'s help documentation for information on enabling cookies.')."</div></center><br /><br />";
 
 if (get_site_setting('USE_REGISTRATION_MODULE')) { ?>
 	<table class="center facts_table width50">
@@ -229,4 +226,3 @@ print "</div><br /><br />";
 <?php
 if ($type=="full") print_footer();
 else print_simple_footer();
-?>

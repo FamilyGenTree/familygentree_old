@@ -44,8 +44,8 @@ require_once WT_ROOT.'includes/classes/class_person.php';
  * Turn URLs in text into HTML links.  Insert breaks into long URLs
  * so that the browser can word-wrap.
  *
- * @param string $text	Text that may or may not contain URLs
- * @return string	The text with URLs replaced by HTML links
+ * @param string $text Text that may or may not contain URLs
+ * @return string The text with URLs replaced by HTML links
  */
 function expand_urls($text) {
 	// Some versions of RFC3987 have an appendix B which gives the following regex
@@ -68,11 +68,11 @@ function expand_urls($text) {
  * print a fact record
  *
  * prints a fact record designed for the personal facts and details page
- * @param Event $eventObj	The Event object to print
- * @param boolean $noedit	Hide or show edit links
+ * @param Event $eventObj The Event object to print
+ * @param boolean $noedit Hide or show edit links
  */
 function print_fact(&$eventObj, $noedit=false) {
-	global $nonfacts, $WT_MENUS_AS_LISTS, $GEDCOM, $RESN_CODES, $WORD_WRAPPED_NOTES;
+	global $nonfacts, $GEDCOM, $RESN_CODES, $WORD_WRAPPED_NOTES;
 	global $TEXT_DIRECTION, $HIDE_GEDCOM_ERRORS, $SHOW_FACT_ICONS, $SHOW_MEDIA_FILENAME;
 	global $n_chil, $n_gchi, $n_ggch, $SEARCH_SPIDER;
 
@@ -138,42 +138,20 @@ function print_fact(&$eventObj, $noedit=false) {
 		if ($styleadd=="") $rowID = "row_".floor(microtime()*1000000);
 		else $rowID = "row_".$styleadd;
 		echo "\n\t\t<tr class=\"", $rowID, "\">";
-		echo "\n\t\t\t<td class=\"descriptionbox $styleadd center width20\">";
+		echo "\n\t\t\t<td class=\"descriptionbox $styleadd width20\">";
 		if ($SHOW_FACT_ICONS)
 			echo $eventObj->Icon(), ' ';
-		echo translate_fact($factref, $label_person);
+		if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && $eventObj->canEdit()) {
+			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">". translate_fact($factref, $label_person). "</a>";
+			echo "<div class=\"editfacts\">";
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><div class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></div></a>";
+				echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><div class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></div></a>";
+				echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><div class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></div></a>";
+			echo "</div>";
+		} else {echo translate_fact($factref, $label_person);}
 		if ($fact=="_BIRT_CHIL" and isset($n_chil)) echo "<br />", i18n::translate('#%d', $n_chil++);
 		if ($fact=="_BIRT_GCHI" and isset($n_gchi)) echo "<br />", i18n::translate('#%d', $n_gchi++);
 		if ($fact=="_BIRT_GGCH" and isset($n_ggch)) echo "<br />", i18n::translate('#%d', $n_ggch++);
-		if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && $eventObj->canEdit()) {
-			$menu = new Menu(i18n::translate('Edit'), "#", "right", "down");
-			$menu->addOnclick("return edit_record('$pid', $linenum);");
-			$menu->addClass("", "", "submenu");
-			$submenu = new Menu(i18n::translate('Edit'), "#", "right");
-			$submenu->addOnclick("return edit_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Copy'), "#", "right");
-			$submenu->addOnclick("return copy_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Delete'), "#", "right");
-			$submenu->addOnclick("return delete_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			if (!$WT_MENUS_AS_LISTS) {
-				echo " <div style=\"width:25px;\">";
-				$menu->printMenu();
-				echo "</div>";
-			} else {
-				echo " <ul>";
-				$menu->printMenu();
-				echo "</ul>";
-			}
-		}
 		echo "</td>";
 	} else {
 		if ($fact == "OBJE") return false;
@@ -184,38 +162,28 @@ function print_fact(&$eventObj, $noedit=false) {
 		if ($styleadd=="") $rowID = "row_".floor(microtime()*1000000);
 		else $rowID = "row_".$styleadd;
 		echo "\n\t\t<tr class=\"", $rowID, "\">";
-		echo "<td class=\"descriptionbox $styleadd center width20\">";
+		echo "<td class=\"descriptionbox $styleadd width20\">";
 		if ($SHOW_FACT_ICONS)
 			echo $eventObj->Icon(), ' ';
 		if ($ct>0) {
 			if ($factref=='image_size') echo i18n::translate('Image Dimensions');
 			else if ($factref=='file_size') echo i18n::translate('File Size');
-			else echo $factref;
-		} else echo translate_fact($factref, $label_person);
-		if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && !FactEditRestricted($pid, $factrec)) {
-			$menu = new Menu(i18n::translate('Edit'), "#", "right", "down");
-			$menu->addOnclick("return edit_record('$pid', $linenum);");
-			$menu->addClass("", "", "submenu");
-
-			$submenu = new Menu(i18n::translate('Edit'), "#", "right");
-			$submenu->addOnclick("return edit_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Delete'), "#", "right");
-			$submenu->addOnclick("return delete_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Copy'), "#", "right");
-			$submenu->addOnclick("return copy_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			echo " <div style=\"width:25px;\">";
-			$menu->printMenu();
+			if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && !FactEditRestricted($pid, $factrec)) {
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">". $factref. "</a>";
+				echo "<div class=\"editfacts\">";
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><div class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></div></a>";
+				echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><div class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></div></a>";
+				echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><div class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></div></a>";
+				echo "</div>";
+			} else echo $factref;
+		} else if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && !FactEditRestricted($pid, $factrec)) {
+			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">". translate_fact($factref, $label_person). "</a>";
+			echo "<div class=\"editfacts\">";
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><div class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></div></a>";
+				echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><div class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></div></a>";
+				echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><div class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></div></a>";
 			echo "</div>";
-		}
+		} else {echo translate_fact($factref, $label_person);}
 		echo "</td>";
 	}
 	$align = "";
@@ -232,7 +200,7 @@ function print_fact(&$eventObj, $noedit=false) {
 				if ($fact=="MARR") {
 					echo translate_fact("MARR_".strtoupper($match[1]), $label_person);
 				} else {
-					echo translate_fact(strtoupper($match[1]), $label_person);
+					echo $match[1];
 				}
 				echo "<br />";
 			}
@@ -299,6 +267,8 @@ function print_fact(&$eventObj, $noedit=false) {
 				echo getLRM(), $event, ' ' , getLRM();
 			} elseif (strstr('FILE ', $fact.' ')) {
 				if ($SHOW_MEDIA_FILENAME || WT_USER_GEDCOM_ADMIN) echo getLRM(), $event, ' ' , getLRM();
+			} elseif ($fact=='RESN' && array_key_exists($event, $RESN_CODES)) {
+				echo $RESN_CODES[$event];
 			} elseif ($event!='Y') {
 				if (!strstr('ADDR _CREM ', substr($fact, 0, 5).' ')) {
 					if ($factref=='file_size' || $factref=='image_size') {
@@ -417,6 +387,7 @@ function print_fact(&$eventObj, $noedit=false) {
 		//-- find multimedia objects
 		print_media_links($factrec, 2, $pid);
 	}
+	echo "<br />";
 	echo "</td>";
 	echo "\n\t\t</tr>";
 }
@@ -460,9 +431,9 @@ function print_repository_record($xref) {
  *
  * this function is called by the print_fact function and other functions to
  * print any source information attached to the fact
- * @param string $factrec	The fact record to look for sources in
- * @param int $level		The level to look for sources at
- * @param boolean $return	whether to return the data or print the data
+ * @param string $factrec The fact record to look for sources in
+ * @param int $level The level to look for sources at
+ * @param boolean $return whether to return the data or print the data
  */
 function print_fact_sources($factrec, $level, $return=false) {
 	global $WT_IMAGES, $EXPAND_SOURCES;
@@ -536,6 +507,7 @@ function print_fact_sources($factrec, $level, $return=false) {
 	if ($printDone) $data .= "<br />";
 	if (!$return) echo $data;
 	else return $data;
+	echo "<br />";
 }
 
 //-- Print the links to multi-media objects
@@ -692,8 +664,8 @@ function print_media_links($factrec, $level, $pid='') {
  * print an address structure
  *
  * takes a gedcom ADDR structure and prints out a human readable version of it.
- * @param string $factrec	The ADDR subrecord
- * @param int $level		The gedcom line level of the main ADDR record
+ * @param string $factrec The ADDR subrecord
+ * @param int $level The gedcom line level of the main ADDR record
  */
 function print_address_structure($factrec, $level) {
 	global $POSTAL_CODE;
@@ -805,7 +777,7 @@ function print_address_structure($factrec, $level) {
 	if ($ct>0) {
 		for($i=0; $i<$ct; $i++) {
 			$resultText .= "<tr>";
-			$resultText .= "\n\t\t<td><span class=\"label\"><b>".translate_fact('URL').": </b></span></td><td><span class=\"field\">";
+			$resultText .= "\n\t\t<td><span class=\"label\"><b>".translate_fact($omatch[$i][1]).": </b></span></td><td><span class=\"field\">";
 			$resultText .= "<a href=\"".$omatch[$i][2]."\" target=\"_blank\">".$omatch[$i][2]."</a>\n";
 			$resultText .= "</span></td></tr>\n";
 		}
@@ -839,8 +811,7 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 			else echo "<tr>";
 			echo "<td class=\"descriptionbox";
 			if ($level==2) echo " rela";
-			echo " $styleadd center width20\">";
-			if ($level==1) echo "<img class=\"icon\" src=\"", $WT_IMAGES["source"], "\" alt=\"\" /><br />";
+			echo " $styleadd width20\">";
 			$temp = preg_match("/^\d (\w*)/", $factrec, $factname);
 			$factlines = explode("\n", $factrec); // 1 BIRT Y\n2 SOUR ...
 			$factwords = explode(" ", $factlines[0]); // 1 BIRT Y
@@ -855,33 +826,17 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 				} else {
 					echo translate_fact($factname, $parent);
 				}
-			} else {
-				echo translate_fact($factname, $parent);
-			}
+			} else
 			if (!$noedit && WT_USER_CAN_EDIT && !FactEditRestricted($pid, $factrec) && $styleadd!="red") {
-				$menu = new Menu(i18n::translate('Edit'), "#", "right", "down");
-				$menu->addOnclick("return edit_record('$pid', $linenum);");
-				$menu->addClass("", "", "submenu");
-
-				$submenu = new Menu(i18n::translate('Edit'), "#", "right");
-				$submenu->addOnclick("return edit_record('$pid', $linenum);");
-				$submenu->addClass("submenuitem", "submenuitem_hover");
-				$menu->addSubMenu($submenu);
-
-				$submenu = new Menu(i18n::translate('Delete'), "#", "right");
-				$submenu->addOnclick("return delete_record('$pid', $linenum);");
-				$submenu->addClass("submenuitem", "submenuitem_hover");
-				$menu->addSubMenu($submenu);
-
-				$submenu = new Menu(i18n::translate('Copy'), "#", "right");
-				$submenu->addOnclick("return copy_record('$pid', $linenum);");
-				$submenu->addClass("submenuitem", "submenuitem_hover");
-				$menu->addSubMenu($submenu);
-
-				echo " <div style=\"width:25px;\">";
-				$menu->printMenu();
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">";
+					if ($level==1) echo "<img class=\"icon\" src=\"", $WT_IMAGES["source"], "\" alt=\"\" />";
+					echo translate_fact($factname, $parent). "</a>";
+				echo "<div class=\"editfacts\">";
+					echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><span class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></span></a>";
+					echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><span class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></span></a>";
+					echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><span class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></span></a>";
 				echo "</div>";
-			}
+			} else {echo translate_fact($factname, $parent);}
 			echo "</td>";
 			echo "\n\t\t\t<td class=\"optionbox $styleadd wrap\">";
 			//echo "\n\t\t\t<td class=\"facts_value$styleadd\">";
@@ -928,20 +883,20 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 }
 
 /**
- *	Print SOUR structure
+ * Print SOUR structure
  *
  *  This function prints the input array of SOUR sub-records built by the
  *  getSourceStructure() function.
  *
  *  The input array is defined as follows:
- *	$textSOUR["PAGE"] = +1  Source citation
- *	$textSOUR["EVEN"] = +1  Event type
- *	$textSOUR["ROLE"] = +2  Role in event
- *	$textSOUR["DATA"] = +1  place holder (no text in this sub-record)
- *	$textSOUR["DATE"] = +2  Entry recording date
- *	$textSOUR["TEXT"] = +2  (array) Text from source
- *	$textSOUR["QUAY"] = +1  Certainty assessment
- *	$textSOUR["TEXT2"] = +1 (array) Text from source
+ * $textSOUR["PAGE"] = +1  Source citation
+ * $textSOUR["EVEN"] = +1  Event type
+ * $textSOUR["ROLE"] = +2  Role in event
+ * $textSOUR["DATA"] = +1  place holder (no text in this sub-record)
+ * $textSOUR["DATE"] = +2  Entry recording date
+ * $textSOUR["TEXT"] = +2  (array) Text from source
+ * $textSOUR["QUAY"] = +1  Certainty assessment
+ * $textSOUR["TEXT2"] = +1 (array) Text from source
  */
 function printSourceStructure($textSOUR) {
 	global $GEDCOM;
@@ -998,16 +953,16 @@ function printSourceStructure($textSOUR) {
 /**
  * Extract SOUR structure from the incoming Source sub-record
  *
- *  The output array is defined as follows:
- *	$textSOUR["PAGE"] = +1  Source citation
- *	$textSOUR["EVEN"] = +1  Event type
- *	$textSOUR["ROLE"] = +2  Role in event
- *	$textSOUR["DATA"] = +1  place holder (no text in this sub-record)
- *	$textSOUR["DATE"] = +2  Entry recording date
- *	$textSOUR["TEXT"] = +2  (array) Text from source
-	$textSOUR["NOTE"] = +1  Note
- *	$textSOUR["QUAY"] = +1  Certainty assessment
- *	$textSOUR["TEXT2"] = +1 (array) Text from source
+ * The output array is defined as follows:
+ *  $textSOUR["PAGE"] = +1  Source citation
+ *  $textSOUR["EVEN"] = +1  Event type
+ *  $textSOUR["ROLE"] = +2  Role in event
+ *  $textSOUR["DATA"] = +1  place holder (no text in this sub-record)
+ *  $textSOUR["DATE"] = +2  Entry recording date
+ *  $textSOUR["TEXT"] = +2  (array) Text from source
+ *  $textSOUR["NOTE"] = +1  Note
+ *  $textSOUR["QUAY"] = +1  Certainty assessment
+ *  $textSOUR["TEXT2"] = +1 (array) Text from source
  */
 function getSourceStructure($srec) {
 	global $WORD_WRAPPED_NOTES;
@@ -1060,11 +1015,11 @@ function getSourceStructure($srec) {
  * print main note row
  *
  * this function will print a table row for a fact table for a level 1 note in the main record
- * @param string $factrec	the raw gedcom sub record for this note
- * @param int $level		The start level for this note, usually 1
- * @param string $pid		The gedcom XREF id for the level 0 record that this note is a part of
- * @param int $linenum		The line number in the level 0 record where this record was found.  This is used for online editing.
- * @param boolean $noedit	Whether or not to allow this fact to be edited
+ * @param string $factrec the raw gedcom sub record for this note
+ * @param int $level The start level for this note, usually 1
+ * @param string $pid The gedcom XREF id for the level 0 record that this note is a part of
+ * @param int $linenum The line number in the level 0 record where this record was found.  This is used for online editing.
+ * @param boolean $noedit Whether or not to allow this fact to be edited
  */
 function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 	global $GEDCOM, $RESN_CODES, $WT_IMAGES, $TEXT_DIRECTION;
@@ -1091,95 +1046,90 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 		else echo "<tr>";
 		echo "<td valign=\"top\" class=\"descriptionbox";
 		if ($level>=2) echo " rela";
-		echo " $styleadd center width20\">";
-		if ($level<2) {
-			echo "<img class=\"icon\" src=\"", $WT_IMAGES["notes"], "\" alt=\"\" />";
-			if (strstr($factrec, "1 NOTE @" )) {
-				echo "<br />", translate_fact('SHARED_NOTE');
-			} else {
-				echo "<br />", translate_fact('NOTE');
+		echo " $styleadd width20\">";
+		if (!$noedit && WT_USER_CAN_EDIT && !FactEditRestricted($pid, $factrec) && $styleadd!="change_old") {
+			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">";
+			if ($level<2) {
+				echo "<img class=\"icon\" src=\"", $WT_IMAGES["notes"], "\" alt=\"\" />";
+				if (strstr($factrec, "1 NOTE @" )) {
+					echo translate_fact('SHARED_NOTE');
+				} else {
+					echo translate_fact('NOTE');
+				}
+				echo "</a>";
+			echo "<div class=\"editfacts\">";
+				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><span class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></span></a>";
+				echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><span class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></span></a>";
+				echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><span class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></span></a>";
+			echo "</div>";
 			}
 		} else {
-			$factlines = explode("\n", $factrec); // 1 BIRT Y\n2 NOTE ...
-			$factwords = explode(" ", $factlines[0]); // 1 BIRT Y
-			$factname = $factwords[1]; // BIRT
-			$parent=GedcomRecord::getInstance($pid);
-			if ($factname == "EVEN" || $factname=="FACT") {
-				// Add ' EVEN' to provide sensible output for an event with an empty TYPE record
-				$ct = preg_match("/2 TYPE (.*)/", $factrec, $ematch);
-				if ($ct>0) {
-					$factname = trim($ematch[1]);
-					echo $factname;
+			if ($level<2) {
+				echo "<img class=\"icon\" src=\"", $WT_IMAGES["notes"], "\" alt=\"\" />";
+				if (strstr($factrec, "1 NOTE @" )) {
+					echo translate_fact('SHARED_NOTE');
+				} else {
+					echo translate_fact('NOTE');
+				}
+			}
+				$factlines = explode("\n", $factrec); // 1 BIRT Y\n2 NOTE ...
+				$factwords = explode(" ", $factlines[0]); // 1 BIRT Y
+				$factname = $factwords[1]; // BIRT
+				$parent=GedcomRecord::getInstance($pid);
+				if ($factname == "EVEN" || $factname=="FACT") {
+					// Add ' EVEN' to provide sensible output for an event with an empty TYPE record
+					$ct = preg_match("/2 TYPE (.*)/", $factrec, $ematch);
+					if ($ct>0) {
+						$factname = trim($ematch[1]);
+						echo $factname;
+					} else {
+						echo translate_fact($factname, $parent);
+					}
 				} else {
 					echo translate_fact($factname, $parent);
 				}
-			} else {
-				echo translate_fact($factname, $parent);
 			}
-		}
-		if (!$noedit && WT_USER_CAN_EDIT && !FactEditRestricted($pid, $factrec) && $styleadd!="change_old") {
-			$menu = new Menu(i18n::translate('Edit'), "#", "right", "down");
-			$menu->addOnclick("return edit_record('$pid', $linenum);");
-			$menu->addClass("", "", "submenu");
-
-			$submenu = new Menu(i18n::translate('Edit'), "#", "right");
-			$submenu->addOnclick("return edit_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Delete'), "#", "right");
-			$submenu->addOnclick("return delete_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			$submenu = new Menu(i18n::translate('Copy'), "#", "right");
-			$submenu->addOnclick("return copy_record('$pid', $linenum);");
-			$submenu->addClass("submenuitem", "submenuitem_hover");
-			$menu->addSubMenu($submenu);
-
-			echo " <div style=\"width:25px;\">";
-			$menu->printMenu();
-			echo "</div>";
-		}
-		if ($nt==0) {
-			//-- print embedded note records
-			$text = preg_replace("/~~/", "<br />", trim($match[$j][1]));
-			$text .= get_cont($nlevel, $nrec);
-			$text = expand_urls($text);
-			$text = PrintReady($text);
-		}
-		else {
-			//-- print linked note records
-			$noterec = find_gedcom_record($nid, $ged_id, true);
-			$nt = preg_match("/0 @$nid@ NOTE (.*)/", $noterec, $n1match);
-			$text ="";
-			if ($nt>0) {
-				// If Census assistant installed, enable hotspot link on shared note title ---------------------
-				if (file_exists(WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php')) {
-					$centitl  = str_replace("~~", "", trim($n1match[1]));
-					$centitl  = str_replace("<br />", "", $centitl);
-					$centitl  = "<a href=\"note.php?nid=$nid\">".$centitl."</a>";
+		echo "</td>";
+			if ($nt==0) {
+				//-- print embedded note records
+				$text = preg_replace("/~~/", "<br />", trim($match[$j][1]));
+				$text .= get_cont($nlevel, $nrec);
+				$text = expand_urls($text);
+				$text = PrintReady($text);
+			}
+			else {
+				//-- print linked note records
+				$noterec = find_gedcom_record($nid, $ged_id, true);
+				$nt = preg_match("/0 @$nid@ NOTE (.*)/", $noterec, $n1match);
+				$text = "";
+				$centitl = "";
+				if ($nt>0) {
+					// If Census assistant installed, enable hotspot link on shared note title ---------------------
+					if (file_exists(WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php')) {
+						$centitl  = str_replace("~~", "", trim($n1match[1]));
+						$centitl  = str_replace("<br />", "", $centitl);
+						$centitl  = "<a href=\"note.php?nid=$nid\">".$centitl."</a>";
+					}else{
+						$text = preg_replace("/~~/", "<br />", trim($n1match[1]));
+					}
+				}
+				$text .= get_cont(1, $noterec);
+				$text = expand_urls($text);
+				$text = PrintReady($text)." <br />\n";
+				// If Census assistant installed, and if Formatted Shared Note (using pipe "|" as delimiter) -------
+				if ( strstr($text, "|") && file_exists(WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php') ) {
+					require WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php';
 				}else{
-					$text = preg_replace("/~~/", "<br />", trim($n1match[1]));
+					$text = $centitl."".$text;
 				}
 			}
-			$text .= get_cont(1, $noterec);
-			$text = expand_urls($text);
-			$text = PrintReady($text)." <br />\n";
-			// If Census assistant installed, and if Formatted Shared Note (using pipe "|" as delimiter) -------
-			if ( strstr($text, "|") && file_exists(WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php') ) {
-				require WT_ROOT.'modules/GEDFact_assistant/_CENS/census_note_decode.php';
-			}else{
-				$text = $centitl."".$text;
-			}
-		}
 
-		$align = "";
-		if (!empty($text)) {
-			if ($TEXT_DIRECTION=="rtl" && !hasRTLText($text) && hasLTRText($text)) $align=" align=\"left\"";
-			if ($TEXT_DIRECTION=="ltr" && !hasLTRText($text) && hasRTLText($text)) $align=" align=\"right\"";
-		}
-		echo " </td>\n<td class=\"optionbox $styleadd wrap\" $align>";
+			$align = "";
+			if (!empty($text)) {
+				if ($TEXT_DIRECTION=="rtl" && !hasRTLText($text) && hasLTRText($text)) $align=" align=\"left\"";
+				if ($TEXT_DIRECTION=="ltr" && !hasLTRText($text) && hasRTLText($text)) $align=" align=\"right\"";
+			}
+		echo "<td class=\"optionbox $styleadd wrap\" $align>";
 		if (!empty($text)) {
 			echo $text;
 			if (!empty($noterec)) print_fact_sources($noterec, 1);
@@ -1200,9 +1150,9 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 
 /**
  * Print the links to multi-media objects
- * @param string $pid	The the xref id of the object to find media records related to
- * @param int $level	The level of media object to find
- * @param boolean $related	Whether or not to grab media from related records
+ * @param string $pid The the xref id of the object to find media records related to
+ * @param int $level The level of media object to find
+ * @param boolean $related Whether or not to grab media from related records
  */
 function print_main_media($pid, $level=1, $related=false, $noedit=false) {
 	global $GEDCOM, $MEDIATYPE;
@@ -1401,13 +1351,13 @@ function print_main_media($pid, $level=1, $related=false, $noedit=false) {
 /**
  * print a media row in a table
  * @param string $rtype whether this is a 'new', 'old', or 'normal' media row... this is used to determine if the rows should be printed with an outline color
- * @param array $rowm	An array with the details about this media item
- * @param string $pid	The record id this media item was attached to
+ * @param array $rowm An array with the details about this media item
+ * @param string $pid The record id this media item was attached to
  */
 function print_main_media_row($rtype, $rowm, $pid) {
 	global $WT_IMAGES, $TEXT_DIRECTION, $GEDCOM, $THUMBNAIL_WIDTH, $USE_MEDIA_VIEWER, $SEARCH_SPIDER, $MEDIA_TYPES;
 
-	if (!canDisplayRecord($rowm['m_gedfile'], $rowm['m_gedrec']) || !canDisplayFact($rowm['m_media'], $rowm['m_gedfile'], $rowm['mm_gedrec'])) {
+	if (!canDisplayRecord($rowm['m_gedfile'], $rowm['m_gedrec'])) {
 		return false;
 	}
 
@@ -1419,37 +1369,21 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	$isExternal = isFileExternal($thumbnail);
 
 	$linenum = 0;
-	echo "\n\t\t<tr><td class=\"descriptionbox $styleadd center width20\"><img class=\"icon\" src=\"", $WT_IMAGES["media"], "\" alt=\"\" /><br />", translate_fact('OBJE');
+	echo "\n\t\t<tr><td class=\"descriptionbox $styleadd width20\">";
 	if ($rowm['mm_gid']==$pid && WT_USER_CAN_EDIT && (!FactEditRestricted($rowm['m_media'], $rowm['m_gedrec'])) && ($styleadd!="change_old")) {
-		$menu = new Menu(i18n::translate('Edit'), "#", "right", "down");
-		$menu->addOnclick("return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');");
-		$menu->addClass("", "", "submenu");
-
-		$submenu = new Menu(i18n::translate('Edit'), "#", "right");
-		$submenu->addOnclick("return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');");
-		$submenu->addClass("submenuitem", "submenuitem_hover");
-		$menu->addSubMenu($submenu);
-
-		$submenu = new Menu(i18n::translate('Delete'), "#", "right");
-		$submenu->addOnclick("return delete_record('$pid', 'OBJE', '".$rowm['m_media']."');");
-		$submenu->addClass("submenuitem", "submenuitem_hover");
-		$menu->addSubMenu($submenu);
-
-		$submenu = new Menu(i18n::translate('Copy'), "#", "right");
-		$submenu->addOnclick("return copy_record('".$rowm['m_media']."', 'media');");
-		$submenu->addClass("submenuitem", "submenuitem_hover");
-		$menu->addSubMenu($submenu);
-
-		echo " <div style=\"width:25px;\">";
-		$menu->printMenu();
-		echo "</div>";
+		echo "<a onclick=\"return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\">";
+			echo "<img class=\"icon\" src=\"", $WT_IMAGES["media"], "\" alt=\"\" />". translate_fact('OBJE'). "</a>";
+			echo "<div class=\"editfacts\">";
+				echo "<a onclick=\"return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');\" href=\"javascript:;\" title=\"".i18n::translate('Edit')."\"><span class=\"editlink\"><span class=\"link_text\">".i18n::translate('Edit')."</span></span></a>";
+				echo "<a onclick=\"return copy_record('".$rowm['m_media']."', 'media');\" href=\"javascript:;\" title=\"".i18n::translate('Copy')."\"><span class=\"copylink\"><span class=\"link_text\">".i18n::translate('Copy')."</span></span></a>";
+				echo "<a onclick=\"return delete_record('$pid', 'OBJE', '".$rowm['m_media']."');\" href=\"javascript:;\" title=\"".i18n::translate('Delete')."\"><span class=\"deletelink\"><span class=\"link_text\">".i18n::translate('Delete')."</span></span></a>";
+			echo "</div>";
+		echo "</td>";
 	}
 
 	// NOTE Print the title of the media
-	echo "</td><td class=\"optionbox wrap $styleadd\"><span class=\"field\">";
+	echo "<td class=\"optionbox wrap $styleadd\"><span class=\"field\">";
 	$mediaTitle = $rowm["m_titl"];
-	$subtitle = get_gedcom_value("TITL", 2, $rowm["mm_gedrec"]);
-	if (!empty($subtitle)) $mediaTitle = $subtitle;
 	$mainMedia = check_media_depth($rowm["m_file"], "NOTRUNC");
 	if ($mediaTitle=="") $mediaTitle = basename($rowm["m_file"]);
 
@@ -1502,16 +1436,14 @@ function print_main_media_row($rtype, $rowm, $pid) {
 		echo "<a href=\"", encode_url("mediaviewer.php?mid={$rowm['m_media']}"), "\">";
 	}
 	if ($TEXT_DIRECTION=="rtl" && !hasRTLText($mediaTitle)) {
-		echo "<i>", getLRM(), PrintReady(htmlspecialchars($mediaTitle, ENT_COMPAT, 'UTF-8')."&nbsp;&nbsp;({$rowm['m_media']})");
+		echo "<i>", getLRM(), PrintReady(htmlspecialchars($mediaTitle, ENT_COMPAT, 'UTF-8'));
 	} else {
-		echo "<i>", PrintReady(htmlspecialchars($mediaTitle, ENT_COMPAT, 'UTF-8')."&nbsp;&nbsp;({$rowm['m_media']})");
+		echo "<i>", PrintReady(htmlspecialchars($mediaTitle, ENT_COMPAT, 'UTF-8'));
 	}
-	$addtitle = get_gedcom_value("TITL:_HEB", 2, $rowm["mm_gedrec"]);
-	if (empty($addtitle)) $addtitle = get_gedcom_value("TITL:_HEB", 2, $rowm["m_gedrec"]);
+	$addtitle = get_gedcom_value("TITL:_HEB", 2, $rowm["m_gedrec"]);
 	if (empty($addtitle)) $addtitle = get_gedcom_value("TITL:_HEB", 1, $rowm["m_gedrec"]);
 	if (!empty($addtitle)) echo "<br />\n", PrintReady(htmlspecialchars($addtitle, ENT_COMPAT, 'UTF-8'));
-	$addtitle = get_gedcom_value("TITL:ROMN", 2, $rowm["mm_gedrec"]);
-	if (empty($addtitle)) $addtitle = get_gedcom_value("TITL:ROMN", 2, $rowm["m_gedrec"]);
+	$addtitle = get_gedcom_value("TITL:ROMN", 2, $rowm["m_gedrec"]);
 	if (empty($addtitle)) $addtitle = get_gedcom_value("TITL:ROMN", 1, $rowm["m_gedrec"]);
 	if (!empty($addtitle)) echo "<br />\n", PrintReady(htmlspecialchars($addtitle, ENT_COMPAT, 'UTF-8'));
 	echo "</i>";
@@ -1575,8 +1507,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	}
 	//-- don't show _PRIM option to regular users
 	if (WT_USER_GEDCOM_ADMIN) {
-		$prim = get_gedcom_value("_PRIM", 2, $rowm["mm_gedrec"]);
-		if (empty($prim)) $prim = get_gedcom_value("_PRIM", 1, $rowm["m_gedrec"]);
+		$prim = get_gedcom_value("_PRIM", 1, $rowm["m_gedrec"]);
 		if (!empty($prim)) {
 			echo "<span class=\"label\">", translate_fact('_PRIM'), ":</span> ";
 			if ($prim=="Y") echo i18n::translate('Yes'); else echo i18n::translate('No');
@@ -1585,8 +1516,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	}
 	//-- don't show _THUM option to regular users
 	if (WT_USER_GEDCOM_ADMIN) {
-		$thum = get_gedcom_value("_THUM", 2, $rowm["mm_gedrec"]);
-		if (empty($thum)) $thum = get_gedcom_value("_THUM", 1, $rowm["m_gedrec"]);
+		$thum = get_gedcom_value("_THUM", 1, $rowm["m_gedrec"]);
 		if (!empty($thum)) {
 			echo "<span class=\"label\">", translate_fact('_THUM'), ":</span> ";
 			if ($thum=="Y") echo i18n::translate('Yes'); else echo i18n::translate('No');
@@ -1594,9 +1524,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 		}
 	}
 	print_fact_notes($rowm["m_gedrec"], 1);
-	print_fact_notes($rowm["mm_gedrec"], 2);
 	print_fact_sources($rowm["m_gedrec"], 1);
-	print_fact_sources($rowm["mm_gedrec"], 2);
 	echo "</td></tr>";
 	return true;
 }
@@ -1615,5 +1543,3 @@ require_once WT_ROOT.'includes/functions/functions_media_reorder.php';
 // -----------------------------------------------------------------------------
 //  End extra print_facts_functions for lightbox and reorder media
 // -----------------------------------------------------------------------------
-
-?>

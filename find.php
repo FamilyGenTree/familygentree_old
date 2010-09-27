@@ -42,12 +42,12 @@ $directory      =safe_GET('directory', WT_REGEX_NOSCRIPT, $MEDIA_DIRECTORY);
 $multiple       =safe_GET_bool('multiple');
 $showthumb      =safe_GET_bool('showthumb');
 $all            =safe_GET_bool('all');
-$subclick		=safe_GET('subclick');
+$subclick       =safe_GET('subclick');
 $choose         =safe_GET('choose', WT_REGEX_NOSCRIPT, '0all');
 $level          =safe_GET('level', WT_REGEX_INTEGER, 0);
 $language_filter=safe_GET('language_filter');
 $magnify        =safe_GET_bool('magnify');
-$qs				=safe_GET('tags');
+$qs             =safe_GET('tags');
 
 
 
@@ -463,7 +463,7 @@ if ($type == "facts") {
 			row.appendChild(cell=document.createElement("td"));
 			o=null;
 			if(document.all) {
-				 //Old IEs handle the creation of a checkbox already checked, as far as I know, only in this way
+				//Old IEs handle the creation of a checkbox already checked, as far as I know, only in this way
 				try {
 					o=document.createElement("<input type='checkbox' id='tag"+this._counter+"' "+(this.selected?"checked='checked'":"")+" />");
 				} catch(e) {
@@ -990,5 +990,3 @@ echo "</div>"; // Close div that centers table
 if ($type!='facts') echo WT_JS_START, 'document.filter', $type, '.filter.focus();', WT_JS_END;
 
 print_simple_footer();
-
-?>

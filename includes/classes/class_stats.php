@@ -128,7 +128,7 @@ class stats {
 						$out .= "<td class=\"list_value_wrap\" align=\"{$alignRes}\" valign=\"top\">{$v}</td>";
 						$out .= "</tr>\n";
 					}
-		$out .=	'</table>';
+		$out .= '</table>';
 		return $out;
 	}
 
@@ -3713,7 +3713,7 @@ class stats {
 class stats_ui extends stats
 {
 ///////////////////////////////////////////////////////////////////////////////
-// Favorites												    //
+// Favorites                                                                 //
 ///////////////////////////////////////////////////////////////////////////////
 
 	static function _getFavorites($isged=true) {
@@ -3740,30 +3740,35 @@ class stats_ui extends stats
 	static function totalUserFavorites(){return count(user_favorites_WT_Module::getUserFavorites(WT_USER_NAME));}
 
 ///////////////////////////////////////////////////////////////////////////////
-// Other blocks												    //
-// example of use: #callBlock:block_name#							    //
+// Other blocks                                                              //
+// example of use: #callBlock:block_name#                                    //
 ///////////////////////////////////////////////////////////////////////////////
 
 	static function callBlock($params=null) {
+		global $ctype;
 		if ($params === null){return '';}
 		if (isset($params[0]) && $params[0] != ''){$block = $params[0];}else{return '';}
-		$class_name = $block.'_WT_Module';
-		if (class_exists($class_name) && $block!='html') {
-			// Build the config array
-			//array_shift($params);
-			//$cfg = array();
-			//foreach($params as $config) {
-			//	$bits = explode('=', $config);
-			//	if(count($bits) < 2){continue;}
-			//	$v = array_shift($bits);
-			//	$cfg[$v] = join('=', $bits);
-			//}
-			$block = new $class_name;
-			$block_id=safe_GET('block_id');
-			$content = $block->getBlock($block_id, false);
-			return $content;
+		$all_blocks=array();
+		foreach (WT_Module::getActiveBlocks() as $name=>$active_block) {
+			if ($ctype=='user' && $active_block->isUserBlock() || $ctype=='gedcom' && $active_block->isGedcomBlock()) {
+				$all_blocks[$name]=$active_block;
+			}
 		}
-		return $block;
+		if (!array_key_exists($block, $all_blocks) || $block=='html') return '';
+		$class_name = $block.'_WT_Module';
+		// Build the config array
+		array_shift($params);
+		$cfg = array();
+		foreach($params as $config) {
+			$bits = explode('=', $config);
+			if(count($bits) < 2){continue;}
+			$v = array_shift($bits);
+			$cfg[$v] = join('=', $bits);
+		}
+		$block = new $class_name;
+		$block_id=safe_GET('block_id');
+		$content = $block->getBlock($block_id, false, $cfg);
+		return $content;
 	}
 
 	function totalUserMessages(){return count(getUserMessages(WT_USER_NAME));}
@@ -3771,8 +3776,8 @@ class stats_ui extends stats
 	function totalGedcomNews(){  return count(getUserNews(WT_GEDCOM));}
 
 ///////////////////////////////////////////////////////////////////////////////
-// System													    //
-// Only allowed in GEDCOM Home Page, not user portals for security.			    //
+// System                                                                    //
+// Only allowed in GEDCOM Home Page, not user portals for security.          //
 ///////////////////////////////////////////////////////////////////////////////
 
 	static function includeFile($params=null) {
@@ -3786,4 +3791,3 @@ class stats_ui extends stats
 		return trim(ob_get_clean());
 	}
 }
-?>

@@ -1,7 +1,7 @@
 L10NVERSION=$(shell date +%Y-%m-%d -r $(LANGUAGE_ARCHIVE))
 LABEL=$(PACKAGE)-$(SVNVERSION)
 LANGUAGE_ARCHIVE=launchpad-export.tar.gz
-LANGUAGES=en_US $(shell tar tf $(LANGUAGE_ARCHIVE) | grep /LC_MESSAGES/webtrees.mo | cut -d / -f 1)
+LANGUAGES=en_US $(shell tar tf $(LANGUAGE_ARCHIVE) | grep /LC_MESSAGES/webtrees.mo | grep -v ^en/ | cut -d / -f 1)
 LANGUAGES_RELEASE=en_US en_GB pl it es fi fr de da pt he et ca tr nl sk nn sl hu sv ru
 MO=$(patsubst %,$(LABEL)/language/%.mo,$(LANGUAGES))
 PACKAGE=webtrees
@@ -41,7 +41,7 @@ $(LABEL).zip: $(LABEL) $(MO)
 ################################################################################
 $(LABEL): $(PHP)
 	svn export .. $(LABEL)
-	rm -R $(LABEL)/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Controller,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Filter,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Session,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
+	rm -R $(LABEL)/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Controller,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Filter,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
 	rm -R $(LABEL)/build
 	rm -Rf $(LABEL)/language/*
 	for file in `find . -path ./library -prune -o -name '*.php' -print`; do php -l $$file; done

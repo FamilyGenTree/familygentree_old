@@ -33,7 +33,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.0.2');
+define('WT_VERSION',         '1.0.3');
 define('WT_VERSION_RELEASE', ''); // 'svn', 'beta', 'rc1', '', etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 define('WT_WEBTREES_URL',    'http://webtrees.net');
@@ -96,6 +96,9 @@ define('WT_JS_END',   "\n//]]>\n</script>\n");
 
 // Used in Google charts
 define ('WT_GOOGLE_CHART_ENCODING', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.');
+
+// Maximum number of results in auto-complete fields
+define('WT_AUTOCOMPLETE_LIMIT', 500);
 
 // Privacy constants
 define('WT_PRIV_PUBLIC',  2); // Allows non-authenticated public visitors to view the marked information
@@ -270,30 +273,25 @@ if ($SEARCH_SPIDER && !array_key_exists(WT_SCRIPT_NAME , array(
 	exit;
 }
 
-// Start the php session
-$session_time=get_site_setting('SESSION_TIME');
-$session_save_path=get_site_setting('SESSION_SAVE_PATH');
+// Use the Zend_Session object to start the session.
+// This allows all the other Zend Framework components to integrate with the session
+define('WT_SESSION_NAME', 'WT_SESSION');
+Zend_Session::start(array(
+	'name'            => WT_SESSION_NAME,
+	'save_path'       => get_site_setting('SESSION_SAVE_PATH'),
+	'cookie_lifetime' => get_site_setting('SESSION_TIME'),
+	'cookie_path'     => WT_SCRIPT_PATH,
+));
 
-session_name('WTSESSION');
-session_set_cookie_params(date('D M j H:i:s T Y', time()+$session_time), WT_SCRIPT_PATH);
+// Register a session "namespace" to store session data.  This is better than
+// using $_SESSION, as we can avoid clashes with other modules/applications,
+// and problems with servers that have enabled "register_globals".
+$WT_SESSION=new Zend_Session_Namespace('WEBTREES');
 
-if ($session_time>0) {
-	session_cache_expire($session_time/60);
-}
-if ($session_save_path) {
-	session_save_path($session_save_path);
-}
-if (isset($MANUAL_SESSION_START) && !empty($SID)) {
-	session_id($SID);
-}
-
-session_start();
-unset($session_time, $session_save_path, $MANUAL_SESSION_START, $SID);
-
-if (!$SEARCH_SPIDER && !isset($_SESSION['initiated'])) {
+if (!$SEARCH_SPIDER && !$WT_SESSION->initiated) {
 	// A new session, so prevent session fixation attacks by choosing a new PHPSESSID.
-	session_regenerate_id(true);
-	$_SESSION['initiated']=true;
+	Zend_Session::regenerateId();
+	$WT_SESSION->initiated=true;
 } else {
 	// An existing session
 }
@@ -430,35 +428,45 @@ if (WT_SCRIPT_NAME!='help_text.php') {
 	}
 }
 
-//-- load the user specific theme
 if (WT_USER_ID) {
 	//-- update the login time every 5 minutes
 	if (!isset($_SESSION['activity_time']) || (time()-$_SESSION['activity_time'])>300) {
 		userUpdateLogin(WT_USER_ID);
 		$_SESSION['activity_time'] = time();
 	}
-
-	$usertheme = get_user_setting(WT_USER_ID, 'theme');
-	if ((!empty($_POST['user_theme']))&&(!empty($_POST['oldusername']))&&($_POST['oldusername']==WT_USER_ID)) $usertheme = $_POST['user_theme'];
-	if ((!empty($usertheme)) && (file_exists($usertheme.'theme.php')))  {
-		$THEME_DIR = $usertheme;
-		} else { $THEME_DIR = "themes/webtrees/"; }
 }
 
-if (isset($_SESSION['theme_dir'])) {
-	$THEME_DIR = $_SESSION['theme_dir'];
-	if (WT_USER_ID) {
-		if (get_user_setting(WT_USER_ID, 'editaccount')) unset($_SESSION['theme_dir']);
+// Set the theme
+if (get_site_setting('ALLOW_USER_THEMES')) {
+	// Requested change of theme?
+	$THEME_DIR=safe_GET('theme', get_theme_names());
+	unset($_GET['theme']);
+	// Last theme used?
+	if (!$THEME_DIR && isset($_SESSION['theme_dir']) && in_array($_SESSION['theme_dir'], get_theme_names())) {
+		$THEME_DIR=$_SESSION['theme_dir'];
 	}
 }
-
-if (isset($usertheme) && file_exists("{$usertheme}theme.php")) {
-	$THEME_DIR = $usertheme;
-} else if (empty($THEME_DIR) || !file_exists("{$THEME_DIR}theme.php")) {
-	$THEME_DIR = 'themes/webtrees/';
+if (!$THEME_DIR) {
+	// User cannot choose (or has not chosen) a theme.
+	// 1) gedcom setting
+	// 2) site setting
+	// 3) webtrees
+	// 4) first one found
+	$THEME_DIR=get_gedcom_setting(WT_GED_ID, 'THEME_DIR');
+	if (!in_array($THEME_DIR, get_theme_names())) {
+		$THEME_DIR=get_site_setting('THEME_DIR', 'themes/webtrees/');
+	}
+	if (!in_array($THEME_DIR, get_theme_names())) {
+		$THEME_DIR='themes/webtrees/';
+	}
+	if (!in_array($THEME_DIR, get_theme_names())) {
+		list($THEME_DIR)=get_theme_names();
+	}
 }
-
 define('WT_THEME_DIR', $THEME_DIR);
+
+// Remember this setting
+$_SESSION['theme_dir']=WT_THEME_DIR;
 
 require WT_ROOT.WT_THEME_DIR.'theme.php';
 

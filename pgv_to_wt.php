@@ -45,13 +45,14 @@ echo
 	'<style type="text/css">
 		#container {width: 70%; margin:15px auto; border: 1px solid gray; padding: 10px;}
 		#container dl {margin:0 0 40px 25px;}
-		#container dt {display:inline; width: 320px; font-weight:normal;}
+		#container dt {display:inline; width: 320px; font-weight:normal; margin: 0 0 15px 0;}
 		#container dd {color: #81A9CB; margin-bottom:20px;font-weight:bold;}
 		#container p {color: #81A9CB; font-size: 14px; font-style: italic; font-weight:bold; padding: 0 5px 5px; align: top;}
 		h2 {color: #81A9CB;}
 		.good {color: green;}
 		.bad {color: red !important;}
 		.indifferent {color: blue;}
+		#container p.pgv  {color: black; font-size: 12px; font-style: normal; font-weight:normal; padding:0; margin:10px 0 0 320px}
 	</style>';
 
 $error='';
@@ -117,17 +118,35 @@ if ($error || empty($PGV_PATH)) {
 	if ($error) {
 		echo '<p class="bad">', $error, '</p>';
 	}
+
+	// Look for PGV in some nearby directories
+	$pgv_dirs=array();
+	$dir=opendir(realpath('..'));
+	while (($subdir=readdir($dir))!==false) {
+		if (is_dir('../'.$subdir) && preg_match('/pgv|gedview/i', $subdir) && file_exists('../'.$subdir.'/config.php')) {
+			$pgv_dirs[]='../'.$subdir;
+		}
+	}
+	closedir($dir);
+
 	echo
 		'<form action="', WT_SCRIPT_NAME, '" method="post">',
 		'<p>', i18n::translate('Where is your PhpGedView installation?'), '</p>',
 		'<dl>',
 		'<dt>',i18n::translate('Installation directory'), '</dt>',
-		'<dd><input type="text" name="PGV_PATH" size="40" value="'.htmlspecialchars($PGV_PATH).'"><dd>',
-		'</dl>';
-	// Finish
-	echo '<div class="center"><input type="submit" value="'.i18n::translate('next').'"></div>';
-	echo '</form>';
-	echo '</div>';
+		'<dd><input type="text" name="PGV_PATH" size="40" value="'.htmlspecialchars($PGV_PATH).'">',
+		'</dd>';
+	echo '<dt>', /* find better english before translating */ 'PhpGedView might be found in these locations', '</dt>';
+	echo '<dd>';
+	foreach ($pgv_dirs as $pgvpath) {
+		echo '<p class="pgv">', $pgvpath, '</p>';
+	}
+	echo
+		'</dd>',
+		'</dl>',
+		'<div class="center"><input type="submit" value="'.i18n::translate('next').'"></div>',
+		'</form>',
+		'</div>';
 	exit;
 }
 
@@ -165,7 +184,7 @@ echo '<p>config.php => wt_site_setting ...</p>'; ob_flush(); flush(); usleep(500
 // $MAX_VIEWS and $MAX_VIEW_TIME are no longer used
 // Don't copy $MEMORY_LIMIT - use the value from setup.php
 // Don't copy $COMMIT_COMMAND - it will not be applicable!
-@set_site_setting('SMTP_ACTIVE',                     $PGV_SMTP_ACTIVE);
+@set_site_setting('SMTP_ACTIVE',                     $PGV_SMTP_ACTIVE ? 'external' : 'internal');
 @set_site_setting('SMTP_HOST',                       $PGV_SMTP_HOST);
 @set_site_setting('SMTP_HELO',                       $PGV_SMTP_HELO);
 @set_site_setting('SMTP_PORT',                       $PGV_SMTP_PORT);
@@ -360,22 +379,22 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 	try {
 		WT_DB::prepare(
 			"INSERT INTO `##user_setting` (user_id, setting_name, setting_value)".
-			"	SELECT user_id, 'canadmin', ".
+			" SELECT user_id, 'canadmin', ".
 			" CASE WHEN u_canadmin IN ('Y', 'yes') THEN 1 WHEN u_canadmin IN ('N', 'no') THEN 0 ELSE u_canadmin END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'verified', ".
+			" SELECT user_id, 'verified', ".
 			" CASE WHEN u_verified IN ('Y', 'yes') THEN 1 WHEN u_verified IN ('N', 'no') THEN 0 ELSE u_verified END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'verified_by_admin', ".
+			" SELECT user_id, 'verified_by_admin', ".
 			" CASE WHEN u_verified_by_admin IN ('Y', 'yes') THEN 1 WHEN u_verified_by_admin IN ('N', 'no') THEN 0 ELSE u_verified_by_admin END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'language', ".
+			" SELECT user_id, 'language', ".
 			" CASE u_language".
 			"  WHEN 'catalan'    THEN 'ca'".
 			"  WHEN 'english'    THEN 'en_US'".
@@ -401,22 +420,22 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			"  ELSE 'en_US'". // PGV supports other languages that webtrees does not (yet)
 			" END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'pwrequested', ".
+			" SELECT user_id, 'pwrequested', ".
 			" CASE WHEN u_pwrequested IN ('Y', 'yes') THEN 1 WHEN u_pwrequested IN ('N', 'no') THEN 0 ELSE u_pwrequested END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'reg_timestamp', u_reg_timestamp".
+			" SELECT user_id, 'reg_timestamp', u_reg_timestamp".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'reg_hashcode', u_reg_hashcode".
+			" SELECT user_id, 'reg_hashcode', u_reg_hashcode".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'theme', ".
+			" SELECT user_id, 'theme', ".
 			" CASE u_theme".
 			"  WHEN ''                    THEN ''".
 			"  WHEN 'themes/cloudy/'      THEN 'themes/clouds/'".
@@ -428,56 +447,56 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			"  ELSE 'themes/webtrees/'". // ocean, simplyred/blue/green, standard, wood
 			" END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'loggedin', 0".
+			" SELECT user_id, 'loggedin', 0".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'sessiontime', u_sessiontime".
+			" SELECT user_id, 'sessiontime', u_sessiontime".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'contactmethod', u_contactmethod".
+			" SELECT user_id, 'contactmethod', u_contactmethod".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'visibleonline', ".
+			" SELECT user_id, 'visibleonline', ".
 			" CASE WHEN u_visibleonline IN ('Y', 'yes') THEN 1 WHEN u_visibleonline IN ('N', 'no') THEN 0 ELSE u_visibleonline END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'editaccount', ".
+			" SELECT user_id, 'editaccount', ".
 			" CASE WHEN u_editaccount IN ('Y', 'yes') THEN 1 WHEN u_editaccount IN ('N', 'no') THEN 0 ELSE u_editaccount END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'defaulttab', ".
+			" SELECT user_id, 'defaulttab', ".
 			" CASE WHEN u_defaulttab IN ('Y', 'yes') THEN 1 WHEN u_defaulttab IN ('N', 'no') THEN 0 ELSE u_defaulttab END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'comment', u_comment".
+			" SELECT user_id, 'comment', u_comment".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'comment_exp', u_comment_exp".
+			" SELECT user_id, 'comment_exp', u_comment_exp".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'relationship_privacy', ".
+			" SELECT user_id, 'relationship_privacy', ".
 			" CASE WHEN u_relationship_privacy IN ('Y', 'yes') THEN 1 WHEN u_relationship_privacy IN ('N', 'no') THEN 0 ELSE u_relationship_privacy END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'max_relation_path', u_max_relation_path".
+			" SELECT user_id, 'max_relation_path', u_max_relation_path".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)".
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)".
 			" UNION ALL".
-			"	SELECT user_id, 'auto_accept', ".
+			" SELECT user_id, 'auto_accept', ".
 			" CASE WHEN u_auto_accept IN ('Y', 'yes') THEN 1 WHEN u_auto_accept IN ('N', 'no') THEN 0 ELSE u_auto_accept END".
 			" FROM {$DBNAME}.{$TBLPREFIX}users".
-			" JOIN ##user ON (user_name=u_username)"
+			" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)"
 		)->execute();
 	} catch (PDOException $ex) {
 		// This could only fail if;
@@ -490,7 +509,7 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 			WT_DB::prepare(
 				"SELECT user_id, u_gedcomid, u_rootid, u_canedit".
 				" FROM {$DBNAME}.{$TBLPREFIX}users".
-				" JOIN ##user ON (user_name=u_username)"
+				" JOIN ##user ON (user_name=u_username COLLATE utf8_unicode_ci)"
 			)->fetchAll();
 		foreach ($user_gedcom_settings as $setting) {
 			@$array=unserialize($setting->u_gedcomid);
@@ -509,7 +528,7 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 					$id=get_id_from_gedcom($gedcom);
 					if ($id) {
 						// Allow for old/invalid gedcom values in array
-					 	set_user_gedcom_setting($setting->user_id, $id, 'rootid', $value);
+						set_user_gedcom_setting($setting->user_id, $id, 'rootid', $value);
 					}
 				}
 			}
@@ -519,7 +538,7 @@ echo '<p>pgv_gedcom => wt_gedcom ...</p>'; ob_flush(); flush(); usleep(50000);
 					$id=get_id_from_gedcom($gedcom);
 					if ($id) {
 						// Allow for old/invalid gedcom values in array
-					 	set_user_gedcom_setting($setting->user_id, $id, 'canedit', $value);
+						set_user_gedcom_setting($setting->user_id, $id, 'canedit', $value);
 					}
 				}
 			}
@@ -693,13 +712,13 @@ foreach (get_all_gedcoms() as $ged_id=>$gedcom) {
 	@set_gedcom_setting($ged_id, 'SURNAME_LIST_STYLE',           $SURNAME_LIST_STYLE);
 	@set_gedcom_setting($ged_id, 'SURNAME_TRADITION',            $SURNAME_TRADITION);
 	switch ($THEME_DIR) {
-	case '':	                 @set_gedcom_setting($ged_id, 'THEME_DIR', '');
+	case '':                   @set_gedcom_setting($ged_id, 'THEME_DIR', '');
 	case 'themes/cloudy/':     @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/clouds/');
-	case 'themes/minimal/':	   @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/minimal/');
+	case 'themes/minimal/':    @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/minimal/');
 	case 'themes/simplyblue/':
 	case 'themes/simplygreen/':
 	case 'themes/simplyred/':  @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/colors/');
-	case 'themes/xenea/':	     @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/xenea/');
+	case 'themes/xenea/':      @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/xenea/');
 	default:                   @set_gedcom_setting($ged_id, 'THEME_DIR', 'themes/webtrees/');
 	}
 	@set_gedcom_setting($ged_id, 'THUMBNAIL_WIDTH',              $THUMBNAIL_WIDTH);
@@ -1003,7 +1022,7 @@ WT_DB::prepare(
 	"REPLACE INTO `##message` (message_id, sender, ip_address, user_id, subject, body, created)".
 	" SELECT m_id, m_from, '127.0.0.1', user_id, m_subject, m_body, str_to_date(m_created,'%a, %d %M %Y %H:%i:%s')".
 	" FROM {$DBNAME}.{$TBLPREFIX}messages".
-	" JOIN `##user` ON (m_to=user_name)"
+	" JOIN `##user` ON (m_to COLLATE utf8_unicode_ci=user_name)"
 )->execute();
 
 ////////////////////////////////////////////////////////////////////////////////

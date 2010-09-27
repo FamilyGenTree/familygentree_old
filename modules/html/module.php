@@ -22,7 +22,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * @version $Id: class_media.php 5451 2009-05-05 22:15:34Z fisharebest $
+ * @version $Id$
  */
 
 if (!defined('WT_WEBTREES')) {
@@ -45,7 +45,7 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 	}
 
 	// Implement class WT_Module_Block
-	public function getBlock($block_id, $template=true) {
+	public function getBlock($block_id, $template=true, $cfg=null) {
 		global $ctype, $GEDCOM, $WT_IMAGES, $TEXT_DIRECTION, $MULTI_MEDIA, $THEME_DIR;
 
 		// Only show this block for certain languages
@@ -55,8 +55,8 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 
 		/*
-	 	* Select GEDCOM
-	 	*/
+		* Select GEDCOM
+		*/
 		$gedcom=get_block_setting($block_id, 'gedcom');
 		switch($gedcom) {
 		case '__current__':
@@ -80,8 +80,8 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 
 		/*
-	 	* Initiate the stats object.
-	 	*/
+		* Initiate the stats object.
+		*/
 		if(get_block_setting($block_id, 'ui')) {
 			$stats = new stats_ui($GEDCOM);
 		} else {
@@ -89,17 +89,17 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 
 		/*
-	 	* First Pass.
-	 	* Handle embedded language, fact, global, etc. references
-	 	*   This needs to be done first because the language variables could themselves
-	 	*   contain embedded keywords.
-	 	*/
+		* First Pass.
+		* Handle embedded language, fact, global, etc. references
+		*   This needs to be done first because the language variables could themselves
+		*   contain embedded keywords.
+		*/
 		// Title
 		$title_tmp=embed_globals(get_block_setting($block_id, 'title'));
 		$html =embed_globals(get_block_setting($block_id, 'html'));
 		/*
-	 	* Second Pass.
-	 	*/
+		* Second Pass.
+		*/
 		list($new_tags, $new_values) = $stats->getTags("{$title_tmp} {$html}");
 		// Title
 		if (strstr($title_tmp, '#')){$title_tmp = str_replace($new_tags, $new_values, $title_tmp);}
@@ -107,12 +107,12 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 		$html = str_replace($new_tags, $new_values, $html);
 
 		/*
-	 	* Restore Current GEDCOM
-	 	*/
+		* Restore Current GEDCOM
+		*/
 		$GEDCOM = WT_GEDCOM;
 
 		/*
-	 	* Start Of Output
+		* Start Of Output
 		*/
 		$id=$this->getName().$block_id;
 		$title='';
@@ -179,7 +179,7 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 
 		require_once WT_ROOT.'includes/functions/functions_edit.php';
-		
+
 		$templates=array(
 			i18n::translate('Keyword examples')=>
 			'#getAllTagsTable#',

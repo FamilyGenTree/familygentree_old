@@ -40,9 +40,9 @@ $INDEX_DIRECTORY=get_site_setting('INDEX_DIRECTORY');
 
 /**
  * find the name of the first GEDCOM file in a zipfile
- * @param string $zipfile	the path and filename
+ * @param string $zipfile the path and filename
  * @param boolean $extract  true = extract and return filename, false = return filename
- * @return string		the path and filename of the gedcom file
+ * @return string the path and filename of the gedcom file
  */
 function GetGEDFromZIP($zipfile, $extract=true) {
 	GLOBAL $INDEX_DIRECTORY;
@@ -663,7 +663,7 @@ print_header(i18n::translate('GEDCOM configuration'));
 						<td class="optionbox">
 							<?php
 							echo
-							 	/* I18N: Extend privacy to dead people [who were] ... */
+								/* I18N: Extend privacy to dead people [who were] ... */
 								i18n::translate(
 									'born in the last %1$s years or died in the last %2$s years',
 									'<input type="text" name="KEEP_ALIVE_YEARS_BIRTH" value="'.get_gedcom_setting(WT_GED_ID, 'KEEP_ALIVE_YEARS_BIRTH').'" size="5" />',
@@ -981,7 +981,7 @@ print_header(i18n::translate('GEDCOM configuration'));
 			</div>
 			<!-- ACCESS -->
 			<div id="access-options">
-			  <table class="facts_table">
+				<table class="facts_table">
 					<tr>
 						<td class="subbar" colspan="2">
 							<?php print i18n::translate('Visitor options'); ?>
@@ -1071,16 +1071,20 @@ print_header(i18n::translate('GEDCOM configuration'));
 						<td class="optionbox width60">
 							<select name="NEW_THEME_DIR">
 								<?php
+									echo '<option value="">', i18n::translate('&lt;default theme&gt;'), '</option>';
+									$current_themedir=get_gedcom_setting(WT_GED_ID, 'THEME_DIR');
 									foreach (get_theme_names() as $themename=>$themedir) {
-										print "<option value=\"".$themedir."\"";
-										if ($themedir == $THEME_DIR) print " selected=\"selected\"";
-										print ">".$themename."</option>\n";
+										echo '<option value="', $themedir, '"';
+										if ($themedir==$current_themedir) {
+											echo ' selected="selected"';
+										}
+										echo '>', $themename, '</option>';
 									}
 								?>
 							</select>
 						</td>
 					</tr>
-			  </table>
+				</table>
 			</div>
 			<!-- LAYOUT -->
 			<div id="layout-options">
@@ -1500,7 +1504,7 @@ print_header(i18n::translate('GEDCOM configuration'));
 			</div>
 			<!-- EDIT -->
 			<div id="edit-options">
-			  <table class="facts_table">
+				<table class="facts_table">
 				<tr>
 					<td class="descriptionbox nowrap">
 						<?php echo i18n::translate('Online editing'), help_link('ALLOW_EDIT_GEDCOM'); ?>
@@ -1722,7 +1726,7 @@ print_header(i18n::translate('GEDCOM configuration'));
 						<?php echo edit_field_yes_no('NEW_NO_UPDATE_CHAN', get_gedcom_setting(WT_GED_ID, 'NO_UPDATE_CHAN')); ?>
 					</td>
 				</tr>
-			  </table>
+				</table>
 			</div>
 		</td>
 	</tr>

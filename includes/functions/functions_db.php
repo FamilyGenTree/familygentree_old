@@ -858,8 +858,8 @@ function find_gedcom_record($xref, $ged_id, $pending=false) {
 
 /**
  * find and return an updated gedcom record
- * @param string $gid	the id of the record to find
- * @param string $gedfile	the gedcom file to get the record from.. defaults to currently active gedcom
+ * @param string $gid the id of the record to find
+ * @param string $gedfile the gedcom file to get the record from.. defaults to currently active gedcom
  */
 function find_updated_record($xref, $ged_id) {
 	static $statement=null;
@@ -1660,8 +1660,8 @@ function delete_gedcom($ged_id) {
 
 /**
 * get the top surnames
-* @param int $ged_id	fetch surnames from this gedcom
-* @param int $min	only fetch surnames occuring this many times
+* @param int $ged_id fetch surnames from this gedcom
+* @param int $min only fetch surnames occuring this many times
 * @param int $max only fetch this number of surnames (0=all)
 * @return array
 */
@@ -2181,8 +2181,8 @@ function create_user($username, $realname, $email, $password) {
 		->execute(array($username))->fetchOne();
 }
 
-function rename_user($old_username, $new_username) {
-	WT_DB::prepare("UPDATE `##user`      SET user_name=?   WHERE user_name  =?")->execute(array($new_username, $old_username));
+function rename_user($user_id, $new_username) {
+	WT_DB::prepare("UPDATE `##user`      SET user_name=?   WHERE user_id  =?")->execute(array($new_username, $user_id));
 }
 
 function delete_user($user_id) {
@@ -2371,14 +2371,17 @@ function get_user_from_gedcom_xref($ged_id, $xref) {
 // Functions to access the WT_BLOCK table
 ////////////////////////////////////////////////////////////////////////////////
 
-function get_user_blocks($user_id) {
+function get_user_blocks($user_id, $gedcom_id=WT_GED_ID) {
 	$blocks=array('main'=>array(), 'side'=>array());
 	$rows=WT_DB::prepare(
 		"SELECT location, block_id, module_name".
-		" FROM `##block`".
-		" WHERE user_id=?".
+		" FROM  `##block`".
+		" JOIN  `##module` USING (module_name)".
+		" JOIN  `##module_privacy` USING (module_name)".
+		" WHERE user_id=? AND `##module_privacy`.gedcom_id=?".
+		" AND   status='enabled' AND access_level>=?".
 		" ORDER BY location, block_order"
-	)->execute(array($user_id))->fetchAll();
+	)->execute(array($user_id, $gedcom_id, WT_USER_ACCESS_LEVEL))->fetchAll();
 	foreach ($rows as $row) {
 		$blocks[$row->location][$row->block_id]=$row->module_name;
 	}
@@ -2410,10 +2413,13 @@ function get_gedcom_blocks($gedcom_id) {
 	$blocks=array('main'=>array(), 'side'=>array());
 	$rows=WT_DB::prepare(
 		"SELECT location, block_id, module_name".
-		" FROM `##block`".
+		" FROM  `##block`".
+		" JOIN  `##module` USING (module_name)".
+		" JOIN  `##module_privacy` USING (module_name, gedcom_id)".
 		" WHERE gedcom_id=?".
+		" AND   status='enabled' AND access_level>=?".
 		" ORDER BY location, block_order"
-	)->execute(array($gedcom_id))->fetchAll();
+	)->execute(array($gedcom_id, WT_USER_ACCESS_LEVEL))->fetchAll();
 	foreach ($rows as $row) {
 		$blocks[$row->location][$row->block_id]=$row->module_name;
 	}
@@ -2491,4 +2497,3 @@ function update_favorites($xref_from, $xref_to, $ged_id=WT_GED_ID) {
 		->execute(array($xref_to, $xref_from, $ged_name))
 		->rowCount();
 }
-

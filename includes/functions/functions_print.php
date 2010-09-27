@@ -250,7 +250,7 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 	if ($MULTI_MEDIA && $SHOW_HIGHLIGHT_IMAGES) {
 		$object = $person->findHighlightedMedia();
 		if (!empty($object)) {
-			$whichFile = thumb_or_main($object);	// Do we send the main image or a thumbnail?
+			$whichFile = thumb_or_main($object); // Do we send the main image or a thumbnail?
 			$size = findImageSize($whichFile);
 			$class = "pedigree_image_portrait";
 			if ($size[0]>$size[1]) $class = "pedigree_image_landscape";
@@ -372,16 +372,14 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 * Popup pages, because of their different format, should invoke function print_simple_header() instead.
 *
 * @param string $title the title to put in the <TITLE></TITLE> header tags
-* @param string $head
-* @param boolean $use_alternate_styles
 */
-function print_header($title, $head="", $use_alternate_styles=true) {
+function print_header($title) {
 	global $bwidth, $BROWSERTYPE, $SEARCH_SPIDER, $view, $cart;
 	global $GEDCOM, $GEDCOM_TITLE, $QUERY_STRING, $action, $query, $theme_name;
 	global $stylesheet, $print_stylesheet, $rtl_stylesheet, $headerfile, $toplinks, $THEME_DIR, $print_headerfile;
 	global $WT_IMAGES, $TEXT_DIRECTION, $ONLOADFUNCTION, $REQUIRE_AUTHENTICATION;
 
-	header("Content-Type: text/html; charset=UTF-8");
+	header('Content-Type: text/html; charset=UTF-8');
 
 	$META_DESCRIPTION=get_gedcom_setting(WT_GED_ID, 'META_DESCRIPTION');
 	$META_ROBOTS=get_gedcom_setting(WT_GED_ID, 'META_ROBOTS');
@@ -394,24 +392,18 @@ function print_header($title, $head="", $use_alternate_styles=true) {
 	if ($META_TITLE) {
 		$title.=' - '.$META_TITLE;
 	}
-	if ($view=='simple') {
-		// The simple view needs to work without a database - for use during installation
-		$GEDCOM_TITLE=WT_WEBTREES;
-	} else {
-		$GEDCOM_TITLE = get_gedcom_setting(WT_GED_ID, 'title');
-	}
-	$javascript = '';
+	$GEDCOM_TITLE = get_gedcom_setting(WT_GED_ID, 'title');
 	$query_string = $QUERY_STRING;
-	$javascript.=WT_JS_START.'
+	$javascript=WT_JS_START.'
 		/* setup some javascript variables */
 		var query = "'.$query_string.'";
 		var textDirection = "'.$TEXT_DIRECTION.'";
 		var browserType = "'.$BROWSERTYPE.'";
-		var themeName = "'.strtolower($theme_name).'";
+		var themeName = "'.$theme_name.'";
 		var SCRIPT_NAME = "'.WT_SCRIPT_NAME.'";
 		/* keep the session id when opening new windows */
-		var sessionid = "'.session_id().'";
-		var sessionname = "'.session_name().'";
+		var sessionid = "'.Zend_Session::getId().'";
+		var sessionname = "'.WT_SESSION_NAME.'";
 		var accesstime = '.WT_DB::prepare("SELECT UNIX_TIMESTAMP(NOW())")->fetchOne().';
 		var plusminus = new Array();
 		plusminus[0] = new Image();
@@ -476,6 +468,9 @@ function print_header($title, $head="", $use_alternate_styles=true) {
 	}
 	$bodyOnLoad .= "\"";
 	require WT_ROOT.$headerfile;
+
+	// Allow the browser to format the header/menus while we generate the page
+	flush();
 }
 
 /**
@@ -486,8 +481,7 @@ function print_header($title, $head="", $use_alternate_styles=true) {
 * This function should be called by every page before anything is output on popup pages.
 *
 * @param string $title the title to put in the <TITLE></TITLE> header tags
-* @param string $head
-* @param boolean $use_alternate_styles
+
 */
 function print_simple_header($title) {
 	global $view;
@@ -832,7 +826,7 @@ function print_favorite_selector($option=0) {
 				}
 			}
 		}
-		$menu->printMenu();
+		echo $menu->getMenu();
 		break;
 	default:
 		echo '<form class="favorites_form" name="favoriteform" action="', WT_SCRIPT_NAME, '"';
@@ -1010,7 +1004,6 @@ function print_fact_notes($factrec, $level, $textOnly=false, $return=false) {
 	$ged_id=get_id_from_gedcom($GEDCOM);
 
 	$data = "";
-	$printDone = false;
 	$nlevel = $level+1;
 	$ct = preg_match_all("/$level NOTE(.*)/", $factrec, $match, PREG_SET_ORDER);
 	for($j=0; $j<$ct; $j++) {
@@ -1024,18 +1017,18 @@ function print_fact_notes($factrec, $level, $textOnly=false, $return=false) {
 		if ($nt==0) {
 			//-- print embedded note records
 			$closeSpan = print_note_record($match[$j][1], $nlevel, $nrec, $textOnly, true);
-			$data .= $closeSpan;
+			$data .= $closeSpan."<br />";
 		} else {
 			$noterec = find_gedcom_record($nmatch[1], $ged_id);
 			if (canDisplayRecord($ged_id, $noterec)) {
 				//-- print linked note records
 				$nt = preg_match("/0 @$nmatch[1]@ NOTE (.*)/", $noterec, $n1match);
 				$closeSpan = print_note_record(($nt>0)?$n1match[1]:"", 1, $noterec, $textOnly, true);
-				$data .= $closeSpan;
+				$data .= $closeSpan."<br />";
 				if (!$textOnly) {
 					if (strpos($noterec, "1 SOUR")!==false) {
-						$data .= "<br />";
 						$data .= print_fact_sources($noterec, 1, true);
+						$data .= "<br />";
 					}
 				}
 			}
@@ -1049,16 +1042,14 @@ function print_fact_notes($factrec, $level, $textOnly=false, $return=false) {
 		}
 		/*
 		if($closeSpan){
-		    if ($j==$ct-1 || $textOnly==false) {
+			if ($j==$ct-1 || $textOnly==false) {
 				$data .= "</span>";
 			} else {
 				$data .= "</span><br /><br />";
 			}
 		}
 		*/
-		$printDone = true;
 	}
-	if ($printDone) $data .= "<br />";
 	if (!$return) echo $data;
 	else return $data;
 }
@@ -1686,7 +1677,7 @@ function format_fact_date(&$eventObj, $anchor=false, $time=false) {
 * @param boolean $lds option to print LDS TEMPle and STATus
 */
 function format_fact_place(&$eventObj, $anchor=false, $sub=false, $lds=false) {
-	global $SHOW_PEDIGREE_PLACES, $TEMPLE_CODES, $SEARCH_SPIDER;
+	global $SHOW_PEDIGREE_PLACES, $TEMPLE_CODES, $SEARCH_SPIDER, $STATUS_CODES;
 	if ($eventObj==null) return '';
 	if (!is_object($eventObj)) {
 		trigger_error("Object was not sent in, please use Event object", E_USER_WARNING);
@@ -1783,7 +1774,7 @@ function format_fact_place(&$eventObj, $anchor=false, $sub=false, $lds=false) {
 			}
 		}
 		if (preg_match('/2 STAT (.*)/', $factrec, $match)) {
-			$html.='<br />'.i18n::translate('Status').': '.trim($match[1]);
+			$html.='<br />'.i18n::translate('Status').': '.(array_key_exists($match[1], $STATUS_CODES) ? $STATUS_CODES[$match[1]] : $match[1]);
 			if (preg_match('/3 DATE (.*)/', $factrec, $match)) {
 				$date=new GedcomDate($match[1]);
 				$html.=', '.translate_fact('STAT:DATE').': '.$date->Display(false);
@@ -1924,15 +1915,15 @@ function print_add_new_fact($id, $usedfacts, $type) {
 	uasort($translated_addfacts, "factsort");
 	echo "<tr><td class=\"descriptionbox ", $TEXT_DIRECTION, "\">";
 	echo i18n::translate('Add new fact');
-	echo help_link('add_facts'), "</td>\n";
+	echo help_link('add_facts'), "</td>";
 	echo "<td class=\"optionbox wrap ", $TEXT_DIRECTION, "\">";
 	echo "<form method=\"get\" name=\"newfactform\" action=\"\" onsubmit=\"return false;\">";
-	echo "<select id=\"newfact\" name=\"newfact\">\n";
+	echo "<select id=\"newfact\" name=\"newfact\">";
 	foreach($translated_addfacts as $fact=>$fact_name) {
 		echo '<option value="', $fact, '">', i18n::translate('%1$s [%2$s]', $fact_name, $fact), '</option>';
 	}
 	if (($type == "INDI") || ($type == "FAM")) echo "<option value=\"EVEN\">", i18n::translate('Custom Event'), " [EVEN]</option>";
-	echo "\n</select>\n";
+	echo "</select>";
 	echo "&nbsp;&nbsp;<input type=\"button\" value=\"", i18n::translate('Add'), "\" onclick=\"add_record('$id', 'newfact');\" /> ";
 	foreach($quickfacts as $fact) echo "&nbsp;<small><a href='javascript://$fact' onclick=\"add_new_record('$id', '$fact');return false;\">", translate_fact($fact), "</a></small>&nbsp;";
 	echo "</form>";
@@ -2263,10 +2254,10 @@ function DumpString($input) {
 					break;
 				}
 			}
-//			$thisLine .= WT_UTF8_LRM;
+			//$thisLine .= WT_UTF8_LRM;
 			$thisLine .= $thisChar;
 		}
-//		echo '&nbsp;&nbsp;UTF8&nbsp;', $thisLine, '<br />';
+		//echo '&nbsp;&nbsp;UTF8&nbsp;', $thisLine, '<br />';
 		echo '&nbsp;&nbsp;UTF8&nbsp;', WT_UTF8_LRO, $thisLine, WT_UTF8_PDF, '<br />';
 
 		// Line 3:  First hexadecimal byte
@@ -2318,4 +2309,3 @@ function DumpString($input) {
 	echo '</span></code>';
 	return true;
 }
-?>

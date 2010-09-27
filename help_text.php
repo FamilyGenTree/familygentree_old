@@ -2716,7 +2716,10 @@ case 'SURNAME_TRADITION':
 
 case 'THEME':
 	$title=i18n::translate('Theme');
-	$text=i18n::translate('You can change the appearance of <b>webtrees</b> using "themes".  Each theme has a different style, layout, color scheme, etc.');
+	$text=
+		i18n::translate('You can change the appearance of <b>webtrees</b> using "themes".  Each theme has a different style, layout, color scheme, etc.').
+		'<br/><br/>'.
+		i18n::translate('Themes can be selected at three levels: user, GEDCOM, and site.  User settings take priority over GEDCOM settings, which in turn take priority over the site setting.  Selecting "default theme" at user level will give the setting for the current GEDCOM.  Selecting "default theme" at GEDCOM level will give the site setting.');
 	break;
 
 case 'THUMBNAIL_WIDTH':
@@ -2762,7 +2765,7 @@ case 'USE_RIN':
 case 'USE_SILHOUETTE':
 	$title=i18n::translate('Use silhouettes');
 	$text=i18n::translate('Use silhouette images when no highlighted image for that person has been specified.  The images used are specific to the gender of the person in question.<br /><br /><table><tr><td wrap valign="middle">This image might be used when the gender of the person is unknown:')
-	      . " </td><td><img src=\"".$WT_IMAGES["default_image_U"]."\" width=\"40\" alt=\"\" title=\"\" /></td></tr></table>";
+	." </td><td><img src=\"".$WT_IMAGES["default_image_U"]."\" width=\"40\" alt=\"\" title=\"\" /></td></tr></table>";
 	break;
 
 case 'USE_THUMBS_MAIN':
@@ -3117,8 +3120,8 @@ case 'add_note':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new note');
 	$text=i18n::translate('If you have a note to add to this record, this is the place to do so.<br /><br />Just click the link, a window will open, and you can type your note.  When you are finished typing, just click the button below the box, close the window, and that\'s all.')
-	    . '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	    . i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
+	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
 	break;
 
 case 'add_opf_child':
@@ -3135,8 +3138,8 @@ case 'add_shared_note':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new shared note');
 	$text=i18n::translate('When you click the <b>Add a new Shared Note</b> link, a new window will open.  You can choose to link to an existing shared note, or you can create a new shared note and at the same time create a link to it.')
-	    . '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	    . i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
+	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
 	break;
 
 case 'add_sibling':
@@ -3153,8 +3156,8 @@ case 'add_source':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new source citation');
 	$text=i18n::translate('Here you can add a source <b>Citation</b> to this record.<br /><br />Just click the link, a window will open, and you can choose the source from the list (Find ID) or create a new source and then add the Citation.<br /><br />Adding sources is an important part of genealogy because it allows other researchers to verify where you obtained your information.')
-	    . '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	    . i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
+	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
 	break;
 
 case 'add_wife':
@@ -3209,7 +3212,7 @@ case 'annivers_year_select':
 
 case 'apply_privacy':
 	$title=i18n::translate('Apply privacy settings?');
-	$text=i18n::translate('When this option is checked, the output file will pass through privacy checks according to the selected option.  This can result in the removal of certain information.  The output file will contain only the information that is normally visible to a user with the indicated privilege level.<br /><br />If you only have GEDCOM administrator rights, you cannot specify that the output file should be privatized according to the Site administrator privilege level.');
+	$text=i18n::translate('This option will remove private data from the downloaded GEDCOM file.  The file will be filtered according to the privacy settings that apply to each access level.  Privacy settings are specified on the GEDCOM configuration page.');
 	break;
 
 case 'block_move_right':
@@ -3411,7 +3414,7 @@ case 'edituser_realname':
 
 case 'edituser_password':
 	$title=i18n::translate('Password');
-	$text=i18n::translate('It is a good practice to change your password regularly.  You have to keep in mind that anyone who knows your user name and your password will have access to your data.<br /><br />Make the password at least 6 characters long, the longer the better. You may use uppercase and lower case letters with or without diacritical marks, numbers, dash (-), and underscore (_). Do <u>not</u> use punctuation marks or spaces.  Use a combination of upper and lower case, numbers, and other characters. For example: <b>5Z_q$P4=r9</b>.<br /><br />Like the user name, the password is <u>case sensitive</u>.  That means that <b>Secret.Password!#13</b> is not the same as <b>secret.password!#13</b> or <b>SECRET.PASSWORD!#13</b>.');
+	$text=i18n::translate('Passwords must be at least 6 characters long and are case-sensitive, so that "s3CR#t" is different to "S3CR#t".');
 	break;
 
 case 'edituser_rootid':
@@ -3424,14 +3427,9 @@ case 'edituser_user_default_tab':
 	$text=i18n::translate('This setting allows you to specify which tab is opened automatically when you access the Individual Information page.');
 	break;
 
-case 'edituser_user_theme':
-	$title=i18n::translate('Theme');
-	$text=i18n::translate('This site can have several different looks or appearances.  Other programs may call them "skins", but here they\'re "themes".<br /><br />Every theme will display the same data, but its presentation or even its location on the screen may vary.  This is like putting a picture into a different frame and hanging it in a different room as well. The picture does not change, but the way you look at it is completely different.<br /><br />Just give it a try. Set it to another theme. Look at it, try another. Change back to the one that suits you the best. Whenever you log in, you will see the theme you last used; you don\'t even have to get to this configuration page to change your preferred theme.');
-	break;
-
 case 'edituser_username':
 	$title=i18n::translate('Username');
-	$text=i18n::translate('In this box you can change your user name.  If you no longer like your user name or if have other reasons to change it, you can do so using this form.<br /><br />The username is <u>case sensitive</u>. That means that <b>John</b> is not the same as <b>john</b> or <b>JOHN</b>.<br /><br />You should <u>only</u> use characters from the alphabets that <b>webtrees</b> supports.  You may use uppercase and lower case letters with or without diacritical marks, numbers, dash (-), and underscore (_). Do <u>not</u> use punctuation marks or spaces.');
+	$text=i18n::translate('You can change your username by updating it here.  Usernames are case insensitive and ignore accented letters, so that "chloe", "chlo&euml;" and "CHLOE" are considered to be the same.  Usernames may not contain the following characters: &lt;&gt;"%%{};');
 	break;
 
 case 'export_gedcom':
@@ -4047,12 +4045,15 @@ case 'upload_gedcom':
 
 case 'upload_media_file':
 	$title=i18n::translate('Media file to upload');
-	$text=i18n::translate('In this field you specify the location and name, on your local computer, of the media file you wish to upload to the server.  You can use the <b>Browse</b> button to search your local computer for the desired file.<br /><br />The uploaded file will have the same name on the server, and it will be uploaded to the directory specified in the <b>Folder on server</b> field.<br /><br />If you do not see the <b>Folder on server</b> field or cannot change it, you do not have sufficient permissions or your GEDCOM configuration has been set to allow no directory levels beyond the default <b>%s</b>.  In this case, the media file will be uploaded to the directory <b>%s</b>.', $MEDIA_DIRECTORY, $MEDIA_DIRECTORY);
+	$text=
+		i18n::translate('Select the media file that you want to upload.  If a file already exists with the same name, it will be overwritten.').
+		'<br/><br/>'.
+		i18n::translate('It is easier to manage your media files if you choose a consistent format for the filenames.  To organise media files into folders, you must first set the number of levels in the GEDCOM administration page.');
 	break;
 
 case 'upload_media':
 	$title=i18n::translate('Upload media files');
-	$text=i18n::translate('Select files from your local computer to upload to your server.  All files will be uploaded to the directory <b>%s</b> or to one of its sub-directories.<br /><br />Folder names you specify will be appended to <b>%s</b>. For example, <b>%smyfamily</b>. If the thumbnail directory does not exist, it is created automatically.', $MEDIA_DIRECTORY, $MEDIA_DIRECTORY, $MEDIA_DIRECTORY);
+	$text=i18n::translate('Upload one or more media files from your local computer.  Media files can be pictures, video, audio, or other formats.');
 	break;
 
 case 'upload_server_file':
@@ -4067,7 +4068,7 @@ case 'upload_server_folder':
 
 case 'upload_thumbnail_file':
 	$title=i18n::translate('Thumbnail to upload');
-	$text=i18n::translate('In this field you specify the location and name, on your local computer, of the thumbnail file you wish to upload to the server.  You can use the <b>Browse</b> button to search your local computer for the desired file.  When this field is filled in, the <b>Automatic thumbnail</b> checkbox is ignored.<br /><br />If the <b>Media file to upload</b> field has been filled in, your uploaded thumbnail file will be named according to the contents of that field, regardless of what it is called on your local computer.  If that field is empty, the uploaded thumbnail file will be copied to two places on the server, once into the server directory mentioned in the <b>Folder on server</b> field, and then again into an identical directory structure starting with <b>%sthumbs/</b>.<br /><br />If you do not see the <b>Folder on server</b> field or cannot change it, you do not have sufficient permissions or your GEDCOM configuration has been set to allow no directory levels beyond the default <b>%s</b> where uploaded media files are normally stored.', $MEDIA_DIRECTORY, $MEDIA_DIRECTORY);
+	$text=i18n::translate('Choose the thumbnail image that you want to upload.  Although thumbnails can be generated automatically for images, you may wish to generate your own thumbnail, especially for other media types.  For example, you can provide a still image from a video, or a photograph of the person who made an audio recording.');
 	break;
 
 case 'useradmin_auto_accept':
@@ -4173,4 +4174,3 @@ echo '<a href="help_text.php?help=help_contents_help"><b>', i18n::translate('Hel
 echo '<a href="javascript:;" onclick="window.close();"><b>', i18n::translate('Close Window'), '</b></a>';
 echo '</div>';
 print_simple_footer();
-?>

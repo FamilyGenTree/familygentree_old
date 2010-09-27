@@ -44,7 +44,7 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 	}
 
 	// Implement class WT_Module_Block
-	public function getBlock($block_id, $template=true) {
+	public function getBlock($block_id, $template=true, $cfg=null) {
 		global $ctype, $TEXT_DIRECTION, $WT_IMAGES, $THEME_DIR;
 
 		require_once WT_ROOT.'includes/functions/functions_print_facts.php';
@@ -61,7 +61,14 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 				deleteMessage($message_id);
 			}
 		}
-
+		$block=get_block_setting($block_id, 'block', true);
+		if ($cfg) {
+			foreach (array('block') as $name) {
+				if (array_key_exists($name, $cfg)) {
+					$$name=$cfg[$name];
+				}
+			}
+		}
 		$usermessages = getUserMessages(WT_USER_ID);
 
 		$id=$this->getName().$block_id;
@@ -72,6 +79,26 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$content = "";
 		$content .= "<form name=\"messageform\" action=\"index.php?ctype={$ctype}\" method=\"get\" onsubmit=\"return confirm('".i18n::translate('Are you sure you want to delete this message?  It cannot be retrieved later.')."');\">";
+		if (get_user_count()>1) {
+			$content .= '<br />'.i18n::translate('Send Message')." <select name=\"touser\">";
+			if (WT_USER_IS_ADMIN) {
+				$content .= "<option value=\"all\">".i18n::translate('Broadcast to all users')."</option>";
+				$content .= "<option value=\"never_logged\">".i18n::translate('Send message to users who have never logged in')."</option>";
+				$content .= "<option value=\"last_6mo\">".i18n::translate('Send message to users who have not logged in for 6 months')."</option>";
+			}
+			foreach (get_all_users() as $user_id=>$user_name) {
+				if ($user_id!=WT_USER_ID && get_user_setting($user_id, 'verified_by_admin') && get_user_setting($user_id, 'contactmethod')!='none') {
+					$content .= "<option value=\"".$user_name."\">".PrintReady(getUserFullName($user_id))." ";
+					if ($TEXT_DIRECTION=="ltr") {
+						$content .= stripLRMRLM(getLRM()." - ".$user_name.getLRM());
+					} else {
+						$content .= stripLRMRLM(getRLM()." - ".$user_name.getRLM());
+					}
+					$content .= "</option>";
+				}
+			}
+			$content .= "</select> <input type=\"button\" value=\"".i18n::translate('Send')."\" onclick=\"message(document.messageform.touser.options[document.messageform.touser.selectedIndex].value, 'messaging2', ''); return false;\" /><br /><br />";
+		}
 		if (count($usermessages)==0) {
 			$content .= i18n::translate('You have no pending messages.')."<br />";
 		} else {
@@ -139,32 +166,12 @@ class user_messages_WT_Module extends WT_Module implements WT_Module_Block {
 				$content .= "<a href=\"".encode_url("index.php?action=deletemessage&message_id={$key}")."\" onclick=\"return confirm('".i18n::translate('Are you sure you want to delete this message?  It cannot be retrieved later.')."');\">".i18n::translate('Delete')."</a></div></td></tr>";
 			}
 			$content .= "</table>";
-			$content .= "<input type=\"submit\" value=\"".i18n::translate('Delete Selected Messages')."\" /><br /><br />";
-		}
-		if (get_user_count()>1) {
-			$content .= i18n::translate('Send Message')." <select name=\"touser\">";
-			if (WT_USER_IS_ADMIN) {
-				$content .= "<option value=\"all\">".i18n::translate('Broadcast to all users')."</option>";
-				$content .= "<option value=\"never_logged\">".i18n::translate('Send message to users who have never logged in')."</option>";
-				$content .= "<option value=\"last_6mo\">".i18n::translate('Send message to users who have not logged in for 6 months')."</option>";
-			}
-			foreach (get_all_users() as $user_id=>$user_name) {
-				if ($user_id!=WT_USER_ID && get_user_setting($user_id, 'verified_by_admin') && get_user_setting($user_id, 'contactmethod')!='none') {
-					$content .= "<option value=\"".$user_name."\">".PrintReady(getUserFullName($user_id))." ";
-					if ($TEXT_DIRECTION=="ltr") {
-						$content .= stripLRMRLM(getLRM()." - ".$user_name.getLRM());
-					} else {
-						$content .= stripLRMRLM(getRLM()." - ".$user_name.getRLM());
-					}
-					$content .= "</option>";
-				}
-			}
-			$content .= "</select><input type=\"button\" value=\"".i18n::translate('Send')."\" onclick=\"message(document.messageform.touser.options[document.messageform.touser.selectedIndex].value, 'messaging2', ''); return false;\" />";
+			$content .= "<input type=\"submit\" value=\"".i18n::translate('Delete Selected Messages')."\" /><br />";
 		}
 		$content .= "</form>";
 
 		if ($template) {
-			if (get_block_setting($block_id, 'block', true)) {
+			if ($block) {
 				require $THEME_DIR.'templates/block_small_temp.php';
 			} else {
 				require $THEME_DIR.'templates/block_main_temp.php';
