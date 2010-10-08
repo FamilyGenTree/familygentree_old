@@ -42,7 +42,7 @@ if (!defined('WT_WEBTREES')) {
 		//-- Search Function ------------------------------------------------------------
 		?>
 		<tr>
-			<td align="center" class="descriptionbox"><font size=1>Search for People to add:</font></td>
+			<td align="center" class="descriptionbox"><font size=1><?php echo i18n::translate('Add people'); ?></font></td>
 		</tr>
 		<tr>
 			<td class="optionbox" >
@@ -54,8 +54,8 @@ if (!defined('WT_WEBTREES')) {
 							alert("<?php echo i18n::translate('You must enter a name'); ?>");
 						}else{
 							var win02 = window.open(
-								// "module.php?mod=GEDFact_assistant&mod_action=_CENS/census_3_find&callback=paste_id&action=filter&type=indi&multiple=&filter="+txt, "win02", "resizable=1, menubar=0, scrollbars=1, top=180, left=600, HEIGHT=400, WIDTH=450 ");
-								"modules/GEDFact_assistant/_CENS/census_3_find.php?callback=paste_id&action=filter&type=indi&multiple=&filter="+txt, "win02", "resizable=1, menubar=0, scrollbars=1, top=180, left=600, HEIGHT=400, WIDTH=450 ");
+								"module.php?mod=GEDFact_assistant&mod_action=_CENS/census_3_find&callback=paste_id&action=filter&type=indi&multiple=&filter="+txt, "win02", "resizable=1, menubar=0, scrollbars=1, top=180, left=600, HEIGHT=400, WIDTH=450 ");
+								// "modules/GEDFact_assistant/_CENS/census_3_find.php?callback=paste_id&action=filter&type=indi&multiple=&filter="+txt, "win02", "resizable=1, menubar=0, scrollbars=1, top=180, left=600, HEIGHT=400, WIDTH=450 ");
 							if (window.focus) {win02.focus();}
 						}
 					}
@@ -63,7 +63,7 @@ if (!defined('WT_WEBTREES')) {
 				<?php
 				print "<input id=personid type=\"text\" size=\"20\" STYLE=\"color: #000000;\" value=\"\" />";
 				print "<a href=\"javascript: onclick=findindi()\">" ;
-				print "&nbsp;<font size=\"2\">&nbsp;Find</font>";
+				print "&nbsp;<font size=\"2\">&nbsp;".i18n::translate('Search')."</font>";
 				print '</a>';
 				?>
 			</td>

@@ -2404,11 +2404,6 @@ case 'PEDIGREE_SHOW_GENDER':
 	$text=i18n::translate('This option controls whether or not to show the individual\'s gender icon on charts.<br /><br />Since the gender is also indicated by the color of the box, this option doesn\'t conceal the gender. The option simply removes some duplicate information from the box.');
 	break;
 
-case 'SESSION_SAVE_PATH':
-	$title=i18n::translate('Session save path');
-	$text=i18n::translate('The path to store <b>webtrees</b> session files.<br /><br />Some hosts do not have PHP configured properly and sessions are not maintained between page requests.  This option lets site administrators overcome that problem by saving files in one of their local directories.  The ./data/ directory is a good choice if you need to change this.  The default is to leave the field empty, which will use the Save path as configured in <i>php.ini</i>.');
-	break;
-
 case 'SESSION_TIME':
 	$title=i18n::translate('Session timeout');
 	$text=i18n::translate('The time in seconds that a <b>webtrees</b> session remains active before requiring a login.  The default is 7200, which is 2 hours.');
@@ -2535,8 +2530,8 @@ case 'SAVE_WATERMARK_THUMB':
 	break;
 
 case 'SERVER_URL':
-	$title=i18n::translate('<b>webtrees</b> URL');
-	$text=i18n::translate('If you use https or a port other than the default, you will need to enter the URL to access your server here.');
+	$title=i18n::translate('Website URL');
+	$text=i18n::translate('If your site can be reached using more than one URL, such as <b>http://www.example.com/webtrees/</b> and <b>http://webtrees.example.com/</b>, you can specify the preferred URL.  Requests for the other URLs will be redirected to the preferred one.');
 	break;
 
 case 'SHOW_AGE_DIFF':
@@ -3570,11 +3565,6 @@ case 'index_gedcom_news_adm':
 case 'index_gedcom_news':
 	$title=i18n::translate('GEDCOM news block');
 	$text=i18n::translate('The News block is like a bulletin board for this GEDCOM.  The site administrator can place important announcements or interesting news messages here.<br /><br />If you have something interesting to display, please contact the site administrator;  he can put your message on this bulletin board.');
-	break;
-
-case 'index_htmlplus_ui':
-	$title=i18n::translate('Extended Interface');
-	$text=i18n::translate('When the extended interaface is enabled you can call other block using a keyword <b>&#35;callBlock:block_name&#35;</b>, where instead of block_name you should use the real block name. For example, <b>&#35;callBlock:gedcom_stats&#35;</b> displays the GEDCOM statistics block. It is also possible to include other files using a keyword <b>&#35;includeFile:file_name&#35;</b>.');
 	break;
 
 case 'index_htmlplus_content':
