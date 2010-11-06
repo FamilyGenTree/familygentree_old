@@ -205,36 +205,12 @@ if (empty($_POST['maxcpu']) || empty($_POST['maxmem'])) {
 		echo '<p class="good">', i18n::translate('The server configuration is OK.'), '</p>';
 	}
 	echo '<h2>', i18n::translate('Checking server capacity'), '</h2>';
-	// Memory
-	$mem=to_mb(ini_get('memory_limit'));
-	$maxmem=$mem;
-	if (!ini_get('safe_mode')) {
-		for ($i=$mem+1; $i<=1024; ++$i) {
-			ini_set('memory_limit', $i.'M');
-			$newmem=to_mb(ini_get('memory_limit'));
-			if ($newmem>$mem) {
-				$maxmem=$newmem;
-			} else {
-				break;
-			}
-		}
-	}
-	// CPU
-	$cpu=ini_get('max_execution_time');
-	$maxcpu=$cpu;
-	/* Commented out temporarily.  How can we reliably determine the "master value" instead of the "local value"?
-	if (!ini_get('safe_mode')) {
-		for ($i=$cpu+1; $i<=300; ++$i) {
-			set_time_limit('max_execution_time', $i);
-			$newcpu=ini_get('max_execution_time');
-			if ($newcpu>$cpu) {
-				$maxcpu=$newcpu;
-			} else {
-				break;
-			}
-		}
-	}
- */
+	// Previously, we tried to determine the maximum value that we could set for these values.
+	// However, this is unreliable, especially on servers with custom restrictions.
+	// Now, we just show the default values.  These can (hopefully!) be changed using the
+	// site settings page.
+	$maxmem=to_mb(ini_get('memory_limit'));
+	$maxcpu=ini_get('max_execution_time');
 	echo
 		'<p>',
 		i18n::translate('The memory and CPU time requirements depend on the number of individuals in your family tree.'),
@@ -246,14 +222,14 @@ if (empty($_POST['maxcpu']) || empty($_POST['maxmem'])) {
 		i18n::translate('Medium systems (5000 individuals): 32-64MB, 20-40 seconds'),
 		'<br/>',
 		i18n::translate('Large systems (50000 individuals): 64-128MB, 40-80 seconds'),
-		'</p><p class="good">',
+		'</p>',
+		($maxmem<32 || $maxcpu<20) ? '<p class="bad">' : '<p class="good">',
 		i18n::translate('This server\'s memory limit is %dMB and its CPU time limit is %d seconds.', $maxmem, $maxcpu),
+		'</p><p>',
+		i18n::translate('If you try to exceed these limits, you may experience server time-outs and blank pages.'),
+		'</p><p>',
+		i18n::translate('If your server\'s security policy permits it, you will be able to request increased memory or CPU time using the <b>webtrees</b> administration page.  Otherwise, you will need to contact your server\'s administrator.'),
 		'</p>';
-
-	if ($maxmem<32 || $maxcpu<20) {
-		echo '<p class="bad">', i18n::translate('If you try to exceed these limits, you may experience server time-outs and blank pages.'), '</p>';
-	}
-	echo '<p>', i18n::translate('To increase these limits, you should contact your server\'s administrator.'), '</p>';
 	if (!$errors) {
 		echo '<input type="hidden" name="maxcpu" value="'.$maxcpu.'">';
 		echo '<input type="hidden" name="maxmem" value="'.$maxmem.'">';
@@ -266,8 +242,6 @@ if (empty($_POST['maxcpu']) || empty($_POST['maxmem'])) {
 	// Copy these values through to the next step
 	echo '<input type="hidden" name="maxcpu" value="'.$_POST['maxcpu'].'">';
 	echo '<input type="hidden" name="maxmem" value="'.$_POST['maxmem'].'">';
-	@ini_set('max_execution_time', $_POST['maxcpu']);
-	@ini_set('memory_limit', $_POST['maxmem'].'M');
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -287,19 +261,6 @@ try {
 		if (version_compare($row->value, WT_REQUIRED_MYSQL_VERSION, '<')) {
 			echo '<p class="bad">', i18n::translate('This database is only running MySQL version %s.  You cannot install webtrees here.', $row->value), '</p>';
 		} else {
-			if (
-				version_compare($row->value, '5.1.31', '>=') ||
-				version_compare($row->value, '5.0.84', '>=') && version_compare($row->value, '5.0', '<')
-			) {
-				// MAX_ALLOWED_PACKET became read-only in MYSQL 5.1.31 and 5.0.84
-				foreach ($dbh->query("SELECT @@max_allowed_packet AS max_allowed_packet") as $row2) {
-					$max_allowed_packet=$row2->max_allowed_packet;
-					echo
-						'<p class="indifferent">',
-						i18n::translate('This database can only import GEDCOM files smaller than the MySQL setting <b>max_allowed_packet</b>.  This is currently set to %d KB.  To import GEDCOM files larger than this, ask your server\'s administrator to increase this setting.', $max_allowed_packet/1024),
-						'</p>';
-				}
-			}
 			$db_version_ok=true;
 		}
 	}
@@ -607,8 +568,6 @@ try {
 		"CREATE TABLE IF NOT EXISTS `{$TBLPREFIX}gedcom` (".
 		" gedcom_id     INTEGER AUTO_INCREMENT                        NOT NULL,".
 		" gedcom_name   VARCHAR(255)                                  NOT NULL,".
-		" import_gedcom LONGBLOB                                      NOT NULL,".
-		" import_offset INTEGER UNSIGNED                              NOT NULL,".
 		" PRIMARY KEY     (gedcom_id),".
 		" UNIQUE  KEY ux1 (gedcom_name)".
 		") COLLATE utf8_unicode_ci ENGINE=InnoDB"
@@ -981,6 +940,17 @@ try {
 		"         KEY ix2 (user_id, ip_address)".
 		") COLLATE utf8_unicode_ci ENGINE=InnoDB"
 	);
+	$dbh->exec(
+		"CREATE TABLE IF NOT EXISTS `{$TBLPREFIX}gedcom_chunk` (".
+		" gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL,".
+		" gedcom_id       INTEGER                NOT NULL,".
+		" chunk_data      MEDIUMBLOB             NOT NULL,".
+		" imported        BOOLEAN                NOT NULL DEFAULT FALSE,".
+		" PRIMARY KEY     (gedcom_chunk_id),".
+		"         KEY ix1 (gedcom_id, imported),".
+		" FOREIGN KEY fk1 (gedcom_id) REFERENCES `{$TBLPREFIX}gedcom` (gedcom_id) /* ON DELETE CASCADE */".
+		") COLLATE utf8_unicode_ci ENGINE=InnoDB"
+	);
 
 	$dbh->exec(
 		"INSERT IGNORE INTO `{$TBLPREFIX}user` (user_id, user_name, real_name, email, password) VALUES ".
@@ -1016,7 +986,7 @@ try {
 	);
 	$dbh->exec(
 		"INSERT IGNORE INTO `{$TBLPREFIX}site_setting` (setting_name, setting_value) VALUES ".
-		"('WT_SCHEMA_VERSION',               '2'),".
+		"('WT_SCHEMA_VERSION',               '4'),".
 		"('INDEX_DIRECTORY',                 'data/'),".
 		"('STORE_MESSAGES',                  '1'),".
 		"('USE_REGISTRATION_MODULE',         '1'),".
@@ -1026,8 +996,10 @@ try {
 		"('SESSION_TIME',                    '7200'),".
 		"('SERVER_URL',                      ''),".
 		"('LOGIN_URL',                       'login.php'),".
-		"('MEMORY_LIMIT',                    '".addcslashes($_POST['maxmem'], "'")."M'),".
-		"('MAX_EXECUTION_TIME',              '".addcslashes($_POST['maxcpu'], "'")."'),".
+		// Don't set these.  On some servers, trying to set them causes problems.
+		// So, the default behaviour is now to use the defaults.
+		//"('MEMORY_LIMIT',                    '".addcslashes($_POST['maxmem'], "'")."M'),".
+		//"('MAX_EXECUTION_TIME',              '".addcslashes($_POST['maxcpu'], "'")."'),".
 		"('SMTP_ACTIVE',                     '".addcslashes($_POST['smtpuse'], "'")."'),".
 		"('SMTP_HOST',                       '".addcslashes($_POST['smtpserv'], "'")."'),".
 		"('SMTP_HELO',                       '".addcslashes($_POST['smtpsender'], "'")."'),".
@@ -1055,7 +1027,7 @@ try {
 		'<input type="submit" value="'. /* I18N: Button label/action: %s is a filename */ i18n::translate('Download %s', WT_CONFIG_FILE).'" onclick="document.contform.contbtn.disabled=false; return true;">',
 		'</form>',
 		'<p>', i18n::translate('After you have copied this file to the webserver and set the access permissions, click here to continue'), '</p>',
-		'<form name="contform" action="', WT_SCRIPT_NAME, '" method="get" onsubmit="alert(\'', i18n::translate('Reminder: you must copy %s to your webserver', WT_CONFIG_FILE), '\');return true;">',
+		'<form name="contform" action="', WT_SCRIPT_NAME, '" method="get" onsubmit="alert(\'', /* I18N: %s is a filename */ i18n::translate('Reminder: you must copy %s to your webserver', WT_CONFIG_FILE), '\');return true;">',
 		'<input type="submit" name="contbtn" value="'.i18n::translate('Continue').'" disabled>',
 		'</form></body></html>';
 	exit;

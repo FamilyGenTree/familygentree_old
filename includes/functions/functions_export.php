@@ -164,8 +164,6 @@ function createTempUser($userID, $rights, $gedcom) {
 	$tempUserID=create_user($userID, "Dummy User", "dummy@email", md5(rand()));
 	if (!$tempUserID) return false;
 
-	set_user_setting($tempUserID, 'relationship_privacy', '0');
-	set_user_setting($tempUserID, 'max_relation_path', '0');
 	set_user_setting($tempUserID, 'visibleonline', '0');
 	set_user_setting($tempUserID, 'contactmethod', 'none');
 	switch ($rights) {
@@ -190,9 +188,7 @@ function createTempUser($userID, $rights, $gedcom) {
 
 	// Save things in cache
 	$_SESSION["pgv_GED_ID"]           =$ged_id;
-	$_SESSION["pgv_USER_ID"]          =$userID;
-	$_SESSION["pgv_USER_ACCESS_LEVEL"]=getUserAccessLevel($_SESSION["pgv_USER_ID"], $_SESSION["pgv_GED_ID"]);
-	$_SESSION["pgv_USER_GEDCOM_ID"]   =get_user_gedcom_setting($_SESSION["pgv_USER_ID"], $_SESSION["pgv_GED_ID"], 'gedcomid');
+	$_SESSION["pgv_USER_ACCESS_LEVEL"]=getUserAccessLevel($tempUserID, $ged_id);
 
 	return $tempUserID;
 }
@@ -264,7 +260,7 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 
 		// Temporarily become this user
 		$_SESSION["org_user"]=$_SESSION["wt_user"];
-		$_SESSION["wt_user"]=$tempUserID;
+		$_SESSION["wt_user"]=$export_user_id;
 	}
 
 	$head=gedcom_header($gedcom);

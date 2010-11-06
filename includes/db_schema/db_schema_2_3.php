@@ -1,10 +1,9 @@
 <?php
 /**
- * Update the GM module database schema from version 0 to version 1
- *
- * Version 0: empty database
- * Version 1: create the tables, as per PGV 4.2.1
- *
+ * Update the database schema from version 2 to version 3
+ * - create the wt_gedcom_chunk table to import gedcoms in
+ * blocks of data smaller than the max_allowed_packet restriction.
+ * 
  * The script should assume that it can be interrupted at
  * any point, and be able to continue by re-running the script.
  * Fatal errors, however, should be allowed to throw exceptions,
@@ -12,11 +11,8 @@
  * It shouldn't do anything that might take more than a few
  * seconds, for systems with low timeout values.
  *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2009 Greg Roach
+ * phpGedView: Genealogy Viewer
+ * Copyright (C) 20010 Greg Roach
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,31 +32,31 @@
  */
 
 if (!defined('WT_WEBTREES')) {
-header('HTTP/1.0 403 Forbidden');
-exit;
+	header('HTTP/1.0 403 Forbidden');
+	exit;
 }
 
-define('WT_GM_DB_SCHEMA_0_1', '');
+define('WT_DB_SCHEMA_2_3', '');
 
-// Create all of the tables needed for this module
-WT_DB::exec(
-	"CREATE TABLE IF NOT EXISTS `##placelocation` (".
-	" pl_id        INTEGER      NOT NULL,".
-	" pl_parent_id INTEGER          NULL,".
-	" pl_level     INTEGER          NULL,".
-	" pl_place     VARCHAR(255)     NULL,".
-	" pl_long      VARCHAR(30)      NULL,".
-	" pl_lati      VARCHAR(30)      NULL,".
-	" pl_zoom      INTEGER          NULL,".
-	" pl_icon      VARCHAR(255)     NULL,".
-	" PRIMARY KEY     (pl_id),".
-	"         KEY ix1 (pl_level),".
-	"         KEY ix2 (pl_long),".
-	"         KEY ix3 (pl_lati),".
-	"         KEY ix4 (pl_place),".
-	"         KEY ix5 (pl_parent_id)".
+self::exec(
+	"CREATE TABLE IF NOT EXISTS `##gedcom_chunk` (".
+	" gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL,".
+	" gedcom_id       INTEGER                NOT NULL,".
+	" chunk_data      MEDIUMBLOB             NOT NULL,".
+	" imported        BOOLEAN                NOT NULL DEFAULT FALSE,".
+	" PRIMARY KEY     (gedcom_chunk_id),".
+	"         KEY ix1 (gedcom_id, imported),".
+	" FOREIGN KEY fk1 (gedcom_id) REFERENCES `##gedcom` (gedcom_id)".
 	") COLLATE utf8_unicode_ci ENGINE=InnoDB"
 );
+
+try {
+	self::exec(
+		"ALTER TABLE `##gedcom` DROP import_gedcom, DROP import_offset"
+	);
+} catch (PDOException $ex) {
+	// Perhaps we have already deleted these columns?
+}
 
 // Update the version to indicate success
 set_site_setting($schema_name, $next_version);
