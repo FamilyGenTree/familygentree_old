@@ -59,13 +59,15 @@ class NoteController extends BaseController {
 		$this->note->ged_id=WT_GED_ID; // This record is from a file
 
 		if (!$this->note->canDisplayDetails()) {
-			print_header(i18n::translate('Private')." ".i18n::translate('Shared Note Information'));
+			print_header(i18n::translate('Shared note'));
 			print_privacy_error();
 			print_footer();
 			exit;
 		}
 
 		$this->uname = WT_USER_NAME;
+
+		$this->nid=$this->note->getXref(); // Correct upper/lower case mismatch
 
 		//-- perform the desired action
 		switch($this->action) {
@@ -82,6 +84,7 @@ class NoteController extends BaseController {
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -96,6 +99,7 @@ class NoteController extends BaseController {
 				}
 				$this->note = new Note($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -110,6 +114,7 @@ class NoteController extends BaseController {
 				}
 				$this->note = new Note($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -193,7 +198,7 @@ class NoteController extends BaseController {
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('notes');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), "note.php?nid={$this->nid}&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), "note.php?nid={$this->nid}&amp;action=accept");
 				$submenu->addIcon('notes');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);

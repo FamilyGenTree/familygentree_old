@@ -104,35 +104,35 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 				// NOTE: Start div I.$pid.$personcount.$count.links
 				$personlinks .= "<table class=\"person_box$isF\"><tr><td class=\"details1\">";
 				// NOTE: Zoom
-				$personlinks .= "<a href=\"pedigree.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;talloffset={$talloffset}&amp;ged={$GEDCOM}\" $mouseAction1><b>".i18n::translate('Pedigree Tree')."</b></a>";
+				$personlinks .= "<a href=\"pedigree.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;talloffset={$talloffset}&amp;ged=".rawurlencode($GEDCOM)."\" $mouseAction1><b>".i18n::translate('Pedigree Tree')."</b></a>";
 
 				if (file_exists(WT_ROOT.'modules/googlemap/pedigree_map.php')) {
-					$personlinks .= "<br /><a href=\"module.php?mod=googlemap&amp;mod_action=pedigree_map&amp;rootid={$pid}&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Pedigree Map')."</b></a>";
+					$personlinks .= "<br /><a href=\"module.php?mod=googlemap&amp;mod_action=pedigree_map&amp;rootid={$pid}&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Pedigree Map')."</b></a>";
 				}
 				$username = WT_USER_NAME;
 				if (!empty($username)) {
 					$myid=WT_USER_GEDCOM_ID;
 					if ($myid && $myid!=$pid) {
-						$personlinks .= "<br /><a href=\"relationship.php?show_full={$PEDIGREE_FULL_DETAILS}&amp;pid1={$myid}&amp;pid2={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;pretty=2&amp;followspouse=1&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Relationship to me')."</b></a>";
+						$personlinks .= "<br /><a href=\"relationship.php?show_full={$PEDIGREE_FULL_DETAILS}&amp;pid1={$myid}&amp;pid2={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;pretty=2&amp;followspouse=1&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Relationship to me')."</b></a>";
 					}
 				}
 
-				$personlinks .= "<br /><a href=\"descendancy.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;generations={$generations}&amp;box_width={$box_width}&amp;ged={$GEDCOM}\" $mouseAction1><b>".i18n::translate('Descendancy chart')."</b></a><br />";
+				$personlinks .= "<br /><a href=\"descendancy.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;generations={$generations}&amp;box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM)."\" $mouseAction1><b>".i18n::translate('Descendancy chart')."</b></a><br />";
 
 				if (file_exists(WT_ROOT.'ancestry.php')) {
-					$personlinks .= "<a href=\"ancestry.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Ancestry chart')."</b></a><br />";
+					$personlinks .= "<a href=\"ancestry.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Ancestry chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'compact.php')) {
-					$personlinks .= "<a href=\"compact.php?rootid={$pid}&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Compact Chart')."</b></a><br />";
+					$personlinks .= "<a href=\"compact.php?rootid={$pid}&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Compact Chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'fanchart.php') and defined("IMG_ARC_PIE") and function_exists("imagettftext")) {
-					$personlinks .= "<a href=\"fanchart.php?rootid={$pid}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Circle diagram')."</b></a><br />";
+					$personlinks .= "<a href=\"fanchart.php?rootid={$pid}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Circle diagram')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'hourglass.php')) {
-					$personlinks .= "<a href=\"hourglass.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged={$GEDCOM}&amp;show_spouse={$show_spouse}\" ".$mouseAction1."><b>".i18n::translate('Hourglass chart')."</b></a><br />";
+					$personlinks .= "<a href=\"hourglass.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM)."&amp;show_spouse={$show_spouse}\" ".$mouseAction1."><b>".i18n::translate('Hourglass chart')."</b></a><br />";
 				}
 				if (file_exists(WT_ROOT.'treenav.php')) {
-					$personlinks .= "<a href=\"treenav.php?rootid={$pid}&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Interactive tree')."</b></a><br />";
+					$personlinks .= "<a href=\"treenav.php?rootid={$pid}&amp;ged=".rawurlencode($GEDCOM)."\" ".$mouseAction1."><b>".i18n::translate('Interactive tree')."</b></a><br />";
 				}
 
 				$fams = $person->getSpouseFamilies();
@@ -144,7 +144,7 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 						$children = $family->getChildren();
 						$num = count($children);
 						if ((!empty($spouse))||($num>0)) {
-							$personlinks .= "<a href=\"family.php?famid={$famid}&amp;show_full=1&amp;ged={$GEDCOM}\" ".$mouseAction1."><b>".i18n::translate('Family with spouse')."</b></a><br />";
+							$personlinks .= "<a href=\"".$family->getHtmlUrl()."&amp;show_full=1\" ".$mouseAction1."><b>".i18n::translate('Family with spouse')."</b></a><br />";
 							if (!empty($spouse)) {
 								$personlinks .= "<a href=\"".$spouse->getHtmlUrl()."\" $mouseAction1>";
 								if ($spouse->canDisplayName()) $personlinks .= PrintReady($spouse->getFullName());
@@ -183,32 +183,32 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 			if ($LINK_ICONS!="disabled") {
 				$click_link="javascript:;";
 				if (WT_SCRIPT_NAME=='pedigree.php') {
-					$click_link="pedigree.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;talloffset={$talloffset}&amp;ged={$GEDCOM}";
+					$click_link="pedigree.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;talloffset={$talloffset}&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$pid;
 				}
 
 				if (WT_SCRIPT_NAME=='hourglass.php') {
-					$click_link="hourglass.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;generations={$generations}&amp;box_width={$box_width}&amp;ged={$GEDCOM}";
+					$click_link="hourglass.php?pid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;generations={$generations}&amp;box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$pid;
 				}
 
 				if (WT_SCRIPT_NAME=='ancestry.php') {
-					$click_link="ancestry.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged={$GEDCOM}";
+					$click_link="ancestry.php?rootid={$pid}&amp;show_full={$PEDIGREE_FULL_DETAILS}&amp;chart_style={$chart_style}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$pid;
 				}
 
 				if (WT_SCRIPT_NAME=='descendancy.php') {
-					$click_link="descendancy.php?show_full={$PEDIGREE_FULL_DETAILS}&amp;pid={$pid}&amp;generations={$generations}&box_width={$box_width}&amp;ged={$GEDCOM}";
+					$click_link="descendancy.php?show_full={$PEDIGREE_FULL_DETAILS}&amp;pid={$pid}&amp;generations={$generations}&box_width={$box_width}&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$pid;
 				}
 
 				if (WT_SCRIPT_NAME=='family.php' && !empty($famid)) {
-					$click_link="family.php?famid={$famid}&amp;show_full=1&amp;ged={$GEDCOM}";
+					$click_link="family.php?famid={$famid}&amp;show_full=1&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$famid;
 				}
 
 				if (WT_SCRIPT_NAME=='individual.php') {
-					$click_link="individual.php?pid={$pid}&amp;ged={$GEDCOM}";
+					$click_link="individual.php?pid={$pid}&amp;ged=".rawurlencode($GEDCOM);
 					$whichID=$pid;
 				}
 
@@ -374,7 +374,7 @@ function print_pedigree_person($pid, $style=1, $count=0, $personcount="1") {
 */
 function print_header($title) {
 	global $bwidth, $BROWSERTYPE, $SEARCH_SPIDER, $view, $cart;
-	global $GEDCOM, $GEDCOM_TITLE, $QUERY_STRING, $action, $query, $theme_name;
+	global $GEDCOM, $GEDCOM_TITLE, $action, $query, $theme_name;
 	global $stylesheet, $print_stylesheet, $rtl_stylesheet, $headerfile, $THEME_DIR, $print_headerfile;
 	global $WT_IMAGES, $TEXT_DIRECTION, $ONLOADFUNCTION, $REQUIRE_AUTHENTICATION;
 
@@ -392,10 +392,15 @@ function print_header($title) {
 		$title.=' - '.$META_TITLE;
 	}
 	$GEDCOM_TITLE = get_gedcom_setting(WT_GED_ID, 'title');
-	$query_string = $QUERY_STRING;
-	$javascript=WT_JS_START.'
+	$javascript=
+		'<script type="text/javascript" src="js/jquery/jquery.min.js"></script>'.
+		'<script type="text/javascript" src="js/jquery/jquery-ui.min.js"></script>'.
+		'<script type="text/javascript" src="js/jquery/jquery.tablesorter.js"></script>'. // Deprecated - use datatables
+		'<script type="text/javascript" src="js/jquery/jquery.tablesorter.pager.js"></script>'. // Deprecated - use datatables
+		'<script type="text/javascript" src="js/jquery/jquery.jeditable.js"></script>'.
+		'<script type="text/javascript" src="js/jquery/jquery.dataTables.min.js"></script>'.
+		WT_JS_START.'
 		/* setup some javascript variables */
-		var query = "'.$query_string.'";
 		var textDirection = "'.$TEXT_DIRECTION.'";
 		var browserType = "'.$BROWSERTYPE.'";
 		var themeName = "'.$theme_name.'";
@@ -450,7 +455,7 @@ function print_header($title) {
 	';
 	$javascript .= '
 	function message(username, method, url, subject) {
-		if ((!url)||(url=="")) url=\''.urlencode(WT_SCRIPT_NAME.'?'.get_query_string()).'\';
+		if ((!url)||(url=="")) url=\''.addslashes(get_query_url()).'\';
 		if ((!subject)||(subject=="")) subject="";
 		window.open(\'message.php?to=\'+username+\'&method=\'+method+\'&url=\'+url+\'&subject=\'+subject+"&"+sessionname+"="+sessionid, \'_blank\', \'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1\');
 		return false;
@@ -490,7 +495,7 @@ function print_simple_header($title) {
 
 // -- print the html to close the page
 function print_footer() {
-	global $SHOW_STATS, $QUERY_STRING, $footerfile, $printlink, $theme_name, $WT_IMAGES, $TEXT_DIRECTION, $footer_count;
+	global $SHOW_STATS, $footerfile, $printlink, $theme_name, $WT_IMAGES, $TEXT_DIRECTION, $footer_count;
 
 	if (!isset($footer_count)) $footer_count = 1;
 	else $footer_count++;
@@ -567,55 +572,13 @@ function execution_stats() {
 	);
 }
 
-//-- print a form to change the language
-function print_lang_form($option=0) {
-	$language_menu=MenuBar::getLanguageMenu();
-	if (empty($language_menu)) {
-		return;
-	}
-	echo '<div class="lang_form">';
-	switch($option) {
-	case 1:
-		echo $language_menu->getMenu();
-		break;
-	default:
-		echo $language_menu->getMenuAsDropdown();
-		break;
-	}
-	echo '</div>';
-}
-/**
-* print user links
-*
-* this function will print login/logout links and other links based on user privileges
-*/
-function print_user_links() {
-	global $QUERY_STRING, $SEARCH_SPIDER;
-
-	if (WT_USER_ID) {
-		echo '<a href="edituser.php" class="link">', i18n::translate('Logged in as '), ' (', WT_USER_NAME, ')</a><br />';
-		if (WT_USER_GEDCOM_ADMIN) {
-			echo '<a href="admin.php" class="link">', i18n::translate('Administration'), '</a> | ';
-		}
-		echo logout_link();
-	} else {
-		if (empty($SEARCH_SPIDER)) {
-			echo login_link();
-		}
-	}
-}
-
 // Generate a login link
 function login_link($extra='') {
-	global $QUERY_STRING;
 
 	if (WT_SCRIPT_NAME=='login.php') {
 		$href='#';
 	} else {
-		$href=get_site_setting('LOGIN_URL', 'login.php').'?url='.WT_SCRIPT_NAME;
-		if ($QUERY_STRING) {
-			$href.= rawurlencode('?'.$QUERY_STRING);
-		}
+		$href=get_site_setting('LOGIN_URL', 'login.php').'?url='.rawurlencode(get_query_url());
 	}
 	return '<a href="' . $href . '" ' . $extra . ' class="link">' . i18n::translate('Login') . '</a>';
 }
@@ -728,7 +691,7 @@ function contact_menus($ged_id=WT_GED_ID) {
 
 //-- print user favorites
 function print_favorite_selector($option=0) {
-	global $GEDCOM, $QUERY_STRING;
+	global $GEDCOM;
 	global $TEXT_DIRECTION, $REQUIRE_AUTHENTICATION, $WT_IMAGES, $SEARCH_SPIDER;
 	global $controller; // Pages with a controller can be added to the favorites
 
@@ -786,8 +749,7 @@ function print_favorite_selector($option=0) {
 			$menu->addSubMenu($submenu);
 
 			if ($gid!='') {
-				$url=$url=WT_SCRIPT_NAME.'?'.get_query_string(array('action'=>'addfav', 'gid'=>$gid));
-				$submenu = new Menu('<em>'.i18n::translate('Add to My Favorites').'</em>', $url, "right");
+				$submenu = new Menu('<em>'.i18n::translate('Add to My Favorites').'</em>', get_query_url(array('action'=>'addfav', 'gid'=>$gid)), "right");
 				$submenu->addClass("favsubmenuitem", "favsubmenuitem_hover");
 				$menu->addSubMenu($submenu);
 			}
@@ -844,7 +806,7 @@ function print_favorite_selector($option=0) {
 	default:
 		echo '<form class="favorites_form" name="favoriteform" action="', WT_SCRIPT_NAME, '"';
 		echo " method=\"post\" onsubmit=\"return false;\">";
-		echo "<select name=\"fav_id\" class=\"header_select\" onchange=\"if (document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value!='') window.location=document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value; if (document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value=='add') window.location='", WT_SCRIPT_NAME, normalize_query_string("{$QUERY_STRING}&amp;action=addfav&amp;gid={$gid}"), "';\">";
+		echo "<select name=\"fav_id\" class=\"header_select\" onchange=\"if (document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value!='') window.location=document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value; if (document.favoriteform.fav_id.options[document.favoriteform.fav_id.selectedIndex].value=='add') window.location='", get_query_url(array('action'=>'addfav', 'gid'=>$gid)), "';\">";
 		echo "<option value=\"\">", i18n::translate('Favorites'), "</option>";
 		if (WT_USER_NAME && array_key_exists('user_favorites', WT_Module::getActiveModules())) {
 			if (count($userfavs)>0 || $gid!='') {
@@ -1178,26 +1140,6 @@ function write_align_with_textdir_check($t_dir, $return=false)
 	if ($return) return $out;
 	echo $out;
 }
-//-- print theme change dropdown box
-function print_theme_dropdown($style=0) {
-	global $ALLOW_THEME_DROPDOWN;
-
-	if ($ALLOW_THEME_DROPDOWN && get_site_setting('ALLOW_USER_THEMES')) {
-		echo '<div class="theme_form">';
-		$theme_menu=MenuBar::getThemeMenu();
-		switch ($style) {
-		case 0:
-			echo $theme_menu->getMenuAsDropdown();
-			break;
-		case 1:
-			echo $theme_menu->getMenu();
-			break;
-		}
-		echo '</div>';
-	} else {
-		echo '&nbsp;';
-	}
-}
 
 /**
 * Prepare text with parenthesis for printing
@@ -1405,7 +1347,7 @@ function print_asso_rela_record($pid, $factrec, $linebr=false, $type='INDI') {
 				if (!$relationship) {
 					$relationship=i18n::translate('Relationship Chart');
 				}
-				$relationship=' - <a href="relationship.php?pid1='.$pid.'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship.'</a>';
+				$relationship=' - <a href="relationship.php?pid1='.$pid.'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship.'</a>';
 				break;
 			case 'FAM':
 				$relationship='';
@@ -1417,14 +1359,14 @@ function print_asso_rela_record($pid, $factrec, $linebr=false, $type='INDI') {
 						if (!$relationship1) {
 							$relationship1=i18n::translate('Relationship Chart');
 						}
-						$relationship.=' - <a href="relationship.php?pid1='.$parents["HUSB"].'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship1.'<img src="'.$WT_IMAGES['sex_m_9x9'].'" class="gender_image" /></a>';
+						$relationship.=' - <a href="relationship.php?pid1='.$parents["HUSB"].'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship1.'<img src="'.$WT_IMAGES['sex_m_9x9'].'" class="gender_image" /></a>';
 					}
 					if ($parents["WIFE"]) {
 						$relationship2=get_relationship_name(get_relationship($parents["WIFE"], $amatch[1], true, 4));
 						if (!$relationship2) {
 							$relationship2=i18n::translate('Relationship Chart');
 						}
-						$relationship.=' - <a href="relationship.php?pid1='.$parents["WIFE"].'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship2.'<img src="'.$WT_IMAGES['sex_f_9x9'].'" class="gender_image" /></a>';
+						$relationship.=' - <a href="relationship.php?pid1='.$parents["WIFE"].'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship2.'<img src="'.$WT_IMAGES['sex_f_9x9'].'" class="gender_image" /></a>';
 					}
 				}
 				break;
@@ -1463,12 +1405,12 @@ function print_asso_rela_record($pid, $factrec, $linebr=false, $type='INDI') {
 					$label='';
 				} else {
 					// An naturally occuring ASSO event
-					$relationship=get_relationship_name(get_relationship($pid, $amatch[1], true, 4));
+					$relationship=get_relationship_name(get_relationship($pid, $amatch[1], true, 4, true));
 					if (!$relationship) {
 						$relationship=i18n::translate('Relationship Chart');
 					}
 				}
-				$relationship=' - <a href="relationship.php?pid1='.$pid.'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship.'</a>';
+				$relationship=' - <a href="relationship.php?pid1='.$pid.'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship.'</a>';
 				break;
 			case 'FAM':
 				$relationship='';
@@ -1480,14 +1422,14 @@ function print_asso_rela_record($pid, $factrec, $linebr=false, $type='INDI') {
 						if (!$relationship1) {
 							$relationship1=i18n::translate('Relationship Chart');
 						}
-						$relationship.=' - <a href="relationship.php?pid1='.$parents["HUSB"].'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship1.'<img src="'.$WT_IMAGES['sex_m_9x9'].'" class="gender_image" /></a>';
+						$relationship.=' - <a href="relationship.php?pid1='.$parents["HUSB"].'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship1.'<img src="'.$WT_IMAGES['sex_m_9x9'].'" class="gender_image" /></a>';
 					}
 					if ($parents["WIFE"]) {
 						$relationship2=get_relationship_name(get_relationship($parents["WIFE"], $amatch[1], true, 4));
 						if (!$relationship2) {
 							$relationship2=i18n::translate('Relationship Chart');
 						}
-						$relationship.=' - <a href="relationship.php?pid1='.$parents["WIFE"].'&amp;pid2='.$amatch[1].'&amp;ged='.urlencode(WT_GEDCOM).'">'.$relationship2.'<img src="'.$WT_IMAGES['sex_f_9x9'].'" class="gender_image" /></a>';
+						$relationship.=' - <a href="relationship.php?pid1='.$parents["WIFE"].'&amp;pid2='.$amatch[1].'&amp;ged='.WT_GEDURL.'">'.$relationship2.'<img src="'.$WT_IMAGES['sex_f_9x9'].'" class="gender_image" /></a>';
 					}
 				}
 				break;
@@ -1778,7 +1720,7 @@ function format_fact_place(&$eventObj, $anchor=false, $sub=false, $lds=false) {
 			if (preg_match('/\d NOTE (.*)/', $placerec, $match)) {
 				ob_start();
 				print_fact_notes($placerec, 3);
-				$html.=ob_get_contents();
+				$html.='<br />'.ob_get_contents();
 				ob_end_clean();
 			}
 		}

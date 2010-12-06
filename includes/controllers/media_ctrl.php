@@ -61,8 +61,18 @@ class MediaController extends BaseController{
 				if (strpos($requestedfile, $MEDIA_DIRECTORY) !== false) {
 					// strip off the wt directory and media directory from the requested url so just the image information is left
 					$filename = substr($requestedfile, strpos($requestedfile, $MEDIA_DIRECTORY) + strlen($MEDIA_DIRECTORY) - 1);
+					// strip the ged param if it was passed on the querystring
+					// would be better if this could remove any querystring, but '?' are valid in unix filenames
+					if (strpos($filename, '?ged=') !== false) {
+						$filename = substr($filename, 0, strpos($filename, '?ged='));
+					}
 					// if user requested a thumbnail, lookup permissions based on the original image
 					$filename = str_replace('/thumbs', '', $filename);
+				} else {
+					// the MEDIA_DIRECTORY of the current GEDCOM was not part of the requested file
+					// either the requested file is in a different GEDCOM (with a different MEDIA_DIRECTORY)
+					// or the Media Firewall is being called from outside the MEDIA_DIRECTORY
+					// this condition can be detected by the media firewall by calling controller->getServerFilename()
 				}
 			}
 		}
@@ -89,8 +99,9 @@ class MediaController extends BaseController{
 		}
 
 		if (is_null($this->mediaobject)) return false;
-
 		$this->mediaobject->ged_id=WT_GED_ID; // This record is from a file
+
+		$this->mid=$this->mediaobject->getXref(); // Correct upper/lower case mismatch
 
 		//-- perform the desired action
 		switch($this->action) {
@@ -107,6 +118,7 @@ class MediaController extends BaseController{
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -121,6 +133,7 @@ class MediaController extends BaseController{
 				}
 				$this->mediaobject = new Media($mediarec);
 			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -135,6 +148,7 @@ class MediaController extends BaseController{
 				}
 				$this->mediaobject = new Media($mediarec);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -245,7 +259,7 @@ class MediaController extends BaseController{
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('notes');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), "mediaviewer.php?mid={$this->pid}&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), "mediaviewer.php?mid={$this->pid}&amp;action=accept");
 				$submenu->addIcon('notes');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);
@@ -395,6 +409,10 @@ class MediaController extends BaseController{
 	* @return string
 	*/
 	function getServerFilename() {
-		return $this->mediaobject->getServerFilename();
+		if ($this->mediaobject) {
+			return $this->mediaobject->getServerFilename();
+		} else {
+			return false;
+		}
 	}
 }

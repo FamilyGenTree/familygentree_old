@@ -84,10 +84,10 @@ $errors=false;
 $error_msg='';
 
 $PRIVACY_CONSTANTS=array(
-	'none'        =>i18n::translate('Show to public'),
-	'privacy'     =>i18n::translate('Show only to authenticated users'),
-	'confidential'=>i18n::translate('Show only to admin users'),
-	'hidden'      =>i18n::translate('Hide even from admin users')
+	'none'        =>i18n::translate('Show to visitors'),
+	'privacy'     =>i18n::translate('Show to members'),
+	'confidential'=>i18n::translate('Show to managers'),
+	'hidden'      =>i18n::translate('Hide from everyone')
 );
 
 switch (safe_POST('action')) {
@@ -108,11 +108,14 @@ case 'add':
 	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'#privacy');
 	exit;
 case 'update':
-	$_POST["NEW_MEDIA_DIRECTORY"] = preg_replace('/\\\/', '/', $_POST["NEW_MEDIA_DIRECTORY"]);
-	$ct = preg_match("'/$'", $_POST["NEW_MEDIA_DIRECTORY"]);
-	if ($ct==0) $_POST["NEW_MEDIA_DIRECTORY"] .= "/";
+	$_POST["NEW_MEDIA_DIRECTORY"] = trim(str_replace('\\','/',$_POST["NEW_MEDIA_DIRECTORY"]));
+	if (substr ($_POST["NEW_MEDIA_DIRECTORY"], -1) != "/") $_POST["NEW_MEDIA_DIRECTORY"] = $_POST["NEW_MEDIA_DIRECTORY"] . "/";
 	if (substr($_POST["NEW_MEDIA_DIRECTORY"], 0, 2)=="./") $_POST["NEW_MEDIA_DIRECTORY"] = substr($_POST["NEW_MEDIA_DIRECTORY"], 2);
 	if (preg_match("/.*[a-zA-Z]{1}:.*/", $_POST["NEW_MEDIA_DIRECTORY"])>0) $errors = true;
+	if ($_POST["NEW_USE_MEDIA_FIREWALL"]==true) {
+		if (substr($_POST["NEW_MEDIA_DIRECTORY"], 0, 3)=="../") $_POST["NEW_MEDIA_DIRECTORY"] = substr($_POST["NEW_MEDIA_DIRECTORY"], 3);
+		if (substr($_POST["NEW_MEDIA_DIRECTORY"], 0, 1)=="/") $_POST["NEW_MEDIA_DIRECTORY"] = substr($_POST["NEW_MEDIA_DIRECTORY"], 1);
+	}
 
 	set_gedcom_setting(WT_GED_ID, 'ABBREVIATE_CHART_LABELS',      safe_POST_bool('NEW_ABBREVIATE_CHART_LABELS'));
 	set_gedcom_setting(WT_GED_ID, 'ADVANCED_NAME_FACTS',          safe_POST('NEW_ADVANCED_NAME_FACTS'));
@@ -164,7 +167,6 @@ case 'update':
 	set_gedcom_setting(WT_GED_ID, 'MULTI_MEDIA',                  safe_POST_bool('NEW_MULTI_MEDIA'));
 	set_gedcom_setting(WT_GED_ID, 'NOTE_ID_PREFIX',               safe_POST('NEW_NOTE_ID_PREFIX'));
 	set_gedcom_setting(WT_GED_ID, 'NO_UPDATE_CHAN',               safe_POST_bool('NEW_NO_UPDATE_CHAN'));
-	set_gedcom_setting(WT_GED_ID, 'PAGE_AFTER_LOGIN',             safe_POST('NEW_PAGE_AFTER_LOGIN'));
 	set_gedcom_setting(WT_GED_ID, 'PEDIGREE_FULL_DETAILS',        safe_POST_bool('NEW_PEDIGREE_FULL_DETAILS'));
 	set_gedcom_setting(WT_GED_ID, 'PEDIGREE_LAYOUT',              safe_POST_bool('NEW_PEDIGREE_LAYOUT'));
 	set_gedcom_setting(WT_GED_ID, 'PEDIGREE_ROOT_ID',             safe_POST('NEW_PEDIGREE_ROOT_ID'));
@@ -229,7 +231,7 @@ case 'update':
 	set_gedcom_setting(WT_GED_ID, 'WEBTREES_EMAIL',               safe_POST('NEW_WEBTREES_EMAIL'));
 	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_AUTH_MODE',       safe_POST('NEW_WELCOME_TEXT_AUTH_MODE'));
 	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_AUTH_MODE_'.WT_LOCALE, safe_POST('NEW_WELCOME_TEXT_AUTH_MODE_4', WT_REGEX_UNSAFE));
-	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_CUST_HEAD',       safe_POST_bool('NEW_WELCOME_TEXT_CUST_HEAD', WT_REGEX_UNSAFE));
+	set_gedcom_setting(WT_GED_ID, 'WELCOME_TEXT_CUST_HEAD',       safe_POST_bool('NEW_WELCOME_TEXT_CUST_HEAD'));
 	set_gedcom_setting(WT_GED_ID, 'WORD_WRAPPED_NOTES',           safe_POST_bool('NEW_WORD_WRAPPED_NOTES'));
 	set_gedcom_setting(WT_GED_ID, 'ZOOM_BOXES',                   safe_POST('NEW_ZOOM_BOXES'));
 	set_gedcom_setting(WT_GED_ID, 'title',                        safe_POST('gedcom_title', WT_REGEX_UNSAFE));
@@ -237,9 +239,9 @@ case 'update':
 	if (!$_POST["NEW_MEDIA_FIREWALL_ROOTDIR"]) {
 		$NEW_MEDIA_FIREWALL_ROOTDIR = $INDEX_DIRECTORY;
 	} else {
-		$_POST["NEW_MEDIA_FIREWALL_ROOTDIR"] = trim($_POST["NEW_MEDIA_FIREWALL_ROOTDIR"]);
+		$_POST["NEW_MEDIA_FIREWALL_ROOTDIR"] = trim(str_replace('\\','/',$_POST["NEW_MEDIA_FIREWALL_ROOTDIR"]));
 		if (substr ($_POST["NEW_MEDIA_FIREWALL_ROOTDIR"], -1) != "/") $_POST["NEW_MEDIA_FIREWALL_ROOTDIR"] = $_POST["NEW_MEDIA_FIREWALL_ROOTDIR"] . "/";
-		$NEW_MEDIA_FIREWALL_ROOTDIR = $_POST["NEW_MEDIA_FIREWALL_ROOTDIR"];
+		$NEW_MEDIA_FIREWALL_ROOTDIR = safe_POST("NEW_MEDIA_FIREWALL_ROOTDIR");
 	}
 	if (!is_dir($NEW_MEDIA_FIREWALL_ROOTDIR)) {
 		$errors = true;
@@ -960,17 +962,6 @@ print_header(i18n::translate('GEDCOM configuration'));
 						</td>
 						<td class="optionbox width60">
 							<?php echo edit_field_yes_no('NEW_REQUIRE_AUTHENTICATION', get_gedcom_setting(WT_GED_ID, 'REQUIRE_AUTHENTICATION')); ?>
-						</td>
-					</tr>
-					<tr>
-						<td class="descriptionbox nowrap">
-							<?php echo i18n::translate('Page to show after login'), help_link('PAGE_AFTER_LOGIN'); ?>
-						</td>
-						<td class="optionbox width60">
-							<select name="NEW_PAGE_AFTER_LOGIN">
-								<option value="welcome" <?php if ($PAGE_AFTER_LOGIN=='welcome') echo " selected=\"selected\""; ?>><?php echo i18n::translate('Home'); ?></option>
-								<option value="mypage" <?php if ($PAGE_AFTER_LOGIN=='mypage') echo " selected=\"selected\""; ?>><?php echo i18n::translate('My Page'); ?></option>
-							</select>
 						</td>
 					</tr>
 					<tr>

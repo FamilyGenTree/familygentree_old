@@ -307,7 +307,7 @@ class GedcomRecord {
 			$url=$link.rawurlencode($this->getXref()).$separator.'ged='.rawurlencode(get_gedcom_from_id($this->ged_id));
 		} else {
 			// If the record was created from a text string, assume the current gedcom
-			$url=$link.rawurlencode($this->getXref()).$separator.'ged='.rawurlencode(WT_GEDCOM);
+			$url=$link.rawurlencode($this->getXref()).$separator.'ged='.WT_GEDURL;
 		}
 		if ($this->isRemote()) {
 			list($servid, $aliaid)=explode(':', $this->rfn);
@@ -654,7 +654,7 @@ class GedcomRecord {
 	public function format_first_major_fact($facts, $style) {
 		foreach ($this->getAllFactsByType(explode('|', $facts)) as $event) {
 			// Only display if it has a date or place (or both)
-			if ($event->getDate() || $event->getPlace()) {
+			if (($event->getDate() || $event->getPlace()) && $event->canShow()) {
 				switch ($style) {
 				case 1:
 					return '<br /><i>'.$event->getLabel().' '.format_fact_date($event).format_fact_place($event).'</i>';

@@ -59,13 +59,15 @@ class SourceController extends BaseController {
 		$this->source->ged_id=WT_GED_ID; // This record is from a file
 
 		if (!$this->source->canDisplayDetails()) {
-			print_header(i18n::translate('Private')." ".i18n::translate('Source Information'));
+			print_header(i18n::translate('Source'));
 			print_privacy_error();
 			print_footer();
 			exit;
 		}
 
 		$this->uname = WT_USER_NAME;
+
+		$this->sid=$this->source->getXref(); // Correct upper/lower case mismatch
 
 		//-- perform the desired action
 		switch($this->action) {
@@ -82,6 +84,7 @@ class SourceController extends BaseController {
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -96,6 +99,7 @@ class SourceController extends BaseController {
 				}
 				$this->source = new Source($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -110,6 +114,7 @@ class SourceController extends BaseController {
 				}
 				$this->source = new Source($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -193,7 +198,7 @@ class SourceController extends BaseController {
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('edit_sour');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), "source.php?sid={$this->sid}&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), "source.php?sid={$this->sid}&amp;action=accept");
 				$submenu->addIcon('edit_sour');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);

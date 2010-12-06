@@ -59,13 +59,15 @@ class RepositoryController extends BaseController {
 		$this->repository->ged_id=WT_GED_ID; // This record is from a file
 
 		if (!$this->repository->canDisplayDetails()) {
-			print_header(i18n::translate('Private')." ".i18n::translate('Repository information'));
+			print_header(i18n::translate('Repository'));
 			print_privacy_error();
 			print_footer();
 			exit;
 		}
 
 		$this->uname = WT_USER_NAME;
+
+		$this->rid=$this->repository->getXref(); // Correct upper/lower case mismatch
 
 		//-- perform the desired action
 		switch($this->action) {
@@ -82,6 +84,7 @@ class RepositoryController extends BaseController {
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -96,6 +99,7 @@ class RepositoryController extends BaseController {
 				}
 				$this->repository = new Repository($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -110,6 +114,7 @@ class RepositoryController extends BaseController {
 				}
 				$this->repository = new Repository($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -187,7 +192,7 @@ class RepositoryController extends BaseController {
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('edit_repo');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), "repo.php?rid={$this->rid}&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), "repo.php?rid={$this->rid}&amp;action=accept");
 				$submenu->addIcon('edit_repo');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);

@@ -1008,7 +1008,7 @@ case 'editsource':
 case 'editnote':
 	?>
 	<b><?php echo i18n::translate('Edit Shared Note'), "&nbsp;&nbsp;(" . $pid . ")"; ?></b><br /><br />
-	<form method="post" action="edit_interface.php" onsubmit="return check_form(this);">
+	<form method="post" action="edit_interface.php" >
 		<input type="hidden" name="action" value="update" />
 		<input type="hidden" name="pid" value="<?php echo $pid; ?>" />
 
@@ -1016,6 +1016,12 @@ case 'editnote':
 		$gedrec = find_gedcom_record($pid, WT_GED_ID, true);
 		if (preg_match("/^0 @$pid@ NOTE ?(.*)/", $gedrec, $n1match)) {
 			$note_content=$n1match[1].get_cont(1, $gedrec, false);
+			
+			$num_note_lines=0;
+			foreach (preg_split("/\r?\n/", $note_content, -1 ) as $j=>$line) {
+				$num_note_lines++;
+			}
+	
 		} else {
 			$note_content='';
 		}
@@ -1046,6 +1052,7 @@ case 'editnote':
 			?>
 		</table>
 		<br /><br />
+		<input type="hidden" name="num_note_lines" value="<?php echo $num_note_lines; ?>" />
 		<input type="submit" value="<?php echo i18n::translate('Save'); ?>" />
 	</form>
 	<?php
@@ -1057,7 +1064,7 @@ case 'addnewrepository':
 	?>
 		function check_form(frm) {
 			if (frm.NAME.value=="") {
-				alert('<?php echo i18n::translate('You must provide a '), " ", translate_fact('NAME'); ?>');
+				alert('<?php echo i18n::translate('You must provide a Repository name'); ?>');
 				frm.NAME.focus();
 				return false;
 			}
@@ -1072,7 +1079,7 @@ case 'addnewrepository':
 		<input type="hidden" name="action" value="addrepoaction" />
 		<input type="hidden" name="pid" value="newrepo" />
 		<table class="facts_table">
-			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('NAME'), help_link('edit_REPO_NAME'); ?></td>
+			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo i18n::translate('Repository name'), help_link('edit_REPO_NAME'); ?></td>
 			<td class="optionbox wrap"><input type="text" name="NAME" id="NAME" value="" size="40" maxlength="255" /> <?php print_specialchar_link("NAME", false); ?></td></tr>
 			<?php if (strstr($ADVANCED_NAME_FACTS, "_HEB")!==false) { ?>
 			<tr><td class="descriptionbox <?php echo $TEXT_DIRECTION; ?> wrap width25"><?php echo translate_fact('_HEB'), help_link('_HEB'); ?></td>
@@ -1176,6 +1183,7 @@ case 'update':
 	 */
 	if (isset($_REQUEST['pids_array_add'])) $pids_array = $_REQUEST['pids_array_add'];
 	if (isset($_REQUEST['pids_array_edit'])) $pids_array = $_REQUEST['pids_array_edit'];
+	if (isset($_REQUEST['num_note_lines'])) $num_note_lines = $_REQUEST['num_note_lines'];
 
 	if (isset($pids_array) && $pids_array!="no_array") {
 		$cens_pids=explode(', ', $pids_array);
@@ -1242,7 +1250,9 @@ case 'update':
 				$fields = explode(' ', $gedlines[$linenum]);
 				$glevel = $fields[0];
 				$i++;
-				while (($i<count($gedlines))&&($gedlines[$i]{0}>$glevel)) $i++;
+				while (($i<count($gedlines))&&($gedlines[$i]{0}>$glevel)) {
+					$i++;				
+				}
 			}
 
 			if (!isset($glevels)) $glevels = array();
@@ -1259,6 +1269,7 @@ case 'update':
 			if (isset($_REQUEST['_HEB'])) $_HEB = $_REQUEST['_HEB'];
 			if (isset($_REQUEST['_AKA'])) $_AKA = $_REQUEST['_AKA'];
 			if (isset($_REQUEST['_MARNM'])) $_MARNM = $_REQUEST['_MARNM'];
+			if (isset($_REQUEST['NOTE'])) $NOTE = $_REQUEST['NOTE'];
 
 			if (!empty($NAME)) $newged .= "1 NAME $NAME\n";
 			if (!empty($TYPE)) $newged .= "2 TYPE $TYPE\n";
@@ -1268,16 +1279,16 @@ case 'update':
 			if (!empty($SPFX)) $newged .= "2 SPFX $SPFX\n";
 			if (!empty($SURN)) $newged .= "2 SURN $SURN\n";
 			if (!empty($NSFX)) $newged .= "2 NSFX $NSFX\n";
-
-			if (isset($_REQUEST['NOTE'])) $NOTE = $_REQUEST['NOTE'];
-			if (!empty($NOTE)) {
-				foreach (preg_split("/\r?\n/", $NOTE, -1 ) as $k=>$line) {
-					if ($k==0) {
-						$gedlines[$k] = "0 @{$pid}@ NOTE {$line}\n";
-					} else {
-						$gedlines[$k] = "1 CONT {$line}\n";
-					}
+			
+			if (!empty($NOTE)) {			
+				$cmpfunc = create_function('$e', 'return strpos($e,"0 @N") !==0 && strpos($e,"1 CONT") !==0;');
+				$gedlines = array_filter($gedlines, $cmpfunc);
+				$tempnote = preg_split('/\r?\n/', trim($NOTE) . "\n"); // make sure only one line ending on the end
+				$title[] = "0 @$pid@ NOTE " . array_shift($tempnote);
+				foreach($tempnote as &$line) {
+    				$line = trim("1 CONT " . $line,' ');
 				}
+				$gedlines = array_merge($title,$tempnote,$gedlines);	
 			}
 
 			//-- Refer to Bug [ 1329644 ] Add Married Name - Wrong Sequence
@@ -1324,6 +1335,7 @@ case 'update':
 				if (isset($_REQUEST['_HEB'])) $_HEB = $_REQUEST['_HEB'];
 				if (isset($_REQUEST['_AKA'])) $_AKA = $_REQUEST['_AKA'];
 				if (isset($_REQUEST['_MARNM'])) $_MARNM = $_REQUEST['_MARNM'];
+				if (isset($_REQUEST['NOTE'])) $NOTE = $_REQUEST['NOTE'];
 
 				if (!empty($NAME)) $newged .= "1 NAME $NAME\n";
 				if (!empty($TYPE)) $newged .= "2 TYPE $TYPE\n";
@@ -1333,17 +1345,18 @@ case 'update':
 				if (!empty($SPFX)) $newged .= "2 SPFX $SPFX\n";
 				if (!empty($SURN)) $newged .= "2 SURN $SURN\n";
 				if (!empty($NSFX)) $newged .= "2 NSFX $NSFX\n";
-
-				if (isset($_REQUEST['NOTE'])) $NOTE = $_REQUEST['NOTE'];
-				if (!empty($NOTE)) {
-					foreach (preg_split("/\r?\n/", $NOTE) as $k=>$line) {
-						if ($k==0) {
-							$gedlines[$k] = "0 @{$pid}@ NOTE {$line}\n";
-						} else {
-							$gedlines[$k] = "1 CONT {$line}\n";
-						}
+					
+				if (!empty($NOTE)) {				
+					$cmpfunc = create_function('$e', 'return strpos($e,"0 @N") !==0 && strpos($e,"1 CONT") !==0;');
+					$gedlines = array_filter($gedlines, $cmpfunc);
+					$tempnote = preg_split('/\r?\n/', trim($NOTE) . "\n"); // make sure only one line ending on the end
+					$title[] = "0 @$pid@ NOTE " . array_shift($tempnote);
+					foreach($tempnote as &$line) {
+    					$line = trim("1 CONT " . $line,' ');
 					}
+					$gedlines = array_merge($title,$tempnote,$gedlines);	
 				}
+				
 				//-- Refer to Bug [ 1329644 ] Add Married Name - Wrong Sequence
 				//-- _HEB/ROMN/FONE have to be before _AKA, even if _AKA exists in input and the others are now added
 				if (!empty($ROMN)) $newged .= "2 ROMN $ROMN\n";

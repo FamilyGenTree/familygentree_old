@@ -86,6 +86,8 @@ class FamilyController extends BaseController {
 		$this->famrec = $this->family->getGedcomRecord();
 		$this->display = $this->family->canDisplayName();
 
+		$this->famid=$this->family->getXref(); // Correct upper/lower case mismatch
+
 		//-- perform the desired action
 		switch($this->action) {
 		case 'addfav':
@@ -101,6 +103,7 @@ class FamilyController extends BaseController {
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -115,7 +118,8 @@ class FamilyController extends BaseController {
 				}
 				$this->family = new Family($gedrec);
 				$this->parents = find_parents($_REQUEST['famid']);
-				}
+			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -131,6 +135,7 @@ class FamilyController extends BaseController {
 				$this->family = new Family($gedrec);
 				$this->parents = find_parents($this->famid);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -158,7 +163,7 @@ class FamilyController extends BaseController {
 		}
 
 		if ($this->showLivingHusb == false && $this->showLivingWife == false) {
-			print_header(i18n::translate('Private')." ".i18n::translate('Family information'));
+			print_header(i18n::translate('Family'));
 			print_privacy_error();
 			print_footer();
 			exit;
@@ -351,7 +356,7 @@ class FamilyController extends BaseController {
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('edit_fam');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), "family.php?famid={$this->famid}&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), "family.php?famid={$this->famid}&amp;action=accept");
 				$submenu->addIcon('edit_fam');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);

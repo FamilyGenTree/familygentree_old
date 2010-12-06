@@ -46,7 +46,7 @@ if (empty($gedcoms)) {
 }
 
 // Which gedcom have we requested to export
-$export = safe_GET('export', $gedcoms);
+$export = safe_GET('export', preg_quote_array($gedcoms));
 
 print_simple_header(i18n::translate('Export'));
 
@@ -82,7 +82,7 @@ if ($export) {
 	echo '<h1>Export data from database to gedcom file</h1>';
 	echo '<ul>';
 	foreach ($gedcoms as $ged_id=>$gedcom) {
-		echo '<li><a href="?export=', urlencode($gedcom), '">', $gedcom, ' => ', htmlspecialchars(filename_decode(realpath(get_gedcom_setting($ged_id, 'path')))), '</a></li>';
+		echo '<li><a href="?export=', rawurlencode($gedcom), '">', $gedcom, ' => ', htmlspecialchars(filename_decode(realpath(get_gedcom_setting($ged_id, 'path')))), '</a></li>';
 	}
 	echo '</ul>';
 }

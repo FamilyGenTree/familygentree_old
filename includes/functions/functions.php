@@ -60,6 +60,10 @@ require_once WT_ROOT.'includes/functions/functions_utf-8.php';
 // NOTE: when using listboxes, $regex can be an array of valid values.  For
 // example, you can use safe_POST('lang', array_keys($pgv_language), WT_LOCALE)
 // to validate against a list of valid languages and supply a sensible default.
+//
+// If the values are plain text, pass them through preg_quote_array() to 
+// escape any regex special characters:
+// $export = safe_GET('export', preg_quote_array($gedcoms));
 ////////////////////////////////////////////////////////////////////////////////
 
 function safe_POST($var, $regex=WT_REGEX_NOSCRIPT, $default=null) {
@@ -110,6 +114,22 @@ function safe_REQUEST($arr, $var, $regex=WT_REGEX_NOSCRIPT, $default=null) {
 	}
 }
 
+function preg_quote_array($var) {
+	if (is_scalar($var)) {
+		return preg_quote($var);
+	} else {
+		if (is_array($var)) {
+			foreach ($var as &$v) {
+				$v = preg_quote($v);
+			}
+			return $var;
+		} else {
+			// Neither scalar nor array.  Object?
+			return false;
+		}
+	}
+}
+
 function preg_match_recursive($regex, $var) {
 	if (is_scalar($var)) {
 		return preg_match($regex, $var);
@@ -141,6 +161,48 @@ function trim_recursive($var) {
 			// Neither scalar nor array.  Object?
 			return $var;
 		}
+	}
+}
+
+// Fetch a remote file.  Stream wrappers are disabled on
+// many hosts, and do not allow the detection of timeout.
+function fetch_remote_file($host, $path, $timeout=3) {
+	$fp=@fsockopen($host, '80', $errno, $errstr, $timeout );
+	if (!$fp) {
+		return null;
+	}
+
+	fputs($fp, "GET $path HTTP/1.0\r\nHost: $host\r\nKeep-Alive: 300\r\nConnection: keep-alive\r\n\r\n");
+
+	$response='';
+	while ($data=fread($fp, 65536)) {
+		$response.=$data;
+	}
+	fclose($fp);
+
+	// The response includes headers, a blank line, then the content
+	$response=substr($response, strpos($response, "\r\n\r\n") + 4);
+
+	return $response;
+}
+
+// Check with the webtrees.net server for the latest version of webtrees.
+// Fetching the remote file can be slow, and place an excessive load on
+// the webtrees.net server, so only check it infrequently, and cache the result.
+function fetch_latest_version() {
+	$last_update_timestamp=get_site_setting('LATEST_WT_VERSION_TIMESTAMP');
+	if ($last_update_timestamp < time()-24*60*60) {
+		$latest_version_txt=fetch_remote_file('webtrees.net', '/latest-version.txt');
+		if ($latest_version_txt) {
+			set_site_setting('LATEST_WT_VERSION', $latest_version_txt);
+			set_site_setting('LATEST_WT_VERSION_TIMESTAMP', time());
+			return $latest_version_txt;
+		} else {
+			// Cannot connect to server - use cached version (if we have one)
+			return get_site_setting('LATEST_WT_VERSION');
+		}
+	} else {
+		return get_site_setting('LATEST_WT_VERSION');
 	}
 }
 
@@ -205,7 +267,6 @@ function load_gedcom_settings($ged_id=WT_GED_ID) {
 	global $MULTI_MEDIA;                  $MULTI_MEDIA                  =get_gedcom_setting($ged_id, 'MULTI_MEDIA');
 	global $NOTE_ID_PREFIX;               $NOTE_ID_PREFIX               =get_gedcom_setting($ged_id, 'NOTE_ID_PREFIX');
 	global $NO_UPDATE_CHAN;               $NO_UPDATE_CHAN               =get_gedcom_setting($ged_id, 'NO_UPDATE_CHAN');
-	global $PAGE_AFTER_LOGIN;             $PAGE_AFTER_LOGIN             =get_gedcom_setting($ged_id, 'PAGE_AFTER_LOGIN');
 	global $PEDIGREE_FULL_DETAILS;        $PEDIGREE_FULL_DETAILS        =get_gedcom_setting($ged_id, 'PEDIGREE_FULL_DETAILS');
 	global $PEDIGREE_LAYOUT;              $PEDIGREE_LAYOUT              =get_gedcom_setting($ged_id, 'PEDIGREE_LAYOUT');
 	global $PEDIGREE_ROOT_ID;             $PEDIGREE_ROOT_ID             =get_gedcom_setting($ged_id, 'PEDIGREE_ROOT_ID');
@@ -1945,8 +2006,8 @@ function get_relationship_name_from_path($path, $pid1, $pid2) {
 	case 'fatbro': return i18n::translate_c('father\'s brother', 'uncle');
 	case 'fatchi': return i18n::translate_c('father\'s child', 'half-sibling');
 	case 'fatdau': return i18n::translate_c('father\'s daughter', 'half-sister');
-	case 'fatfat': return i18n::translate_c('father\'s father', 'grandfather');
-	case 'fatmot': return i18n::translate_c('father\'s mother', 'grandmother');
+	case 'fatfat': return i18n::translate_c('father\'s father', 'paternal grandfather');
+	case 'fatmot': return i18n::translate_c('father\'s mother', 'paternal grandmother');
 	case 'fatpar': return i18n::translate_c('father\'s parent', 'grandparent');
 	case 'fatsib': return i18n::translate_c('father\'s sibling', 'aunt/uncle');
 	case 'fatsis': return i18n::translate_c('father\'s sister', 'aunt');
@@ -1963,9 +2024,9 @@ function get_relationship_name_from_path($path, $pid1, $pid2) {
 	case 'motbro': return i18n::translate_c('mother\'s brother', 'uncle');
 	case 'motchi': return i18n::translate_c('mother\'s child', 'half-sibling');
 	case 'motdau': return i18n::translate_c('mother\'s daughter', 'half-sister');
-	case 'motfat': return i18n::translate_c('mother\'s father', 'grandfather');
+	case 'motfat': return i18n::translate_c('mother\'s father', 'maternal grandfather');
 	case 'mothus': return i18n::translate_c('mother\'s husband', 'step-father');
-	case 'motmot': return i18n::translate_c('mother\'s mother', 'grandmother');
+	case 'motmot': return i18n::translate_c('mother\'s mother', 'maternal grandmother');
 	case 'motpar': return i18n::translate_c('mother\'s parent', 'grandparent');
 	case 'motsib': return i18n::translate_c('mother\'s sibling', 'aunt/uncle');
 	case 'motsis': return i18n::translate_c('mother\'s sister', 'aunt');
@@ -2933,18 +2994,18 @@ function get_theme_names() {
 		$themes = array();
 		$d = dir(WT_ROOT.'themes');
 		while (false !== ($entry = $d->read())) {
-			if ($entry{0}!="." && $entry!="CVS" && !stristr($entry, "svn") && is_dir(WT_ROOT.'themes/'.$entry) && file_exists(WT_ROOT.'themes/'.$entry.'/theme.php')) {
-				$themefile = implode("", file(WT_ROOT.'themes/'.$entry.'/theme.php'));
-				$tt = preg_match("/theme_name\s*=\s*\"(.*)\";/", $themefile, $match);
+			if ($entry[0]!='.' && $entry[0]!='_' && is_dir(WT_ROOT.'themes/'.$entry) && file_exists(WT_ROOT.'themes/'.$entry.'/theme.php')) {
+				$themefile = implode('', file(WT_ROOT.'themes/'.$entry.'/theme.php'));
+				$tt = preg_match('/theme_name\s*=\s*"(.*)";/', $themefile, $match);
 				if ($tt>0)
 					$themename = trim($match[1]);
 				else
 					$themename = "themes/$entry";
-				$themes[$themename] = "themes/$entry/";
+				$themes[i18n::translate('%s', $themename)] = "themes/$entry/";
 			}
 		}
 		$d->close();
-		uksort($themes, "utf8_strcasecmp");
+		uksort($themes, 'utf8_strcasecmp');
 	}
 	return $themes;
 }
@@ -2973,23 +3034,6 @@ function filename_encode($filename) {
 		return utf8_encode($filename);
 	else
 		return $filename;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Remove empty and duplicate values from a URL query string
-////////////////////////////////////////////////////////////////////////////////
-function normalize_query_string($query) {
-	$components=array();
-	foreach (preg_split('/(^\?|\&(amp;)*)/', urldecode($query), -1, PREG_SPLIT_NO_EMPTY) as $component)
-		if (strpos($component, '=')!==false) {
-			list ($key, $data)=explode('=', $component, 2);
-			if (!empty($data)) $components[$key]=$data;
-		}
-	$new_query='';
-	foreach ($components as $key=>$data)
-		$new_query.=(empty($new_query)?'?':'&amp;').$key.'='.$data;
-
-	return $new_query;
 }
 
 function getfilesize($bytes) {
@@ -3037,43 +3081,36 @@ function in_arrayr($needle, $haystack) {
 	return false;
 }
 
-/**
- * function to build an URL querystring from GET or POST variables
- * @return string
- */
-function get_query_string() {
-	$qstring = "";
-	if (!empty($_GET)) {
-		foreach ($_GET as $key => $value) {
-			if ($key != "view") {
-				if (!is_array($value)) {
-					$qstring .= "&amp;{$key}={$value}";
-				} else {
-					foreach ($value as $k=>$v) {
-						$qstring .= "&amp;{$key}[{$k}]={$v}";
-					}
-				}
-			}
-		}
+// Function to build an URL querystring from GET variables
+// Optionally, add/replace specified values
+function get_query_url($overwrite=null) {
+	if (empty($_GET)) {
+		$get=array();
 	} else {
-		if (!empty($_POST)) {
-			foreach ($_POST as $key => $value) {
-				if ($key != "view") {
-					if (!is_array($value)) {
-						$qstring .= "&amp;{$key}={$value}";
-					} else {
-						foreach ($value as $k=>$v) {
-							if (!is_array($v)) {
-								$qstring .= "&amp;{$key}[{$k}]={$v}";
-							}
-						}
-					}
-				}
+		$get=$_GET;
+	}
+	if (is_array($overwrite)) {
+		foreach ($overwrite as $key=>$value) {
+			$get[$key]=$value;
+		}
+	}
+
+	$query_string='';
+	foreach ($get as $key=>$value) {
+		if (!is_array($value)) {
+			$query_string.='&amp;' . rawurlencode($key) . '=' . rawurlencode($value);
+		} else {
+			foreach ($value as $k=>$v) {
+				$query_string.='&amp;' . rawurlencode($key) . '[' . rawurlencode($k) . ']=' . rawurlencode($v);
 			}
 		}
 	}
-	$qstring = substr($qstring, 5); // Remove leading "&amp;"
-	return $qstring;
+	$query_string=substr($query_string, 5); // Remove leading '&amp;'
+	if ($query_string) {
+		return WT_SCRIPT_NAME.'?'.$query_string;
+	} else {
+		return WT_SCRIPT_NAME;
+	}
 }
 
 //This function works with a specified generation limit.  It will completely fill

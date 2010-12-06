@@ -998,7 +998,7 @@ function print_repo_table($repos, $legend='') {
 	$table_id = "ID".floor(microtime()*1000000); // sorttable requires a unique ID
 	//-- table header
 	echo '<table id="', $table_id, '" class="sortable list_table center"><tr><td></td>';
-	echo '<th class="list_label">', translate_fact('NAME'), '</th>';
+	echo '<th class="list_label">', i18n::translate('Repository name'), '</th>';
 	echo '<th class="list_label">', i18n::translate('Sources'), '</th>';
 	if ($SHOW_LAST_CHANGE) {
 		echo '<th class="list_label rela">', translate_fact('CHAN'), '</th>';
@@ -1143,9 +1143,9 @@ function format_surname_table($surnames, $type) {
 	foreach ($surnames as $surn=>$surns) {
 		// Each surname links back to the indi/fam surname list
 		if ($surn) {
-			$url=$type.'.php?surname='.urlencode($surn).'&amp;ged='.urlencode($GEDCOM);
+			$url=$type.'.php?surname='.urlencode($surn).'&amp;ged='.rawurlencode($GEDCOM);
 		} else {
-			$url=$type.'.php?alpha=,&amp;ged='.urlencode($GEDCOM);
+			$url=$type.'.php?alpha=,&amp;ged='.rawurlencode($GEDCOM);
 		}
 		// Row counter
 		++$row_num;
@@ -1237,8 +1237,8 @@ function format_surname_tagcloud($surnames, $type, $totals) {
 				'weight'=>count($indis),
 				'params'=>array(
 					'url'=>$surn ?
-						$type.'.php?surname='.urlencode($surn).'&amp;ged='.urlencode(WT_GEDCOM) :
-						$type.'.php?alpha=,&amp;ged='.urlencode(WT_GEDCOM)
+						$type.'.php?surname='.urlencode($surn).'&amp;ged='.WT_GEDURL :
+						$type.'.php?alpha=,&amp;ged='.WT_GEDURL
 				)
 			));
 		}
@@ -1257,9 +1257,9 @@ function format_surname_list($surnames, $style, $totals) {
 	foreach ($surnames as $surn=>$surns) {
 		// Each surname links back to the indilist
 		if ($surn) {
-			$url='indilist.php?surname='.urlencode($surn).'&amp;ged='.urlencode($GEDCOM);
+			$url='indilist.php?surname='.urlencode($surn).'&amp;ged='.rawurlencode($GEDCOM);
 		} else {
-			$url='indilist.php?alpha=,&amp;ged='.urlencode($GEDCOM);
+			$url='indilist.php?alpha=,&amp;ged='.rawurlencode($GEDCOM);
 		}
 		// If all the surnames are just case variants, then merge them into one
 		// Comment out this block if you want SMITH listed separately from Smith
@@ -1325,15 +1325,14 @@ function format_surname_list($surnames, $style, $totals) {
  * @param array $datalist contain records that were extracted from the database.
  */
 function print_changes_table($change_ids) {
-	global $SHOW_MARRIED_NAMES, $TEXT_DIRECTION;
+	global $SHOW_MARRIED_NAMES, $TEXT_DIRECTION, $WT_IMAGES;
 	if (!$change_ids) return;
 	require_once WT_ROOT.'js/sorttable.js.htm';
-	$indi = false;
 	$table_id = "ID".floor(microtime()*1000000); // sorttable requires a unique ID
 	//-- table header
 	echo "<table id=\"", $table_id, "\" class=\"sortable list_table center\">";
 	echo "<tr>";
-	//echo "<td></td>";
+	echo "<th></th>";
 	echo "<th class=\"list_label\">", i18n::translate('Record'), "</th>";
 	echo "<th style=\"display:none\">GIVN</th>";
 	echo "<th class=\"list_label\">", translate_fact('CHAN'), "</th>";
@@ -1350,21 +1349,47 @@ function print_changes_table($change_ids) {
 		}
 		//-- Counter
 		echo "<tr>";
-		//echo "<td class=\"list_value_wrap rela list_item\">", ++$n, "</td>";
+		echo "<td class=\"list_value_wrap rela list_item\">";
+		switch ($record->getType()) {
+		case "INDI":
+			echo $record->getSexImage('small', '', '', false);
+			$indi=true;
+			break;
+		case "FAM":
+			echo '<img src="', $WT_IMAGES['cfamily'], '" title="" alt="" height="12" />';
+			$indi = false;
+			break;
+		case "OBJE":
+			echo '<img src="', $record->getMediaIcon(), '" title="" alt="" height="12" />';
+			$indi = false;
+			break;
+		case "NOTE":
+			echo '<img src="', $WT_IMAGES['note'], '" title="" alt="" height="12" />';
+			$indi = false;
+			break;
+		case "SOUR":
+			echo '<img src="', $WT_IMAGES['source'], '" title="" alt="" height="12" />';
+			$indi = false;
+			break;
+		case "REPO":
+			echo '<img src="', $WT_IMAGES['repository'], '" title="" alt="" height="12" />';
+			$indi = false;
+			break;
+		default:
+			$indi = false;
+			break;
+		}
+		echo "</td>";
 		++$n;
 		//-- Record name(s)
 		$name = $record->getFullName();
 		echo "<td class=\"list_value_wrap\" align=\"", get_align($name), "\">";
 		echo "<a href=\"", $record->getHtmlUrl(), "\" class=\"list_item name2\" dir=\"", $TEXT_DIRECTION, "\">", PrintReady($name), "</a>";
-		if ($record->getType()=="INDI") {
-			echo $record->getSexImage();
-			$indi=true;
-		}
 		$addname=$record->getAddName();
 		if ($addname) {
 			echo "<br /><a href=\"", $record->getHtmlUrl(), "\" class=\"list_item\">", PrintReady($addname), "</a>";
 		}
-		if ($record->getType()=='INDI') {
+		if ($indi) {
 			if ($SHOW_MARRIED_NAMES) {
 				foreach ($record->getAllNames() as $name) {
 					if ($name['type']=='_MARNM') {
@@ -1388,7 +1413,7 @@ function print_changes_table($change_ids) {
 	}
 	//-- table footer
 	echo "<tr class=\"sortbottom\">";
-	//echo "<td></td>";
+	echo "<td></td>";
 	echo "<td class=\"list_label\">";
 	if ($n>1 && $indi) {
 		echo '<a href="javascript:;" onclick="sortByOtherCol(this, 1)"><img src="images/topdown.gif" alt="" border="0" /> ', translate_fact('GIVN'), '</a><br />';
@@ -1397,7 +1422,7 @@ function print_changes_table($change_ids) {
 		echo "<input id=\"cb_parents_$table_id\" type=\"checkbox\" onclick=\"toggleByClassName('DIV', 'parents_$table_id');\" /><label for=\"cb_parents_$table_id\">", i18n::translate('Show parents'), "</label><br />";
 	}
 	echo i18n::translate('Total changes'), ": ", $n;
-	if ($n>=$NMAX) echo "<br /><span class=\"warning\">", i18n::translate('Recent Changes'), " &gt; ", $NMAX, "</span>";
+	if ($n>=$NMAX) echo "<br /><span class=\"warning\">", i18n::translate('Recent changes'), " &gt; ", $NMAX, "</span>";
 	echo "</td>";
 	echo "<td style=\"display:none\">GIVN</td>";
 	echo "<td></td>";

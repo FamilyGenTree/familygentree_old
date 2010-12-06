@@ -33,7 +33,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.0.5');
+define('WT_VERSION',         '1.0.6');
 define('WT_VERSION_RELEASE', ''); // 'svn', 'beta', 'rc1', '', etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 define('WT_WEBTREES_URL',    'http://webtrees.net');
@@ -48,7 +48,7 @@ define('WT_DEBUG_SQL',  false);
 define('WT_ERROR_LEVEL', 2); // 0=none, 1=minimal, 2=full
 
 // Required version of database tables/columns/indexes/etc.
-define('WT_SCHEMA_VERSION', 4);
+define('WT_SCHEMA_VERSION', 5);
 
 // Regular expressions for validating user input, etc.
 define('WT_REGEX_XREF',     '[A-Za-z0-9:_-]+');
@@ -343,6 +343,7 @@ if (!$ged_id) {
 }
 define('WT_GEDCOM', $GEDCOM);
 define('WT_GED_ID', $ged_id);
+define('WT_GEDURL', rawurlencode(WT_GEDCOM));
 
 load_gedcom_settings(WT_GED_ID);
 
@@ -424,7 +425,7 @@ if (WT_SCRIPT_NAME!='help_text.php') {
 			basicHTTPAuthenticateUser();
 		} else {
 			if (WT_SCRIPT_NAME=='index.php') {
-				$url='index.php?ctype=gedcom&ged='.WT_GEDCOM;
+				$url='index.php?ged='.WT_GEDCOM;
 			} else {
 				$url=WT_SCRIPT_NAME.'?'.$QUERY_STRING;
 			}
@@ -453,33 +454,35 @@ if (WT_USER_ID) {
 }
 
 // Set the theme
-if (get_site_setting('ALLOW_USER_THEMES')) {
-	// Requested change of theme?
-	$THEME_DIR=safe_GET('theme', get_theme_names());
-	unset($_GET['theme']);
-	// Last theme used?
-	if (!$THEME_DIR && isset($_SESSION['theme_dir']) && in_array($_SESSION['theme_dir'], get_theme_names())) {
-		$THEME_DIR=$_SESSION['theme_dir'];
+if (!defined('WT_THEME_DIR')) {
+	if (get_site_setting('ALLOW_USER_THEMES')) {
+		// Requested change of theme?
+		$THEME_DIR=safe_GET('theme', get_theme_names());
+		unset($_GET['theme']);
+		// Last theme used?
+		if (!$THEME_DIR && isset($_SESSION['theme_dir']) && in_array($_SESSION['theme_dir'], get_theme_names())) {
+			$THEME_DIR=$_SESSION['theme_dir'];
+		}
 	}
+	if (!$THEME_DIR) {
+		// User cannot choose (or has not chosen) a theme.
+		// 1) gedcom setting
+		// 2) site setting
+		// 3) webtrees
+		// 4) first one found
+		$THEME_DIR=get_gedcom_setting(WT_GED_ID, 'THEME_DIR');
+		if (!in_array($THEME_DIR, get_theme_names())) {
+			$THEME_DIR=get_site_setting('THEME_DIR', 'themes/webtrees/');
+		}
+		if (!in_array($THEME_DIR, get_theme_names())) {
+			$THEME_DIR='themes/webtrees/';
+		}
+		if (!in_array($THEME_DIR, get_theme_names())) {
+			list($THEME_DIR)=get_theme_names();
+		}
+	}
+	define('WT_THEME_DIR', $THEME_DIR);
 }
-if (!$THEME_DIR) {
-	// User cannot choose (or has not chosen) a theme.
-	// 1) gedcom setting
-	// 2) site setting
-	// 3) webtrees
-	// 4) first one found
-	$THEME_DIR=get_gedcom_setting(WT_GED_ID, 'THEME_DIR');
-	if (!in_array($THEME_DIR, get_theme_names())) {
-		$THEME_DIR=get_site_setting('THEME_DIR', 'themes/webtrees/');
-	}
-	if (!in_array($THEME_DIR, get_theme_names())) {
-		$THEME_DIR='themes/webtrees/';
-	}
-	if (!in_array($THEME_DIR, get_theme_names())) {
-		list($THEME_DIR)=get_theme_names();
-	}
-}
-define('WT_THEME_DIR', $THEME_DIR);
 
 // Remember this setting
 $_SESSION['theme_dir']=WT_THEME_DIR;

@@ -100,6 +100,8 @@ class IndividualController extends BaseController {
 			return false;
 		}
 
+		$this->$pid=$this->indi->getXref(); // Correct upper/lower case mismatch
+
 		//-- perform the desired action
 		switch($this->action) {
 		case 'addfav':
@@ -115,6 +117,7 @@ class IndividualController extends BaseController {
 				);
 				user_favorites_WT_Module::addFavorite($favorite);
 			}
+			unset($_GET['action']);
 			break;
 		case 'accept':
 			if (WT_USER_CAN_ACCEPT) {
@@ -129,6 +132,7 @@ class IndividualController extends BaseController {
 				}
 				$this->indi = new Person($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		case 'undo':
 			if (WT_USER_CAN_ACCEPT) {
@@ -143,6 +147,7 @@ class IndividualController extends BaseController {
 				}
 				$this->indi = new Person($gedrec);
 			}
+			unset($_GET['action']);
 			break;
 		}
 
@@ -378,7 +383,7 @@ class IndividualController extends BaseController {
 			echo '<dd class="field">', PrintReady($dummy->getFullName());
 				if ($this->userCanEdit() && !strpos($factrec, 'WT_OLD') && $this->name_count > 1) {
 					echo "&nbsp;&nbsp;&nbsp;<a href=\"javascript:;\" class=\"font9\" onclick=\"edit_name('".$this->pid."', ".$linenum."); return false;\">", i18n::translate('Edit'), "</a> | ";
-					echo "<a class=\"font9\" href=\"javascript:;\" onclick=\"delete_record('".$this->pid."', ".$linenum."); return false;\">", i18n::translate('Delete'), "</a>", help_link('delete_name');
+					echo "<a class=\"font9\" href=\"javascript:;\" onclick=\"delete_record('".$this->pid."', ".$linenum."); return false;\">", i18n::translate('Delete'), "</a>";
 				}
 			echo '</dd>';
 			echo '</dl>';
@@ -545,7 +550,7 @@ class IndividualController extends BaseController {
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$submenu->addIcon('edit_indi');
 				$menu->addSubmenu($submenu);
-				$submenu = new Menu(i18n::translate('Accept all changes'), $this->indi->getHtmlUrl()."&amp;action=accept");
+				$submenu = new Menu(i18n::translate('Approve all changes'), $this->indi->getHtmlUrl()."&amp;action=accept");
 				$submenu->addIcon('edit_indi');
 				$submenu->addClass("submenuitem{$ff}", "submenuitem_hover{$ff}", "submenu{$ff}");
 				$menu->addSubmenu($submenu);

@@ -996,10 +996,10 @@ case 'RESN':
 	$text=
 		i18n::translate('Apart from general privacy settings, <b>webtrees</b> has the ability to set restrictions on viewing and editing fact information for individuals and families. The restrictions can be set by anyone who is allowed to edit the information, unless privacy or formerly set restrictions prohibit this.').
 		'<br /><br />'.i18n::translate('The following values can be used:').
-		'<br /><ul><li><b>'.i18n::translate_c('Restriction status', 'None').'</b><br />'.i18n::translate('Site administrators, GEDCOM administrators, and users who have rights to edit can change the information. Fact information can be viewed according to privacy settings as applied by the administrator.').
-		'</li><li><b>'.i18n::translate_c('Restriction status', 'Do not change').'</b><br />'.i18n::translate('This setting has no influence on the visibility of the fact data. It restricts editing rights to site administrators and GEDCOM administrators. If the information applies to the user himself, he can also view and, assuming he has editing rights, edit it.').
-		'</li><li><b>'.i18n::translate_c('Restriction status', 'Privacy').'</b><br />'.i18n::translate('Site administrators and GEDCOM administrators can view and edit the information. If the information applies to the user himself, he can also view and, assuming he has editing rights, edit it. It will be hidden from all other users regardless of their login status.').
-		'</li><li><b>'.i18n::translate_c('Restriction status', 'Confidential').'</b><br />'.i18n::translate('Only site administrators and GEDCOM administrators can view and edit the information. It will be hidden from all other users regardless of their login status.').
+		'<br /><ul><li><b>'.i18n::translate_c('Restriction status', 'None').'</b><br />'.i18n::translate('Administrators, managers, and editors can change the information. Fact information can be viewed according to privacy settings as applied by the administrator or manager.').
+		'</li><li><b>'.i18n::translate_c('Restriction status', 'Do not change').'</b><br />'.i18n::translate('This setting has no influence on the visibility of the fact data. It restricts editing rights to administrators and managers. If the information applies to the user himself, he can also view and, assuming he has editing rights, edit it.').
+		'</li><li><b>'.i18n::translate_c('Restriction status', 'Privacy').'</b><br />'.i18n::translate('Administrators and managers can view and edit the information. If the information applies to the user himself, he can also view and, assuming he has editing rights, edit it. It will be hidden from all other users regardless of their login status.').
+		'</li><li><b>'.i18n::translate_c('Restriction status', 'Confidential').'</b><br />'.i18n::translate('Only administrators and managers can view and edit the information. It will be hidden from all other users regardless of their login status.').
 		'</li></ul>';
 	break;
 
@@ -2246,7 +2246,14 @@ case 'HIDE_LIVE_PEOPLE':
 
 case 'INDEX_DIRECTORY':
 	$title=i18n::translate('Data file directory');
-	$text=i18n::translate('The path to a readable and writable directory where <b>webtrees</b> should store data files (include the trailing "/").  <b>webtrees</b> does not require this directory\'s name to be "data".  You can choose any name you like.<br /><br />For security, this directory should be placed somewhere in the server\'s file space that is not accessible from the Internet. An example of such a structure follows:<br /><b>webtrees:</b> dir1/dir2/dir3/webtrees<br /><b>Index:</b> dir1/dir4/dir5/dir6/data<br /><br />For the example shown, you would enter <b>../../dir4/dir5/dir6/data/</b> in this field.');
+	$text=
+		i18n::translate('<b>webtrees</b> requires a directory with read/write permission, where it can create temporary files and export data.  By default, it uses the data/ directory.').
+	'<br/><br/>'.
+		i18n::translate('Some site administrators prefer not to have writable files or directories in the public HTML directory.  By specifying an alternative location to write data, you can make the existing data/ directory read-only.  Note that the file data/config.ini.php cannot be moved, and must remain in this location.').
+	'<br/><br/>'.
+		i18n::translate('If your server does not support ".htaccess" files (e.g. Microsoft IIS), and you cannot set access controls for this directory, then you should move this directory to another location.').
+	'<br/><br/>'.
+		i18n::translate('The directory can be specified in full (e.g. /home/user_name/genealogy_data/) or relative to the installation directory (e.g. ../../genealogy_data/).');
 	break;
 
 case 'INDI_FACTS_ADD':
@@ -2351,7 +2358,7 @@ case 'MEMORY_LIMIT':
 	ini_restore('memory_limit');
 	$dflt_mem=ini_get('memory_limit');
 	$title=i18n::translate('Memory limit');
-	$text=i18n::translate('By default, your server allows scripts to use %s of memory.', $dflt_mem).
+	$text= /* I18N: %s is an amount of memory, such as 32MB */ i18n::translate('By default, your server allows scripts to use %s of memory.', $dflt_mem).
 		' '.
 		i18n::translate('You can request a higher or lower limit, although the server may ignore this request.').
 		' '.
@@ -2383,11 +2390,6 @@ case 'NOTE_ID_PREFIX':
 	$text=i18n::translate('When a new note record is added online in <b>webtrees</b>, a new ID for that note will be generated automatically. The note ID will have this prefix.');
 	break;
 
-case 'PAGE_AFTER_LOGIN':
-	$title=i18n::translate('Page to show after login');
-	$text=i18n::translate('Which page should users see after they have logged in?<br /><br />The choice made here determines whether a successful Login causes My Page or the Home Page to appear when the login is done from the Home Page.<br /><br />A Login done from the link at the top of every other page will return the user to that page.');
-	break;
-
 case 'PEDIGREE_FULL_DETAILS':
 	$title=i18n::translate('Show birth and death details on charts');
 	$text=i18n::translate('This option controls whether or not to show the Birth and Death details of an individual on charts.');
@@ -2414,9 +2416,9 @@ case 'PEDIGREE_SHOW_GENDER':
 	break;
 
 case 'RELATIONSHIP_PATH_LENGTH':
-	$title=i18n::translate('Maximum relationship path length');
+	$title=i18n::translate('Restrict to immediate family');
 	$text=
-		i18n::translate('Where a user is associated to an individual in the database, you can prevent them from accessing the details of distant relations.  You specify the number of relationship steps that the user is allowed to see.  This option only affects access to living people, access to dead people is covered by the global privacy settings.').
+		i18n::translate('Where a user is associated to an individual record in a family tree and has a role of member, editor, or moderator, you can prevent them from accessing the details of distant, living relations.  You specify the number of relationship steps that the user is allowed to see.').
 		'<br/><br/>'.
 		i18n::translate('For example, if you specify a path length of 2, the person will be able to see their grandson (child, child), their aunt (parent, sibling), their step-daughter (spouse, child), but not their first cousin (parent, sibling, child).').
 		'<br/><br/>'.
@@ -2620,7 +2622,7 @@ case 'SHOW_LIST_PLACES':
 
 case 'SHOW_LIVING_NAMES':
 	$title=i18n::translate('Show living names');
-	$text=i18n::translate('Should the names of living people be shown to the public?');
+	$text=i18n::translate('Should the names of living people be shown to visitors?');
 	break;
 
 case 'SHOW_MARRIED_NAMES':
@@ -2883,7 +2885,7 @@ case 'edituser.php':
 	break;
 
 case 'family.php':
-	$title=i18n::translate('Family details page');
+	$title=i18n::translate('Family');
 	$text=i18n::translate('This page will show you an overview of the family that you chose on a previous page.<br /><br />From top to bottom you will see the Personal Details boxes of the husband and his parents, the wife and her parents, and the children.<br /><br />The layout and contents of the Person Boxes are the same as the boxes that you already know from the Pedigree and Descendancy pages.<br /><br />To the right of the Parent boxes you may see an arrow if more ancestors exist in the file. When you click that arrow, you will move up a generation to show you a new family page with the previous parents now listed as the husband and wife.<br /><br />At the right side within the name box you may see a Zoom (magnifying glass) icon which you can click to reveal more details about the individual. When you click the name you will be taken to the Individual Information page of that person.<br /><br />Also at the right side you will find a small menu to take you to pages with charts or more information.  Some of these menu items also have sub-menus which will appear when your mouse pointer approaches the parent menu item.<br /><br />The Family Group Information box shows all known facts and information about this family, such as marriage, multimedia objects, and notes. In the Fact Information box, clicking a place will take you to the Place list, where all other families and individuals who are connected to that place are shown. Clicking a date will jump to the Day calendar, which will show all events that happened on that day and month in history. Multi-media objects can be clicked; this will open a new window in which the object is viewed. When you click on the picture caption, you will see the picture on the MultiMedia page. If you click on a Source link, the details of that source will be displayed on the Source page.<br /><br />Below the name boxes of the children you find the <b>Add a child to this Family</b> link.  Next to the name boxes of the children you see the <b>Family Group Information</b> link.  If you have enough rights, you can edit, delete, and add data and facts here.<br /><br />As with the Individual Information page, you will see a menu at the top right of the page.  Entries in this menu take you to other pages where you can get information about this family or perform other tasks related to this family.<br />');
 	break;
 
@@ -2893,7 +2895,7 @@ case 'familybook.php':
 	break;
 
 case 'famlist.php':
-	$title=i18n::translate('Family list page');
+	$title=i18n::translate('Families');
 	$text=i18n::translate('On this page you can display a list of families.  The names will be displayed with surnames first and sorted into alphabetical order.<br /><br />The output of the Name list depends on:<ol><li>The letter you clicked in the Alphabetical index.</li><li>Whether you clicked "Skip" or "Show" Surname List.</li></ol>You can search on the husband\'s or the wife\'s surname;  both are included in the list.<br /><br />More help is available by clicking the <b>?</b> next to items on the page.');
 	break;
 
@@ -2917,12 +2919,12 @@ case 'index.php':
 	break;
 
 case 'indilist.php':
-	$title=i18n::translate('Individuals list page');
+	$title=i18n::translate('Individuals');
 	$text=i18n::translate('On this page you can display a list of individuals.  The names will be displayed with surnames first and sorted into alphabetical order.<br /><br />The output of the Name list depends on:<ol><li>The letter you clicked in the Alphabetical index.</li><li>Whether you clicked "Skip" or "Show" Surname List.</li></ol>More help is available by clicking the <b>?</b> next to items on the page.');
 	break;
 
 case 'individual.php':
-	$title=i18n::translate('Individual information');
+	$title=i18n::translate('Individual');
 	$text=i18n::translate('All details of a person are displayed on this page.<br /><br />If there is a picture available, you will see it at the top left side.  You will see the names of the person next to the picture.<br /><br />Names can have notes and sources attached to them. If any of the names have notes or sources, you will see them listed under the names they relate to.<br /><br />A person might have an AKA (maybe he\'s known under another name). If that is the case, it will be displayed.<br /><br />If you have Edit rights to this person, you will also see <b>Edit</b> and <b>Delete</b> links next to the items that you can edit.<br /><br />On this page you see tab sheets for <b>Personal Facts and Details</b>, <b>Notes</b>, <b>Sources</b>, <b>Media</b>, and <b>Close Relatives</b>.  These tab sheets show you all the information about this individual that is stored in the database.<br /><ul><li>The <b>Personal Facts and Details</b> tab will show you the facts and details about this person and any fact from their marriages. Clicking on any date on this tab will take you to the Anniversary Calendar for that date, so that you can see other events that happened on the same day. Clicking on a place will take you to the Place Hierarchy where you can view other people who had events in the same place. For marriage and other family related facts, the name of the person\'s spouse is available so that you can view the spouse and a link to the family record is also provided.</li><li>The <b>Notes</b> tab will show you any general notes relating to this person.</li><li>The <b>Sources</b> tab will show you all of the <u>general</u> sources for this person. These sources are <u>not</u> linked to individual facts, not even the person\'s name; they are associated with the individual himself.  Clicking on the title of a source will take you to a more detailed Source Information page that will display other people who are also linked to the same source.</li><li>The <b>Media</b> tab will list all of the pictures and other media items that are attached to this individual. Clicking on a thumbnail of the picture will open up a larger view of the image. Clicking on the picture caption will show you the picture on the MultiMedia page.</li><li>The <b>Close Relatives</b> tab lists this person\'s parents and siblings as well as all of the spouses and children that this person has had. These persons will be listed in boxes similar to the charts that you may have already seen.</li></ul>On the right of the screen you will find a box with links.  Many of the links in the box are the same as the links in the menus. For example, clicking on the <b>Pedigree Chart</b> link on the side links will take you to the Pedigree chart for this person. This is different from the menu links, because clicking on the <b>Pedigree Chart</b> link in the menu will take you back to the default Pedigree chart for this database.<br /><br />One of the links that might appear in this list if it has been enabled by the admin, is the <b>View GEDCOM Record</b> link. This link will show you the raw GEDCOM record of this individual.<br /><br />If the Clippings Cart has been enabled by the site admin, you will also have a link that will allow you to add this person to your Clippings Cart.<br /><br />The <b>Relationship to me</b> link will only appear if you are logged in and have been assigned an ID in the GEDCOM. This link will take you to the Pedigree chart and show you how you are related to this person.<br /><br />More help is available by clicking the <b>?</b> next to items on the page.');
 	break;
 
@@ -2962,8 +2964,13 @@ case 'media.php':
 	break;
 
 case 'medialist.php':
-	$title=i18n::translate('Multimedia object list');
+	$title=i18n::translate('Multimedia objects');
 	$text=i18n::translate('This page lists all of the multimedia objects available for this GEDCOM (family tree) file.<br /><br />To display the list, first make your selections from the range of filtering options displayed at the top of the page. On the basis of those settings, after clicking "Search" you will see thumbnails, descriptions, and links for each media object.<br /><br />For each item you can then choose to view a full sized, image, its details, or go to one of the people of families it is linked to');
+	break;
+
+case 'mediaviewer.php':
+	$title=i18n::translate('Multimedia object');
+	$text='';
 	break;
 
 case 'module_admin.php':
@@ -2997,7 +3004,7 @@ case 'relationship.php':
 	break;
 
 case 'repo.php':
-	$title=i18n::translate('Repository information');
+	$title=i18n::translate('Repository');
 	$text=i18n::translate('The details of the Repository are displayed here. Together with Sources, Repositories are very important to genealogical researchers.  With accurate Source and Repository information, you can follow the trail another researcher used to find the information.  You should be able to find that same information again.<br /><br />On this page you may see information about the Repository\'s title, address, email and webpage.<br /><br />After the repository details, will be a list of all sources that are linked to this repository. This allows you to see all of the information that was obtained from a particular repository.<br /><br />If enabled by the site admin, you will have one or two more menu icons on this page:<br /><b>View GEDCOM Record</b>, which shows the information in GEDCOM format.<br /><b>Add to Clippings Cart</b>, which enables you to store this information in your Clippings Cart. From there you can download the information in GEDCOM file format and import it into your own genealogy program.<br /><br />More help is available by clicking the <b>?</b> next to items on the page.');
 	break;
 
@@ -3029,22 +3036,17 @@ case 'search_engine.php':
 	break;
 
 case 'source.php':
-	$title=i18n::translate('Sources details page');
+	$title=i18n::translate('Source');
 	$text=i18n::translate('The details of the source are displayed on this page. Sources are very important to genealogical researchers and will allow you to follow the trail another researcher used to find the information.<br /><br />You can see information about the source\'s title, author, publication, and the repository where the source was looked up. Because of the many different types of sources, some sources may have more information than others.<br /><br />If a multimedia object such as a scan of a document is connected to the source, you can view that object by clicking the object. When you click on the object name, you will see the object on the MultiMedia page.<br /><br />Following the source details there is a list of all individuals and families who are connected to this source. This allows you to identify all items that were obtained from that data source.<br /><br />When the administrator has enabled these features, you will have one or two additional menu icons on this page:<ol><li><b>View GEDCOM Record</b><br />which shows the information in GEDCOM format.</li><li><b>Add to Clippings Cart</b><br />which enables you to store this information in your Clippings Cart for later downloading and importing into your own genealogy program.</li></ol><br />More help is available by clicking the <b>?</b> next to items on the page.');
 	break;
 
 case 'sourcelist.php':
-	$title=i18n::translate('Sources list page');
+	$title=i18n::translate('Sources');
 	$text=i18n::translate('A list of sources is displayed on this page.<br /><br />Unlike the Individual Information and Family pages, there is no alphabetical index.<br /><br />A source can be an individual, a public database, an institution, an Internet resource, etc.  Because of the completely random nature of genealogical sources, it is impossible to find a sort order that is meaningful in all cases. However, <b>webtrees</b> <u>does</u> sort the Source names into alphabetical order.<br /><br /><b>SOURCES</b><br />Without sources we cannot build our database. There is a source for every item of information in the database. The source can be a relative, an institution, a public database, government or private records, an Internet resource, etc.<br /><br />A source can be linked to many persons. One person can also be linked to many sources. You can have different sources for every event, whether it is birth date, profession, marriage, children, etc.');
 	break;
 
 case 'statistics.php':
 	$title=i18n::translate('Statistics page');
-	$text=i18n::translate('This page lets you determine the criteria for producing a graphical display of various statistics from your database.');
-	break;
-
-case 'statisticsplot.php':
-	$title=i18n::translate('Statistics plot');
 	$text=i18n::translate('This page lets you determine the criteria for producing a graphical display of various statistics from your database.');
 	break;
 
@@ -3105,11 +3107,6 @@ case 'add_facts':
 	$text.=i18n::translate('<b>webtrees</b> allows you to copy up to 10 facts, with all their details, to a clipboard.  This clipboard is different from the Clippings Cart that you can use to export portions of your database.<br /><br />You can select any of the facts from the clipboard and copy the selected fact to the Individual, Family, Media, Source, or Repository record currently being edited.  However, you cannot copy facts of dissimilar record types.  For example, you cannot copy a Marriage fact to a Source or an Individual record since the Marriage fact is associated only with Family records.<br /><br />This is very helpful when entering similar facts, such as census facts, for many individuals or families.');
 	break;
 
-case 'add_gedcom':
-	$title=i18n::translate('Add GEDCOM');
-	$text=i18n::translate('When you use the <b>Add GEDCOM</b> function, it is assumed that you have already uploaded the GEDCOM file to your server using a program or method <u>external</u> to <b>webtrees</b>, for example, <i>ftp</i> or <i>network connection</i>.  The file you wish to add could also have been left over from a previous <b>Upload GEDCOM</b> procedure.<br /><br />If the input GEDCOM file is not yet on your server, you <u>have to</u> get it there first, before you can start with Adding.<br /><br />Instead of uploading a GEDCOM file, you can also upload a ZIP file containing the GEDCOM file, either with <b>webtrees</b>, or using an external program. <b>webtrees</b> will recognize the ZIP file automatically and will extract the GEDCOM file and filename from the ZIP file.<br /><br />If a GEDCOM file with the same name already exists in <b>webtrees</b>, it will be overwritten. However, all GEDCOM settings made previously will be preserved.<br /><br />You are guided step by step through the procedure.');
-	break;
-
 case 'add_husband':
 	$title=i18n::translate('Add a new husband');
 	$text=i18n::translate('By clicking this link, you can add a <u>new</u> male person and link this person to the principal individual as a new husband.<br /><br />Just click the link, and you will get a pop up window to add the new person.  Fill out as many boxes as you can and click the <b>Save</b> button.<br /><br />That\'s all.');
@@ -3125,17 +3122,10 @@ case 'add_media_linkid':
 	$text=i18n::translate('Each media item should be associated with one or more person, family, or source records in your database.<br /><br />To establish such a link, you can enter or search for the ID of the person, family, or source at the same time as you create the media item.  You can also establish the link later through editing options on the Manage MultiMedia page, or by adding media items through the Add Media link available on the Individual, Family, or Source Details pages.');
 	break;
 
-case 'add_new_gedcom':
-	$title=i18n::translate('Create a new GEDCOM');
-	$text=i18n::translate('You can start a new genealogical database from scratch.<br /><br />This procedure requires only a few simple steps. Step 1 is different from what you know already about uploading and adding. The other steps will be familiar.<ol><li><b>Naming the new GEDCOM</b><br />Type the name of the new GEDCOM <u>without</u> the extension <b>.ged</b>. The new file will be created in the directory named above the box where you enter the name.  Click <b>Add</b>.</li><li><b>Configuration page</b><br />You already know this page;  you configure the settings for your new GEDCOM file.</li><li><b>Validate</b><br />You already know this page;  the new GEDCOM is checked.  Since there is nothing in it, it will be ok.</li><li><b>Importing Records</b><br />Since there will be only one record to import, this will be finished very fast.</li></ol>That\'s it.  Now you can go to the Pedigree chart to see your first person in the new GEDCOM. Click the name of the person and start editing. After that, you can link new individuals to the first person.');
-	break;
-
 case 'add_note':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new note');
-	$text=i18n::translate('If you have a note to add to this record, this is the place to do so.<br /><br />Just click the link, a window will open, and you can type your note.  When you are finished typing, just click the button below the box, close the window, and that\'s all.')
-	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	$text=i18n::translate('If you have a note to add to this record, this is the place to do so.<br /><br />Just click the link, a window will open, and you can type your note.  When you are finished typing, just click the button below the box, close the window, and that\'s all.');
 	break;
 
 case 'add_opf_child':
@@ -3151,9 +3141,7 @@ case 'add_person':
 case 'add_shared_note':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new shared note');
-	$text=i18n::translate('When you click the <b>Add a new Shared Note</b> link, a new window will open.  You can choose to link to an existing shared note, or you can create a new shared note and at the same time create a link to it.')
-	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	$text=i18n::translate('When you click the <b>Add a new Shared Note</b> link, a new window will open.  You can choose to link to an existing shared note, or you can create a new shared note and at the same time create a link to it.');
 	break;
 
 case 'add_sibling':
@@ -3169,9 +3157,7 @@ case 'add_son_daughter':
 case 'add_source':
 	// This is a general help text for multiple pages
 	$title=i18n::translate('Add a new source citation');
-	$text=i18n::translate('Here you can add a source <b>Citation</b> to this record.<br /><br />Just click the link, a window will open, and you can choose the source from the list (Find ID) or create a new source and then add the Citation.<br /><br />Adding sources is an important part of genealogy because it allows other researchers to verify where you obtained your information.')
-	. '<br /><br />~' . i18n::translate('General info about adding') . '~<br />'
-	. i18n::translate('When you have added a fact, note, source, or multimedia file to a record in the database, the addition still has to be approved by a user who has Accept rights.<br /><br />Until the changes have been Accepted, they are identified as "pending" by a differently colored border.  All users with Edit rights can see these changes as well as the original information.  Users who do not have Edit rights will only see the original information. When the addition has been Accepted, the borders will disappear and the new data will display normally, replacing the old.  At that time, users without Edit rights will see the new data too.');
+	$text=i18n::translate('Here you can add a source <b>Citation</b> to this record.<br /><br />Just click the link, a window will open, and you can choose the source from the list (Find ID) or create a new source and then add the Citation.<br /><br />Adding sources is an important part of genealogy because it allows other researchers to verify where you obtained your information.');
 	break;
 
 case 'add_wife':
@@ -3244,11 +3230,6 @@ case 'box_width':
 	$text=i18n::translate('Here you can change the box width from 50 percent to 300 percent.  At 100 percent each box is about 270 pixels wide.');
 	break;
 
-case 'chart_area':
-	$title=i18n::translate('Chart area');
-	$text=i18n::translate('Select the geographical area that you want to see on the map. You can choose:<p style="padding-left: 25px"><b>World</b>&nbsp;&nbsp;shows all continents.<br /><b>Europe</b>&nbsp;&nbsp;shows Europe.<br /><b>South America</b>&nbsp;&nbsp;shows South America.<br /><b>Asia</b>&nbsp;&nbsp;shows Asia.<br /><b>Middle East</b>&nbsp;&nbsp;shows the Middle East.<br /><b>Africa</b>&nbsp;&nbsp;shows Africa.</p>');
-	break;
-
 case 'chart_style':
 	$title=i18n::translate('Chart style');
 	$text=i18n::translate('Two chart styles are available:<ul><li><b>List</b><br />Vertical tree, with collapsible/expandable families.</li><li><b>Booklet</b><br />One family per page, with parents, grandparents, and all recorded children.<br /><br />This format is easy to print to give to your relatives.</li></ul>');
@@ -3284,16 +3265,6 @@ case 'default_gedcom':
 	$text=i18n::translate('If you have more than one genealogical database, you can set here which of them will be the default.<br /><br />This default will be shown to all visitors and users who have not yet logged in.<br /><br />Users who can edit their account settings can override this default.  In that case, the user\'s preferred database will be shown after login.');
 	break;
 
-case 'delete_gedcom':
-	$title=i18n::translate('Delete GEDCOM');
-	$text=i18n::translate('<b>webtrees</b> creates its database from a GEDCOM file that was previously uploaded. When you select <b>Delete</b>, that section of the database will be erased.  You have to confirm your Delete request.<br /><br />Unless you have deliberately removed it outside <b>webtrees</b>, the original GEDCOM file will remain in the directory into which it was uploaded.  If you later want to work with that GEDCOM file again, you don\'t have to upload it again. You can choose the <b>Add GEDCOM</b> function.');
-	break;
-
-case 'delete_name':
-	$title=i18n::translate('Delete name');
-	$text=i18n::translate('<b>Edit name</b><br />When you click this link, another window will open.  There you can edit the name of the person.  Just type the changes into the boxes and click the button, close the window, and that\'s it.<br /><br /><b>DELETE NAME</b><br />By clicking this option you will mark this Name to be deleted from the database.  Note that deleting the name is completely different from deleting the individual.  Deleting the name just removes the name from the person. The person will <u>not</u> be deleted.  If it is an AKA that you want to delete, the person still has his other names.  If it is the <u>only</u> name that you want to remove, the person will still not be deleted, but will now be recorded as <b>(unknown)</b>.  The person will also not be disconnected from any other to relatives, sources, notes, etc.<br /><br />How does it work?<br />You will be asked to confirm your deletion request.  If you decide to continue, it can take a little time before you see a message that the name is deleted.<br /><br />When you continue with your visit, you will notice that the name is still visible and can be used as if the deletion had not occurred.<br /><br /><b>This is <u>not</u> an error.</b>  The site admin will get a message that a change has been made to the database, and that you removed the name.<br />The administrator can accept or reject your change. Only after the administrator has accepted your change will the deletion actually occur <u>irreversibly</u>.  If there is any doubt about your change, the administrator will contact you.');
-	break;
-
 case 'desc_generations':
 	$title=i18n::translate('Number of generations');
 	$text=i18n::translate('Here you can set the number of generations to display on this page.<br /><br />The right number for you depends of the size of your screen and whether you show details or not.  Processing time will increase as you increase the number of generations.');
@@ -3302,11 +3273,6 @@ case 'desc_generations':
 case 'desc_rootid':
 	$title=i18n::translate('Root individual');
 	$text=i18n::translate('If you want to display a chart with a new starting (root) person, the ID of that new starting person is typed here.<br /><br />If you don\'t know the ID of that person, use the <b>Find ID</b> link.<br /><br /><b>ID NUMBER</b><br />The ID numbers used inside <b>webtrees</b> are <u>not</u> the identification numbers issued by various governments (driving permit or passport numbers, for instance).  The ID number referred to here is simply a number used within the database to uniquely identify each individual; it was assigned by the ancestry program that created the GEDCOM file which was imported into <b>webtrees</b>.');
-	break;
-
-case 'download_gedcom':
-	$title=i18n::translate('Download GEDCOM');
-	$text=i18n::translate('From this page you can download your genealogical database in GEDCOM format.  You may want to import the data into another genealogical program, or you may want to share its information with others.<br /><br />~CONVERT FROM UTF-8 TO ANSI~<br /><br />For optimal display on the Internet, <b>webtrees</b> uses the UTF-8 character set.  Some programs, Family Tree Maker for example, do not support importing GEDCOM files encoded in UTF-8.  Checking this box will convert the file from <b>UTF-8</b> to <b>ANSI (ISO-8859-1)</b>.<br /><br />The format you need depends on the program you use to work with your downloaded GEDCOM file.  If you aren\'t sure, consult the documentation of that program.<br /><br />Note that for special characters to remain unchanged, you will need to keep the file in UTF-8 and convert it to your program\'s method for handling these special characters by some other means.  Consult your program\'s manufacturer or author.<br /><br />This <a href=\'http://en.wikipedia.org/wiki/UTF-8\' target=\'_blank\' title=\'Wikipedia article\'><b>Wikipedia article</b></a> contains comprehensive information and links about UTF-8.<br /><br /><br /><br />~REMOVE CUSTOM WEBTREES TAGS~<br /><br />Checking this option will remove any custom tags that may have been added to the records by <b>webtrees</b>.<br /><br />Custom tags used by <b>webtrees</b> include the <b>_WT_USER</b> tag which identifies the user who changed a record online and the <b>_THUM</b> tag which tells <b>webtrees</b> that the image should be used as a thumbnail.<br /><br />Custom tags may cause errors when importing the downloaded GEDCOM to another genealogy application.<br /><br /><br /><br />~DOWNLOAD GEDCOM AS ZIP FILE~<br /><br />When you check this option, a copy of the GEDCOM file will be compressed into ZIP format before the download begins. This will reduce its size considerably, but you will need to use a compatible Unzip program (WinZIP, for example) to decompress the transmitted GEDCOM file before you can use it.<br /><br />This is a useful option for downloading large GEDCOM files.  There is a risk that the download time for the uncompressed file may exceed the maximum allowed execution time, resulting in incompletely downloaded files.  The ZIP option should reduce the download time by 75 percent.');
 	break;
 
 case 'download_zipped':
@@ -3371,7 +3337,10 @@ case 'edit_add_unlinked_source':
 
 case 'edit_edit_raw':
 	$title=i18n::translate('Edit raw GEDCOM record');
-	$text=i18n::translate('This page allows you to edit the raw GEDCOM record.  You should use this page with caution; it requires a good understanding of the GEDCOM 5.5.1 Standard.  For more information on the GEDCOM 5.5.1 Standard, refer to Help topic <b>GEDCOM file</b>.<br /><br /><b>webtrees</b> provides many ways to add and edit information, but there could be occasions when you may want to edit the raw GEDCOM structure.  When possible, you should use the provided forms for adding information, but when that is impossible, you can use this form.  Upon submitting the form, your information will be checked for basic conformance to the Standard and the CHAN record will be updated.');
+	$text=
+		i18n::translate('This page allows you to bypass the usual forms, and edit the underlying data directly.  It is an advanced option, and you should not use it unless you understand the GEDCOM format.  If you make a mistake here, it can be difficult to fix.').
+		'<br/><br/>'.
+		/* I18N: %s is a URL */ i18n::translate('You can download a copy of the GEDCOM specification from %s.', '<a href="http://wiki.webtrees.net/images/Ged551-5.pdf">http://wiki.webtrees.net/images/Ged551-5.pdf</a>');
 	break;
 
 case 'edit_SOUR_EVEN':
@@ -3417,8 +3386,8 @@ case 'edituser_email':
 	break;
 
 case 'edituser_gedcomid':
-	$title=i18n::translate('GEDCOM individual record ID');
-	$text=i18n::translate('This is an identification number that links you to your own data in the database.<br /><br />You cannot change this ID; it\'s set by the administrator.  If you think that this ID is not correct, you should contact the administrator to have it changed.');
+	$title=i18n::translate('Individual record');
+	$text=i18n::translate('This is a link to your own record in the family tree.  If this is the wrong person, contact an administrator.');
 	break;
 
 case 'edituser_realname':
@@ -3446,11 +3415,6 @@ case 'edituser_username':
 	$text=i18n::translate('You can change your username by updating it here.  Usernames are case insensitive and ignore accented letters, so that "chloe", "chlo&euml;" and "CHLOE" are considered to be the same.  Usernames may not contain the following characters: &lt;&gt;"%%{};');
 	break;
 
-case 'export_gedcom':
-	$title=i18n::translate('Export');
-	$text=i18n::translate('On this page you can export your data to a GEDCOM file in UTF-8 encoding. The file will be saved automatically to the data directory.');
-	break;
-
 case 'fambook_descent':
 	$title=i18n::translate('Descendant generations');
 	$text=i18n::translate('This value determines the number of descendant generations of the root person that will be printed in Hourglass format.');
@@ -3469,11 +3433,6 @@ case 'fan_width':
 case 'gedcom_administration':
 	$title=i18n::translate('GEDCOM administration');
 	$text=i18n::translate('The GEDCOM Administration page is the control center for administering all of your genealogical databases.');
-	break;
-
-case 'gedcom_configfile':
-	$title=i18n::translate('GEDCOM configuration file');
-	$text=i18n::translate('This is the file where all the basic settings related to the genealogical database are stored.  There is a separate file for each such database.<br /><br />You will find the path and name of each configuration file in the <b>Current GEDCOMs</b> table on the <b>GEDCOM Administration</b> page.');
 	break;
 
 case 'gedcom_info':
@@ -3535,8 +3494,7 @@ case 'help_contents_help':
 			.i18n::translate('Sources').'</a></li><li><a href="?help=timeline.php">'.i18n::translate('Timeline chart').'</a></li><li><a href="?help=edituser_username">'.i18n::translate('Username').'</a></li></ul></td>';
 		if (WT_USER_IS_ADMIN) {
 			$text.='<td valign="top"><span class="helpstart">'.i18n::translate('Administrator help items').'</span><ul><li><a href="?help=admin.php">'.i18n::translate('Administration').'</a></li><li><a href="?help=help_editconfig.php">'.i18n::translate('Configure').'</a></li><li><a href="?help=help_faq.php">'
-			.i18n::translate('FAQ List: Edit').'</a></li><li><a href="?help=add_gedcom">'.i18n::translate('GEDCOM: Add').'</li><li><a href="?help=edit_gedcoms">'.i18n::translate('GEDCOM: Administration page').'</a></li><li><a href="?help=gedcom_configfile">'.i18n::translate('GEDCOM: Configuration file').'</a></li><li><a href="?help=edit_config_gedcom">'.i18n::translate('GEDCOM: Configure').'</a></li><li><a href="?help=add_new_gedcom">'.i18n::translate('GEDCOM: Create new').'</a></li><li><a href="?help=default_gedcom">'.i18n::translate('GEDCOM: Default').'</a></li><li><a href="?help=delete_gedcom">'.i18n::translate('GEDCOM: Delete').'</a></li><li><a href="?help=download_gedcom">'
-			.i18n::translate('GEDCOM: Download').'<a/></li><li><a href="?help=import_gedcom">'.i18n::translate('GEDCOM: Import').'</a></li><li><a href="?help=upload_gedcom">'.i18n::translate('GEDCOM: Upload').'</a></li><li><a href="readme.html">'.i18n::translate('View readme.html file').'</a></li><li><a href="?help=help_useradmin.php">'.i18n::translate('User administration').'</a></li></ul></td>';
+			.i18n::translate('FAQ List: Edit').'</a></li><li><a href="?help=edit_gedcoms">'.i18n::translate('GEDCOM: Administration page').'</a></li><li><a href="?help=edit_config_gedcom">'.i18n::translate('GEDCOM: Configure').'</a></li><li><a href="?help=default_gedcom">'.i18n::translate('GEDCOM: Default').'</a></li><li><a href="readme.html">'.i18n::translate('View readme.html file').'</a></li><li><a href="?help=help_useradmin.php">'.i18n::translate('User administration').'</a></li></ul></td>';
 		}
 	$text.=('</tr></table>');
 	break;
@@ -3544,11 +3502,6 @@ case 'help_contents_help':
 case 'help_editconfig.php':
 	$title=i18n::translate('Configure webtrees');
 	$text=i18n::translate('On this page you can configure the global settings for <b>webtrees</b>.  You can do this after you have installed <b>webtrees</b> and are running it for the first time.<br /><br />As these settings are <b>global</b>, they are for the whole program and for all genealogical databases you use with <b>webtrees</b>.<br /><br />Each genealogical database also has additional configuration options that you set after clicking the <b>Click here to administer GEDCOMs</b> link on this page.<br /><br />You can also access the GEDCOM Administration function from the main Admin page, whose link is found under the My Page icon or in the header of most pages.  On the Admin page, the relevant link is called <b>Manage GEDCOMs and edit Privacy.</b>');
-	break;
-
-case 'import_gedcom':
-	$title=i18n::translate('Import GEDCOM');
-	$text=i18n::translate('In most cases importing of an externally created GEDCOM file is one step in procedures that result in bulk changes to the genealogical database.<br /><br />These steps are in a logical sequence and need to be completed in the prescribed order so that the genealogical database is usable.<br /><br />If, for some reason, you did not complete these steps in the correct order, you will see a <u>warning</u> message that the GEDCOM is not yet imported. To correct the problem, click the <b>Import GEDCOM</b> link to import the file.<br /><br />Existing GEDCOM configuration settings will not change when you re-import a GEDCOM.  Existing data will, however, be overwritten.');
 	break;
 
 case 'include_media':
@@ -3873,7 +3826,7 @@ case 'register_comments':
 	break;
 
 case 'register_gedcomid':
-	$title=i18n::translate('GEDCOM INDI record ID');
+	$title=i18n::translate('Individual record');
 	$text=i18n::translate('Every person in the database has a unique ID number on this site.  If you know the ID number for your own record, please enter it here.  If you don\'t know your ID number or could not find it because of privacy settings, please provide enough information in the Comments field to help the site administrator identify who you are on this site so that he can set the ID for you.');
 	break;
 
@@ -3902,9 +3855,35 @@ case 'reorder_families':
 	$text=i18n::translate('Families on the Close Relatives tab are displayed in the order in which they appear in the individual\'s GEDCOM record.  Families are not sorted by the marriage date because often the marriage dates are unknown but the order of the marriages <u>is</u> known.<br /><br />This option will allow you to change the order of the families in which they are listed on the Close Relatives tab.  If you want to sort the families by their marriage dates, there is a button you can press that will automatically do this for you.');
 	break;
 
-case 'review_changes':
-	$title=i18n::translate('Review GEDCOM changes');
-	$text=i18n::translate('This block will list all of the records that have been changed online and that still need to be reviewed and accepted into the database.');
+case 'role':
+	$title=i18n::translate('Role');
+	$text=
+		i18n::translate('A role is a set of access rights, which give permission to view data, change configuration settings, etc.  Access rights are assigned to roles, and roles are granted to users.  Each family tree can assign different access to each role, and users can have a different role in each family tree.').
+		'<br/><br>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Visitors').'</dt><dd>'.
+		i18n::translate('Everybody has this role, including visitors to the site and search engines.').
+		'</dd>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Member').'</dt><dd>'.
+		i18n::translate('This role has all the permissions of the visitor role, plus any additional access granted by the family tree configuration.').
+		'</dd>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Editor').'</dt><dd>'.
+		i18n::translate('This role has all the permissions of the member role, plus permission to add/change/delete data.  Any changes will need to be approved by a moderator, unless the user has the "automatically accept changes" option enabled.').
+		'</dd>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Moderator').'</dt><dd>'.
+		i18n::translate('This role has all the permissions of the editor role, plus permission to approve/reject changes made by other users.').
+		'</dd>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Manager').'</dt><dd>'.
+		i18n::translate('This role has all the permissions of the moderator role, plus any additional access granted by the family tree configuration, plus permission to change the settings/configuration of a family tree.').
+		'</dd>'.
+		'<dl>'.
+		'<dt>'.i18n::translate('Administrator').'</dt><dd>'.
+		i18n::translate('This role has all the permissions of the manager role in all family trees, plus permission to change the settings/configuration of the site, users and modules.').
+		'</dd>';
 	break;
 
 case 'rootid':
@@ -4047,11 +4026,6 @@ case 'timeline_control':
 	$text=i18n::translate('Click the drop down menu to change the speed at which the timeline scrolls.<br/><br/>~Begin Year~<br/>Enter the starting year of the range.<br/><br/>~End Year~<br/>Enter the ending year of the range.<br/><br/>~Search~<br/>Click the Search button to begin searching for events that occurred within the range identified by the Begin Year and End Year fields.');
 	break;
 
-case 'upload_gedcom':
-	$title=i18n::translate('Upload GEDCOM');
-	$text=i18n::translate('Unlike the <b>Add GEDCOM</b> function, the GEDCOM file you wish to add to your database does not have to be on your server.<br /><br />In Step 1 you select a GEDCOM file from your local computer. Type the complete path and file name in the text box or use the <b>Browse</b> button on the page.<br /><br />You can also use this function to upload a ZIP file containing the GEDCOM file. <b>webtrees</b> will recognize the ZIP file and extract the file and the filename automatically.<br /><br />If a GEDCOM file with the same name already exists in <b>webtrees</b>, it will, after your confirmation, be overwritten. However, all GEDCOM settings made previously will be preserved.<br /><br />You will find more help on other pages of the procedure.');
-	break;
-
 case 'upload_media_file':
 	$title=i18n::translate('Media file to upload');
 	$text=
@@ -4081,19 +4055,10 @@ case 'upload_thumbnail_file':
 	break;
 
 case 'useradmin_auto_accept':
-	$title=i18n::translate('Automatically accept changes made by this user');
-	$text=i18n::translate('By checking this box you are allowing the system to automatically accept any edit changes made by this user.  The user must also have accept privileges on the GEDCOM in order for this setting to take effect.');
+	$title=i18n::translate('Automatically approve changes made by this user');
+	$text=i18n::translate('Normally, any changes made to a family tree need to be approved by a moderator.  This option allows a user to make changes without needing a moderator\'s approval.');
 	break;
 
-case 'useradmin_can_admin':
-	$title=i18n::translate('User can administer');
-	$text=i18n::translate('If this box is checked, the user will have the same rights that you have.<dl><dt>These rights include:</dt><dd>Add / Remove / Edit Users</dd><dd>Broadcast messages to all users</dd><dd>Edit Welcome messages</dd><dd>Edit and configure language files</dd><dt></dt><dd>Upgrade <b>webtrees</b></dd><dd>Change program and GEDCOM configurations</dd><dd>Administer the GEDCOMs</dd><dd>Change Privacy settings</dd><dd>And anything else that is not mentioned here.</dd></dl><br />The user <u>cannot</u> change anything on your server outside <b>webtrees</b>.');
-	break;
-
-case 'useradmin_can_edit':
-	$title=i18n::translate('Access level');
-	$text=i18n::translate('The user can have different access and editing privileges for each genealogical database in the system.<ul><li><b>None:</b> The user cannot access the private data in this GEDCOM.</li><li><b>Access:</b> The user cannot edit or accept data into the database but can see the private data.</li><li><b>Edit:</b> The user can edit values but another user with <b>Accept</b> privileges must approve the changes before they are added to the database and made public.</li><li><b>Accept:</b> The user can edit.  He can also edit and approve changes made by other users.</li><li><b>Admin GEDCOM:</b> The user edit and approve changes made by other users.  The user can also edit configuration and privacy settings for <u>this</u> GEDCOM.</li></ul>System administrators, identified through the <b>User can administer</b> check box, are automatically given <b>Admin GEDCOM</b> privileges.');
-	break;
 
 case 'useradmin_editaccount':
 	$title=i18n::translate('Edit account information');
@@ -4101,8 +4066,8 @@ case 'useradmin_editaccount':
 	break;
 
 case 'useradmin_gedcomid':
-	$title=i18n::translate('GEDCOM INDI record ID');
-	$text=i18n::translate('The GEDCOM INDI record ID identifies the user.  It has to be set by the administrator.<br /><br />This ID is used as the ID on several pages such as <b>My Individual Record</b> and <b>My Pedigree</b>.<br /><br />You can set the user\'s GEDCOM ID separately for each GEDCOM.  If a user does not have a record in a GEDCOM, you leave that box empty.');
+	$title=i18n::translate('Individual record');
+	$text=i18n::translate('The individual record identifies the user in each family tree.  Since a user can view the details of their individual record, this can only be set by an administrator.  If the user does not have a record in a family tree, leave it empty.');
 	break;
 
 case 'useradmin_rootid':
@@ -4115,14 +4080,15 @@ case 'useradmin_user_default_tab':
 	$text=i18n::translate('This setting allows you to specify which tab is opened automatically when this user accesses the Individual Information page.  If allowed to edit their account, the user can change this setting later.');
 	break;
 
-case 'useradmin_verbyadmin':
-	$title=i18n::translate('User approved by admin');
-	$text=i18n::translate('If a user has used the Self Registration module and has verified himself, the last step, before his account will become active, is your approval.<br /><br />After you have approved the user\'s application for a new account, the user will receive an email message.  The message will tell the user that his account is now active.  He can login with the user name and password that he supplied when he applied for the account.');
-	break;
-
-case 'useradmin_verified':
-	$title=i18n::translate('User verified himself');
-	$text=i18n::translate('<b>Self Registration</b><br />A user can apply for a new account by means of the <b>self registration</b> module.<br /><br />When he does so, he will receive an email message with a link to verify his application.  After the applicant has acted on the instructions in that email, you will see this box checked, and you can proceed with the next step, <b>User approved by Admin</b>.  You should wait with your approval as long as this box is not checked.<br /><br /><b>Add user manually</b><br />If you use this form to add a user manually, you will find this box checked already.');
+case 'useradmin_verification':
+	$title=i18n::translate('Account approval and email verification');
+	$text=i18n::translate('When a user registers for an account, an email is sent to their email address with a verification link.  When they click this link, we know the email address is correct, and the "email verified" option is selected automatically.').
+		'<br/><br/>'.
+		i18n::translate('If an administrator creates a user account, the verification email is not sent, and the email must be verified manually.').
+		'<br/><br/>'.
+		i18n::translate('You should not approve an account unless you know that the email address is correct.').
+		'<br/><br/>'.
+		i18n::translate('A user will not be able to login until both the "email verified" and "approved by administrator" options are selected.');
 	break;
 
 case 'useradmin_visibleonline':

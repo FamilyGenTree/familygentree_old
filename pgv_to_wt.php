@@ -68,7 +68,7 @@ if ($PGV_PATH) {
 		// The easiest way to do this is to exec() the file - but not lines containing require or PHP tags
 		$config_php=preg_replace(
 			array(
-				'/^\s*(include|require).*/',
+				'/^\s*(include|require).*/m',
 				'/.*<\?php.*/',
 				'/.*\?>.*/'
 			), '', $config_php
@@ -167,12 +167,10 @@ WT_DB::exec("UPDATE `##log` SET user_id=NULL");
 WT_DB::exec("DELETE FROM `##change`");
 WT_DB::exec("DELETE FROM `##block_setting`");
 WT_DB::exec("DELETE FROM `##block`");
-WT_DB::exec("DELETE FROM `##user_gedcom_setting`");
-WT_DB::exec("DELETE FROM `##user_setting`");
 WT_DB::exec("DELETE FROM `##message`");
-WT_DB::exec("DELETE FROM `##user`");
-WT_DB::exec("DELETE FROM `##user_setting`");
-WT_DB::exec("DELETE FROM `##user`");
+WT_DB::exec("DELETE FROM `##user_gedcom_setting` WHERE user_id>0");
+WT_DB::exec("DELETE FROM `##user_setting`        WHERE user_id>0");
+WT_DB::exec("DELETE FROM `##user`                WHERE user_id>0");
 
 ////////////////////////////////////////////////////////////////////////////////
 if (ob_get_level() == 0) ob_start();
@@ -657,7 +655,6 @@ foreach (get_all_gedcoms() as $ged_id=>$gedcom) {
 	@set_gedcom_setting($ged_id, 'NOTE_FACTS_UNIQUE',            $NOTE_FACTS_UNIQUE);
 	@set_gedcom_setting($ged_id, 'NOTE_ID_PREFIX',               'N');
 	@set_gedcom_setting($ged_id, 'NO_UPDATE_CHAN',               $NO_UPDATE_CHAN);
-	@set_gedcom_setting($ged_id, 'PAGE_AFTER_LOGIN',             'mypage');
 	@set_gedcom_setting($ged_id, 'PEDIGREE_FULL_DETAILS',        $PEDIGREE_FULL_DETAILS);
 	@set_gedcom_setting($ged_id, 'PEDIGREE_LAYOUT',              $PEDIGREE_LAYOUT);
 	@set_gedcom_setting($ged_id, 'PEDIGREE_ROOT_ID',             $PEDIGREE_ROOT_ID);
