@@ -1,31 +1,27 @@
 <?php
-/**
- * Display an family book chart
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package webtrees
- * @subpackage Charts
- * @version $Id$
- */
+// Display an family book chart
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 define('WT_SCRIPT_NAME', 'familybook.php');
 require './includes/session.php';
@@ -51,7 +47,7 @@ $bhalfheight = (int) ($bheight / 2);
 
 // -- root id
 $pid   =check_rootid($pid);
-$person=Person::getInstance($pid);
+$person=WT_Person::getInstance($pid);
 $name  =$person->getFullName();
 
 function print_descendency($person, $count) {
@@ -86,7 +82,7 @@ function print_descendency($person, $count) {
 						if ($i==0) $firstkids = $kids;
 						$numkids += $kids;
 					} else {
-						print_pedigree_person($child->getXref());
+						print_pedigree_person($child);
 						$numkids++;
 					}
 					echo "</td>";
@@ -130,12 +126,12 @@ function print_descendency($person, $count) {
 			echo '<br /><div style="height:', $bheight, 'px;width:', $bwidth, 'px;"><br /></div>';
 		}
 	}
-	print_pedigree_person($pid);
+	print_pedigree_person($person);
 
 	if ($show_spouse) {
 		foreach ($sfamilies as $family) {
 			echo '<br/>', $family->getMarriage()->print_simple_fact();
-			print_pedigree_person($family->getSpouseId($pid));
+			print_pedigree_person($family->getSpouse($person));
 		}
 	}
 
@@ -144,14 +140,12 @@ function print_descendency($person, $count) {
 	return $numkids;
 }
 
-function print_person_pedigree($pid, $count) {
+function print_person_pedigree($person, $count) {
 	global $generations, $SHOW_EMPTY_BOXES, $WT_IMAGES, $bheight, $bhalfheight;
-	if ($count>=$generations) return;
-	$famids = find_family_ids($pid);
+	if ($count>=$generations || !$person) return;
 	$hheight = ($bhalfheight+3) * pow(2,($generations-$count-1));
-	foreach ($famids as $indexval => $famid) {
+	foreach ($person->getChildFamilies() as $family) {
 		echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"empty-cells: show;\">";
-		$parents = find_parents($famid);
 		$height="100%";
 		echo "<tr>";
 		if ($count<$generations-1) {
@@ -159,10 +153,10 @@ function print_person_pedigree($pid, $count) {
 			echo "<td rowspan=\"2\"><img src=\"".$WT_IMAGES["hline"]."\" width=\"7\" height=\"3\" alt=\"\" /></td>";
 		}
 		echo "<td rowspan=\"2\">";
-		print_pedigree_person($parents["HUSB"]);
+		print_pedigree_person($family->getHusband());
 		echo "</td>";
 		echo "<td rowspan=\"2\">";
-		print_person_pedigree($parents["HUSB"], $count+1);
+		print_person_pedigree($family->getHusband(), $count+1);
 		echo "</td>";
 		echo "</tr><tr><td height=\"".$hheight."\"";
 		if ($count<$generations-1) {
@@ -174,10 +168,10 @@ function print_person_pedigree($pid, $count) {
 			echo "<td rowspan=\"2\"><img src=\"".$WT_IMAGES["hline"]."\" width=\"7\" height=\"3\" alt=\"\" /></td>";
 		}
 		echo "<td rowspan=\"2\">";
-		print_pedigree_person($parents["WIFE"]);
+		print_pedigree_person($family->getWife());
 		echo "</td>";
 		echo "<td rowspan=\"2\">";
-		print_person_pedigree($parents["WIFE"], $count+1);
+		print_person_pedigree($family->getWife(), $count+1);
 		echo "</td>";
 		echo "</tr>";
 		if ($count<$generations-1) {
@@ -198,12 +192,12 @@ function print_family_book($person, $descent) {
 		$firstrun=true;
 		echo
 			'<h2 style="text-align:center">',
-			/* I18N: A title/heading. %s is a person's name */ i18n::translate('Family of %s', $person->getFullName()),
+			/* I18N: A title/heading. %s is a person's name */ WT_I18N::translate('Family of %s', $person->getFullName()),
 			'</h2><table cellspacing="0" cellpadding="0" border="0"><tr><td valign="middle">';
 		$dgenerations = $generations;
 		print_descendency($person, 1);
 		echo '</td><td valign="middle">';
-		print_person_pedigree($person->getXref(), 1);
+		print_person_pedigree($person, 1);
 		echo '</td></tr></table><br /><br /><hr style="page-break-after:always;"/><br /><br />';
 
 		foreach ($families as $family) {
@@ -215,23 +209,22 @@ function print_family_book($person, $descent) {
 }
 
 // -- print html header information
-print_header(PrintReady($name)." ".i18n::translate('Family book chart'));
+print_header(PrintReady($name)." ".WT_I18N::translate('Family book chart'));
 
 if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 
 // LBox =====================================================================================
 if (WT_USE_LIGHTBOX) {
-	require WT_ROOT.'modules/lightbox/lb_defaultconfig.php';
-	require WT_ROOT.'modules/lightbox/functions/lb_call_js.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/lb_defaultconfig.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/functions/lb_call_js.php';
 }
 // ==========================================================================================
 
-echo "<!-- // NOTE: Start table header -->";
-echo "<table><tr><td valign=\"top\">";
-echo "<h2>".i18n::translate('Family book chart').":<br />".PrintReady($name)."</h2>";
+echo '<table><tr><td valign="top">';
+echo '<h2>'.WT_I18N::translate('Family book chart'), help_link('family_book_chart'), '<br />', PrintReady($name), '</h2>';
 ?>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 	var pastefield;
 	function open_find(textbox) {
@@ -251,7 +244,7 @@ $gencount=0;
 <table><tr>
 
 <td class="descriptionbox">
-	<?php echo i18n::translate('Root Person ID'), help_link('desc_rootid'); ?>
+	<?php echo WT_I18N::translate('Root Person ID'), help_link('desc_rootid'); ?>
 </td>
 <td class="optionbox">
 	<input class="pedigree_form" type="text" name="pid" id="pid" size="3" value="<?php echo $pid; ?>" />
@@ -259,7 +252,7 @@ $gencount=0;
 </td>
 
 <td class="descriptionbox">
-<?php echo i18n::translate('Show Details'), help_link('show_full'); ?>
+<?php echo WT_I18N::translate('Show Details'), help_link('show_full'); ?>
 </td>
 <td class="optionbox">
 <input type="hidden" name="show_full" value="<?php echo $show_full; ?>" />
@@ -269,11 +262,11 @@ else echo "0\" onclick=\"document.people.show_full.value='1';"; ?>" />
 </td>
 
 <td rowspan="4" class="topbottombar vmiddle">
-<input type="submit" value="<?php echo i18n::translate('View'); ?>" />
+<input type="submit" value="<?php echo WT_I18N::translate('View'); ?>" />
 </td></tr>
 
 <tr><td class="descriptionbox">
-<?php echo i18n::translate('Generations'), help_link('desc_generations'); ?>
+<?php echo WT_I18N::translate('Generations'), help_link('desc_generations'); ?>
 </td>
 <td class="optionbox">
 <select name="generations">
@@ -288,7 +281,7 @@ for ($i=2; $i<=$MAX_DESCENDANCY_GENERATIONS; $i++) {
 </td>
 
 <td class="descriptionbox">
-	<?php echo i18n::translate('Show spouses'), help_link('show_spouse'); ?>
+	<?php echo WT_I18N::translate('Show spouses'), help_link('show_spouse'); ?>
 </td>
 <td class="optionbox">
 <input type="checkbox" value="1" name="show_spouse"
@@ -297,7 +290,7 @@ if ($show_spouse) echo " checked=\"checked\""; ?> />
 </td></tr>
 
 <tr><td class="descriptionbox">
-	<?php echo i18n::translate('Box width'), help_link('box_width'); ?>
+	<?php echo WT_I18N::translate('Box width'), help_link('box_width'); ?>
 </td>
 <td class="optionbox"><input type="text" size="3" name="box_width" value="<?php echo $box_width; ?>" />
 <b>%</b>
@@ -306,7 +299,7 @@ if ($show_spouse) echo " checked=\"checked\""; ?> />
 <td class="descriptionbox">&nbsp;</td><td class="optionbox">&nbsp;</td></tr>
 
 <tr><td class="descriptionbox">
-	<?php echo i18n::translate('Descent Steps'), help_link('fambook_descent'); ?>
+	<?php echo WT_I18N::translate('Descent Steps'), help_link('fambook_descent'); ?>
 </td>
 <td class="optionbox"><input type="text" size="3" name="descent" value="<?php echo $descent; ?>" />
 </td>

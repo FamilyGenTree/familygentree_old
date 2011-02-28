@@ -1,31 +1,27 @@
 <?php
-/**
- * Compact pedigree tree
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package webtrees
- * @subpackage Charts
- * @version $Id$
- */
+// Compact pedigree tree
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 define('WT_SCRIPT_NAME', 'compact.php');
 require './includes/session.php';
@@ -38,33 +34,33 @@ $showthumbs=safe_GET('showthumbs', '1', '0');
 // Validate form variables
 $rootid=check_rootid($rootid);
 
-$person =Person::getInstance($rootid);
+$person =WT_Person::getInstance($rootid);
 $name   =$person->getFullName();
 $addname=$person->getAddName();
 
 // -- print html header information
-print_header(PrintReady($name) . " " . i18n::translate('Compact Chart'));
+print_header(PrintReady($name) . " " . WT_I18N::translate('Compact chart'));
 
 if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 
 // LBox =====================================================================================
 if (WT_USE_LIGHTBOX) {
-	require WT_ROOT.'modules/lightbox/lb_defaultconfig.php';
-	require WT_ROOT.'modules/lightbox/functions/lb_call_js.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/lb_defaultconfig.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/functions/lb_call_js.php';
 }
 // ==========================================================================================
 
 if (strlen($name)<30) $cellwidth="420";
 else $cellwidth=(strlen($name)*14);
 echo "<table class=\"list_table $TEXT_DIRECTION\"><tr><td width=\"{$cellwidth}px\" valign=\"top\">";
-echo "<h2>" . i18n::translate('Compact Chart') . ":";
+echo "<h2>" . WT_I18N::translate('Compact chart') . ":";
 echo "<br />".PrintReady($name) ;
 if ($addname != "") echo "<br />" . PrintReady($addname);
 echo "</h2>";
 
 // -- print the form
 ?>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 var pastefield;
 function paste_id(value) {
@@ -79,7 +75,7 @@ echo "<tr>";
 
 // NOTE: Root ID
 echo "<td class=\"descriptionbox\">";
-echo i18n::translate('Root Person ID'), help_link('rootid'), "</td>";
+echo WT_I18N::translate('Root Person ID'), help_link('rootid'), "</td>";
 echo "<td class=\"optionbox vmiddle\">";
 echo "<input class=\"pedigree_form\" type=\"text\" name=\"rootid\" id=\"rootid\" size=\"3\" value=\"$rootid\" />";
 print_findindi_link("rootid","");
@@ -87,13 +83,13 @@ echo "</td>";
 
 // NOTE: submit
 echo "<td class=\"facts_label03\" rowspan=\"3\">";
-echo "<input type=\"submit\" value=\"".i18n::translate('View')."\" />";
+echo "<input type=\"submit\" value=\"".WT_I18N::translate('View')."\" />";
 echo "</td></tr>";
 
 if ($SHOW_HIGHLIGHT_IMAGES) {
 	echo "<tr>";
 	echo "<td class=\"descriptionbox\">";
-	echo i18n::translate('Show highlight images in people boxes'), help_link('SHOW_HIGHLIGHT_IMAGES');
+	echo WT_I18N::translate('Show highlight images in people boxes'), help_link('SHOW_HIGHLIGHT_IMAGES');
 	echo "</td>";
 	echo "<td class=\"optionbox\">";
 	echo "<input name=\"showthumbs\" type=\"checkbox\" value=\"1\"";
@@ -295,13 +291,13 @@ function print_td_person($n) {
 	$pid = $treeid[$n];
 
 	if ($TEXT_DIRECTION=="ltr") {
-		$title = i18n::translate('Individual information').": ".$pid;
+		$title = WT_I18N::translate('Individual information').": ".$pid;
 	} else {
-		$title = $pid." :".i18n::translate('Individual information');
+		$title = $pid." :".WT_I18N::translate('Individual information');
 	}
 
 	if ($pid) {
-		$indi=Person::getInstance($pid);
+		$indi=WT_Person::getInstance($pid);
 		$name=$indi->getFullName();
 		$addname=$indi->getAddName();
 
@@ -351,7 +347,7 @@ function print_td_person($n) {
 		if ($indi->canDisplayDetails()) {
 			$text.="<span class='details1'>";
 			$text.=$indi->getBirthYear().'-'.$indi->getDeathYear();
-			$age=GedcomDate::GetAgeYears($indi->getBirthDate(), $indi->getDeathDate());
+			$age=WT_Date::GetAgeYears($indi->getBirthDate(), $indi->getDeathDate());
 			if ($age) {
 				$text.=" <span class=\"age\">".PrintReady("({$age})")."</span>";
 			}
@@ -402,22 +398,23 @@ function print_arrow_person($n, $arrow_dir) {
 			$arrow_dir="l";
 		}
 	}
-	if ($TEXT_DIRECTION=="ltr") {
-		$title = i18n::translate('Compact Chart').": ".$pid;
-	} else {
-		$title = $pid." :".i18n::translate('Compact Chart');
-	}
-	$arrow_img = "<img id='arrow$n' src='".$WT_IMAGES[$arrow_dir."arrow"]."' border='0' align='middle' alt='$title' title='$title' />";
-	$hideArrow = "<img id='arrow$n' src='".$WT_IMAGES[$arrow_dir."arrow"]."' border='0' align='middle' alt='$title' title='$title' style='visibility:hidden;' />";
 
 	$text = "";
 	if ($pid) {
+		$indi=WT_Person::getInstance($pid);
+		$name=$indi->getFullName();
+		if ($TEXT_DIRECTION=="ltr") {
+			$title = WT_I18N::translate('Compact chart').": ".$name;
+		} else {
+			$title = $name." :".WT_I18N::translate('Compact chart');
+		}
+		$arrow_img = "<img id='arrow$n' src='".$WT_IMAGES[$arrow_dir."arrow"]."' border='0' align='middle' alt='$title' title='$title' />";
 		$text .= "<a href=\"?rootid=".$pid;
 		if ($showthumbs) $text .= "&amp;showthumbs=".$showthumbs;
 		$text .= "\" onmouseover=\"swap_image('arrow$n',".$arrow_swap[$arrow_dir].");\" onmouseout=\"swap_image('arrow$n',".$arrow_swap[$arrow_dir].");\" >";
 		$text .= $arrow_img."</a>";
 	}
 	// -- arrow to empty box does not have a url attached.
-	else $text = $hideArrow;
+	else $text = "<img id='arrow$n' src='".$WT_IMAGES[$arrow_dir."arrow"]."' border='0' align='middle' alt='".WT_I18N::translate('Compact chart')."' title='".WT_I18N::translate('Compact chart')."' style='visibility:hidden;' />";
 	echo $text;
 }

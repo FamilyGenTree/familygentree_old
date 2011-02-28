@@ -5,7 +5,7 @@
  *
  * @package webtrees
  * @subpackage Themes
- * @version $Id: style_rtl.css 7896 2010-04-07 22:08:56Z greg $
+ * @version $Id$
  */
 body {
 	direction: rtl;
@@ -17,16 +17,6 @@ padding-right: 10px;
 html {
 	direction: rtl;
 	white-space: normal;
-}
-#footer {
-	text-align: center;
-}
-.person_box, .person_boxF, .person_boxNN {
-	text-align: right;
-}
-.footer {
-	text-align: left;
-	direction: rtl;
 }
 .image {
 	margin-right: 0px;
@@ -42,12 +32,6 @@ html {
 .blockhc {
 	padding-left: 15px;
 	padding-right: 5px;
-}
-.blockh2, .blockhc, .door {
-	direction: rtl;
-}
-.door dd {
-	float: right;
 }
 .toplinks_right {
 padding-left: 15px;
@@ -75,7 +59,7 @@ padding-right:0pt;
 	background-image: url(images/right1R.gif);
 }
 /* jquery css THEME adjustments for RTL */
-/* @version $Id: style_rtl.css 7896 2010-04-07 22:08:56Z greg $ */
+/* @version $Id$ */
 
 /* Tabs --------------------------------*/
 .ui-tabs { direction: rtl; }

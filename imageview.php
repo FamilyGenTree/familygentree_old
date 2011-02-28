@@ -1,41 +1,37 @@
 <?php
-/**
- * Popup window for viewing images
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @version $Id$
- * @package webtrees
- * @subpackage Media
- */
+// Popup window for viewing images
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 define('WT_SCRIPT_NAME', 'imageview.php');
 require './includes/session.php';
 
 $filename=safe_GET('filename');
 
-print_simple_header(i18n::translate('Image viewer'));
+print_simple_header(WT_I18N::translate('Image viewer'));
 
 ?>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 	var zoom = 100;
 	function zoomin() {
@@ -174,13 +170,13 @@ print_simple_header(i18n::translate('Image viewer'));
 echo "<form name=\"zoomform\" onsubmit=\"setzoom(document.getElementById('zoomval').value); return false;\" action=\"imageview.php\">";
 $isExternal = isFileExternal($filename);
 if (!$isExternal && !media_exists($filename) ) {
-	echo "<span class=\"error\">".i18n::translate('File not found.')."&nbsp;".$filename."</span>";
-	echo "<br /><br /><div class=\"center\"><a href=\"javascript:;\" onclick=\"self.close();\">".i18n::translate('Close Window')."</a></div>";
+	echo "<span class=\"error\">".WT_I18N::translate('File not found.')."&nbsp;".$filename."</span>";
+	echo "<br /><br /><div class=\"center\"><a href=\"javascript:;\" onclick=\"self.close();\">".WT_I18N::translate('Close Window')."</a></div>";
 } else {
 	echo "<center><font size=\"6\"><a href=\"javascript:;\" onclick=\"zoomin(); return false;\">+</a> <a href=\"javascript:;\" onclick=\"zoomout();\">&ndash;</a> </font>";
 	echo "<input type=\"text\" size=\"2\" name=\"zoomval\" id=\"zoomval\" value=\"100\" />%";
-	echo "<input type=\"button\" value=\"".i18n::translate('Reset')."\" onclick=\"resetimage(); return false;\" />";
-	echo "<br /><a href=\"javascript:;\" onclick=\"window.opener.location='mediaviewer.php?filename=".urlencode(str_replace($MEDIA_DIRECTORY, "", $filename))."'; window.close();\">".i18n::translate('View image details')."</a>";
+	echo "<input type=\"button\" value=\"".WT_I18N::translate('Reset')."\" onclick=\"resetimage(); return false;\" />";
+	echo "<br /><a href=\"javascript:;\" onclick=\"window.opener.location='mediaviewer.php?filename=".urlencode(str_replace($MEDIA_DIRECTORY, "", $filename))."'; window.close();\">".WT_I18N::translate('View image details')."</a>";
 	echo "</center>";
 	$imgsize = findImageSize($filename);
 	$imgwidth = $imgsize[0]+2;
@@ -197,5 +193,5 @@ if (!$isExternal && !media_exists($filename) ) {
 echo "</form>";
 echo "<div style=\"position: relative; \">";
 echo "</div>";
-echo "<div class=\"center\"><br /><a href=\"javascript:;\" onclick=\"window.close();\">".i18n::translate('Close Window')."</a></div><br />";
+echo "<div class=\"center\"><br /><a href=\"javascript:;\" onclick=\"window.close();\">".WT_I18N::translate('Close Window')."</a></div><br />";
 print_simple_footer();

@@ -1,42 +1,37 @@
 <?php
-/**
- * Media Firewall
- * Called when a 404 error occurs in the media directory
- * Serves images from the index directory
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *
- * @package webtrees
- * @version $Id$
- */
+// Media Firewall
+// Called when a 404 error occurs in the media directory
+// Serves images from the index directory
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// @version $Id$
 
 define('WT_SCRIPT_NAME', 'mediafirewall.php');
 require './includes/session.php';
-require_once WT_ROOT.'includes/controllers/media_ctrl.php';
 
 // We have finished writing session data, so release the lock
 Zend_Session::writeClose();
 
-$controller = new MediaController();
+$controller = new WT_Controller_Media();
 $controller->init();
 
 $debug_mediafirewall   = 0; // set to 1 if you want to see media firewall values displayed instead of images
@@ -108,7 +103,7 @@ function sendErrorAndExit($type, $line1, $line2 = false) {
 		// if we are using mod rewrite, there will be no error status.  be sure to set it
 		header('HTTP/1.0 404 Not Found');
 		header('Status: 404 Not Found');
-		echo "<html ", i18n::html_markup(), "><body>\n";
+		echo "<html ", WT_I18N::html_markup(), "><body>\n";
 		echo "<!-- filler space so IE will display the custom 404 error -->";
 		echo "<!-- filler space so IE will display the custom 404 error -->";
 		echo "<!-- filler space so IE will display the custom 404 error -->";
@@ -320,8 +315,8 @@ if (!$serverFilename) {
 	$exp = explode("?", $requestedfile);
 	$pathinfo = pathinfo($exp[0]);
 	$ext = @strtolower($pathinfo['extension']);
-	// have to exit even if debug_mediafirewall is enabled because $controller->mediaobject doesn't exist and is required below 
-	sendErrorAndExit($ext, i18n::translate('The media file was not found in this family tree'), $requestedfile);
+	// have to exit even if debug_mediafirewall is enabled because $controller->mediaobject doesn't exist and is required below
+	sendErrorAndExit($ext, WT_I18N::translate('The media file was not found in this family tree'), $requestedfile);
 }
 
 $isThumb = false;
@@ -337,7 +332,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/thumbs/')) {
 if (!file_exists($serverFilename)) {
 	// the requested file MAY be in the gedcom, but it does NOT exist on the server.  bail.
 	// Note: the 404 error status is still in effect.
-	if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), i18n::translate('The media file was not found in this family tree'), $serverFilename);
+	if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), WT_I18N::translate('The media file was not found in this family tree'), $serverFilename);
 }
 
 if (empty($controller->pid)) {
@@ -346,7 +341,7 @@ if (empty($controller->pid)) {
 		// only show these files to admin users
 		// bail since current user is not admin
 		// Note: the 404 error status is still in effect.
-		// if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), i18n::translate('The media file was not found in this family tree'), $serverFilename);
+		// if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), WT_I18N::translate('The media file was not found in this family tree'), $serverFilename);
 	}
 }
 
@@ -354,7 +349,7 @@ if (empty($controller->pid)) {
 if (!$controller->mediaobject->canDisplayDetails()) {
 	// if no permissions, bail
 	// Note: the 404 error status is still in effect
-	if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), i18n::translate('The media file was not found in this family tree'));
+	if (!$debug_mediafirewall) sendErrorAndExit($controller->mediaobject->getFiletype(), WT_I18N::translate('The media file was not found in this family tree'));
 }
 
 $protocol = $_SERVER["SERVER_PROTOCOL"];  // determine if we are using HTTP/1.0 or HTTP/1.1
@@ -532,7 +527,7 @@ if ($generatewatermark) {
 
 	} else {
 		// this image is defective.  log it
-		AddToLog("Media Firewall error: >".i18n::translate('This media file is broken and cannot be watermarked')."< in file >".$serverFilename."< (".getImageInfoForLog($serverFilename).") memory used: ".memory_get_usage(), 'media');
+		AddToLog("Media Firewall error: >".WT_I18N::translate('This media file is broken and cannot be watermarked')."< in file >".$serverFilename."< (".getImageInfoForLog($serverFilename).") memory used: ".memory_get_usage(), 'media');
 
 		// set usewatermark to false so image will simply be passed through below
 		$usewatermark = false;
@@ -549,9 +544,21 @@ if ($usewatermark) {
 // determine filesize of image (could be original or watermarked version)
 $filesize = filesize($serverFilename);
 
-// set one more header
+// set content-length header, send file
 header("Content-Length: " . $filesize);
-// open the file and send it
-$fp = fopen($serverFilename, 'rb');
-fpassthru($fp);
-exit;
+
+// Some servers disable fpassthru() and readfile()
+if (function_exists('readfile')) {
+	readfile($serverFilename);
+} else {
+	$fp=fopen($serverFilename, 'rb');
+	if (function_exists('fpassthru')) {
+		fpassthru($fp);
+	} else {
+		while (!feof($fp)) {
+			echo fread($fp, 65536);
+		}
+	}
+	fclose($fp);
+}
+

@@ -33,12 +33,16 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.0.6');
+define('WT_VERSION',         '1.1.0');
 define('WT_VERSION_RELEASE', ''); // 'svn', 'beta', 'rc1', '', etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 define('WT_WEBTREES_URL',    'http://webtrees.net');
 define('WT_WEBTREES_WIKI',   'http://wiki.webtrees.net');
 define('WT_TRANSLATORS_URL', 'https://translations.launchpad.net/webtrees');
+
+// Location of our modules and themes.  These are used as URLs and directory paths.
+define('WT_MODULES_DIR', 'modules_v2/');
+define('WT_THEMES_DIR',  'themes/' );
 
 // Enable debugging output?
 define('WT_DEBUG',      false);
@@ -48,7 +52,7 @@ define('WT_DEBUG_SQL',  false);
 define('WT_ERROR_LEVEL', 2); // 0=none, 1=minimal, 2=full
 
 // Required version of database tables/columns/indexes/etc.
-define('WT_SCHEMA_VERSION', 5);
+define('WT_SCHEMA_VERSION', 9);
 
 // Regular expressions for validating user input, etc.
 define('WT_REGEX_XREF',     '[A-Za-z0-9:_-]+');
@@ -101,10 +105,10 @@ define ('WT_GOOGLE_CHART_ENCODING', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
 define('WT_AUTOCOMPLETE_LIMIT', 500);
 
 // Privacy constants
-define('WT_PRIV_PUBLIC',  2); // Allows non-authenticated public visitors to view the marked information
-define('WT_PRIV_USER',    1); // Allows authenticated users to access the marked information
-define('WT_PRIV_NONE',    0); // Allows admin users to access the marked information
-define('WT_PRIV_HIDE',   -1); // Hide the item to all users including the admin
+define('WT_PRIV_PUBLIC',  2); // Allows visitors to view the marked information
+define('WT_PRIV_USER',    1); // Allows members to access the marked information
+define('WT_PRIV_NONE',    0); // Allows managers to access the marked information
+define('WT_PRIV_HIDE',   -1); // Hide the item to all users
 
 // For performance, it is quicker to refer to files using absolute paths
 define ('WT_ROOT', realpath(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR);
@@ -118,10 +122,10 @@ ini_set('error_reporting', E_ALL | E_STRICT);
 ini_set('display_errors', '1');
 error_reporting(E_ALL | E_STRICT);
 
-// Invoke the Zend Framework Autoloader, so we can use Zend_XXXXX classes
+// Invoke the Zend Framework Autoloader, so we can use Zend_XXXXX and WT_XXXXX classes
 set_include_path(WT_ROOT.'library'.PATH_SEPARATOR.get_include_path());
 require_once 'Zend/Loader/Autoloader.php';
-Zend_Loader_Autoloader::getInstance();
+Zend_Loader_Autoloader::getInstance()->registerNamespace('WT_');
 
 // Check configuration issues that affect various versions of PHP
 if (version_compare(PHP_VERSION, '6.0', '<')) {
@@ -187,7 +191,6 @@ if (!isset($_SERVER['REQUEST_URI']))  {
 require WT_ROOT.'includes/functions/functions.php';
 require WT_ROOT.'includes/functions/functions_name.php';
 require WT_ROOT.'includes/functions/functions_db.php';
-require WT_ROOT.'includes/classes/class_wt_db.php';
 
 set_error_handler('wt_error_handler');
 
@@ -195,7 +198,7 @@ set_error_handler('wt_error_handler');
 if (file_exists(WT_ROOT.'data/config.ini.php')) {
 	$dbconfig=parse_ini_file(WT_ROOT.'data/config.ini.php');
 	// Invalid/unreadable config file?
-	if (!is_array($dbconfig)) {
+	if (!is_array($dbconfig) || file_exists(WT_ROOT.'data/offline.txt')) {
 		header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'site-unavailable.php');
 		exit;
 	}
@@ -229,7 +232,7 @@ try {
 // www.isp.com/~example), then redirect to it.
 $SERVER_URL=get_site_setting('SERVER_URL');
 if ($SERVER_URL && $SERVER_URL != WT_SERVER_NAME.WT_SCRIPT_PATH) {
-	header('Location: '.get_site_setting('SERVER_URL'));
+	header('Location: '.$SERVER_URL.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : ''), TRUE, 301);
 	exit;
 }
 
@@ -270,7 +273,7 @@ require WT_ROOT.'includes/session_spider.php';
 // Search engines are only allowed to see certain pages.
 if ($SEARCH_SPIDER && !in_array(WT_SCRIPT_NAME , array(
 	'family.php', 'famlist.php', 'index.php', 'indilist.php', 'individual.php',
-	'media.php', 'medialist.php', 'note.php', 'notelist.php', 'repo.php', 'repolist.php',
+	'medialist.php', 'note.php', 'notelist.php', 'repo.php', 'repolist.php',
 	'search_engine.php', 'site-unavailable.php', 'source.php', 'sourcelist.php'
 ))) {
 	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'search_engine.php');
@@ -296,10 +299,17 @@ $cfg=array(
 	'gc_maxlifetime'  => get_site_setting('SESSION_TIME'),
 	'cookie_path'     => WT_SCRIPT_PATH,
 );
+
+// Search engines don't send cookies, and so create a new session with every visit.
+// Make sure they always use the same one
+if ($SEARCH_SPIDER) {
+	Zend_Session::setId('search_engine_'.$_SERVER['REMOTE_ADDR']);
+}
+
 Zend_Session::start($cfg);
 
 // Register a session "namespace" to store session data.  This is better than
-// using $_SESSION, as we can avoid clashes with other modules/applications,
+// using $_SESSION, as we can avoid clashes with other modules or applications,
 // and problems with servers that have enabled "register_globals".
 $WT_SESSION=new Zend_Session_Namespace('WEBTREES');
 
@@ -371,8 +381,7 @@ define('WT_CLIENT_JD', timestamp_to_jd(client_time()));
 define('WT_USER_ID', getUserId());
 
 // With no parameters, init() looks to the environment to choose a language
-require WT_ROOT.'includes/classes/class_i18n.php';
-define('WT_LOCALE', i18n::init());
+define('WT_LOCALE', WT_I18N::init());
 
 // Application configuration data - things that aren't (yet?) user-editable
 require WT_ROOT.'includes/config_data.php';
@@ -413,12 +422,12 @@ if (isset($_GET['show_context_help'])) {
 if (!isset($_SESSION['wt_user'])) $_SESSION['wt_user'] = '';
 
 if (WT_SCRIPT_NAME!='help_text.php') {
-	if (!get_gedcom_setting(WT_GED_ID, 'imported') && !in_array(WT_SCRIPT_NAME, array('editconfig_gedcom.php', 'help_text.php', 'editgedcoms.php', 'downloadgedcom.php', 'logs.php', 'login.php', 'siteconfig.php', 'admin.php', 'addmedia.php', 'client.php', 'gedcheck.php', 'useradmin.php', 'export_gedcom.php', 'edit_changes.php', 'import.php', 'pgv_to_wt.php'))) {
-		header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'editgedcoms.php');
+	if (!get_gedcom_setting(WT_GED_ID, 'imported') && substr(WT_SCRIPT_NAME, 0, 5)!=='admin' && !in_array(WT_SCRIPT_NAME, array('help_text.php', 'downloadgedcom.php', 'login.php', 'login_register.php', 'gedcheck.php', 'export_gedcom.php', 'edit_changes.php', 'import.php', 'message.php', 'save.php'))) {
+		header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'admin_trees_manage.php');
 		exit;
 	}
 
-	if ($REQUIRE_AUTHENTICATION && !WT_USER_ID && !in_array(WT_SCRIPT_NAME, array('login.php', 'login_register.php', 'client.php', 'genservice.php', 'help_text.php', 'message.php'))) {
+	if ($REQUIRE_AUTHENTICATION && !WT_USER_ID && !in_array(WT_SCRIPT_NAME, array('login.php', 'login_register.php', 'help_text.php', 'message.php'))) {
 		if (!empty($_REQUEST['auth']) && $_REQUEST['auth']=='basic') {
 			// if user is attempting basic authentication
 			// TODO: Update if digest auth is ever implemented
@@ -454,7 +463,10 @@ if (WT_USER_ID) {
 }
 
 // Set the theme
-if (!defined('WT_THEME_DIR')) {
+if (substr(WT_SCRIPT_NAME, 0, 5)=='admin' || WT_SCRIPT_NAME=='module.php' && substr(safe_GET('mod_action'), 0, 5)=='admin') {
+	// Administration scripts begin with 'admin' and use a special administration theme
+	define('WT_THEME_DIR', WT_THEMES_DIR.'_administration/');
+} else {
 	if (get_site_setting('ALLOW_USER_THEMES')) {
 		// Requested change of theme?
 		$THEME_DIR=safe_GET('theme', get_theme_names());
@@ -463,6 +475,8 @@ if (!defined('WT_THEME_DIR')) {
 		if (!$THEME_DIR && isset($_SESSION['theme_dir']) && in_array($_SESSION['theme_dir'], get_theme_names())) {
 			$THEME_DIR=$_SESSION['theme_dir'];
 		}
+	} else {
+		$THEME_DIR='';
 	}
 	if (!$THEME_DIR) {
 		// User cannot choose (or has not chosen) a theme.
@@ -472,20 +486,22 @@ if (!defined('WT_THEME_DIR')) {
 		// 4) first one found
 		$THEME_DIR=get_gedcom_setting(WT_GED_ID, 'THEME_DIR');
 		if (!in_array($THEME_DIR, get_theme_names())) {
-			$THEME_DIR=get_site_setting('THEME_DIR', 'themes/webtrees/');
+			$THEME_DIR=get_site_setting('THEME_DIR', 'webtrees');
 		}
 		if (!in_array($THEME_DIR, get_theme_names())) {
-			$THEME_DIR='themes/webtrees/';
+			$THEME_DIR='webtrees';
 		}
 		if (!in_array($THEME_DIR, get_theme_names())) {
 			list($THEME_DIR)=get_theme_names();
 		}
 	}
-	define('WT_THEME_DIR', $THEME_DIR);
+	define('WT_THEME_DIR', WT_THEMES_DIR.$THEME_DIR.'/');
+	// Remember this setting
+	if (WT_THEME_DIR!=WT_THEMES_DIR.'_administration/') {
+		$_SESSION['theme_dir']=$THEME_DIR;
+	}
 }
 
-// Remember this setting
-$_SESSION['theme_dir']=WT_THEME_DIR;
 
 require WT_ROOT.WT_THEME_DIR.'theme.php';
 
@@ -506,4 +522,4 @@ if (substr(PHP_SAPI, 0, 3) == 'cgi') {  // cgi-mode, should only be writable by 
 }
 
 // Lightbox needs custom integration in many places.  Only check for the module once.
-define('WT_USE_LIGHTBOX', !$SEARCH_SPIDER && $MULTI_MEDIA && is_dir(WT_ROOT.'modules/lightbox'));
+define('WT_USE_LIGHTBOX', !$SEARCH_SPIDER && $MULTI_MEDIA && is_dir(WT_ROOT.WT_MODULES_DIR.'lightbox'));

@@ -1,35 +1,30 @@
 <?php
-/**
-* Animated Sidebar for the Individual Page
-*
-* webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
-* Copyright (C) 2002 to 2010 PGV Development Team. All rights reserved.
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-* @package webtrees
-* @subpackage Sidebar
-* @version $Id$
-*/
+// Animated Sidebar for the Individual Page
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2010 PGV Development Team. All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+//
+// @version $Id$
 
 if (!defined('WT_SCRIPT_NAME')) define('WT_SCRIPT_NAME', 'sidebar.php');
 require_once('includes/session.php');
-require_once(WT_ROOT.'includes/classes/class_module.php');
 
 $sidebarmods = WT_Module::getActiveSidebars();
 if (!$sidebarmods) {
@@ -74,7 +69,7 @@ if ($sb_action!='none') {
 			if (isset($controller)) $mod->setController($controller);
 			if ($mod->hasSidebarContent()) {
 				?>
-				<h3 title="<?php echo $mod->getName(); ?>"><a href="#"><?php echo $mod->getTitle(); ?></a></h3>
+				<h3 title="<?php echo $mod->getName(); ?>"><a href="#"><?php echo '<span title="', $mod->getTitle(), '">', $mod->getTitle(), '</span>'; ?></a></h3>
 				<div id="sb_content_<?php echo $mod->getName(); ?>">
 				<?php if ($counter==0) echo $mod->getSidebarContent();
 				else { ?><img src="<?php echo WT_THEME_DIR; ?>images/loading.gif" /><?php } ?>
@@ -142,12 +137,11 @@ function closeCallback() {
 		jQuery.get('individual.php?pid=<?php echo $controller->pid; ?>&action=ajax&pin=false');
 		pinned = false;
 	}
+	// For Google Maps v3 only ---------------------------------------------------------------------
 	if (jQuery("#tabs li:eq("+jQuery("#tabs").tabs("option", "selected")+") a").attr("title") == "googlemap") {
 		loadMap();
-		map.setMapType(<?php echo $GOOGLEMAP_MAP_TYPE; ?>);
-		SetMarkersAndBounds();
-		ResizeMap();
 	}
+	// ---------------------------------------------------------------------------------------------	
 }
 
 function openCallback() {
@@ -162,12 +156,12 @@ function openCallback() {
 			}
 		}
 	});
+	
+	// For Google Maps v3 only ---------------------------------------------------------------------
 	if (jQuery("#tabs li:eq("+jQuery("#tabs").tabs("option", "selected")+") a").attr("title") == "googlemap") {
 		loadMap();
-		map.setMapType(<?php echo $GOOGLEMAP_MAP_TYPE; ?>);
-		SetMarkersAndBounds();
-		ResizeMap();
 	}
+	// ---------------------------------------------------------------------------------------------	
 }
 
 jQuery(document).ready(function() {
@@ -175,12 +169,12 @@ jQuery(document).ready(function() {
 	// Sidebar Pin Function
 	jQuery('#sidebar_pin').toggle(
 		function() {
-			jQuery('#sidebar_pin img').attr('src', '<?php echo $WT_IMAGES['pin-in']; ?>').attr('title', '<?php echo i18n::translate('Unpin Sidebar'); ?>');
+			jQuery('#sidebar_pin img').attr('src', '<?php echo $WT_IMAGES['pin-in']; ?>').attr('title', '<?php echo WT_I18N::translate('Unpin Sidebar'); ?>');
 			jQuery.get('individual.php?pid=<?php echo $controller->pid; ?>&action=ajax&pin=true');
 			pinned = true;
 		},
 		function() {
-			jQuery('#sidebar_pin img').attr('src', '<?php echo $WT_IMAGES['pin-out']; ?>').attr('title', '<?php echo i18n::translate('Pin Sidebar'); ?>');
+			jQuery('#sidebar_pin img').attr('src', '<?php echo $WT_IMAGES['pin-out']; ?>').attr('title', '<?php echo WT_I18N::translate('Pin Sidebar'); ?>');
 		jQuery.get('individual.php?pid=<?php echo $controller->pid; ?>&action=ajax&pin=false');
 		pinned = false;
 		}
@@ -195,7 +189,7 @@ jQuery(document).ready(function() {
 	// Sidebar Open/Close Function
 	// Sidebar Open
 	jQuery('#sidebar_open').toggle(function() {
-		jQuery('#sidebar_open img').attr('style', 'margin-left:255px;' ).attr('src', '<?php echo $WT_IMAGES['slide_close']; ?>').attr('title', '<?php echo i18n::translate('Sidebar Close'); ?>');
+		jQuery('#sidebar_open img').attr('style', 'margin-left:255px;' ).attr('src', '<?php echo $WT_IMAGES['slide_close']; ?>').attr('title', '<?php echo WT_I18N::translate('Sidebar Close'); ?>');
 		jQuery('#sidebar').animate({
 			right: "0px",
 			width: "260px"
@@ -233,7 +227,7 @@ jQuery(document).ready(function() {
 		sb_open=true;
 	// Sidebar Close
 	}, function() {
-		jQuery('#sidebar_open img').attr('style', 'margin-left:0px;' ).attr('src', '<?php echo $WT_IMAGES['slide_open']; ?>').attr('title', '<?php echo i18n::translate('Sidebar Open'); ?>');
+		jQuery('#sidebar_open img').attr('style', 'margin-left:0px;' ).attr('src', '<?php echo $WT_IMAGES['slide_open']; ?>').attr('title', '<?php echo WT_I18N::translate('Sidebar Open'); ?>');
 		jQuery('#sidebar').css('left', '');
 		jQuery('#sidebar').animate({
 			right: "4px",
@@ -278,15 +272,15 @@ jQuery(document).ready(function() {
 	if (isset($_SESSION['WT_pin']) && $_SESSION['WT_pin'] && $sidebar_state == "open") {
 		?>
 		<div id="sidebar_controls" class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top ui-state-focus">
-			<a id="sidebar_open" href="#open"><img style="margin-left:0px;" src="<?php echo $WT_IMAGES['slide_close']; ?>" border="0" title="<?php echo i18n::translate('Sidebar Open'); ?>" alt="" /></a>
-			<a id="sidebar_pin" href="#pin"><img src="<?php echo $WT_IMAGES['pin-out']; ?>" border="0" title="<?php echo i18n::translate('Pin Sidebar'); ?>" alt="" /></a>
+			<a id="sidebar_open" href="#open"><img style="margin-left:0px;" src="<?php echo $WT_IMAGES['slide_close']; ?>" border="0" title="<?php echo WT_I18N::translate('Sidebar Open'); ?>" alt="" /></a>
+			<a id="sidebar_pin" href="#pin"><img src="<?php echo $WT_IMAGES['pin-out']; ?>" border="0" title="<?php echo WT_I18N::translate('Pin Sidebar'); ?>" alt="" /></a>
 		</div>
 		<?php
 	} else {
 		?>
 		<div id="sidebar_controls" class="ui-accordion-header ui-helper-reset ui-state-active ui-corner-top ui-state-focus">
-			<a id="sidebar_open" href="#open"><img style="margin-left:0px;" src="<?php echo $WT_IMAGES['slide_open']; ?>" border="0" title="<?php echo i18n::translate('Sidebar Open'); ?>" alt="" /></a>
-			<a id="sidebar_pin" href="#pin"><img src="<?php echo $WT_IMAGES['pin-out']; ?>" border="0" title="<?php echo i18n::translate('Pin Sidebar'); ?>" alt="" /></a>
+			<a id="sidebar_open" href="#open"><img style="margin-left:0px;" src="<?php echo $WT_IMAGES['slide_open']; ?>" border="0" title="<?php echo WT_I18N::translate('Sidebar Open'); ?>" alt="" /></a>
+			<a id="sidebar_pin" href="#pin"><img src="<?php echo $WT_IMAGES['pin-out']; ?>" border="0" title="<?php echo WT_I18N::translate('Pin Sidebar'); ?>" alt="" /></a>
 		</div>
 		<?php
 	}

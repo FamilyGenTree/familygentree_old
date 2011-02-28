@@ -116,9 +116,6 @@ function gedcom_header($gedfile) {
 	// Preserve some values from the original header
 	if (get_gedcom_setting($ged_id, 'imported')) {
 		$head=find_gedcom_record("HEAD", $ged_id);
-		if (preg_match("/\n1 CHAR .+/", $head, $match)) {
-			$CHAR=$match[0];
-		}
 		if (preg_match("/\n1 PLAC\n2 FORM .+/", $head, $match)) {
 			$PLAC=$match[0];
 		}
@@ -239,7 +236,7 @@ function convert_media_path($rec, $path, $slashes) {
  * $gedcom:         GEDCOM to be exported
  * $gedout:         Handle of output file
  * $exportOptions:  array of options for this Export operation as follows:
- *  'privatize':    which Privacy rules apply?  (none, visitor, user, GEDCOM admin, site admin)
+ *  'privatize':    which Privacy rules apply?  (none, visitor, user, manager)
  *  'toANSI':       should the output be produced in ANSI instead of UTF-8?  (yes, no)
  *  'noCustomTags': should custom tags be removed?  (yes, no)
  *  'path':         what constant should prefix all media file paths?  (eg: media/  or c:\my pictures\my family

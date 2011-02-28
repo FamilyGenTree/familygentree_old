@@ -1,42 +1,36 @@
 <?php
-/**
- * Media View Page
- *
- * This page displays all information about media that is selected in PHPGedView.
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package webtrees
- * @subpackage Display
- * @version $Id$
- * @TODO use more theme specific CSS, allow a more fluid layout to take advantage of the page width
- */
+// Media View Page
+//
+// This page displays all information about media that is selected in PHPGedView.
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 define('WT_SCRIPT_NAME', 'mediaviewer.php');
 require './includes/session.php';
-require_once WT_ROOT.'includes/controllers/media_ctrl.php';
 
 $nonfacts=array();
 
-$controller = new MediaController();
+$controller = new WT_Controller_Media();
 $controller->init();
 
 
@@ -50,7 +44,7 @@ $filename = $controller->getLocalFilename();
 print_header($controller->getPageTitle());
 
 if (!$controller->mediaobject) {
-	echo "<b>", i18n::translate('Unable to find record with ID'), "</b><br /><br />";
+	echo "<b>", WT_I18N::translate('Unable to find record with ID'), "</b><br /><br />";
 	print_footer();
 	exit;
 }
@@ -59,8 +53,8 @@ global $tmb;
 // LBox =============================================================================
 // Get Javascript variables from lb_config.php ---------------------------
 if (WT_USE_LIGHTBOX) {
-	require WT_ROOT.'modules/lightbox/lb_defaultconfig.php';
-	require WT_ROOT.'modules/lightbox/functions/lb_call_js.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/lb_defaultconfig.php';
+	require WT_ROOT.WT_MODULES_DIR.'lightbox/functions/lb_call_js.php';
 }
 // LBox  ============================================================================
 
@@ -71,7 +65,7 @@ if (WT_USE_LIGHTBOX) {
 		<td class="name_head" colspan="2">
 			<?php echo PrintReady($controller->mediaobject->getFullName()); ?>
 			<?php echo PrintReady($controller->mediaobject->getAddName()); ?> <br /><br />
-			<?php if ($controller->mediaobject->isMarkedDeleted()) echo "<span class=\"error\">".i18n::translate('This record has been marked for deletion upon admin approval.')."</span>"; ?>
+			<?php if ($controller->mediaobject->isMarkedDeleted()) echo "<span class=\"error\">".WT_I18N::translate('This record has been marked for deletion upon admin approval.')."</span>"; ?>
 		</td>
 	</tr>
 	<tr>
@@ -104,7 +98,7 @@ if (WT_USE_LIGHTBOX) {
 
 					// If download
 					if ($SHOW_MEDIA_DOWNLOAD) {
-						echo "<br /><br /><a href=\"".$filename."\">".i18n::translate('Download File')."</a><br/>";
+						echo "<br /><br /><a href=\"".$filename."\">".WT_I18N::translate('Download File')."</a><br/>";
 					}
 
 					// else the file is not external and does not exist
@@ -112,7 +106,7 @@ if (WT_USE_LIGHTBOX) {
 					?>
 					<img src="<?php echo $controller->mediaobject->getThumbnail(); ?>" border="0" width="100" alt="<?php echo $controller->mediaobject->getFullName(); ?>" title="<?php echo PrintReady(htmlspecialchars($controller->mediaobject->getFullName())); ?>" />
 					<span class="error">
-						<?php echo i18n::translate('File not found.'); ?>
+						<?php echo WT_I18N::translate('File not found.'); ?>
 					</span>
 					<?php
 				}
@@ -139,7 +133,7 @@ if (WT_USE_LIGHTBOX) {
 	</tr>
 	<tr>
 		<td class="center" colspan="2">
-			<br /><b><?php echo i18n::translate('The image relates to:'); ?></b><br /><br />
+			<br /><b><?php echo WT_I18N::translate('The image relates to:'); ?></b><br /><br />
 			<?php
 
 				// Individuals linked to this media object
@@ -157,6 +151,11 @@ if (WT_USE_LIGHTBOX) {
 					print_sour_table($controller->mediaobject->fetchLinkedSources(), $controller->mediaobject->getFullName());
 				}
 
+				// Repositories linked to this media object
+				if ($controller->mediaobject->countLinkedRepositories()) {
+					print_repo_table($controller->mediaobject->fetchLinkedRepositories(), $controller->mediaobject->getFullName());
+				}
+
 				// Notes linked to this media object
 				if ($controller->mediaobject->countLinkedNotes()) {
 					print_note_table($controller->mediaobject->fetchLinkedNotes(), $controller->mediaobject->getFullName());
@@ -170,7 +169,7 @@ if (WT_USE_LIGHTBOX) {
 
 // These JavaScript functions are needed for the code to work properly with the menu.
 ?>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 
 // javascript function to open the lightbox view

@@ -1,55 +1,48 @@
 <?php
-/**
- * Display a timeline chart for a group of individuals
- *
- * Use the $pids array to set which individuals to show on the chart
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * This Page Is Valid XHTML 1.0 Transitional! > 08 August 2005
- *
- * @package webtrees
- * @subpackage Charts
- * @version $Id$
- */
+// Display a timeline chart for a group of individuals
+//
+// Use the $pids array to set which individuals to show on the chart
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// @version $Id$
 
 define('WT_SCRIPT_NAME', 'lifespan.php');
 require './includes/session.php';
-require_once WT_ROOT.'includes/controllers/lifespan_ctrl.php';
 
 // GEDCOM elements that will be found but should not be displayed
 $nonfacts = array("FAMS", "FAMC", "MAY", "BLOB", "OBJE", "SEX", "NAME", "SOUR", "NOTE", "BAPL", "ENDL", "SLGC", "SLGS", "_TODO", "_WT_OBJE_SORT", "CHAN", "HUSB", "WIFE", "CHIL", "BIRT", "DEAT", "BURI");// DEATH OF SIBLING:  DEATH OF HALF SIBLING DEATH OF MOTHER DEATH OF FATHER DEATH OF CHILD
 $nonfamfacts = array("CHAN", "HUSB", "WIFE", "CHIL");
 
-$controller = new LifespanController();
+$controller = new WT_Controller_Lifespan();
 $controller->init();
 
 $zoomfactor = 10;
 //if peeps !null then pass new array for zooming
 
-print_header(i18n::translate('Lifespan chart'));
+print_header(WT_I18N::translate('Lifespan chart'));
 
 if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 ?>
-	<script language="JavaScript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 	var pastefield;
 	function paste_id(value) {
@@ -58,7 +51,7 @@ if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 	//-->
 	</script>
 
-<h2><?php echo i18n::translate('Lifespan chart'); ?></h2>
+<h2><?php echo WT_I18N::translate('Lifespan chart'), help_link('lifespan_chart'); ?></h2>
 <table><tr><td>
 <form name="people" action="lifespan.php">
 
@@ -68,16 +61,16 @@ if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 		?>
 	<table>
 		<tr><td class="person<?php echo $col; ?>" style="padding: 5px" valign="top">
-			<?php echo i18n::translate('Add another person to chart'), help_link('add_person'), '<br />', i18n::translate('Person ID'); ?>
+			<?php echo WT_I18N::translate('Add another person to chart'), help_link('add_person'), '<br />', WT_I18N::translate('Person ID'); ?>
 			<input class="pedigree_form" type="text" size="5" id="newpid" name="newpid" />
 			<?php print_findindi_link("newpid",""); ?>
 			<br />
-			<div style="text-align: center"><input type="checkbox" checked="checked" value="yes" name="addFamily"/><?php echo i18n::translate('Include Immediate Family'); ?></div>
+			<div style="text-align: center"><input type="checkbox" checked="checked" value="yes" name="addFamily"/><?php echo WT_I18N::translate('Include Immediate Family'); ?></div>
 			<br />
-			<div style="text-align: center"><input type="submit" value="<?php echo i18n::translate('Show'); ?>" /></div>
+			<div style="text-align: center"><input type="submit" value="<?php echo WT_I18N::translate('Show'); ?>" /></div>
 		</td></tr>
 	</table>
-	<?php if (count($controller->pids)<11) { ?><br /><a href="timeline.php"><b><?php echo i18n::translate('Show Timeline chart'); ?></b></a><br /><br /><?php } ?>
+	<?php if (count($controller->pids)<11) { ?><br /><a href="timeline.php"><b><?php echo WT_I18N::translate('Show Timeline chart'); ?></b></a><br /><br /><?php } ?>
 
 </form>
 <script type="text/javascript">
@@ -303,9 +296,9 @@ var oldMx = 0;
 	<table>
 		<tr>
 			<td rowspan="2"><?php echo help_link('timeline_control'); ?></td>
-			<td align="center"><?php echo i18n::translate('Speed'); ?></td>
-				<td align="center"><?php echo i18n::translate('Begin Year'); ?></td>
-				<td align="center"><?php echo i18n::translate('End Year'); ?></td>
+			<td align="center"><?php echo WT_I18N::translate('Speed'); ?></td>
+				<td align="center"><?php echo WT_I18N::translate('Begin Year'); ?></td>
+				<td align="center"><?php echo WT_I18N::translate('End Year'); ?></td>
 				<td align="center"><?php echo translate_fact('PLAC'); ?></td>
 		</tr>
 		<tr>
@@ -319,13 +312,13 @@ var oldMx = 0;
 			<td><input type="text" name="beginYear" size="5" value="<?php if (isset($beginYear)) echo $beginYear; ?>" /></td>
 			<td><input type="text" name="endYear" size="5" value="<?php if (isset($endYear)) echo $endYear; ?>" /></td>
 			<td><input type="text" name="place" size="15" value="<?php if (isset($place)) echo $place; ?>"/></td>
-			<td><input type="submit" name="search" value="<?php echo i18n::translate('Search'); ?>" /></td>
-		<td><input type="button" value="<?php echo i18n::translate('Clear Chart'); ?>" onclick="window.location = 'lifespan.php?clear=1';" /></td>
+			<td><input type="submit" name="search" value="<?php echo WT_I18N::translate('Search'); ?>" /></td>
+		<td><input type="button" value="<?php echo WT_I18N::translate('Clear Chart'); ?>" onclick="window.location = 'lifespan.php?clear=1';" /></td>
 		</tr>
 	</table>
 	<?php
 	$people = count($controller->people);
-	echo "<br /><b>".i18n::plural('%d Individual', '%d Individuals', $people, $people)."</b>";
+	echo "<br /><b>".WT_I18N::plural('%d Individual', '%d Individuals', $people, $people)."</b>";
 	?>
 </form>
 </td></tr></table>
@@ -359,7 +352,7 @@ var oldMx = 0;
 </div>
 	<!--  Floating div controls END-->
 </div>
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 <!--
 var maxY = 80-<?php echo $maxY; ?>; // Sets the boundaries for how far the timeline can move in the up direction
 var maxX = <?php if (!isset($maxX)) $maxX = 0; echo $maxX; ?>;  // Sets the boundaries for how far the timeline can move in the left direction

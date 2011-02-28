@@ -1,37 +1,32 @@
 <?php
-/**
-* Individual Page
-*
-* Display all of the information about an individual
-*
-* webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
-* Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*
-* @package webtrees
-* @subpackage Charts
-* @version $Id$
-*/
+// Individual Page
+//
+// Display all of the information about an individual
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 define('WT_SCRIPT_NAME', 'individual.php');
 require './includes/session.php';
-require WT_ROOT.'includes/controllers/individual_ctrl.php';
 
 $showFull = ($PEDIGREE_FULL_DETAILS) ? 1 : 0;
 
@@ -40,7 +35,7 @@ $nonfacts = array("FAMS", "FAMC", "MAY", "BLOB", "CHIL", "HUSB", "WIFE", "RFN", 
 
 $nonfamfacts = array(/*"NCHI",*/ "UID", "");
 
-$controller=new IndividualController();
+$controller=new WT_Controller_Individual();
 $controller->init();
 
 // tell tabs that use jquery that it is already loaded
@@ -52,7 +47,7 @@ Zend_Session::writeClose();
 print_header($controller->getPageTitle());
 
 if (!$controller->indi) {
-	echo "<b>", i18n::translate('Unable to find record with ID'), "</b><br /><br />";
+	echo "<b>", WT_I18N::translate('Unable to find record with ID'), "</b><br /><br />";
 	print_footer();
 	exit;
 }
@@ -65,7 +60,7 @@ $linkToID=$controller->pid; // -- Tell addmedia.php what to link to
 
 ?>
 
-<script language="JavaScript" type="text/javascript">
+<script type="text/javascript">
 // <![CDATA[
 // javascript function to open a window with the raw gedcom in it
 function show_gedcom_record(shownew) {
@@ -74,11 +69,6 @@ function show_gedcom_record(shownew) {
 	var recwin = window.open("gedrecord.php?pid=<?php echo $controller->pid; ?>"+fromfile, "_blank", "top=50,left=50,width=600,height=400,scrollbars=1,scrollable=1,resizable=1");
 }
 <?php if (WT_USER_CAN_EDIT) { ?>
-function open_link_remote(pid) {
-	window.open("addremotelink.php?pid="+pid, "_blank", "top=50,left=50,width=600,height=500,scrollbars=1,scrollable=1,resizable=1");
-	return false;
-}
-
 function showchanges() {
 	window.location = '<?php echo $controller->indi->getRawUrl(); ?>&show_changes=yes';
 }
@@ -108,8 +98,8 @@ jQuery(document).ready(function() {
 
 <div id="indi_main_blocks">
 	<?php
-		if ((empty($SEARCH_SPIDER))&&($controller->accept_success)) echo "<b>", i18n::translate('Changes successfully accepted into database'), "</b><br />";
-		if ($controller->indi->isMarkedDeleted()) echo "<span class=\"error\">".i18n::translate('This record has been marked for deletion upon admin approval.')."</span>";
+		if ((empty($SEARCH_SPIDER))&&($controller->accept_success)) echo "<b>", WT_I18N::translate('Changes successfully accepted into database'), "</b><br />";
+		if ($controller->indi->isMarkedDeleted()) echo "<span class=\"error\">".WT_I18N::translate('This record has been marked for deletion upon admin approval.')."</span>";
 		if (strlen($controller->indi->getAddName()) > 0) echo "<span class=\"name_head\">", PrintReady($controller->indi->getAddName()), "</span><br />";
 	?>
 	<div id="indi_header">
@@ -123,7 +113,7 @@ jQuery(document).ready(function() {
 					if ($user_id) {
 						$user_name=get_user_name($user_id);
 						echo "&nbsp;";
-						echo printReady("<a href=\"useradmin.php?action=edituser&amp;username={$user_name}\">({$user_name})</a>");
+						echo printReady("<a href=\"admin_users.php?action=edituser&amp;username={$user_name}\">({$user_name})</a>");
 					}
 				}
 			?>
@@ -160,8 +150,8 @@ jQuery(document).ready(function() {
 									// If alive display age
 									if (!$controller->indi->isDead()) {
 										$bdate=$controller->indi->getBirthDate();
-										$age = GedcomDate::GetAgeGedcom($bdate);
-										if ($age!="") $summary.= "<dl><dt class=\"label\">".i18n::translate('Age')."</dt><span class=\"field\">".get_age_at_event($age, true)."</span></dl>";
+										$age = WT_Date::GetAgeGedcom($bdate);
+										if ($age!="") $summary.= "<dl><dt class=\"label\">".WT_I18N::translate('Age')."</dt><span class=\"field\">".get_age_at_event($age, true)."</span></dl>";
 									}
 									$summary.=$controller->indi->format_first_major_fact(WT_EVENTS_DEAT, 2);
 									if ($SHOW_LDS_AT_GLANCE) {
@@ -188,21 +178,8 @@ jQuery(document).ready(function() {
 			if ($SHOW_COUNTER && (empty($SEARCH_SPIDER))) {
 				//print indi counter only if displaying a non-private person
 				require WT_ROOT.'includes/hitcount.php';
-				echo i18n::translate('Hit Count:'), " ", $hitCount;
+				echo WT_I18N::translate('Hit Count:'), " ", $hitCount;
 			}
-			// if individual is a remote individual
-			// if information for this information is based on a remote site
-			if ($controller->indi->isRemote()) {
-				echo '<br />';
-				echo i18n::translate('The information for this individual was linked from a remote site.');//<br />--><!--take this out if you want break the remote site and the fact that it was remote into two separate lines
-				echo '<a href="', $controller->indi->getHtmlUrl(), '">', $controller->indi->getLinkTitle(), '</a>';
-			}
-			// if indivual is not a remote individual
-			// if information for this individual is based on this local site
-			// this is not need to be printed, but may be uncommented if desired
-			/*else
-				echo("This is a local individual.");
-			}*/
 		?>
 	</div>
 
@@ -248,7 +225,7 @@ if (!$controller->indi->canDisplayDetails()) {
 				// Non-AJAX tabs load immediately (search engines don't load ajax)
 				echo '<li class="ui-state-default ui-corner-top"><a title="', $tab->getName(), '" href="#', $tab->getName(), '">';
 			}
-			echo '<span>', $tab->getTitle(), '</span></a></li>';
+			echo '<span title="', $tab->getTitle(), '">', $tab->getTitle(), '</span></a></li>';
 		}
 	}
 	echo '</ul>';
@@ -272,10 +249,4 @@ echo 'alert("webtrees.js: A javascript function is missing.  Please clear your W
 echo '}';
 echo WT_JS_END;
 
-if ($SEARCH_SPIDER) {
-	if ($SHOW_SPIDER_TAGLINE)
-		echo i18n::translate('Search Engine Spider Detected'), ": ", $SEARCH_SPIDER;
-	echo "</div></body></html>";
-} else {
-	print_footer();
-}
+print_footer();

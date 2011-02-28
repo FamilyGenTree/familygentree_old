@@ -33,7 +33,6 @@
 
 define('WT_SCRIPT_NAME', 'hourglass_ajax.php');
 require './includes/session.php';
-require_once WT_ROOT.'includes/controllers/hourglass_ctrl.php';
 
 /*
  * The purpose of this page is to build the left half of the Hourglass chart via Ajax.
@@ -41,12 +40,12 @@ require_once WT_ROOT.'includes/controllers/hourglass_ctrl.php';
  * label the pair as a pair.
  */
 
-$controller = new HourglassController();
+$controller = new WT_Controller_Hourglass();
 $controller->init();
 
 header('Content-type: text/html; charset=UTF-8');
 // -- print html header information
 if (isset($_REQUEST['type']) && $_REQUEST['type']=='desc')
-	$controller->print_descendency($controller->pid, 1, false);
+	$controller->print_descendency(WT_Person::getInstance($controller->pid), 1, false);
 else
-	$controller->print_person_pedigree($controller->pid, 0);
+	$controller->print_person_pedigree(WT_Person::getInstance($controller->pid), 0);

@@ -3,7 +3,7 @@
  * Used by AJAX to load the expanded view inside person boxes
  *
  * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
+ * Copyright (C) 2011 webtrees development team.
  *
  * Derived from PhpGedView
  * Copyright (C) 2002 to 2008 PGV Development Team. All rights reserved.
@@ -31,10 +31,10 @@ require './includes/session.php';
 
 header('Content-Type: text/html; charset=UTF-8');
 $pid = safe_GET_xref('pid');
-$person = Person::getInstance($pid);
-if (!$person->canDisplayDetails()) return i18n::translate('Private');
+$person = WT_Person::getInstance($pid);
+if (!$person->canDisplayDetails()) return WT_I18N::translate('Private');
 
-$nonfacts = array("SEX","FAMS","FAMC","NAME","TITL","NOTE","SOUR","SSN","OBJE","HUSB","WIFE","CHIL","ALIA","ADDR","PHON","SUBM","_EMAIL","CHAN","URL","EMAIL","WWW","RESI","_UID","_TODO","_WT_OBJE_SORT","_WT_OBJE_SORT");
+$nonfacts = array("SEX","FAMS","FAMC","NAME","TITL","NOTE","SOUR","SSN","OBJE","HUSB","WIFE","CHIL","ALIA","ADDR","PHON","SUBM","_EMAIL","CHAN","URL","EMAIL","WWW","RESI","RESN","_UID","_TODO","_WT_OBJE_SORT");
 $person->add_family_facts(false);
 $subfacts = $person->getIndiFacts();
 
@@ -48,7 +48,7 @@ foreach ($subfacts as $indexval => $event) {
 		$f2++;
 		// handle ASSO record
 		if ($event->getTag()=='ASSO') {
-			print_asso_rela_record($pid, $event->getGedComRecord(), false);
+			print_asso_rela_record($event);
 			continue;
 		}
 		$fact = $event->getTag();
@@ -61,15 +61,15 @@ foreach ($subfacts as $indexval => $event) {
 		$famid = $event->getFamilyId();
 		$spouseid = $event->getSpouseId();
 		if (!empty($spouseid)) {
-			$spouse = Person::getInstance($spouseid);
+			$spouse = WT_Person::getInstance($spouseid);
 			if ($spouse) {
 				echo ' <a href="', $spouse->getHtmlUrl(), '">', PrintReady($spouse->getFullName()), '</a> - ';
 			}
 		}
 		if (!empty($famid)) {
-			$family = Family::getInstance($famid);
+			$family = WT_Family::getInstance($famid);
 			if ($family) {
-				echo '<a href="', $family->getHtmlUrl(), '">[',i18n::translate('View Family'), ']</a>';
+				echo '<a href="', $family->getHtmlUrl(), '">[',WT_I18N::translate('View Family'), ']</a>';
 			}
 		}
 		echo format_fact_place($event, true, true);

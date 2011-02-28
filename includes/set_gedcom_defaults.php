@@ -5,7 +5,7 @@
 *
 * The calling module must set $ged_id and $ged_name
 *
-* Copyright (C) 2010 webtrees development team.
+* Copyright (C) 2011 webtrees development team.
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,6 @@ if (!defined('WT_WEBTREES') || empty($ged_id) || empty($ged_name)) {
 ////////////////////////////////////////////////////////////////////////////////
 // Module privacy
 ////////////////////////////////////////////////////////////////////////////////
-require_once WT_ROOT.'includes/classes/class_module.php';
 WT_Module::setDefaultAccess($ged_id);
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +83,6 @@ set_gedcom_setting($ged_id, 'MEDIA_FIREWALL_ROOTDIR',       get_site_setting('IN
 set_gedcom_setting($ged_id, 'MEDIA_FIREWALL_THUMBS',        false);
 set_gedcom_setting($ged_id, 'MEDIA_ID_PREFIX',              'M');
 set_gedcom_setting($ged_id, 'META_DESCRIPTION',             '');
-set_gedcom_setting($ged_id, 'META_ROBOTS',                  'index,follow');
 set_gedcom_setting($ged_id, 'META_TITLE',                   WT_WEBTREES);
 set_gedcom_setting($ged_id, 'MULTI_MEDIA',                  true);
 set_gedcom_setting($ged_id, 'NOTE_FACTS_ADD',               'SOUR');
@@ -124,20 +122,17 @@ set_gedcom_setting($ged_id, 'SHOW_LIVING_NAMES',            WT_PRIV_USER);
 set_gedcom_setting($ged_id, 'SHOW_MARRIED_NAMES',           true);
 set_gedcom_setting($ged_id, 'SHOW_MEDIA_DOWNLOAD',          false);
 set_gedcom_setting($ged_id, 'SHOW_MEDIA_FILENAME',          false);
-set_gedcom_setting($ged_id, 'SHOW_MULTISITE_SEARCH',        WT_PRIV_NONE);
 set_gedcom_setting($ged_id, 'SHOW_NO_WATERMARK',            WT_PRIV_USER);
 set_gedcom_setting($ged_id, 'SHOW_PARENTS_AGE',             true);
 set_gedcom_setting($ged_id, 'SHOW_PEDIGREE_PLACES',         '9');
 set_gedcom_setting($ged_id, 'SHOW_PRIVATE_RELATIONSHIPS',   false);
 set_gedcom_setting($ged_id, 'SHOW_REGISTER_CAUTION',        true);
-set_gedcom_setting($ged_id, 'SHOW_RELATIVES_EVENTS',        '_BIRT_CHIL,_BIRT_GCHI,_BIRT_HSIB,_BIRT_SIBL,_DEAT_CHIL,_DEAT_COUS,_DEAT_FATH,_DEAT_GCHI,_DEAT_GPAR,_DEAT_GGPA,_DEAT_MOTH,_DEAT_SIBL,_DEAT_SPOU,_MARR_CHIL,_MARR_FATH,_MARR_GCHI,_MARR_MOTH,_FAMC_EMIG');
-set_gedcom_setting($ged_id, 'SHOW_SPIDER_TAGLINE',          true);
+set_gedcom_setting($ged_id, 'SHOW_RELATIVES_EVENTS',        '_BIRT_CHIL,_BIRT_SIBL,_MARR_CHIL,_MARR_PARE,_DEAT_CHIL,_DEAT_PARE,_DEAT_GPAR,_DEAT_SIBL,_DEAT_SPOU');
 set_gedcom_setting($ged_id, 'SHOW_STATS',                   false);
 set_gedcom_setting($ged_id, 'SOURCE_ID_PREFIX',             'S');
 set_gedcom_setting($ged_id, 'SOUR_FACTS_ADD',               'NOTE,OBJE,REPO,SHARED_NOTE');
 set_gedcom_setting($ged_id, 'SOUR_FACTS_QUICK',             'WWW,EMAIL,NOTE');
 set_gedcom_setting($ged_id, 'SOUR_FACTS_UNIQUE',            'AUTH,ABBR,TITL,PUBL,TEXT');
-set_gedcom_setting($ged_id, 'SPLIT_PLACES',                 false);
 set_gedcom_setting($ged_id, 'SUBLIST_TRIGGER_F',            '200');
 set_gedcom_setting($ged_id, 'SUBLIST_TRIGGER_I',            '200');
 set_gedcom_setting($ged_id, 'SURNAME_LIST_STYLE',           'style2');
@@ -148,7 +143,7 @@ case 'pl': set_gedcom_setting($ged_id, 'SURNAME_TRADITION', 'polish');     break
 case 'pt': set_gedcom_setting($ged_id, 'SURNAME_TRADITION', 'portuguese'); break;
 default:   set_gedcom_setting($ged_id, 'SURNAME_TRADITION', 'paternal');   break;
 }
-set_gedcom_setting($ged_id, 'THEME_DIR',                    'themes/webtrees/');
+set_gedcom_setting($ged_id, 'THEME_DIR',                    'webtrees');
 set_gedcom_setting($ged_id, 'THUMBNAIL_WIDTH',              '100');
 set_gedcom_setting($ged_id, 'UNDERLINE_NAME_QUOTES',        false);
 set_gedcom_setting($ged_id, 'USE_GEONAMES',                 false);
@@ -165,7 +160,7 @@ set_gedcom_setting($ged_id, 'WELCOME_TEXT_CUST_HEAD',       false);
 set_gedcom_setting($ged_id, 'WORD_WRAPPED_NOTES',           false);
 set_gedcom_setting($ged_id, 'ZOOM_BOXES',                   'click');
 set_gedcom_setting($ged_id, 'imported',                     0);
-set_gedcom_setting($ged_id, 'title',                        i18n::translate('Genealogy from [%s]', $ged_name));
+set_gedcom_setting($ged_id, 'title',                        WT_I18N::translate('Genealogy from [%s]', $ged_name));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Default restriction settings

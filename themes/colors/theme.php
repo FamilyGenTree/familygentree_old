@@ -39,9 +39,9 @@ function color_theme_dropdown($style=0) {
 	if ($ALLOW_THEME_DROPDOWN && get_site_setting('ALLOW_USER_THEMES')) {
 		switch ($style) {
 		case 0:
-			return '<div class="color_form">'.MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenuAsDropdown().'</div>';
+			return '<div class="color_form">'.WT_MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenuAsDropdown().'</div>';
 		case 1:
-			return '<div class="color_form">'.MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenu().'</div>';
+			return '<div class="color_form">'.WT_MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenu().'</div>';
 		}
 	}
 	return '&nbsp;';
@@ -54,20 +54,20 @@ function color_theme_dropdown($style=0) {
  */
 
 $COLOR_THEME_LIST=array(
-	'aquamarine'      => /* I18N: This is the name of theme color-scheme */ i18n::translate('Aqua Marine'),
-	'ash'             => /* I18N: This is the name of theme color-scheme */ i18n::translate('Ash'),
-	'belgianchocolate'=> /* I18N: This is the name of theme color-scheme */ i18n::translate('Belgian Chocolate'),
-	'bluelagoon'      => /* I18N: This is the name of theme color-scheme */ i18n::translate('Blue Lagoon'),
-	'bluemarine'      => /* I18N: This is the name of theme color-scheme */ i18n::translate('Blue Marine'),
-	'coldday'         => /* I18N: This is the name of theme color-scheme */ i18n::translate('Cold Day'),
-	'greenbeam'       => /* I18N: This is the name of theme color-scheme */ i18n::translate('Green Beam'),
-	'mediterranio'    => /* I18N: This is the name of theme color-scheme */ i18n::translate('Mediterranio'),
-	'mercury'         => /* I18N: This is the name of theme color-scheme */ i18n::translate('Mercury'),
-	'nocturnal'       => /* I18N: This is the name of theme color-scheme */ i18n::translate('Nocturnal'),
-	'olivia'          => /* I18N: This is the name of theme color-scheme */ i18n::translate('Olivia'),
-	'pinkplastic'     => /* I18N: This is the name of theme color-scheme */ i18n::translate('Pink Plastic'),
-	'shinytomato'     => /* I18N: This is the name of theme color-scheme */ i18n::translate('Shiny Tomato'),
-	'tealtop'         => /* I18N: This is the name of theme color-scheme */ i18n::translate('Teal Top'),
+	'aquamarine'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Aqua Marine'),
+	'ash'             => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Ash'),
+	'belgianchocolate'=> /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Belgian Chocolate'),
+	'bluelagoon'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Blue Lagoon'),
+	'bluemarine'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Blue Marine'),
+	'coldday'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Cold Day'),
+	'greenbeam'       => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Green Beam'),
+	'mediterranio'    => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Mediterranio'),
+	'mercury'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Mercury'),
+	'nocturnal'       => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Nocturnal'),
+	'olivia'          => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Olivia'),
+	'pinkplastic'     => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Pink Plastic'),
+	'shinytomato'     => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Shiny Tomato'),
+	'tealtop'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Teal Top'),
 );
 
 if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_THEME_LIST)) {
@@ -103,16 +103,6 @@ $rtl_stylesheet   = WT_THEME_DIR . 'style_rtl.css';
 $stylesheet       = WT_THEME_DIR . 'css/' . $subColor . '.css';
 $WT_MENU_LOCATION = 'top';
 $WT_USE_HELPIMG   = true;
-
-
-//-- variables for image names
-$WT_IMAGES['selected'] = 'images/selected.png';
-$WT_IMAGES['sex_m_9x9'] = 'images/sex_m_9x9.gif';
-$WT_IMAGES['sex_f_9x9'] = 'images/sex_f_9x9.gif';
-$WT_IMAGES['sex_u_9x9'] = 'images/sex_u_9x9.gif';
-$WT_IMAGES['sex_m_15x15'] = 'images/sex_m_15x15.gif';
-$WT_IMAGES['sex_f_15x15'] = 'images/sex_f_15x15.gif';
-$WT_IMAGES['sex_u_15x15'] = 'images/sex_u_15x15.gif';
 
 //- WT main icons
 $WT_IMAGES['admin'] = WT_THEME_DIR.'images/admin.gif';
@@ -154,13 +144,20 @@ $WT_IMAGES['reports'] = WT_THEME_DIR.'images/report.gif';
 $WT_IMAGES['repository'] = WT_THEME_DIR.'images/repository.gif';
 $WT_IMAGES['rings'] = WT_THEME_DIR.'images/rings.gif';
 $WT_IMAGES['search'] = WT_THEME_DIR.'images/search.gif';
+$WT_IMAGES['selected'] = WT_THEME_DIR.'images/selected.png';
+$WT_IMAGES['sex_m_9x9'] = WT_THEME_DIR.'images/sex_m_9x9.gif';
+$WT_IMAGES['sex_f_9x9'] = WT_THEME_DIR.'images/sex_f_9x9.gif';
+$WT_IMAGES['sex_u_9x9'] = WT_THEME_DIR.'images/sex_u_9x9.gif';
+$WT_IMAGES['sex_m_15x15'] = WT_THEME_DIR.'images/sex_m_15x15.gif';
+$WT_IMAGES['sex_f_15x15'] = WT_THEME_DIR.'images/sex_f_15x15.gif';
+$WT_IMAGES['sex_u_15x15'] = WT_THEME_DIR.'images/sex_u_15x15.gif';
 $WT_IMAGES['sfamily'] = WT_THEME_DIR.'images/sfamily.gif';
 $WT_IMAGES['source'] = WT_THEME_DIR.'images/source.gif';
 $WT_IMAGES['statistic'] = WT_THEME_DIR.'images/statistic.gif';
-$WT_IMAGES['target'] = 'images/buttons/target.gif';
+$WT_IMAGES['target'] = WT_THEME_DIR.'images/buttons/target.gif';
 $WT_IMAGES['timeline'] = WT_THEME_DIR.'images/timeline.gif';
-$WT_IMAGES['trashcan'] = 'images/trashcan.gif';
 $WT_IMAGES['tree'] = WT_THEME_DIR.'images/gedcom.gif';
+$WT_IMAGES['warning'] = WT_THEME_DIR.'images/warning.gif';
 $WT_IMAGES['wiki'] = WT_THEME_DIR.'images/w_22.png';
 
 //- PGV buttons for data entry pages
@@ -233,8 +230,8 @@ $WT_IMAGES['vline'] = WT_THEME_DIR.'images/vline.gif';
 $WT_IMAGES['webtrees'] = WT_THEME_DIR.'images/webtrees.png';
 $WT_IMAGES['zoomin'] = WT_THEME_DIR.'images/zoomin.gif';
 $WT_IMAGES['zoomout'] = WT_THEME_DIR.'images/zoomout.gif';
-$WT_IMAGES['reminder'] = 'images/reminder.gif';
-$WT_IMAGES['children'] = 'images/children.gif';
+$WT_IMAGES['reminder'] = WT_THEME_DIR.'images/reminder.gif';
+$WT_IMAGES['children'] = WT_THEME_DIR.'images/children.gif';
 
 // - lifespan chart arrows
 $WT_IMAGES['lsltarrow'] = WT_THEME_DIR.'images/lsltarrow.gif';
@@ -254,8 +251,8 @@ $fanChart = array(
 
 //-- This section defines variables for the pedigree chart
 $bwidth = 225; // -- width of boxes on pedigree chart
-$bheight = 78; // -- height of boxes on pedigree chart
-$baseyoffset = -20; // -- position the entire pedigree tree relative to the top of the page
+$bheight = 80; // -- height of boxes on pedigree chart
+$baseyoffset = 10; // -- position the entire pedigree tree relative to the top of the page
 $basexoffset = 10; // -- position the entire pedigree tree relative to the left of the page
 $bxspacing = 4; // -- horizontal spacing between boxes on the pedigree chart
 $byspacing = 5; // -- vertical spacing between boxes on the pedigree chart

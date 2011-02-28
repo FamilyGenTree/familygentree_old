@@ -3,7 +3,7 @@
  * Counts how many hits.
  *
  * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
+ * Copyright (C) 2011 webtrees development team.
  *
  * Derived from PhpGedView
  * Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
@@ -35,7 +35,7 @@ if (!defined('WT_WEBTREES')) {
 // Only record hits for certain pages
 switch (WT_SCRIPT_NAME) {
 case 'index.php':
-	switch (safe_GET('ctype', '(user|gedcom)')) {
+	switch (safe_REQUEST($_REQUEST, 'ctype', array('gedcom', 'user'), WT_USER_ID ? 'user' : 'gedcom')) {
 	case 'user':
 		$page_parameter='user:'.WT_USER_ID;
 		break;
@@ -49,9 +49,6 @@ case 'individual.php':
 	break;
 case 'family.php':
 	$page_parameter=safe_GET('famid', WT_REGEX_XREF);
-	break;
-case 'source.php':
-	$page_parameter=safe_GET('sid', WT_REGEX_XREF);
 	break;
 case 'source.php':
 	$page_parameter=safe_GET('sid', WT_REGEX_XREF);
@@ -95,16 +92,6 @@ if ($page_parameter) {
 	$hitCount=1;
 }
 
-//replace the numbers with their images
-if (array_key_exists('0', $WT_IMAGES)) {
-	for ($i=0;$i<10;$i++) {
-		$hitCount = str_replace("$i","<img src=\"".$WT_IMAGES[$i]["digit"]."\" alt=\"pgv_counter\" />","$hitCount");
-	}
-} else {
-	$hitCount="<span class=\"hit-counter\">{$hitCount}</span>";
-}
+$hitCount="<span class=\"hit-counter\">{$hitCount}</span>";
 
-if ($TEXT_DIRECTION=='rtl') {
-	$hitCount=getLRM().$hitCount.getLRM();
-}
 unset($page_name, $page_parameter);

@@ -5,7 +5,7 @@
  * To learn more about CSS visit http: //www.w3.org/TR/REC-CSS2/
  *
  * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
+ * Copyright (C) 2011 webtrees development team.
  *
  * Derived from PhpGedView
  * Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
@@ -395,14 +395,16 @@ a:hover .nameZoom {
 
 .pedigree_image_portrait, .pedigree_image_landscape {
 	float: left;
-	height: 50px;
+	max-height: 50px;
+	max-width: 50px;
 	border: solid black 1px;
 	margin-right: 3px;
 }
 
 .pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
 	float: right;
-	height: 50px;
+	max-height: 50px;
+	max-width: 50px;
 	border: solid black 1px;
 	margin-left: 3px;
 }
@@ -420,6 +422,11 @@ a:hover .nameZoom {
 	border: none;
 	padding-left: 0;
 	padding-right: 5px;
+}
+
+html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
+	padding-left: 5px;
+	padding-right: 0;
 }
 
 .link {
@@ -532,25 +539,22 @@ a:hover .nameZoom {
 	color: white;
 }
 
-.langmenuitem, .langmenuitem_rtl {
+.langmenuitem {
 	color: white;
 	font: bold 11px tahoma, arial, helvetica, sans-serif;
 	text-decoration: none;
 	padding: 1px;
 }
 
-.langmenuitem a, .langmenuitem_rtl a {
+.langmenuitem a {
 	color: white;
 }
 
-.langmenuitem_hover, .langmenuitem_hover_rtl {
+.langmenuitem_hover {
 	color: red;
 	font: bold 11px tahoma, arial, helvetica, sans-serif;
 	text-decoration: none;
 	padding: 1px;
-}
-.langmenuitem_rtl, .langmenuitem_hover_rtl {
-	text-align: left;
 }
 
 .thememenuitem  {
@@ -637,7 +641,7 @@ a:hover .nameZoom {
 	cursor: help;
 }
 
-.menuitem, .menuitem_rtl {
+.menuitem {
 	color: black;
 	font: normal 11px tahoma, arial, helvetica, sans-serif;
 	text-decoration: none;
@@ -645,7 +649,7 @@ a:hover .nameZoom {
 	padding: 1px;
 }
 
-.menuitem_hover, .menuitem_hover_rtl {
+.menuitem_hover {
 	color: black;
 	font: normal 11px tahoma, arial, helvetica, sans-serif;
 	text-decoration: none;
@@ -653,7 +657,7 @@ a:hover .nameZoom {
 	padding: 1px;
 }
 
-.submenu, .submenu_rtl {
+.submenu {
 	visibility: hidden;
 	position: absolute;
 	z-index: 100;
@@ -665,7 +669,7 @@ a:hover .nameZoom {
 	white-space: nowrap;
 }
 
-.submenuitem, .submenuitem_rtl {
+.submenuitem {
 	vertical-align: middle;
 	height: 22px;
 	color: black;
@@ -676,21 +680,13 @@ a:hover .nameZoom {
 	padding: 1px;
 }
 
-.submenuitem, .submenuitem_hover {
-	text-align: left;
-}
-
-.submenuitem_rtl, .submenuitem_hover_rtl {
-	text-align: right;
-}
-
-.submenuitem a, .submenuitem_rtl a, .submenuitem_hover a, .submenuitem_hover_rtl a {
+.submenuitem a, .submenuitem_hover a {
  	color: black;
 	display: inline-block;
 	vertical-align: middle;
 }
 
-.submenuitem_hover, .submenuitem_hover_rtl {
+.submenuitem_hover {
 	vertical-align: middle;
 	height: 22px;
 	color: black;
@@ -838,16 +834,12 @@ img.block{
 	position: relative;
 	top: -240px;
 	left: 0;
-	width: 99%;
 }
 
 /*-- pedigree chart rtl specific stylesheets --*/
-#pedigree_chart_rtl {
-	position: relative;
-	float: right;
-	top: -240px;
-	right: 0;
-	width: 99%;
+html[dir='rtl'] #pedigree_chart {
+left:auto;
+right:0px;
 }
 
 /*-- descendancy chart specific stylesheets --*/
@@ -871,21 +863,10 @@ img.block{
 }
 
 /*-- descendancy chart rtl specific stylesheets --*/
-#descendancy_chart_rtl ul {
-	background-image: url(images/vline.gif);
-	background-repeat: repeat-y;
-	background-position: right top;
-	list-style: none;
-	margin: 0 15px 5px 0; /* top right bottom left */
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-left: 0;
-}
-
-#descendancy_chart_rtl li {
-	list-style: none;
-	margin: 0 -15px 0 0; /* top right bottom left */
-	padding: 0;
+html[dir='rtl'] #descendancy_chart ul {
+background-position:right top;
+margin:0px 15px 0px 0px;
+left:auto;
 }
 
 /*-- relationship chart specific stylesheets --*/
@@ -895,10 +876,9 @@ img.block{
 	left: 0;
 }
 
-#relationship_chart_rtl {
-	position: relative;
-	top: -40px;
-	right: 10px;
+html[dir='rtl'] #relationship_chart {
+	left:auto;
+	right:10px;
 }
 
 /*-- ancestry chart specific stylesheets --*/
@@ -907,6 +887,7 @@ img.block{
 	background-repeat: repeat-y;
 	background-position: left top;
 	list-style: none;
+	display: block;
 	margin: 0 0 0 15px; /* top right bottom left */
 	padding-top: 0;
 	padding-right: 0;
@@ -922,21 +903,16 @@ img.block{
 }
 
 /*-- ancestry chart rtl specific stylesheets --*/
-#ancestry_chart_rtl ul {
-	background-image: url(images/vline.gif);
-	background-repeat: repeat-y;
-	background-position: right top;
-	list-style: none;
-	margin: 0 15px 0 0; /* top right bottom left */
-	padding-top: 0;
-	padding-bottom: 0;
-	padding-left: 0;
+html[dir='rtl'] #ancestry_chart ul {
+background-position:right top;
+margin:0px 15px 0px 0px;
+left:auto;
 }
 
-#ancestry_chart_rtl li {
-	list-style: none;
-	margin: 0 -15px 2px 0; /* top right bottom left */
-	padding: 0 2px 0 0; /* top right bottom left */
+html[dir='rtl'] #ancestry_chart li {
+margin:0px 0px 0px 0px;
+padding:0px 2px 0px 0px;
+left:auto;
 }
 
 /*-- timeline chart specific styles --*/
@@ -1202,20 +1178,6 @@ h4 {
 	border: solid red 2px;
 }
 
-.door {
-	margin: 0;
-	padding: 0;
-}
-
-.door dd {
-	margin: 2px;
-	padding: 2px 6px;
-	height: 100%;
-	float: left;
-	font-weight: bold;
-	display: none;
-}
-
 .note_details {
 	display: none;
 }
@@ -1476,6 +1438,11 @@ dt {
 	margin-right:10px;
 	clear:both; 
 }
+html[dir="rtl"] dt {
+	float:right;
+	margin-right:auto;
+	margin-left:10px;
+}
 
 dd {
 	display: inline;
@@ -1704,16 +1671,24 @@ div.faq_body {
 	display:none;
 	position:absolute;
 	left:0px;
+	right:auto;
 	top:1.1em;
 	background-color:#FFF;
 	border:thin solid #C3DFFF;
 	z-index:999;
+}
+html[dir='rtl'] .makeMenu li ul {
+	left:auto;
+	right:0px;
 }
 
 .makeMenu li ul li {
 	padding: 2px;
 	display:block;
 	text-align:left;
+}
+html[dir='rtl'] li up li {
+	text-align:right;
 }
 
 .makeMenu li ul li a {
@@ -1737,7 +1712,23 @@ div.faq_body {
 }
 
 .makeMenu li ul {
-        margin-left:-40px;
+        xmargin-left:-40px;
+}
+
+/* The language menu in the header is right-justified, so submenus must also be right justified */
+#extra-menu {
+	text-align:right;
+}
+html[dir='rtl'] #extra-menu {
+	text-align:left;
+}
+#extra-menu.makeMenu li ul {
+	left:auto;
+	right:0px;
+}
+html[dir='rtl'] #extra-menu.makeMenu li ul {
+	left:0px;
+	right:auto;
 }
 
 /*--- edit links ---*/
