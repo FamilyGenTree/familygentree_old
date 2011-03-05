@@ -37,17 +37,22 @@
 	<link type="text/css" href="<?php echo WT_MODULES_DIR; ?>googlemap/css/wt_v3_places_edit.css" rel="stylesheet" />
 
 	<script type="text/javascript">
-
 	var map;
 	var marker;
 	var zoom;
 	var pl_name = "<?php echo htmlspecialchars($place_name); ?>";
-	var pl_lati = "<?php echo $place_lati; ?>";
-	var pl_long = "<?php echo $place_long; ?>";
+	if (pl_name) {
+		var pl_lati = "<?php echo $place_lati; ?>";
+		var pl_long = "<?php echo $place_long; ?>";	
+	} else {
+		var pl_lati = "<?php echo $parent_lati; ?>";
+		var pl_long = "<?php echo $parent_long; ?>";
+	}
 	var pl_zoom = <?php echo $zoomfactor; ?>;
 	var latlng = new google.maps.LatLng(pl_lati, pl_long);
 	var polygon1;
 	var geocoder;
+	var mapType;
 	
 	var infowindow = new google.maps.InfoWindow({ 
 		//	
@@ -181,30 +186,41 @@
 			map.setMapTypeId(google.maps.MapTypeId.ROADMAP)
 		});
 	}
-
-	function loadMap() {
+	
+	function loadMap(zoom, mapType) {
+		if (mapType) {		
+			mapTyp = mapType;
+		} else {
+			mapTyp = google.maps.MapTypeId.ROADMAP;
+		}
 		geocoder = new google.maps.Geocoder();
+		if (zoom) {
+			zoom = zoom;
+		}else {
+			zoom = pl_zoom;
+		}
 		// Define map
 		var myOptions = {
-			zoom: pl_zoom,
+			zoom: zoom,
 			center: latlng,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,					// ROADMAP, SATELLITE, HYBRID, TERRAIN
+			mapTypeId: mapTyp,											// ROADMAP, SATELLITE, HYBRID, TERRAIN
+			// mapTypeId: google.maps.MapTypeId.ROADMAP,				// ROADMAP, SATELLITE, HYBRID, TERRAIN
 			mapTypeControlOptions: {
-				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU// DEFAULT, DROPDOWN_MENU, HORIZONTAL_BAR
+				style: google.maps.MapTypeControlStyle.DROPDOWN_MENU	// DEFAULT, DROPDOWN_MENU, HORIZONTAL_BAR
 			},
 			navigationControlOptions: {
-			position: google.maps.ControlPosition.TOP_RIGHT,		// BOTTOM, BOTTOM_LEFT, LEFT, TOP, etc
-			style: google.maps.NavigationControlStyle.SMALL			// ANDROID, DEFAULT, SMALL, ZOOM_PAN
+			position: google.maps.ControlPosition.TOP_RIGHT,			// BOTTOM, BOTTOM_LEFT, LEFT, TOP, etc
+			style: google.maps.NavigationControlStyle.SMALL				// ANDROID, DEFAULT, SMALL, ZOOM_PAN
 			},
 			streetViewControl: false,									// Show Pegman or not
-			scrollwheel: false
+			scrollwheel: true
 		};
 	
 		map = new google.maps.Map(document.getElementById("map_pane"), myOptions);
 
-		// *** === NOTE *** This function creates the UK country overlays ==================
+		// *** === NOTE *** This function creates the UK country overlays ==========================
 		overlays();
-		// === Above function is located in WT_MODULES_DIR/googlemap/wt_v3_placeOverlays.js.php ===
+		// === Above function is located in WT_MODULES_DIR/googlemap/wt_v3_placeOverlays.js.php ====
 		
 		
 		// Close any infowindow when map is clicked
@@ -218,7 +234,8 @@
 		homeControlDiv.index = 1;
 		map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
 		// ---------------------------------------------------------------------------------
-	
+
+		// Check for zoom changes
 		google.maps.event.addListener(map, 'zoom_changed', function() {
 			document.editplaces.NEW_ZOOM_FACTOR.value = map.zoom;
 		});	
@@ -244,7 +261,7 @@
 				echo 'title: pl_name,';
 				echo 'draggable: true,';
 				echo 'zIndex:1';
-			echo '});';		
+			echo '});';
 		} else { 
 			echo 'marker = new google.maps.Marker({';
 				echo 'position: latlng,';
@@ -261,24 +278,49 @@
 			if (document.editplaces.NEW_PRECISION[i].checked) {
 				prec = document.editplaces.NEW_PRECISION[i].value;
 			}
-		}	
-		google.maps.event.addListener(marker, 'drag', function() {
+		}
+	
+		// Set marker by clicking on map ---
+		clickset = google.maps.event.addListener(map, 'click', function(event) {	
+			// alert(pos2);
+			clearMarks();	
+			latlng = event.latLng;
+			<?php			
+				echo 'marker = new google.maps.Marker({';
+				echo 'position: latlng,';
+				echo 'map: map,';
+				echo 'title: pl_name,';
+				echo 'draggable: true,';
+				echo 'zIndex: 1';
+			echo '});';			
+			?>			
+			pos3 = marker.getPosition();
+			document.getElementById('NEW_PLACE_LATI').value = parseFloat(pos3.lat()).toFixed(prec);
+			document.getElementById('NEW_PLACE_LONG').value = parseFloat(pos3.lng()).toFixed(prec);
+			updateMap('flag_drag');
+			currzoom = parseInt(document.editplaces.NEW_ZOOM_FACTOR.value);
+			mapType = map.getMapTypeId();
+			loadMap(currzoom, mapType);
+		});
+		
+		// Set marker by drag-n-drop on map ---	
+		dragset = google.maps.event.addListener(marker, 'drag', function() {
 			pos1 = marker.getPosition();
 			document.getElementById('NEW_PLACE_LATI').value = parseFloat(pos1.lat()).toFixed(prec); 
 			document.getElementById('NEW_PLACE_LONG').value = parseFloat(pos1.lng()).toFixed(prec);
 		});	
-		google.maps.event.addListener(marker, 'dragend', function() {
-			// geocodePosition(marker.getPosition());
+		dropset = google.maps.event.addListener(marker, 'dragend', function() {
 			pos2 = marker.getPosition();
-			old_lati = document.getElementById('NEW_PLACE_LATI').value;
-			old_long = document.getElementById('NEW_PLACE_LONG').value;
 			document.getElementById('NEW_PLACE_LATI').value = parseFloat(pos2.lat()).toFixed(prec);
 			document.getElementById('NEW_PLACE_LONG').value = parseFloat(pos2.lng()).toFixed(prec);
 			updateMap('flag_drag');
 		});
-	
 	}
 	
+	function clearMarks() {
+		marker.setMap(null);
+	}
+
 	function edit_close() {
 		if (window.opener.showchanges) window.opener.showchanges();
 		window.close();
@@ -323,8 +365,8 @@
 			echo 'new google.maps.Point(10, 34)';	// Shadow anchor is base of image
 		echo ');';
 		?>
-	var marker = new google.maps.Marker({
-		icon: image,
+		var marker = new google.maps.Marker({
+			icon: image,
 			shadow: iconShadow,
 			map: map, 
 			position: point,
@@ -344,10 +386,9 @@
 		return marker;
 	}
 		
-
 	function change_icon() {
 		window.open('module.php?mod=googlemap&mod_action=flags&countrySelected=<?php echo $selected_country; ?>', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');
-	return false;
+		return false;
 	}
 
 	function remove_icon() {
@@ -355,7 +396,6 @@
 		document.getElementById('flagsDiv').innerHTML = "<a href=\"javascript:;\" onclick=\"change_icon();return false;\"><?php echo WT_I18N::translate('Change flag'); ?></a>";
 	}
 	
-
 	function addAddressToMap(response) {
 		var bounds = new google.maps.LatLngBounds();
 		if (!response ) {

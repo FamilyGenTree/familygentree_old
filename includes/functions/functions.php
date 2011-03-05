@@ -3226,10 +3226,12 @@ function mediaFileInfo($fileName, $thumbName, $mid, $name='', $notes='', $admin=
 		$type .= 'picasa';
 	} else if (preg_match('/\.(jpg|jpeg|gif|png)$/i', $fileName)) {
 		$type .= 'image';
-	} else if (preg_match('/\.(pdf|avi|txt)$/i', $fileName)) {
+	} else if (preg_match('/\.(avi|txt)$/i', $fileName)) {
 		$type .= 'page';
 	} else if (preg_match('/\.mp3$/i', $fileName)) {
 		$type .= 'audio';
+	} else if (preg_match('/\.pdf$/i', $fileName)) {
+		$type .= 'pdf';
 	} else if (preg_match('/\.wmv$/i', $fileName)) {
 		$type .= 'wmv';
 	} else if (strpos($fileName, 'http://maps.google.')===0) {
@@ -3265,8 +3267,10 @@ function mediaFileInfo($fileName, $thumbName, $mid, $name='', $notes='', $admin=
 				break 2;
 			case 'url_picasa':
 			case 'url_page':
+			case 'url_pdf':
 			case 'url_other':
 			case 'local_page':
+			case 'local_pdf':
 			// case 'local_other':
 				$url = $fileName . "\" rel='clearbox({$LB_URL_WIDTH}, {$LB_URL_HEIGHT}, click)' rev=\"" . $mid . "::" . $GEDCOM . "::" . PrintReady(htmlspecialchars($name)) . "::" . htmlspecialchars($notes);
 				break 2;
@@ -3302,11 +3306,13 @@ function mediaFileInfo($fileName, $thumbName, $mid, $name='', $notes='', $admin=
 			break 2;
 		case 'url_picasa':
 		case 'url_page':
+		case 'url_pdf':
 		case 'url_other':
 		case 'local_other';
 			$url = "javascript:;\" onclick=\"var winurl = window.open('".$fileName."', 'winurl', 'width=900, height=600, left=200, top=200'); if (window.focus) {winurl.focus();}";
 			break 2;
 		case 'local_page':
+		case 'local_pdf':
 			$url = "javascript:;\" onclick=\"var winurl = window.open('".WT_SERVER_NAME.WT_SCRIPT_PATH.$fileName."', 'winurl', 'width=900, height=600, left=200, top=200'); if (window.focus) {winurl.focus();}";
 			break 2;
 		case 'url_streetview':
@@ -3355,6 +3361,10 @@ function mediaFileInfo($fileName, $thumbName, $mid, $name='', $notes='', $admin=
 			break;
 		case 'local_page':
 			$thumb = $WT_IMAGES['media_doc'];
+			break;
+		case 'url_pdf':
+		case 'local_pdf':
+			$thumb = $WT_IMAGES['media_pdf'];
 			break;
 		case 'url_audio':
 		case 'local_audio':
@@ -3437,3 +3447,24 @@ function pathinfo_utf($path) {
 
 	return array('dirname'=>$dirname, 'basename'=>$basename, 'extension'=>$extension, 'filename'=>$filename);
 }
+
+// Turn URLs in text into HTML links.  Insert breaks into long URLs
+// so that the browser can word-wrap.
+function expand_urls($text) {
+	// Some versions of RFC3987 have an appendix B which gives the following regex
+	// (([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?
+	// This matches far too much while a "precise" regex is several pages long.
+	// This is a compromise.
+	$URL_REGEX='((https?|ftp]):)(//([^\s/?#<>]*))?([^\s?#<>]*)(\?([^\s#<>]*))?(#[^\s?#<>]+)?';
+
+	return preg_replace_callback(
+		'/'.addcslashes("(?!>)$URL_REGEX(?!</a>)", '/').'/i',
+		create_function( // Insert soft hyphens into the replaced string
+			'$m',
+			'return "<a href=\"".$m[0]."\" target=\"blank\">".preg_replace("/\b/", "&shy;", $m[0])."</a>";'
+		),
+		preg_replace("/<(?!br)/i", "&lt;", $text) // no html except br
+	);
+}
+
+

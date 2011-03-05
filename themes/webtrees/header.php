@@ -87,7 +87,7 @@ echo
 if ($view!='simple') {
 	echo '<div id="header" class="', $TEXT_DIRECTION, '">',
 			'<div class="header_img"><img src="', WT_THEME_DIR, 'images/webtrees.png" width="242" height="50" alt="" /></div>',
-				'<ul id="extra-menu" class="makeMenu">';
+				'<ul id="extra-menu" class="makeMenu">',
 					'<li>';
 						if (WT_USER_ID) {
 							echo '<a href="edituser.php">', WT_I18N::translate('Logged in as '), ' (', WT_USER_NAME, ')</a> | ', logout_link();
@@ -119,10 +119,10 @@ if ($view!='simple') {
 							'onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();"',
 							'onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
 						'<input type="image" class="image" src="', $WT_IMAGES['search'], '" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '" />',
-					'</form>';
+						'</form>';
+					echo '</div>';
 				}
-			echo '</div>';
-	echo '<div>',
+	echo '<div>', // menu
 		'<img src="', $WT_IMAGES['hline'], '" width="100%" height="3" alt="" />',
 		'<table id="topMenu">',
 			'<tr>';
@@ -167,8 +167,8 @@ if ($view!='simple') {
 			echo '</tr>',
 		'</table>',
 		'<img align="middle" src="', $WT_IMAGES['hline'], '" width="100%" height="3" alt="" />',
-	'</div>',
-'</div>',
+	'</div>', // close menu
+'</div>', // close header
 // end header section -->
 // begin content section -->
 '<div id="content">';

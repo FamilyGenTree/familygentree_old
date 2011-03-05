@@ -28,8 +28,6 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-require_once WT_ROOT.'includes/functions/functions_print_facts.php';
-
 class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
 	public function getTitle() {
@@ -465,8 +463,7 @@ function openPic(filename, width, height) {
 				<?php
 				//-- Build the list of checkboxes
 				$i = 0;
-				global $MEDIA_TYPES;
-				foreach ($MEDIA_TYPES as $typeName => $typeValue) {
+				foreach (WT_Gedcom_Tag::getFileFormTypes() as $typeName => $typeValue) {
 					$i++;
 					if ($i > 3) {
 						$i = 1;

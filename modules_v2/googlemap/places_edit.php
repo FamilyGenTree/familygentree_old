@@ -222,7 +222,7 @@ if ($action=="add") {
 			if ($row->pl_lati!==null && $row->pl_long!==null) {
 				$parent_lati=str_replace(array('N', 'S', ','), array('', '-', '.') , $row->pl_lati);
 				$parent_long=str_replace(array('E', 'W', ','), array('', '-', '.') , $row->pl_long);
-				$zoomfactor=$row->pl_zoom+2;
+				$zoomfactor=$row->pl_zoom;
 				if ($zoomfactor>$GOOGLEMAP_MAX_ZOOM) {
 					$zoomfactor=$GOOGLEMAP_MAX_ZOOM;
 				}
@@ -345,7 +345,7 @@ $api="v3";
 	<tr>
 		<td class="descriptionbox"><?php echo WT_I18N::translate('Zoom factor'), help_link('PLE_ZOOM','googlemap'); ?></td>
 		<td class="optionbox">
-			<input type="text" name="NEW_ZOOM_FACTOR" value="<?php echo $zoomfactor; ?>" size="20" onchange="updateMap();" /></td>
+			<input type="text" id="NEW_ZOOM_FACTOR" name="NEW_ZOOM_FACTOR" value="<?php echo $zoomfactor; ?>" size="20" onchange="updateMap();" /></td>
 	</tr>
 	<tr>
 		<td class="descriptionbox"><?php echo WT_I18N::translate('Flag'), help_link('PLE_ICON','googlemap'); ?></td>
