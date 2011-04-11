@@ -117,14 +117,14 @@ function print_fact(&$eventObj) {
 		if ($SHOW_FACT_ICONS)
 			echo $eventObj->Icon(), ' ';
 		if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && $eventObj->canEdit()) {
-			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">". translate_fact($factref, $label_person). "</a>";
+			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">". WT_Gedcom_Tag::getLabel($factref, $label_person). "</a>";
 			echo "<div class=\"editfacts\">";
 			echo "<div class=\"editlink\"><a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\"><span class=\"link_text\">".WT_I18N::translate('Edit')."</span></a></div>";
 			echo "<div class=\"copylink\"><a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Copy')."\"><span class=\"link_text\">".WT_I18N::translate('Copy')."</span></a></div>";
 			echo "<div class=\"deletelink\"><a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Delete')."\"><span class=\"link_text\">".WT_I18N::translate('Delete')."</span></a></div>";
 			echo "</div>";
 		} else {
-			echo translate_fact($factref, $label_person);
+			echo WT_Gedcom_Tag::getLabel($factref, $label_person);
 		}
 		if ($fact=="_BIRT_CHIL") echo "<br />", WT_I18N::translate('#%d', $n_chil++);
 		if (preg_match("/_BIRT_GCH[I12]/", $fact)) echo "<br />", WT_I18N::translate('#%d', $n_gchi++);
@@ -135,7 +135,7 @@ function print_fact(&$eventObj) {
 		$ct = preg_match("/2 TYPE (.*)/", $factrec, $match);
 		if ($ct>0) {
 			// Some users (just Meliza?) use "1 EVEN/2 TYPE BIRT".  Translate the TYPE, if we can.
-			$factref = strip_tags(translate_fact($match[1], $label_person));
+			$factref = strip_tags(WT_Gedcom_Tag::getLabel($match[1], $label_person));
 		} else {
 			$factref = $fact;
 		}
@@ -162,14 +162,14 @@ function print_fact(&$eventObj) {
 				echo $factref;
 			}
 		} else if (!$noedit && WT_USER_CAN_EDIT && $styleadd!="change_old" && $linenum>0 && $eventObj->canEdit()) {
-			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">". translate_fact($factref, $label_person). "</a>";
+			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">". WT_Gedcom_Tag::getLabel($factref, $label_person). "</a>";
 			echo "<div class=\"editfacts\">";
 			echo "<div class=\"editlink\"><a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\"><span class=\"link_text\">".WT_I18N::translate('Edit')."</span></a></div>";
 			echo "<div class=\"copylink\"><a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Copy')."\"><span class=\"link_text\">".WT_I18N::translate('Copy')."</span></a></div>";
 			echo "<div class=\"deletelink\"><a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Delete')."\"><span class=\"link_text\">".WT_I18N::translate('Delete')."</span></a></div>";
 			echo "</div>";
 		} else {
-			echo translate_fact($factref, $label_person);
+			echo WT_Gedcom_Tag::getLabel($factref, $label_person);
 		}
 		echo "</td>";
 	}
@@ -181,7 +181,7 @@ function print_fact(&$eventObj) {
 		if ($fact!="EVEN" && $fact!="FACT") {
 			if (preg_match("/2 TYPE (.*)/", $factrec, $match)) {
 				if ($fact=="MARR") {
-					echo translate_fact("MARR_".strtoupper($match[1]), $label_person);
+					echo WT_Gedcom_Tag::getLabel("MARR_".strtoupper($match[1]), $label_person);
 				} else {
 					echo $match[1];
 				}
@@ -200,13 +200,11 @@ function print_fact(&$eventObj) {
 				}
 				echo "</a>";
 			}
-			if (empty($SEARCH_SPIDER)) {
-				$family = WT_Family::getInstance($pid);
-				if ($family) {
-					if ($spouse) echo " - ";
-					echo '<a href="', $family->getHtmlUrl(), '">', WT_I18N::translate('View Family'), '</a>';
-					echo '<br />';
-				}
+			$family = WT_Family::getInstance($pid);
+			if ($family) {
+				if ($spouse) echo " - ";
+				echo '<a href="', $family->getHtmlUrl(), '">', WT_I18N::translate('View Family'), '</a>';
+				echo '<br />';
 			}
 		}
 		// -- find date for each fact
@@ -231,12 +229,6 @@ function print_fact(&$eventObj) {
 				//-- strip // from ALIA tag for FTM generated gedcoms
 				echo preg_replace("'/'", "", $event), "<br />";
 			}
-			/* -- see the format_fact_date function where this is handled
-			else if ($event=="Y") {
-				if (get_sub_record(2, "2 DATE", $factrec)=="") {
-					echo WT_I18N::translate('Yes'), "<br />";
-				}
-			}*/
 			elseif ($event=="N") {
 				if (get_sub_record(2, "2 DATE", $factrec)=="") {
 					echo WT_I18N::translate('No');
@@ -287,44 +279,107 @@ function print_fact(&$eventObj) {
 				echo PrintReady($temp);
 			}
 		}
-		//-- find description for some facts
-		$ct = preg_match("/2 DESC (.*)/", $factrec, $match);
-		if ($ct>0) echo PrintReady($match[1]);
-		// -- print PLACe, TEMPle and STATus
+		// Place (includes temple)
 		echo '<div class="place">', format_fact_place($eventObj, true, true, true), '</div>';
-		if (preg_match("/ (PLAC)|(STAT)|(TEMP)|(SOUR) /", $factrec)>0 || ($event && $fact!="ADDR")) print "<br />";
-		// -- print BURIal -> CEMEtery
-		$ct = preg_match("/2 CEME (.*)/", $factrec, $match);
-		if ($ct>0) {
-			if ($SHOW_FACT_ICONS && file_exists(WT_THEME_DIR."images/facts/CEME.gif"))
-				//echo $eventObj->Icon(), ' '; // echo incorrect fact icon !!!
-				echo "<img src=\"".WT_THEME_DIR."images/facts/CEME.gif\" alt=\"".translate_fact('CEME')."\" title=\"".translate_fact('CEME')."\" align=\"middle\" /> ";
-			echo "<b>", translate_fact('CEME'), ":</b> ", $match[1], "<br />";
-		}
-		//-- print address structure
+		// Address
 		if ($fact!="ADDR") {
 			print_address_structure($factrec, 2);
-		}
-		else {
+		} else {
 			print_address_structure($factrec, 1);
 		}
-		// -- Enhanced ASSOciates > RELAtionship
+		// Associates
 		print_asso_rela_record($eventObj);
-		// -- find _WT_USER field
-		if (preg_match("/\n2 _WT_USER (.+)/", $factrec, $match)) {
-			$fullname=getUserFullname(getUserId($match[1])); // may not exist	
-			echo ' - ', translate_fact('_WT_USER'), ': ';
-			if ($fullname) {
-				echo '<span title="'.htmlspecialchars($fullname).'">'.$match[1].'</span>';
-			} else {
-				echo $match[1];
-			}
-		}
-		// 2 RESN tags.  Note, there can be more than one, such as "privacy" and "locked"
-		if (preg_match_all("/\n2 RESN (.+)/", $factrec, $matches)) {
-			foreach ($matches[1] as $match) {
-				echo '<br/><span class="label">', translate_fact('RESN'), ':</span> <span class="field">';
-				switch ($match) {
+
+		// Display any other "2 XXXX" attributes in the order in which they appear
+		preg_match_all('/\n2 ('.WT_REGEX_TAG.') (.+)/', $factrec, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			switch ($match[1]) {
+			case 'DATE':
+			case 'TIME':
+			case 'AGE':
+			case 'PLAC':
+			case 'ADDR':
+			case 'ALIA':
+			case 'ASSO':
+			case 'DESC':
+			case 'EMAIL':
+			case 'FAX':
+			case 'PHON':
+			case 'RELA':
+			case 'STAT':
+			case 'TEMP':
+			case 'TYPE':
+			case 'WWW':
+			case '_EMAIL':
+			case 'URL':
+			case 'FAMS':
+			case '_WTS':
+			case '_WTFS':
+			case 'CONT':
+				// These were already shown at the beginning
+				break;
+			case 'NOTE':
+			case 'OBJE':
+			case 'SOUR':
+				// These will be shown at the end
+				break;
+			case 'EVEN': // 0 SOUR / 1 DATA / 2 EVEN /3 DATE/PLAC
+				echo '<div>';
+				foreach (preg_split('/ *, */', $match[2]) as $n=>$value) {
+					if ($n>0) {
+						echo ', ';
+					}
+					if (preg_match("/2 EVEN (.*)/", $factrec)>0) {
+						echo '<span class="label">', WT_Gedcom_Tag::getLabel('EVEN'), ':</span> <span class="field">', $value, '</span>';
+					} else {
+						echo $value;
+					}
+				}
+				if (preg_match('/\n3 DATE (.+)/', $factrec, $date_match)) {
+					$date=new WT_Date($date_match[1]);
+					echo ' - ', $date->Display();
+				}
+				if (preg_match('/\n3 PLAC (.+)/', $factrec, $plac_match)) {
+					echo ' - ', $plac_match[1];
+				}
+				echo '</div>';
+				break;
+			case 'FAMC': // 1 ADOP / 2 FAMC
+				echo '<div><span class="label">', WT_Gedcom_Tag::getLabel('FAMC'), ':</span> ';
+				$family=WT_Family::getInstance(str_replace('@', '', $match[2]));
+				if ($family) { // May be a pointer to a non-existant record
+					echo '<a href="', $family->getHtmlUrl(), '">', $family->getFullName(), '</a>';
+				} else {
+					echo '<span class="error">', $match[2], '</span>';
+				}
+				if (preg_match('/\n3 ADOP (HUSB|WIFE|BOTH)/', $factrec, $match)) {
+					echo '<div><span class="indent"><span class="label">', WT_Gedcom_Tag::getLabel('ADOP'), ':</span> <span class="field">';
+					switch ($match[1]) {
+					case 'HUSB':
+					case 'WIFE':
+						echo WT_Gedcom_Tag::getLabel($match[1]);
+						break;
+					case 'BOTH':
+						echo WT_Gedcom_Tag::getLabel('HUSB'), '+', WT_Gedcom_Tag::getLabel('WIFE');
+						break;
+					}
+					echo '</span>';
+				}
+				echo '</div>';
+				break;
+			case '_WT_USER':
+				$fullname=getUserFullname(getUserId($match[2])); // may not exist	
+				echo '<div> - ', WT_Gedcom_Tag::getLabel('_WT_USER'), ': ';
+				if ($fullname) {
+					echo '<span title="'.htmlspecialchars($fullname).'">'.$match[2].'</span>';
+				} else {
+					echo $match[2];
+				}
+				echo '</div>';
+				break;
+			case 'RESN':
+				echo '<div><span class="label">', WT_Gedcom_Tag::getLabel('RESN'), ':</span> <span class="field">';
+				switch ($match[2]) {
 				case 'none':
 					// Note: "2 RESN none" is not valid gedcom, and the GUI will not let you add it.
 					// However, webtrees privacy rules will interpret it as "show an otherwise private fact to public".
@@ -343,80 +398,30 @@ function print_fact(&$eventObj) {
 					echo $match;
 					break;
 				}
-				echo '</span>';
-			}
-		}
-		if (preg_match("/\n2 FAMC @(.+)@/", $factrec, $match)) {
-			echo "<br/><span class=\"label\">", translate_fact('FAMC'), ":</span> ";
-			$family=WT_Family::getInstance($match[1]);
-			if ($family) { // May be a pointer to a non-existant record
-				echo '<a href="', $family->getHtmlUrl(), '">', $family->getFullName(), '</a>';
-			} else {
-				echo '<span class="error">', $match[1], '</span>';
-			}
-			if (preg_match("/\n3 ADOP (HUSB|WIFE|BOTH)/", utf8_strtoupper($factrec), $match)) {
-				echo '<br/><span class="indent"><span class="label">', translate_fact('ADOP'), ':</span> ';
-				echo '<span class="field">';
-				switch ($match[1]) {
-				case 'HUSB':
-				case 'WIFE':
-					echo translate_fact($match[1]);
-					break;
-				case 'BOTH':
-					echo translate_fact('HUSB'), '+', translate_fact('WIFE');
-					break;
-				}
-				echo '</span></span>';
-			}
-		}
-		// 0 SOUR/1 DATA/2 EVEN/3 DATE/3 PLAC
-		$data_rec = get_sub_record(1, "1 DATA", $factrec, 1);
-		if (!empty($data_rec)) {
-			for ($even_num=1; $even_rec=get_sub_record(2, "2 EVEN", $data_rec, $even_num); ++$even_num) {
-				$tmp1=get_gedcom_value('EVEN', 2, $even_rec, $truncate='', $convert=false);
-				$tmp2=new WT_Date(get_gedcom_value('DATE', 3, $even_rec, $truncate='', $convert=false));
-				$tmp3=get_gedcom_value('PLAC', 3, $even_rec, $truncate='', $convert=false);
-				$fact_string = "";
-				if ($even_num>1)
-					$fact_string .= "<br />";
-				$fact_string .= "<b>";
-				foreach (preg_split('/\W+/', $tmp1) as $key=>$value) {
-					if ($key>0)
-						$fact_string .= ", ";
-					$fact_string .= WT_I18N::translate($value);
-				}
-				$fact_string .= "</b>";
-				if ($tmp2->Display(false, '', array())!="&nbsp;") $fact_string .= " - ".$tmp2->Display(false, '', array());
-				if ($tmp3!='') $fact_string .= " - ".$tmp3;
-				echo $fact_string;
-			}
-		}
-		if ($fact!="ADDR") {
-			//-- catch all other facts that could be here
-			$special_facts = array("ADDR", "ALIA", "ASSO", "CEME", "CONT", "DATE", "DESC", "EMAIL",
-			"FAMC", "FAMS", "FAX", "NOTE", "OBJE", "PHON", "PLAC", "RESN", "RELA", "SOUR", "STAT", "TEMP",
-			"TIME", "TYPE", "WWW", "_EMAIL", "_WT_USER", "URL", "AGE", "_WTS", "_WTFS");
-			$ct = preg_match_all("/\n2 (\w+) (.*)/", $factrec, $match, PREG_SET_ORDER);
-			if ($ct>0) echo "<br />";
-			for ($i=0; $i<$ct; $i++) {
-				$factref = $match[$i][1];
-				if (!in_array($factref, $special_facts)) {
-					$label = translate_fact($fact.':'.$factref, $label_person);
-					if (!$HIDE_GEDCOM_ERRORS || WT_Gedcom_Tag::isTag($factref)) {
-						if ($SHOW_FACT_ICONS && file_exists(WT_THEME_DIR."images/facts/".$factref.".gif")) {
-							echo "<img src=\"".WT_THEME_DIR."images/facts/", $factref, ".gif\" alt=\"{$label}\" title=\"{$label}\" align=\"middle\" /> ";
-						} else {
-							echo "<span class=\"label\">", $label, ": </span>";
-						}
-						echo htmlspecialchars($match[$i][2]);
-						$sub_rec = get_sub_record(2, "2 ".$factref, $factrec, 1);
-						$tmp=new WT_Date(get_gedcom_value('DATE', 3, $sub_rec, $truncate='', $convert=false));
-						if ($tmp->Display(true)!="&nbsp;") echo " - ".$tmp->Display(true);
-						echo "<br />";
+				echo '</span></div>';
+				break;
+			case 'CALN':
+				echo '<div><span class="label">', WT_Gedcom_Tag::getLabel($match[1]), ':</span> <span class="field">', expand_urls($match[2]), '</span></div>';
+				break;
+			default:
+				if (!$HIDE_GEDCOM_ERRORS || WT_Gedcom_Tag::isTag($match[1])) {
+					echo '<div>';
+					$label = WT_Gedcom_Tag::getLabel($fact.':'.$match[1], $label_person);
+					if ($SHOW_FACT_ICONS && file_exists(WT_THEME_DIR."images/facts/".$match[1].".gif")) {
+						echo '<img src="', WT_THEME_DIR, 'images/facts/', $match[1], '.gif" alt="', $label, '" title="', $label, '" align="middle" /> ';
+					} else {
+						echo '<span class="label">', $label, ':</span> ';
 					}
+					echo htmlspecialchars($match[2]);
+					$sub_rec = get_sub_record(2, '2 '.$factref, $factrec, 1);
+					$tmp=new WT_Date(get_gedcom_value('DATE', 3, $sub_rec, $truncate='', $convert=false));
+					if ($tmp->Display(true)!='&nbsp;') echo ' - '.$tmp->Display(true);
+					echo '</div>';
 				}
+				break;
 			}
 		}
+		echo '<br/>';
 		// -- find source for each fact
 		print_fact_sources($factrec, 2);
 		// -- find notes for each fact
@@ -424,9 +429,7 @@ function print_fact(&$eventObj) {
 		//-- find multimedia objects
 		print_media_links($factrec, 2, $pid);
 	}
-	echo "<br />";
-	echo "</td>";
-	echo "</tr>";
+	echo '</td></tr>';
 }
 //------------------- end print fact function
 
@@ -487,7 +490,7 @@ function print_fact_sources($factrec, $level, $return=false) {
 			$srec = get_sub_record($level, "$level SOUR ", $factrec, $j+1);
 			$srec = substr($srec, 6); // remove "2 SOUR"
 			$srec = str_replace("\n".($level+1)." CONT ", "<br/>", $srec); // remove n+1 CONT
-			$data .= "<br /><span class=\"label\">".WT_I18N::translate('Source').":</span> <span class=\"field\">".PrintReady($srec)."</span><br />";
+			$data .= "<div=\"fact_SOUR\"><span class=\"label\">".WT_I18N::translate('Source').":</span> <span class=\"field\">".PrintReady($srec)."</span></div>";
 			$printDone = true;
 		}
 	}
@@ -502,7 +505,7 @@ function print_fact_sources($factrec, $level, $return=false) {
 			if (!$spos2) $spos2 = strlen($factrec);
 			$srec = substr($factrec, $spos1, $spos2-$spos1);
 			$lt = preg_match_all("/$nlevel \w+/", $srec, $matches);
-			$data .= "<br />";
+			$data .= "<div class=\"fact_SOUR\">";
 			$data .= "<span class=\"label\">";
 			$elementID = $sid."-".floor(microtime()*1000000);
 			if ($EXPAND_SOURCES) $plusminus="minus"; else $plusminus="plus";
@@ -518,7 +521,7 @@ function print_fact_sources($factrec, $level, $return=false) {
 			} else {
 				$data .= $sid;
 			}
-			$data .= "</span>";
+			$data .= "</span></div>";
 
 			$data .= "<div id=\"$elementID\"";
 			if ($EXPAND_SOURCES) $data .= " style=\"display:block\"";
@@ -527,7 +530,7 @@ function print_fact_sources($factrec, $level, $return=false) {
 			if ($source) {
 				$text = get_gedcom_value("PUBL", "1", $source->getGedcomRecord());
 				if (!empty($text)) {
-					$data .= "<span class=\"label\">".translate_fact('PUBL').": </span>";
+					$data .= "<span class=\"label\">".WT_Gedcom_Tag::getLabel('PUBL').": </span>";
 					$data .= $text;
 				}
 			}
@@ -542,10 +545,10 @@ function print_fact_sources($factrec, $level, $return=false) {
 			$printDone = true;
 		}
 	}
-	if ($printDone) $data .= "<br />";
+
 	if (!$return) echo $data;
 	else return $data;
-	echo "<br />";
+	
 }
 
 //-- Print the links to multi-media objects
@@ -644,7 +647,7 @@ function print_media_links($factrec, $level, $pid='') {
 			echo print_fact_notes($row["m_gedrec"], 1);
 			// NOTE: echo the format of the media
 			if (!empty($row["m_ext"])) {
-				echo "<br /><span class=\"label\">", translate_fact('FORM'), ": </span> <span class=\"field\">", $row["m_ext"], "</span>";
+				echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('FORM'), ": </span> <span class=\"field\">", $row["m_ext"], "</span>";
 				if ($imgsize[2]!==false) {
 					echo "<span class=\"label\"><br />", WT_I18N::translate('Image Dimensions'), ": </span> <span class=\"field\" style=\"direction: ltr;\">" , $imgsize[0] , ($TEXT_DIRECTION =="rtl"?(" " . getRLM() . "x" . getRLM() . " ") : " x ") , $imgsize[1] , "</span>";
 				}
@@ -652,7 +655,7 @@ function print_media_links($factrec, $level, $pid='') {
 			if (preg_match('/2 DATE (.+)/', get_sub_record("FILE", 1, $row["m_gedrec"]), $match)) {
 				$media_date=new WT_Date($match[1]);
 				$md = $media_date->Display(true);
-				echo "<br /><span class=\"label\">", translate_fact('DATE'), ": </span> ", $md;
+				echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('DATE'), ": </span> ", $md;
 			}
 			$ttype = preg_match("/".($nlevel+1)." TYPE (.*)/", $row["m_gedrec"], $match);
 			if ($ttype>0) {
@@ -715,7 +718,7 @@ function print_address_structure($factrec, $level) {
 	for ($i=0; $i<$ct; $i++) {
 		$arec = get_sub_record($level, "$level ADDR", $factrec, $i+1);
 		$resultText = "";
-		if ($level>1) $resultText .= "<span class=\"label\">".translate_fact('ADDR').": </span><br /><div class=\"indent\">";
+		if ($level>1) $resultText .= "<span class=\"label\">".WT_Gedcom_Tag::getLabel('ADDR').": </span><br /><div class=\"indent\">";
 		$cn = preg_match("/$nlevel _NAME (.*)/", $arec, $cmatch);
 		if ($cn>0) $resultText .= str_replace("/", "", $cmatch[1])."<br />";
 		$resultText .= PrintReady(trim($omatch[$i][1]));
@@ -784,7 +787,7 @@ function print_address_structure($factrec, $level) {
 	if ($ct>0) {
 		for ($i=0; $i<$ct; $i++) {
 			$resultText .= "<tr>";
-			$resultText .= "<td><span class=\"label\"><b>".translate_fact('PHON').": </b></span></td><td><span class=\"field\">";
+			$resultText .= "<td><span class=\"label\"><b>".WT_Gedcom_Tag::getLabel('PHON').": </b></span></td><td><span class=\"field\">";
 			$resultText .= getLRM() . $omatch[$i][1] . getLRM();
 			$resultText .= "</span></td></tr>";
 		}
@@ -793,7 +796,7 @@ function print_address_structure($factrec, $level) {
 	if ($ct>0) {
 		for ($i=0; $i<$ct; $i++) {
 			$resultText .= "<tr>";
-			$resultText .= "<td><span class=\"label\"><b>".translate_fact('FAX').": </b></span></td><td><span class=\"field\">";
+			$resultText .= "<td><span class=\"label\"><b>".WT_Gedcom_Tag::getLabel('FAX').": </b></span></td><td><span class=\"field\">";
 			$resultText .= getLRM() . $omatch[$i][1] . getLRM();
 			$resultText .= "</span></td></tr>";
 		}
@@ -802,7 +805,7 @@ function print_address_structure($factrec, $level) {
 	if ($ct>0) {
 		for ($i=0; $i<$ct; $i++) {
 			$resultText .= "<tr>";
-			$resultText .= "<td><span class=\"label\"><b>".translate_fact('EMAIL').": </b></span></td><td><span class=\"field\">";
+			$resultText .= "<td><span class=\"label\"><b>".WT_Gedcom_Tag::getLabel('EMAIL').": </b></span></td><td><span class=\"field\">";
 			$resultText .= "<a href=\"mailto:".$omatch[$i][1]."\">".$omatch[$i][1]."</a>";
 			$resultText .= "</span></td></tr>";
 		}
@@ -811,7 +814,7 @@ function print_address_structure($factrec, $level) {
 	if ($ct>0) {
 		for ($i=0; $i<$ct; $i++) {
 			$resultText .= "<tr>";
-			$resultText .= "<td><span class=\"label\"><b>".translate_fact($omatch[$i][1]).": </b></span></td><td><span class=\"field\">";
+			$resultText .= "<td><span class=\"label\"><b>".WT_Gedcom_Tag::getLabel($omatch[$i][1]).": </b></span></td><td><span class=\"field\">";
 			$resultText .= "<a href=\"".$omatch[$i][2]."\" target=\"_blank\">".$omatch[$i][2]."</a>";
 			$resultText .= "</span></td></tr>";
 		}
@@ -858,20 +861,20 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 					$factname = trim($ematch[1]);
 					echo $factname;
 				} else {
-					echo translate_fact($factname, $parent);
+					echo WT_Gedcom_Tag::getLabel($factname, $parent);
 				}
 			} else
 			if (!$noedit && WT_USER_CAN_EDIT && !FactEditRestricted($pid, $factrec) && $styleadd!="red") {
 				echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">";
 					if ($level==1) echo "<img class=\"icon\" src=\"", $WT_IMAGES["source"], "\" alt=\"\" />";
-					echo translate_fact($factname, $parent). "</a>";
+					echo WT_Gedcom_Tag::getLabel($factname, $parent). "</a>";
 				echo "<div class=\"editfacts\">";
 					echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\"><span class=\"editlink\"><span class=\"link_text\">".WT_I18N::translate('Edit')."</span></span></a>";
 					echo "<a onclick=\"return copy_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Copy')."\"><span class=\"copylink\"><span class=\"link_text\">".WT_I18N::translate('Copy')."</span></span></a>";
 					echo "<a onclick=\"return delete_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Delete')."\"><span class=\"deletelink\"><span class=\"link_text\">".WT_I18N::translate('Delete')."</span></span></a>";
 				echo "</div>";
 			} else {
-				echo translate_fact($factname, $parent);
+				echo WT_Gedcom_Tag::getLabel($factname, $parent);
 			}
 			echo "</td>";
 			echo "<td class=\"optionbox $styleadd wrap\">";
@@ -882,13 +885,13 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 				// PUBL
 				$text = get_gedcom_value("PUBL", "1", $source->getGedcomRecord());
 				if (!empty($text)) {
-					echo "<br /><span class=\"label\">", translate_fact('PUBL'), ": </span>";
+					echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('PUBL'), ": </span>";
 					echo $text;
 				}
 				// 2 RESN tags.  Note, there can be more than one, such as "privacy" and "locked"
 				if (preg_match_all("/\n2 RESN (.+)/", $factrec, $matches)) {
 					foreach ($matches[1] as $match) {
-						echo '<br/><span class="label">', translate_fact('RESN'), ':</span> <span class="field">';
+						echo '<br/><span class="label">', WT_Gedcom_Tag::getLabel('RESN'), ':</span> <span class="field">';
 						switch ($match) {
 						case 'none':
 							// Note: "2 RESN none" is not valid gedcom, and the GUI will not let you add it.
@@ -913,9 +916,9 @@ function print_main_sources($factrec, $level, $pid, $linenum, $noedit=false) {
 				}
 				$cs = preg_match("/$nlevel EVEN (.*)/", $srec, $cmatch);
 				if ($cs>0) {
-					echo "<br /><span class=\"label\">", translate_fact('EVEN'), " </span><span class=\"field\">", $cmatch[1], "</span>";
+					echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('EVEN'), " </span><span class=\"field\">", $cmatch[1], "</span>";
 					$cs = preg_match("/".($nlevel+1)." ROLE (.*)/", $srec, $cmatch);
-					if ($cs>0) echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"label\">", translate_fact('ROLE'), " </span><span class=\"field\">$cmatch[1]</span>";
+					if ($cs>0) echo "<br />&nbsp;&nbsp;&nbsp;&nbsp;<span class=\"label\">", WT_Gedcom_Tag::getLabel('ROLE'), " </span><span class=\"field\">$cmatch[1]</span>";
 				}
 				if ($source) {
 					echo printSourceStructure(getSourceStructure($srec));
@@ -946,28 +949,28 @@ function printSourceStructure($textSOUR) {
 	$html='';
 
 	if ($textSOUR['PAGE']) {
-		$html.='<div class="indent"><span class="label">'.translate_fact('PAGE').':</span> <span class="field">'.PrintReady(expand_urls($textSOUR['PAGE'])).'</span></div>';
+		$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('PAGE').':</span> <span class="field">'.PrintReady(expand_urls($textSOUR['PAGE'])).'</span></div>';
 	}
 
 	if ($textSOUR['EVEN']) {
-		$html.='<div class="indent"><span class="label">'.translate_fact('EVEN').': </span><span class="field">'.PrintReady($textSOUR['EVEN']).'</span></div>';
+		$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('EVEN').': </span><span class="field">'.PrintReady($textSOUR['EVEN']).'</span></div>';
 		if ($textSOUR['ROLE']) {
-			$html.='<div class="indent"><span class="label">'.translate_fact('ROLE').': </span><span class="field">'.PrintReady($textSOUR['ROLE']).'</span></div>';
+			$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('ROLE').': </span><span class="field">'.PrintReady($textSOUR['ROLE']).'</span></div>';
 		}
 	}
 
 	if ($textSOUR['DATE'] || count($textSOUR['TEXT'])) {
 		if ($textSOUR['DATE']) {
 			$date=new WT_Date($textSOUR['DATE']);
-			$html.='<div class="indent"><span class="label">'.translate_fact('DATA:DATE').':</span> <span class="field">'.$date->Display(false).'</span></div>';
+			$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('DATA:DATE').':</span> <span class="field">'.$date->Display(false).'</span></div>';
 		}
 		foreach ($textSOUR['TEXT'] as $text) {
-			$html.='<div class="indent"><span class="label">'.translate_fact('TEXT').':</span> <span class="field">'.PrintReady(expand_urls($text)).'</span></div>';
+			$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('TEXT').':</span> <span class="field">'.PrintReady(expand_urls($text)).'</span></div>';
 		}
 	}
 
 	if ($textSOUR['QUAY']!='') {
-		$html.='<div class="indent"><span class="label">'.translate_fact('QUAY').':</span> <span class="field">'.PrintReady($textSOUR['QUAY']).'</span></div>';
+		$html.='<div class="indent"><span class="label">'.WT_Gedcom_Tag::getLabel('QUAY').':</span> <span class="field">'.PrintReady($textSOUR['QUAY']).'</span></div>';
 	}
 
 	return $html;
@@ -1063,11 +1066,11 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 		if (!$noedit && WT_USER_CAN_EDIT && !FactEditRestricted($pid, $factrec) && $styleadd!="change_old") {
 			echo "<a onclick=\"return edit_record('$pid', $linenum);\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">";
 			if ($level<2) {
-				echo "<img class=\"icon\" src=\"", $WT_IMAGES["notes"], "\" alt=\"\" />";
+				echo "<img class=\"icon\" src=\"", $WT_IMAGES["note"], "\" alt=\"\" />";
 				if (strstr($factrec, "1 NOTE @" )) {
-					echo translate_fact('SHARED_NOTE');
+					echo WT_Gedcom_Tag::getLabel('SHARED_NOTE');
 				} else {
-					echo translate_fact('NOTE');
+					echo WT_Gedcom_Tag::getLabel('NOTE');
 				}
 				echo "</a>";
 				echo "<div class=\"editfacts\">";
@@ -1078,11 +1081,11 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 			}
 		} else {
 			if ($level<2) {
-				echo "<img class=\"icon\" src=\"", $WT_IMAGES["notes"], "\" alt=\"\" />";
+				echo "<img class=\"icon\" src=\"", $WT_IMAGES["note"], "\" alt=\"\" />";
 				if (strstr($factrec, "1 NOTE @" )) {
-					echo translate_fact('SHARED_NOTE');
+					echo WT_Gedcom_Tag::getLabel('SHARED_NOTE');
 				} else {
-					echo translate_fact('NOTE');
+					echo WT_Gedcom_Tag::getLabel('NOTE');
 				}
 			}
 			$factlines = explode("\n", $factrec); // 1 BIRT Y\n2 NOTE ...
@@ -1096,11 +1099,11 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 					$factname = trim($ematch[1]);
 					echo $factname;
 				} else {
-					echo translate_fact($factname, $parent);
+					echo WT_Gedcom_Tag::getLabel($factname, $parent);
 				}
 			} else if ($factname != "NOTE") {
 				// Note is already printed
-				echo translate_fact($factname, $parent);
+				echo WT_Gedcom_Tag::getLabel($factname, $parent);
 			}
 		}
 		echo "</td>";
@@ -1153,7 +1156,7 @@ function print_main_notes($factrec, $level, $pid, $linenum, $noedit=false) {
 			// 2 RESN tags.  Note, there can be more than one, such as "privacy" and "locked"
 			if (preg_match_all("/\n2 RESN (.+)/", $factrec, $matches)) {
 				foreach ($matches[1] as $match) {
-					echo '<br/><span class="label">', translate_fact('RESN'), ':</span> <span class="field">';
+					echo '<br/><span class="label">', WT_Gedcom_Tag::getLabel('RESN'), ':</span> <span class="field">';
 					switch ($match) {
 					case 'none':
 						// Note: "2 RESN none" is not valid gedcom, and the GUI will not let you add it.
@@ -1384,7 +1387,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	echo "<tr><td class=\"descriptionbox $styleadd width20\">";
 	if ($rowm['mm_gid']==$pid && WT_USER_CAN_EDIT && (!FactEditRestricted($rowm['m_media'], $rowm['m_gedrec'])) && ($styleadd!="change_old")) {
 		echo "<a onclick=\"return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\">";
-			echo "<img class=\"icon\" src=\"", $WT_IMAGES["media"], "\" alt=\"\" />". translate_fact('OBJE'). "</a>";
+			echo "<img class=\"icon\" src=\"", $WT_IMAGES["media"], "\" alt=\"\" />". WT_Gedcom_Tag::getLabel('OBJE'). "</a>";
 			echo "<div class=\"editfacts\">";
 				echo "<a onclick=\"return window.open('addmedia.php?action=editmedia&pid={$rowm['m_media']}&linktoid={$rowm['mm_gid']}', '_blank', 'top=50, left=50, width=600, height=500, resizable=1, scrollbars=1');\" href=\"javascript:;\" title=\"".WT_I18N::translate('Edit')."\"><span class=\"editlink\"><span class=\"link_text\">".WT_I18N::translate('Edit')."</span></span></a>";
 				echo "<a onclick=\"return copy_record('".$rowm['m_media']."', 'media');\" href=\"javascript:;\" title=\"".WT_I18N::translate('Copy')."\"><span class=\"copylink\"><span class=\"link_text\">".WT_I18N::translate('Copy')."</span></span></a>";
@@ -1465,7 +1468,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 
 	// NOTE: echo the format of the media
 	if (!empty($rowm["m_ext"])) {
-		echo "<br /><span class=\"label\">", translate_fact('FORM'), ": </span> <span class=\"field\">", $rowm["m_ext"], "</span>";
+		echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('FORM'), ": </span> <span class=\"field\">", $rowm["m_ext"], "</span>";
 		if (isset($imgsize) and $imgsize[2]!==false) {
 			echo "<span class=\"label\"><br />", WT_I18N::translate('Image Dimensions'), ": </span> <span class=\"field\" style=\"direction: ltr;\">", $imgsize[0], $TEXT_DIRECTION =="rtl"?(" " . getRLM() . "x" . getRLM(). " ") : " x ", $imgsize[1], "</span>";
 		}
@@ -1473,7 +1476,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	if (preg_match('/2 DATE (.+)/', get_sub_record("FILE", 1, $rowm["m_gedrec"]), $match)) {
 		$media_date=new WT_Date($match[1]);
 		$md = $media_date->Display(true);
-		echo "<br /><span class=\"label\">", translate_fact('DATE'), ": </span> ", $md;
+		echo "<br /><span class=\"label\">", WT_Gedcom_Tag::getLabel('DATE'), ": </span> ", $md;
 	}
 	$ttype = preg_match("/\d TYPE (.*)/", $rowm["m_gedrec"], $match);
 	if ($ttype>0) {
@@ -1498,7 +1501,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	if (WT_USER_GEDCOM_ADMIN) {
 		$prim = get_gedcom_value("_PRIM", 1, $rowm["m_gedrec"]);
 		if (!empty($prim)) {
-			echo "<span class=\"label\">", translate_fact('_PRIM'), ":</span> ";
+			echo "<span class=\"label\">", WT_Gedcom_Tag::getLabel('_PRIM'), ":</span> ";
 			if ($prim=="Y") echo WT_I18N::translate('Yes'); else echo WT_I18N::translate('No');
 			echo "<br />";
 		}
@@ -1507,7 +1510,7 @@ function print_main_media_row($rtype, $rowm, $pid) {
 	if (WT_USER_GEDCOM_ADMIN) {
 		$thum = get_gedcom_value("_THUM", 1, $rowm["m_gedrec"]);
 		if (!empty($thum)) {
-			echo "<span class=\"label\">", translate_fact('_THUM'), ":</span> ";
+			echo "<span class=\"label\">", WT_Gedcom_Tag::getLabel('_THUM'), ":</span> ";
 			if ($thum=="Y") echo WT_I18N::translate('Yes'); else echo WT_I18N::translate('No');
 			echo "<br />";
 		}

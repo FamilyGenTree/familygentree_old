@@ -75,7 +75,7 @@ function select_edit_control($name, $values, $empty, $selected, $extra='') {
 			$html.='<option value="'.htmlspecialchars($key).'">'.htmlspecialchars($value).'</option>';
 		}
 	}
-	return '<select name="'.$name.'" '.$extra.'>'.$html.'</select>';
+	return '<select id="'.$name.'" name="'.$name.'" '.$extra.'>'.$html.'</select>';
 }
 
 // An inline-editing version of select_edit_control()
@@ -703,12 +703,15 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 			break;
 		case 'paternal':
 		case 'polish':
+		case 'lithuanian':
 			// Father gives his surname to his wife and children
 			switch ($nextaction) {
 			case 'addspouseaction':
 				if ($famtag=='WIFE' && preg_match('/\/(.*)\//', $indi_name, $match)) {
 					if ($SURNAME_TRADITION=='polish') {
 						$match[1]=preg_replace(array('/ski$/', '/cki$/', '/dzki$/', '/żki$/'), array('ska', 'cka', 'dzka', 'żka'), $match[1]);
+					} else if ($SURNAME_TRADITION=='lithuanian') {
+						$match[1]=preg_replace(array('/as$/', '/is$/', '/ys$/', '/us$/'), array('ienė', 'ienė', 'ienė', 'ienė'), $match[1]);
 					}
 					$new_marnm=$match[1];
 				}
@@ -718,6 +721,8 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 					$name_fields['SURN']=$match[2];
 					if ($SURNAME_TRADITION=='polish' && $sextag=='F') {
 						$match[2]=preg_replace(array('/ski$/', '/cki$/', '/dzki$/', '/żki$/'), array('ska', 'cka', 'dzka', 'żka'), $match[2]);
+					} else if ($SURNAME_TRADITION=='lithuanian' && $sextag=='F') {
+						$match[2]=preg_replace(array('/as$/', '/a$/', '/is$/', '/ys$/', '/ius$/', '/us$/'), array('aitė', 'aitė', 'ytė', 'ytė', 'iūtė', 'utė'), $match[2]);
 					}
 					$name_fields['SPFX']=trim($match[1]);
 					$name_fields['NAME']="/{$match[1]}{$match[2]}/";
@@ -727,6 +732,9 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 				if ($famtag=='HUSB' && preg_match('/\/((?:[a-z]{2,3}\s+)*)(.*)\//i', $indi_name, $match)) {
 					if ($SURNAME_TRADITION=='polish' && $sextag=='M') {
 						$match[2]=preg_replace(array('/ska$/', '/cka$/', '/dzka$/', '/żka$/'), array('ski', 'cki', 'dzki', 'żki'), $match[2]);
+					} else if ($SURNAME_TRADITION=='lithuanian' && $sextag=='F') {
+						// not a complete list as the rules are somewhat complicated but will do 95% correctly
+						$match[2]=preg_replace(array('/aitė$/', '/ytė$/', '/iūtė$/', '/utė$/'), array('as', 'is', 'ius', 'us'), $match[2]);
 					}
 					$name_fields['SPFX']=trim($match[1]);
 					$name_fields['SURN']=$match[2];
@@ -774,9 +782,9 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 		foreach ($match[1] as $tag)
 			$adv_name_fields[$tag]='';
 	// This is a custom tag, but PGV uses it extensively.
-	if ($SURNAME_TRADITION=='paternal' || $SURNAME_TRADITION=='polish' || (strpos($namerec, '2 _MARNM')!==false))
+	if ($SURNAME_TRADITION=='paternal' || $SURNAME_TRADITION=='polish' || $SURNAME_TRADITION=='lithuanian' || (strpos($namerec, '2 _MARNM')!==false)) {
 		$adv_name_fields['_MARNM']='';
-
+	}
 	$person = WT_Person::getInstance($pid);
 	foreach ($adv_name_fields as $tag=>$dummy) {
 		// Edit existing tags
@@ -789,7 +797,7 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 					add_simple_tag("2 _MARNM ".$value);
 					add_simple_tag("2 _MARNM_SURN ".$marnm_surn);
 				} else {
-					add_simple_tag("2 $tag $value", '', translate_fact("NAME:{$tag}", $person));
+					add_simple_tag("2 $tag $value", '', WT_Gedcom_Tag::getLabel("NAME:{$tag}", $person));
 				}
 			}
 			// Allow a new row to be entered if there was no row provided
@@ -798,7 +806,7 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 					add_simple_tag("0 _MARNM");
 					add_simple_tag("0 _MARNM_SURN $new_marnm");
 				} else {
-					add_simple_tag("0 $tag", '', translate_fact("NAME:{$tag}", $person));
+					add_simple_tag("0 $tag", '', WT_Gedcom_Tag::getLabel("NAME:{$tag}", $person));
 				}
 	}
 
@@ -944,7 +952,16 @@ function print_indi_form($nextaction, $famid, $linenum='', $namerec='', $famtag=
 			surn=surn.replace(/dzki$/, 'dzka');
 			surn=surn.replace(/żki$/, 'żka');
 		<?php } ?>
-		return trim(npfx+" "+givn+" /"+trim(spfx+" "+surn.replace(/ *, */, " "))+"/ "+nsfx);
+		if (WT_LOCALE=='vi' || WT_LOCALE=='hu') {
+			// Default format: /SURN/ GIVN
+			return trim(npfx+" /"+trim(spfx+" "+surn.replace(/ *, */, " "))+"/ "+givn+" "+nsfx);
+		} else if (WT_LOCALE=='zh') {
+			// Default format: /SURN/GIVN
+			return trim(npfx+" /"+trim(spfx+" "+surn.replace(/ *, */, " "))+"/"+givn+" "+nsfx);
+		} else {
+			// Default format: GIVN /SURN/
+			return trim(npfx+" "+givn+" /"+trim(spfx+" "+surn.replace(/ *, */, " "))+"/ "+nsfx);
+		}
 	}
 
 	// Update the NAME and _MARNM fields from the name components
@@ -1423,7 +1440,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 		}
 	} else {
 		if ($fact=="NOTE" && $islink) {
-			echo translate_fact('SHARED_NOTE');
+			echo WT_Gedcom_Tag::getLabel('SHARED_NOTE');
 			/*
 			if (file_exists(WT_ROOT.WT_MODULES_DIR.'GEDFact_assistant/_CENS/census_1_ctrl.php') && $pid && $label=="GEDFact Assistant") {
 				// use $label (GEDFact Assistant);
@@ -1432,7 +1449,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 			}
 			*/
 		} else {
-			echo translate_fact($fact);
+			echo WT_Gedcom_Tag::getLabel($fact);
 		}
 	}
 
@@ -1522,7 +1539,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 */
 
 	} else if ($fact=="TEMP") {
-		echo select_edit_control($element_name, WT_Gedcom_Code_LDS::templeNames(), WT_I18N::translate('No Temple - Living Ordinance'), $value);
+		echo select_edit_control($element_name, WT_Gedcom_Code_Temp::templeNames(), WT_I18N::translate('No Temple - Living Ordinance'), $value);
 	} else if ($fact=="ADOP") {
 		switch ($gender) {
 		case 'M': echo edit_field_adop_m($element_name, $value); break;
@@ -1536,7 +1553,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 		default:  echo edit_field_pedi_u($element_name, $value); break;
 		}
 	} else if ($fact=="STAT") {
-		echo select_edit_control($element_name, WT_Gedcom_Code_LDS::statusNames($upperlevel), '', $value);
+		echo select_edit_control($element_name, WT_Gedcom_Code_Stat::statusNames($upperlevel), '', $value);
 	} else if ($fact=="RELA") {
 		echo edit_field_rela($element_name, strtolower($value));
 	} else if ($fact=="_WT_USER") {
@@ -1563,15 +1580,19 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 		echo ">", WT_I18N::translate_c('unknown gender', 'Unknown'), "</option></select>";
 	} else if ($fact == "TYPE" && $level == '3') {
 		//-- Build the selector for the Media "TYPE" Fact
-		echo "<select name=\"text[]\">";
-		if ($value=='') echo "<option selected=\"selected\" value=\"\" > ", WT_I18N::translate('Choose: '), " </option>";
+		echo '<select name="text[]"><option selected="selected" value="" ></option>';
 		$selectedValue = strtolower($value);
-		foreach (WT_Gedcom_Tag::getFileFormTypes() as $typeName => $typeValue) {
-			echo "<option value=\"", $typeName, "\" ";
-			if ($selectedValue == $typeName) echo "selected=\"selected\" ";
-			echo "> ", $typeValue, " </option>";
+		if (!array_key_exists($selectedValue, WT_Gedcom_Tag::getFileFormTypes())) {
+			echo '<option selected="selected" value="', htmlspecialchars($value), '" >', htmlspecialchars($value), '</option>';
 		}
-		echo "</select>";
+		foreach (WT_Gedcom_Tag::getFileFormTypes() as $typeName => $typeValue) {
+			echo '<option value="', $typeName, '"';
+			if ($selectedValue == $typeName) {
+				echo ' selected="selected"';
+			}
+			echo '>', $typeValue, '</option>';
+		}
+		echo '</select>';
 	} else if (($fact=="NAME" && $upperlevel!='REPO') || $fact=="_MARNM") {
 		// Populated in javascript from sub-tags
 		echo "<input type=\"hidden\" id=\"", $element_id, "\" name=\"", $element_name, "\" onchange=\"updateTextName('", $element_id, "');\" value=\"", PrintReady(htmlspecialchars($value)), "\" />";
@@ -1606,7 +1627,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 			print_specialchar_link($element_id, false);
 			print_findplace_link($element_id);
 			echo "</div>";
-			echo "<a href=\"javascript:;\" onclick=\"toggle_lati_long();\"><img src=\"", $WT_IMAGES["target"], "\" border=\"0\" align=\"middle\" alt=\"", translate_fact('LATI'), " / ", translate_fact('LONG'), "\" title=\"", translate_fact('LATI'), " / ", translate_fact('LONG'), "\" /></a>";
+			echo "<a href=\"javascript:;\" onclick=\"toggle_lati_long();\"><img src=\"", $WT_IMAGES["target"], "\" border=\"0\" align=\"middle\" alt=\"", WT_Gedcom_Tag::getLabel('LATI'), " / ", WT_Gedcom_Tag::getLabel('LONG'), "\" title=\"", WT_Gedcom_Tag::getLabel('LATI'), " / ", WT_Gedcom_Tag::getLabel('LONG'), "\" /></a>";
 			if (array_key_exists('places_assistant', WT_Module::getActiveModules())) {
 				places_assistant_WT_Module::setup_place_subfields($element_id);
 				places_assistant_WT_Module::print_place_subfields($element_id);
@@ -1615,7 +1636,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 		else if (($cols>20 || $fact=="NPFX") && $readOnly=='') print_specialchar_link($element_id, false);
 	}
 	// MARRiage TYPE : hide text field and show a selection list
-	if ($fact=="TYPE" and $tags[0]=="MARR") {
+	if ($fact=='TYPE' && $level==2 && $tags[0]=='MARR') {
 		echo "<script type='text/javascript'>";
 		echo "document.getElementById('", $element_id, "').style.display='none'";
 		echo "</script>";
@@ -1627,7 +1648,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 			$b=strtolower($value);
 			if (@strpos($a, $b)!==false or @strpos($b, $a)!==false) echo " selected=\"selected\"";
 			$tmp="MARR_".strtoupper($key);
-			echo ">", translate_fact($tmp), "</option>";
+			echo ">", WT_Gedcom_Tag::getLabel($tmp), "</option>";
 		}
 		echo "</select>";
 	}
@@ -1814,7 +1835,7 @@ function print_add_layer($tag, $level=2, $printSaveButton=true) {
 		add_simple_tag(($level+2)." $text");
 		if ($FULL_SOURCES) {
 			// 4 DATE
-			add_simple_tag(($level+2)." DATE", '', translate_fact('DATA:DATE'));
+			add_simple_tag(($level+2)." DATE", '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
 			// 3 QUAY
 			add_simple_tag(($level+1)." QUAY");
 		}
@@ -1890,7 +1911,7 @@ function print_add_layer($tag, $level=2, $printSaveButton=true) {
 	if ($tag=="RESN") {
 		//-- Retrieve existing resn or add new resn to fact
 		$text = '';
-		echo "<a href=\"javascript:;\" onclick=\"return expand_layer('newresn');\"><img id=\"newresn_img\" src=\"", $WT_IMAGES["plus"], "\" border=\"0\" width=\"11\" height=\"11\" alt=\"\" title=\"\" /> ", translate_fact('RESN'), "</a>";
+		echo "<a href=\"javascript:;\" onclick=\"return expand_layer('newresn');\"><img id=\"newresn_img\" src=\"", $WT_IMAGES["plus"], "\" border=\"0\" width=\"11\" height=\"11\" alt=\"\" title=\"\" /> ", WT_Gedcom_Tag::getLabel('RESN'), "</a>";
 		echo help_link('RESN');
 		echo "<br />";
 		echo "<div id=\"newresn\" style=\"display: none;\">";
@@ -1912,12 +1933,12 @@ function addSimpleTags($fact) {
 	} else {
 		add_simple_tag("0 {$fact}");
 	}
-	add_simple_tag("0 DATE", $fact, translate_fact("{$fact}:DATE"));
-	add_simple_tag("0 PLAC", $fact, translate_fact("{$fact}:PLAC"));
+	add_simple_tag("0 DATE", $fact, WT_Gedcom_Tag::getLabel("{$fact}:DATE"));
+	add_simple_tag("0 PLAC", $fact, WT_Gedcom_Tag::getLabel("{$fact}:PLAC"));
 
 	if (preg_match_all('/('.WT_REGEX_TAG.')/', $ADVANCED_PLAC_FACTS, $match)) {
 		foreach ($match[1] as $tag) {
-			add_simple_tag("0 {$tag}", $fact, translate_fact("{$fact}:PLAC:{$tag}"));
+			add_simple_tag("0 {$tag}", $fact, WT_Gedcom_Tag::getLabel("{$fact}:PLAC:{$tag}"));
 		}
 	}
 	add_simple_tag("0 MAP", $fact);
@@ -1937,9 +1958,9 @@ function addNewName() {
 		$tags=array_merge($tags, $match[1]);
 	}
 
-	// Paternal and Polish surname traditions can also create a _MARNM
+	// Paternal and Polish and Lithuanian surname traditions can also create a _MARNM
 	$SURNAME_TRADITION=get_gedcom_setting(WT_GED_ID, 'SURNAME_TRADITION');
-	if ($SURNAME_TRADITION=='paternal' || $SURNAME_TRADITION=='polish') {
+	if ($SURNAME_TRADITION=='paternal' || $SURNAME_TRADITION=='polish' || $SURNAME_TRADITION=='lithuanian') {
 		$tags[]='_MARNM';
 	}
 
@@ -2339,7 +2360,7 @@ function create_add_form($fact) {
 			add_simple_tag("2 PAGE");
 			add_simple_tag("3 TEXT");
 			if ($FULL_SOURCES) {
-				add_simple_tag("3 DATE", '', translate_fact('DATA:DATE'));
+				add_simple_tag("3 DATE", '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
 				add_simple_tag("2 QUAY");
 			}
 		}
@@ -2444,14 +2465,14 @@ function create_edit_form($gedrec, $linenum, $level0type) {
 			$person = WT_Person::getInstance($pid);
 			$subrecord = $level.' '.$type.' '.$text;
 			if ($inSource && $type=="DATE") {
-				add_simple_tag($subrecord, '', translate_fact($label, $person));
+				add_simple_tag($subrecord, '', WT_Gedcom_Tag::getLabel($label, $person));
 			} elseif (!$inSource && $type=="DATE") {
-				add_simple_tag($subrecord, $level1type, translate_fact($label, $person));
+				add_simple_tag($subrecord, $level1type, WT_Gedcom_Tag::getLabel($label, $person));
 				$add_date = false;
 			} elseif ($type=='STAT') {
-				add_simple_tag($subrecord, $level1type, translate_fact($label, $person));
+				add_simple_tag($subrecord, $level1type, WT_Gedcom_Tag::getLabel($label, $person));
 		 	} else {
-				add_simple_tag($subrecord, $level0type, translate_fact($label, $person));
+				add_simple_tag($subrecord, $level0type, WT_Gedcom_Tag::getLabel($label, $person));
 			}
 		}
 
@@ -2466,11 +2487,11 @@ function create_edit_form($gedrec, $linenum, $level0type) {
 			foreach ($expected_subtags[$type] as $subtag) {
 				if (!in_array($subtag, $subtags)) {
 					if (!$inSource || $subtag!="DATA") {
-						add_simple_tag(($level+1).' '.$subtag, '', translate_fact("{$label}:{$subtag}"));
+						add_simple_tag(($level+1).' '.$subtag, '', WT_Gedcom_Tag::getLabel("{$label}:{$subtag}"));
 					}
 					if (!empty($expected_subtags[$subtag])) {
 						foreach ($expected_subtags[$subtag] as $subsubtag) {
-							add_simple_tag(($level+2).' '.$subsubtag, '', translate_fact("{$label}:{$subtag}:{$subsubtag}"));
+							add_simple_tag(($level+2).' '.$subsubtag, '', WT_Gedcom_Tag::getLabel("{$label}:{$subtag}:{$subsubtag}"));
 						}
 					}
 				}
@@ -2481,8 +2502,8 @@ function create_edit_form($gedrec, $linenum, $level0type) {
 		if ($level==2 && $type=='DATE' && in_array($level1type, $date_and_time) && !in_array('TIME', $subtags)) {
 			add_simple_tag("3 TIME"); // TIME is NOT a valid 5.5.1 tag
 		}
-		if ($level==2 && $type=='STAT' && WT_Gedcom_Code_LDS::isTagLDS($level1type) && !in_array('DATE', $subtags)) {
-			add_simple_tag("3 DATE", '', translate_fact('STAT:DATE'));
+		if ($level==2 && $type=='STAT' && WT_Gedcom_Code_Temp::isTagLDS($level1type) && !in_array('DATE', $subtags)) {
+			add_simple_tag("3 DATE", '', WT_Gedcom_Tag::getLabel('STAT:DATE'));
 		}
 
 		$i++;
@@ -2539,7 +2560,7 @@ function insert_missing_subtags($level1tag, $add_date=false) {
 				case "PLAC":
 					if (preg_match_all('/('.WT_REGEX_TAG.')/', $ADVANCED_PLAC_FACTS, $match)) {
 						foreach ($match[1] as $tag) {
-							add_simple_tag("3 $tag", '', translate_fact("{$level1tag}:PLAC:{$tag}"));
+							add_simple_tag("3 $tag", '', WT_Gedcom_Tag::getLabel("{$level1tag}:PLAC:{$tag}"));
 						}
 					}
 					add_simple_tag("3 MAP");
@@ -2554,8 +2575,8 @@ function insert_missing_subtags($level1tag, $add_date=false) {
 					add_simple_tag("3 PLAC");
 					break;
 				case "STAT":
-					if (WT_Gedcom_Code_LDS::isTagLDS($level1tag)) {
-						add_simple_tag("3 DATE", '', translate_fact('STAT:DATE'));
+					if (WT_Gedcom_Code_Temp::isTagLDS($level1tag)) {
+						add_simple_tag("3 DATE", '', WT_Gedcom_Tag::getLabel('STAT:DATE'));
 					}
 					break;
 				case "DATE":
@@ -2572,7 +2593,7 @@ function insert_missing_subtags($level1tag, $add_date=false) {
 					break;
 			}
 		} elseif ($key=="DATE" && $add_date) {
-			add_simple_tag("2 DATE", $level1tag, translate_fact("{$level1tag}:DATE"));
+			add_simple_tag("2 DATE", $level1tag, WT_Gedcom_Tag::getLabel("{$level1tag}:DATE"));
 		}
 	}
 	// Do something (anything!) with unrecognised custom tags
@@ -2583,7 +2604,7 @@ function insert_missing_subtags($level1tag, $add_date=false) {
 				if ($tag=='PLAC') {
 					if (preg_match_all('/('.WT_REGEX_TAG.')/', $ADVANCED_PLAC_FACTS, $match)) {
 						foreach ($match[1] as $tag) {
-							add_simple_tag("3 $tag", '', translate_fact("{$level1tag}:PLAC:{$tag}"));
+							add_simple_tag("3 $tag", '', WT_Gedcom_Tag::getLabel("{$level1tag}:PLAC:{$tag}"));
 						}
 					}
 					add_simple_tag("3 MAP");

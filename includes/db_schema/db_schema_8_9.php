@@ -37,7 +37,7 @@ define('WT_DB_SCHEMA_8_9', '');
 
 try {
 	self::exec(
-		"ALTER TABLE `###dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
+		"ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
 	);
 } catch (PDOException $ex) {
 	// Already been run?

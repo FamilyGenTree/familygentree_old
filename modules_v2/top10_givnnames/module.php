@@ -65,7 +65,6 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 		// I18N: There are separate lists of male/female names, containing %d names each
 		$title .= WT_I18N::plural('Top Given Name', 'Top %d Given Names', $num, $num);
-		$title .= help_link('index_common_given_names');
 
 		$content = '<div class="normal_inner_block">';
 		//Select List or Table
@@ -150,14 +149,14 @@ class top10_givnnames_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$infoStyle=get_block_setting($block_id, 'infoStyle', 'table');
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Presentation style'), help_link('style', $this->getName());
+		echo WT_I18N::translate('Presentation style');
 		echo '</td><td class="optionbox">';
 		echo select_edit_control('infoStyle', array('list'=>WT_I18N::translate('List'), 'table'=>WT_I18N::translate('Table')), null, $infoStyle, '');
 		echo '</td></tr>';
 
 		$showUnknown=get_block_setting($block_id, 'showUnknown', true);
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Show unknown gender'), help_link('showUnknown');
+		echo /* I18N: label for yes/no option */ WT_I18N::translate('Include people whose gender is unknown');
 		echo '</td><td class="optionbox">';
 		echo edit_field_yes_no('showUnknown', $showUnknown);
 		echo '</td></tr>';

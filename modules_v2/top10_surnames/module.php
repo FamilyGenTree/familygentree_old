@@ -43,6 +43,8 @@ class top10_surnames_WT_Module extends WT_Module implements WT_Module_Block {
 	public function getBlock($block_id, $template=true, $cfg=null) {
 		global $ctype, $WT_IMAGES, $SURNAME_LIST_STYLE;
 
+		require_once WT_ROOT.'includes/functions/functions_print_lists.php';
+
 		$COMMON_NAMES_REMOVE=get_gedcom_setting(WT_GED_ID, 'COMMON_NAMES_REMOVE');
 		$COMMON_NAMES_THRESHOLD=get_gedcom_setting(WT_GED_ID, 'COMMON_NAMES_THRESHOLD');
 
@@ -71,7 +73,7 @@ class top10_surnames_WT_Module extends WT_Module implements WT_Module_Block {
 		$all_surnames=array();
 		$i=0;
 		foreach (array_keys($top_surnames) as $top_surname) {
-			$all_surnames=array_merge($all_surnames, get_indilist_surns($top_surname, '', false, false, WT_GED_ID));
+			$all_surnames=array_merge($all_surnames, WT_Query_Name::surnames($top_surname, '', false, false, WT_GED_ID));
 			if (++$i == $num) break;
 		}
 		if ($i < $num) $num=$i;

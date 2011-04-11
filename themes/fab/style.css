@@ -8,23 +8,6 @@
 * $Id$
 */
 
-/* temp stuff - for old PGV menus */
-.submenu, .sublinks_table {
-	background-color:#EEE;
-	border:thin solid #AAA;
-}
-.sublinks_cell {
-	text-align:center;
-}
-.sublinks_cell .icon {
-	display:none;
-}
-@media print {
-.submenu, .sublinks_table, .help {
-	display:none;
-	}
-}
-
 /* Thin grey borders around block-level elements */
 input,
 textarea,
@@ -46,8 +29,7 @@ fieldset,
 	margin:3px;
 	padding:3px;
 	border:1px solid DarkGray;
-	/* Uncomment this next line when it becomes a standard */
-	/*border-radius:3px;*/
+	border-radius:3px;
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
 }
@@ -179,6 +161,17 @@ html[dir='rtl'] .makeMenu li ul {
 	right:0px;
 }
 
+/* position sub-sub-menus */
+.makeMenu ul ul {
+	top:0;
+	left:100px;
+}
+html[dir='rtl'] .makeMenu ul ul {
+	top:0;
+	left:auto;
+	right:100px;
+}
+
 .makeMenu li ul li {
 	display:block;
 	text-align:left;
@@ -194,8 +187,19 @@ html[dir='rtl'] .makeMenu li ul li {
 	padding:1px;
 }
 
-.makeMenu li:hover ul {
+.makeMenu li:hover > ul {
 	display:block;
+}
+
+.makeMenu ul li a {
+	background-color: #EEE;
+	padding: 0px 5px 0px 2px;
+	display: block;
+}
+
+.makeMenu ul li a:hover  {
+    background-color: DarkSlateGray;
+	color: #000;
 }
 
 /* person boxes are used in various charts */
@@ -1148,11 +1152,6 @@ div.faq_body {
 td.descriptionbox  a { 
 }
 
-.editfacts { /* a container for the following three links */
-	clear: left;
-	padding-top: 15px;
-}
-
 .editfacts  a:hover { 
 	background-color: transparent;
 }
@@ -1166,11 +1165,19 @@ td.descriptionbox  a {
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .editlink, html[dir='rtl'] editlink  {
+	background: url(images/edit_sm.png) no-repeat right center;
+	float: right;
+}
 
 .copylink  {
 	background: url(images/copy.png) no-repeat left center;
 	width: 20px;
 	float: left;
+}
+html[dir='rtl'] .copylink, html[dir='rtl'] copylink  {
+	background: url(images/copy.png) no-repeat right center;
+	float: right;
 }
 
 .deletelink  {
@@ -1178,3 +1185,8 @@ td.descriptionbox  a {
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .deletelink, html[dir='rtl'] deletelink  {
+	background: url(images/delete.png) no-repeat right center;
+	float: right;
+}
+

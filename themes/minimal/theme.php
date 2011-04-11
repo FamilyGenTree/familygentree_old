@@ -56,7 +56,7 @@ $WT_IMAGES['help'] = WT_THEME_DIR.'images/help.gif';
 $WT_IMAGES['indis'] = WT_THEME_DIR.'images/indis.gif';
 $WT_IMAGES['media'] = WT_THEME_DIR.'images/media.gif';
 $WT_IMAGES['mypage'] = WT_THEME_DIR.'images/mypage.gif';
-$WT_IMAGES['notes'] = WT_THEME_DIR.'images/notes.gif';
+$WT_IMAGES['note'] = WT_THEME_DIR.'images/notes.gif';
 $WT_IMAGES['patriarch'] = WT_THEME_DIR.'images/patriarch.gif';
 $WT_IMAGES['pedigree'] = WT_THEME_DIR.'images/pedigree.gif';
 $WT_IMAGES['place'] = WT_THEME_DIR.'images/place.gif';
@@ -116,7 +116,6 @@ $WT_IMAGES['larrow'] = WT_THEME_DIR.'images/larrow.gif';
 $WT_IMAGES['larrow2'] = WT_THEME_DIR.'images/larrow2.gif';
 $WT_IMAGES['ldarrow'] = WT_THEME_DIR.'images/ldarrow.gif';
 $WT_IMAGES['minus'] = WT_THEME_DIR.'images/minus.gif';
-$WT_IMAGES['note'] = WT_THEME_DIR.'images/notes.gif';
 $WT_IMAGES['plus'] = WT_THEME_DIR.'images/plus.gif';
 $WT_IMAGES['rarrow'] = WT_THEME_DIR.'images/rarrow.gif';
 $WT_IMAGES['rarrow2'] = WT_THEME_DIR.'images/rarrow2.gif';
@@ -133,19 +132,19 @@ $WT_IMAGES['zoomout'] = WT_THEME_DIR.'images/zoomout.gif';
 $WT_IMAGES['stop'] = WT_THEME_DIR.'images/stop.gif';
 $WT_IMAGES['pin-out'] = WT_THEME_DIR.'images/pin-out.png';
 $WT_IMAGES['pin-in'] = WT_THEME_DIR.'images/pin-in.png';
-$WT_IMAGES['default_image_M'] = WT_THEME_DIR.'images/silhouette_male.gif';
-$WT_IMAGES['default_image_F'] = WT_THEME_DIR.'images/silhouette_female.gif';
-$WT_IMAGES['default_image_U'] = WT_THEME_DIR.'images/silhouette_unknown.gif';
+$WT_IMAGES['default_image_M'] = WT_THEME_DIR.'images/silhouette_male.png';
+$WT_IMAGES['default_image_F'] = WT_THEME_DIR.'images/silhouette_female.png';
+$WT_IMAGES['default_image_U'] = WT_THEME_DIR.'images/silhouette_unknown.png';
 $WT_IMAGES['slide_open'] = WT_THEME_DIR.'images/open.png';
 $WT_IMAGES['slide_close'] = WT_THEME_DIR.'images/close.png';
 $WT_IMAGES['reminder'] = WT_THEME_DIR.'images/reminder.gif';
 $WT_IMAGES['children'] = WT_THEME_DIR.'images/children.gif';
 
 // - lifespan chart arrows
-$WT_IMAGES['lsltarrow'] = WT_THEME_DIR.'images/lsltarrow.gif';
-$WT_IMAGES['lsrtarrow'] = WT_THEME_DIR.'images/lsrtarrow.gif';
-$WT_IMAGES['lsdnarrow'] = WT_THEME_DIR.'images/lsdnarrow.gif';
-$WT_IMAGES['lsuparrow'] = WT_THEME_DIR.'images/lsuparrow.gif';
+$WT_IMAGES['lsltarrow'] = WT_THEME_DIR.'images/lifespan-left.png';
+$WT_IMAGES['lsrtarrow'] = WT_THEME_DIR.'images/lifespan-right.png';
+$WT_IMAGES['lsdnarrow'] = WT_THEME_DIR.'images/lifespan-down.png';
+$WT_IMAGES['lsuparrow'] = WT_THEME_DIR.'images/lifespan-up.png';
 
 //-- Variables for the Fan chart
 $fanChart = array(

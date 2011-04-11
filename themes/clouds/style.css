@@ -15,7 +15,7 @@
 body {
 	color: #000066;
 	background-color: #c8e7ff;
-	background-image: url('images/background.jpg');
+	background-image: url('images/background.png');
 	background-attachment: fixed;
 	background-position: top left;
 	background-repeat: repeat-x;
@@ -95,7 +95,7 @@ a {
 	text-decoration: none;
 	}
 
-a.link:link, a.link:visited, a.link:active, a.link:hover, .menuitem a, .nameZoom {
+a:link, a:visited, a:active, a:hover, .menuitem a, .nameZoom {
 color:#003399;
 }
 
@@ -288,6 +288,23 @@ color: #003399;
 }
 
 /*	Start Standard Code					*/
+
+/* Rounded corners on boxes */
+.block,  .descriptionbox,
+.facts_label, .facts_label02, 
+.facts_label03, .facts_value,
+.lifespan_outer, .subbar,
+.list_label, .list_label_wrap, 
+.list_value, .list_value_wrap,
+.messagebox, .optionbox,
+.person_box, .person_boxF, .person_boxNN,
+.person0,  .person1,  .person2,  .person3,  .person4,  .person5,
+.topbottombar {
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+}
+
 #content {
 padding:10px;
 }
@@ -341,6 +358,7 @@ padding: 1px;
 div.blockcontent {
 border: solid #999 1px;
 margin-left:auto;
+*margin-top: -2px; /* IE7 fix */
 margin-right:2px;  /* changed from auto for right side match to header */
 margin-bottom:10px;
 font-size: 13px;
@@ -1472,7 +1490,7 @@ padding:2px 5px;
 }
 
 .ac_loading {
-background:#FFF   url(/images/indicator.gif) right center no-repeat;
+background:#fff url(../../../images/indicator.gif) right center no-repeat;
 }
 
 .ac_odd {
@@ -1773,7 +1791,7 @@ padding: 0 10px;
 	display:none;
 	position:absolute;
 	left:0px;
-	top: 1.0em;
+	top: 1.1em;
 	background-color:#EEE;
 	border:thin solid #AAA;
 	z-index:999;
@@ -1808,6 +1826,17 @@ html[dir='rtl'] .makeMenu li ul li {
 margin-left: 5px;
 }
 
+.makeMenu ul li a {
+    background-color: #fff;
+	padding: 0px 5px 0px 2px;
+    display: block;
+}
+
+.makeMenu ul li a:hover  {
+	background:#c8e7ff;
+	color: #000;
+}
+
 /*--- edit links ---*/
 
 .edit_link:after { /* used only on the user list */
@@ -1835,17 +1864,29 @@ td.descriptionbox  a {
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .editlink, html[dir='rtl'] editlink  {
+	background: url(images/edit_sm.png) no-repeat right center;
+	float: right;
+}
 
 .copylink  {
 	background: url(images/copy.png) no-repeat left center;
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .copylink, html[dir='rtl'] copylink  {
+	background: url(images/copy.png) no-repeat right center;
+	float: right;
+}
 
 .deletelink  {
 	background: url(images/delete.png) no-repeat left center;
 	width: 20px;
 	float: left;
+}
+html[dir='rtl'] .deletelink, html[dir='rtl'] deletelink  {
+	background: url(images/delete.png) no-repeat right center;
+	float: right;
 }
 
 .place {

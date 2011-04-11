@@ -33,7 +33,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.1.1');
+define('WT_VERSION',         '1.1.2');
 define('WT_VERSION_RELEASE', ''); // 'svn', 'beta', 'rc1', '', etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 define('WT_WEBTREES_URL',    'http://webtrees.net');
@@ -52,7 +52,7 @@ define('WT_DEBUG_SQL',  false);
 define('WT_ERROR_LEVEL', 2); // 0=none, 1=minimal, 2=full
 
 // Required version of database tables/columns/indexes/etc.
-define('WT_SCHEMA_VERSION', 9);
+define('WT_SCHEMA_VERSION', 10);
 
 // Regular expressions for validating user input, etc.
 define('WT_REGEX_XREF',     '[A-Za-z0-9:_-]+');
@@ -118,9 +118,7 @@ define ('WT_ROOT', realpath(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR);
 $start_time=microtime(true);
 $PRIVACY_CHECKS=0;
 
-ini_set('arg_separator.output', '&amp;');
-ini_set('error_reporting', E_ALL | E_STRICT);
-ini_set('display_errors', '1');
+// We want to know about all PHP errors
 error_reporting(E_ALL | E_STRICT);
 
 // Invoke the Zend Framework Autoloader, so we can use Zend_XXXXX and WT_XXXXX classes
@@ -229,6 +227,10 @@ try {
 	exit;
 }
 
+// The config.ini.php file must always be in a fixed location.
+// Other user files can be stored elsewhere...
+define('WT_DATA_DIR', realpath(get_site_setting('INDEX_DIRECTORY', 'data')).DIRECTORY_SEPARATOR);
+
 // If we have a preferred URL (e.g. https instead of http, or www.example.com instead of
 // www.isp.com/~example), then redirect to it.
 $SERVER_URL=get_site_setting('SERVER_URL');
@@ -310,7 +312,7 @@ $cfg=array(
 // Search engines don't send cookies, and so create a new session with every visit.
 // Make sure they always use the same one
 if ($SEARCH_SPIDER) {
-	Zend_Session::setId('search_engine_'.$_SERVER['REMOTE_ADDR']);
+	Zend_Session::setId('search-engine-'.str_replace('.', '-', $_SERVER['REMOTE_ADDR']));
 }
 
 Zend_Session::start($cfg);

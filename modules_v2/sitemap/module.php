@@ -28,8 +28,6 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-require_once WT_ROOT.'includes/functions/functions_export.php';
-
 class sitemap_WT_Module extends WT_Module implements WT_Module_Config{
 	// Extend WT_Module
 	public function getTitle() {
@@ -45,9 +43,12 @@ class sitemap_WT_Module extends WT_Module implements WT_Module_Config{
 	public function modAction($mod_action) {
 		switch($mod_action) {
 		case 'admin_index':
+			require_once WT_ROOT.'includes/functions/functions_export.php';
 			// TODO: these files should be methods in this class
 			require WT_ROOT.WT_MODULES_DIR.$this->getName().'/'.$mod_action.'.php';
 			break;
+		default:
+			header('HTTP/1.0 404 Not Found');
 		}
 	}
 

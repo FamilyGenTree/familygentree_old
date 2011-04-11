@@ -33,18 +33,21 @@ if (!defined('WT_WEBTREES')) {
 }
 
 //-- print color theme sub type change dropdown box
-function color_theme_dropdown($style=0) {
+function color_theme_dropdown() {
 	global $ALLOW_THEME_DROPDOWN, $COLOR_THEME_LIST;
 
 	if ($ALLOW_THEME_DROPDOWN && get_site_setting('ALLOW_USER_THEMES')) {
-		switch ($style) {
-		case 0:
-			return '<div class="color_form">'.WT_MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenuAsDropdown().'</div>';
-		case 1:
-			return '<div class="color_form">'.WT_MenuBar::getColorMenu($COLOR_THEME_LIST)->getMenu().'</div>';
+		$menu=new WT_Menu(WT_I18N::translate('Color Palette'));
+		$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
+		uasort($COLOR_THEME_LIST, 'utf8_strcasecmp');
+		foreach ($COLOR_THEME_LIST as $colorChoice=>$colorName) {
+			$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice)));
+			$menu->addSubMenu($submenu);
 		}
+		return '<div class="color_form">'.$menu->getMenuAsDropdown().'</div>';
+	} else {
+		return '&nbsp;';
 	}
-	return '&nbsp;';
 }
 
 /**
@@ -135,7 +138,7 @@ $WT_IMAGES['menu_repository'] = WT_THEME_DIR.'images/menu_repository.gif';
 $WT_IMAGES['menu_note'] = WT_THEME_DIR.'images/menu_note.gif';
 $WT_IMAGES['menu_source'] = WT_THEME_DIR.'images/menu_source.gif';
 $WT_IMAGES['mypage'] = WT_THEME_DIR.'images/mypage.gif';
-$WT_IMAGES['notes'] = WT_THEME_DIR.'images/notes.gif';
+$WT_IMAGES['note'] = WT_THEME_DIR.'images/notes.gif';
 $WT_IMAGES['patriarch'] = WT_THEME_DIR.'images/patriarch.gif';
 $WT_IMAGES['pedigree'] = WT_THEME_DIR.'images/pedigree.gif';
 $WT_IMAGES['place'] = WT_THEME_DIR.'images/place.gif';
@@ -177,7 +180,6 @@ $WT_IMAGES['button_media'] = WT_THEME_DIR.'images/buttons/media.gif';
 $WT_IMAGES['button_note'] = WT_THEME_DIR.'images/buttons/note.gif';
 $WT_IMAGES['button_note'] = WT_THEME_DIR.'images/buttons/note.gif';
 $WT_IMAGES['button_place'] = WT_THEME_DIR.'images/buttons/place.gif';
-$WT_IMAGES['button_refresh'] = WT_THEME_DIR.'images/buttons/refresh.gif';
 $WT_IMAGES['button_repository'] = WT_THEME_DIR.'images/buttons/repository.gif';
 $WT_IMAGES['button_source'] = WT_THEME_DIR.'images/buttons/source.gif';
 
@@ -200,9 +202,9 @@ $WT_IMAGES['add'] = WT_THEME_DIR.'images/add.gif';
 $WT_IMAGES['darrow'] = WT_THEME_DIR.'images/darrow.gif';
 $WT_IMAGES['darrow2'] = WT_THEME_DIR.'images/darrow2.gif';
 $WT_IMAGES['ddarrow'] = WT_THEME_DIR.'images/ddarrow.gif';
-$WT_IMAGES['default_image_F'] = WT_THEME_DIR.'images/silhouette_female.gif';
-$WT_IMAGES['default_image_M'] = WT_THEME_DIR.'images/silhouette_male.gif';
-$WT_IMAGES['default_image_U'] = WT_THEME_DIR.'images/silhouette_unknown.gif';
+$WT_IMAGES['default_image_F'] = WT_THEME_DIR.'images/silhouette_female.png';
+$WT_IMAGES['default_image_M'] = WT_THEME_DIR.'images/silhouette_male.png';
+$WT_IMAGES['default_image_U'] = WT_THEME_DIR.'images/silhouette_unknown.png';
 $WT_IMAGES['dline'] = WT_THEME_DIR.'images/dline.gif';
 $WT_IMAGES['dline2'] = WT_THEME_DIR.'images/dline2.gif';
 $WT_IMAGES['hline'] = WT_THEME_DIR.'images/hline.gif';
@@ -210,7 +212,6 @@ $WT_IMAGES['larrow'] = WT_THEME_DIR.'images/larrow.gif';
 $WT_IMAGES['larrow2'] = WT_THEME_DIR.'images/larrow2.gif';
 $WT_IMAGES['ldarrow'] = WT_THEME_DIR.'images/ldarrow.gif';
 $WT_IMAGES['minus'] = WT_THEME_DIR.'images/minus.gif';
-$WT_IMAGES['note'] = WT_THEME_DIR.'images/notes.gif';
 $WT_IMAGES['pin-in'] = WT_THEME_DIR.'images/pin-in.png';
 $WT_IMAGES['pin-out'] = WT_THEME_DIR.'images/pin-out.png';
 $WT_IMAGES['plus'] = WT_THEME_DIR.'images/plus.gif';
@@ -234,10 +235,10 @@ $WT_IMAGES['reminder'] = WT_THEME_DIR.'images/reminder.gif';
 $WT_IMAGES['children'] = WT_THEME_DIR.'images/children.gif';
 
 // - lifespan chart arrows
-$WT_IMAGES['lsltarrow'] = WT_THEME_DIR.'images/lsltarrow.gif';
-$WT_IMAGES['lsrtarrow'] = WT_THEME_DIR.'images/lsrtarrow.gif';
-$WT_IMAGES['lsdnarrow'] = WT_THEME_DIR.'images/lsdnarrow.gif';
-$WT_IMAGES['lsuparrow'] = WT_THEME_DIR.'images/lsuparrow.gif';
+$WT_IMAGES['lsltarrow'] = WT_THEME_DIR.'images/lifespan-left.png';
+$WT_IMAGES['lsrtarrow'] = WT_THEME_DIR.'images/lifespan-right.png';
+$WT_IMAGES['lsdnarrow'] = WT_THEME_DIR.'images/lifespan-down.png';
+$WT_IMAGES['lsuparrow'] = WT_THEME_DIR.'images/lifespan-up.png';
 
 //-- Variables for the Fan chart
 $fanChart = array(

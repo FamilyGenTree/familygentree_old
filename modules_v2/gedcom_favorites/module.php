@@ -126,9 +126,7 @@ class gedcom_favorites_WT_Module extends WT_Module implements WT_Module_Block {
 		if (WT_USER_IS_ADMIN && $ENABLE_AUTOCOMPLETE) {
 			$content = '<script type="text/javascript" src="js/jquery/jquery.min.js"></script>
 			<script type="text/javascript" src="js/jquery/jquery.autocomplete.js"></script>
-			<script type="text/javascript" src="js/jquery/jquery.ajaxQueue.js"></script>
 			<script type="text/javascript">
-			jQuery.noConflict(); // @see http://docs.jquery.com/Using_jQuery_with_Other_Libraries/
 			jQuery(document).ready(function($) {
 				$("input[name^=gid]").autocomplete("autocomplete.php", {
 					extraParams: {field:"IFSRO"},
@@ -238,7 +236,7 @@ class gedcom_favorites_WT_Module extends WT_Module implements WT_Module_Block {
 			$content .= print_findmedia_link("gid{$uniqueID}",'1','',true);
 
 			$content .= "<br />".WT_I18N::translate('OR<br />Enter a URL and a title');
-			$content .= "<table><tr><td>".translate_fact('URL')."</td><td><input type=\"text\" name=\"url\" size=\"40\" value=\"\" /></td></tr>";
+			$content .= "<table><tr><td>".WT_Gedcom_Tag::getLabel('URL')."</td><td><input type=\"text\" name=\"url\" size=\"40\" value=\"\" /></td></tr>";
 			$content .= "<tr><td>".WT_I18N::translate('Title:')."</td><td><input type=\"text\" name=\"favtitle\" size=\"40\" value=\"\" /></td></tr></table>";
 			if ($block) $content .= "</td></tr><tr><td><br />";
 			else $content .= "</td><td>";

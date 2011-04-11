@@ -29,6 +29,18 @@ padding:0px;
 background:#971702;
 color: #ffffff;
 }
+
+/*	Define Link Color					*/
+
+a {
+color:#333333;
+text-decoration: none;
+}
+
+a:link, a:visited, a:active, .menuitem a, .nameZoom {
+color:#333333;
+}
+
 /*	Define Tbl hdrs and Light Text Colors	*/
 
 .descriptionbox,
@@ -73,25 +85,10 @@ color: #311900;
 background:#f6edd5;
 }
 
-/*	Define Link Color					*/
-
-a {
-color:#333333;
-text-decoration: none;
-}
-
-a.link:link, a.link:visited, a.link:active, a.link:hover, .menuitem a, 
-.nameZoom {
-color:#333333;
-}
-
 a:hover { 
 color: red;
 text-decoration: none;
 }
-
-a.icon_small_theme:link, a.icon_large_gedcom:link, a.icon_language:link, li a.link  {color: #ffffff !important;}
-a.icon_small_theme:hover, a.icon_large_gedcom:hover, a.icon_language:hover, li a.link:hover  {color: #ff0000 !important;}
 
 /*	Define Alert Color					*/
 
@@ -285,6 +282,23 @@ color: #ffffff;
 }
 
 /*	Start Standard Code					*/
+
+/* Rounded corners on boxes */
+.block,  .descriptionbox,
+.facts_label, .facts_label02, 
+.facts_label03, .facts_value,
+.lifespan_outer, .subbar,
+.list_label, .list_label_wrap, 
+.list_value, .list_value_wrap,
+.messagebox, .optionbox,
+.person_box, .person_boxF, .person_boxNN,
+.person0,  .person1,  .person2,  .person3,  .person4,  .person5,
+.topbottombar {
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+}
+
 #content {
 padding:10px;
 }
@@ -338,6 +352,7 @@ font: normal 10px tahoma, arial, helvetica, sans-serif;
 div.blockcontent {
 	border: solid #999 1px;
 	margin-left:auto;
+	*margin-top: -2px; /* IE7 fix */
 	margin-right:2px;  /* changed from auto for right side match to header */
 	margin-bottom:10px;
 	font-size: 13px;
@@ -1081,7 +1096,7 @@ color:#000;
 }
 
 .title {
-font-size: 30px;
+font-size: 24px;
 vertical-align:bottom;
 }
 
@@ -1760,7 +1775,7 @@ padding: 0 10px;
 	display:none;
 	position:absolute;
 	left:0px;
-	top: 1.0em;
+	top: 1.1em;
 	background-color:#EEE;
 	border:thin solid #AAA;
 	z-index:999;
@@ -1776,6 +1791,10 @@ html[dir='rtl'] .makeMenu li ul {
 	text-align:left;
 }
 
+.makeMenu li ul li a {
+	color: #333;
+}
+
 html[dir='rtl'] .makeMenu li ul li {
 	text-align:right;
 }
@@ -1789,6 +1808,20 @@ html[dir='rtl'] .makeMenu li ul li {
 
 .makeMenu li:hover > ul {
 	display:block;
+}
+
+.makeMenu li a {color: #ffffff;}
+.makeMenu li a:hover {color: #f5003d;}
+
+.makeMenu ul li a {
+    background-color: #fff;
+	padding: 0px 5px 0px 2px;
+    display: block;
+}
+
+.makeMenu ul li a:hover  {
+	background: #f6edd5;
+	color: #000;
 }
 
 li a.link {
@@ -1814,6 +1847,9 @@ td.descriptionbox  a {
 	clear: left;
 	padding-top: 15px;
 }
+html[dir='rtl'] .editfacts {
+	clear:right;
+}
 
 .editfacts  a:hover { 
 	background-color: transparent;
@@ -1828,11 +1864,21 @@ td.descriptionbox  a {
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .editlink, html[dir='rtl'] editlink  {
+	background: url(../images/edit_sm.png) no-repeat right center;
+	width: 20px;
+	float: right;
+}
 
 .copylink  {
 	background: url(../images/copy.png) no-repeat left center;
 	width: 20px;
 	float: left;
+}
+html[dir='rtl'] .copylink, html[dir='rtl'] editlink  {
+	background: url(../images/copy.png) no-repeat right center;
+	width: 20px;
+	float: right;
 }
 
 .deletelink  {
@@ -1840,6 +1886,12 @@ td.descriptionbox  a {
 	width: 20px;
 	float: left;
 }
+html[dir='rtl'] .deletelink, html[dir='rtl'] editlink  {
+	background: url(../images/delete.png) no-repeat right center;
+	width: 20px;
+	float: right;
+}
+
 .place {
 	padding-top: 5px;
 }

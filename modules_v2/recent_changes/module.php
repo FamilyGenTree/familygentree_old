@@ -45,6 +45,8 @@ class recent_changes_WT_Module extends WT_Module implements WT_Module_Block {
 	public function getBlock($block_id, $template=true, $cfg=null) {
 		global $ctype, $WT_IMAGES;
 
+		require_once WT_ROOT.'includes/functions/functions_print_lists.php';
+
 		$days = get_block_setting($block_id, 'days', 7);
 		$infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
 		$show_parents = get_block_setting($block_id, 'show_parents', false);
@@ -146,7 +148,7 @@ class recent_changes_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Presentation style'); //, help_link('style');
+		echo WT_I18N::translate('Presentation style');
 		echo '</td><td class="optionbox">';
 		echo select_edit_control('infoStyle', array('list' => WT_I18N::translate('list'), 'table' => WT_I18N::translate('table')), null, $infoStyle, '');
 		echo '</td></tr>';

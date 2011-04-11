@@ -28,12 +28,6 @@
  * @subpackage Themes
  * @version $Id$
  */
-
-
-.something {
-	/*empty style to make sure that the BODY style is not ignored */
-}
-
 body {
 	color: black;
 	background-color: white;
@@ -58,6 +52,149 @@ a:hover	{
 	color: black;
 	text-decoration: underline;
 }
+
+/* -----Layout for top header ----- */
+
+.title {display: block; float: left; width: 40%;}
+.hlogin {display: block; float: left; width: 13%; padding-top: 5px; padding-left: 40px;}
+.htheme {display: block; float: left; width: 10%; 	white-space: nowrap; }
+.htheme option { text-align:left; }
+.hsearch, .favorites_form {display: block; float: right;}
+.favorites_form {
+	position:absolute; 
+	right:4px;
+	top:1.4em;
+	z-index:2000;
+	*top:1.7em; /* For IE7 */
+}
+html[dir='rtl'] .title, html[dir='rtl'] .hlogin, html[dir='rtl'] .htheme {float: right; padding-left: 0px;}
+html[dir='rtl'] .hsearch {float: left;}
+html[dir='rtl'] .favorites_form {
+	position:absolute; 
+	right: auto;
+	left:4px;
+	top:1.4em;
+	z-index:2000;
+	*top:1.7em; /* For IE7 */
+}
+
+/* Layout for header menu */
+
+#topMenu {  /* set up container for menu */
+	clear: both;
+	float: left;
+	width: 100%;
+	margin:0;
+	padding:0;
+	margin-top: 18px;
+	z-index:2000;
+	position: relative;
+}
+
+/* Set up Top Menu */
+
+#topMenu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: right;
+	position: relative;
+	right: 50%;
+}
+
+#topMenu ul li {
+	margin:0;
+	padding:0;
+	width: auto;
+	padding-left: 5px;
+	padding-right: 5px;
+	border: solid #999 1px;
+	float:left;
+	position:relative;
+	left: 50%;
+}
+
+#topMenu ul li a {
+	display: block;
+	font-size: 14px; /* set font size for top menu */
+	text-align: center;
+	padding: 5px 5px 5px 5px;
+	background-color: #fff;
+	color: #555;
+	text-decoration: none; 
+}
+
+/* Subnavigation section */
+#topMenu ul ul {
+	display:none; /* Sub menus are hiden by default */
+	position:absolute;
+	top: 27px;
+	left:0;
+	right:auto; /*resets the right:50% on the parent ul */
+	width: auto; 
+	border: 1px solid #AAA;
+	white-space: nowrap;
+	background: #eeeeee;
+	color: #666;
+}
+
+/* sub-sub-menus */
+#topMenu ul ul ul {
+	z-index:2100;
+	top:0;
+	left:100px;
+}
+
+#topMenu ul ul li {
+	border: 0px;
+	left:auto;  /*resets the left:50% on the parent li */
+	margin:0; /* Reset the 1px margin from the top menu */
+	padding-left: 0px;
+	padding-right: 0px;
+	clear:left;
+	float:left;
+	width:100%;
+}
+
+#topMenu ul ul li a {
+	font-size: 12px; /* set font size for submenu */
+	padding: 5px 5px 5px 5px;
+	text-align: left;
+ }
+ 
+.separator {display:none; }
+
+/* Set up hover layout and style */
+
+/* header hover */
+#topMenu ul li:hover a {
+	text-decoration: underline;
+	color: black;
+}
+
+#topMenu ul li:hover > ul {
+	display: block;
+	text-align: left;
+	position: absolute;
+	margin: 0;
+	padding: 0; 
+}
+
+#topMenu ul li:hover li {
+	float: none; }
+	
+#topMenu ul li:hover li a {
+	background-color: #eeeeee;
+	border-bottom: 1px solid #fff;
+	text-decoration: none;
+	color: #000; }
+	
+#topMenu ul li li a:hover {
+	background-color: #fff; 
+	width: auto;
+	}
+
+/* --- end headers --- */
 
 h2 {
 	color: black;
@@ -133,7 +270,8 @@ table.center{
 
 .list_label, .list_label_wrap {
 	color: black;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
+	border: 1px solid black;
 	font: 12px tahoma, arial, helvetica, sans-serif;
 	text-align: center;
 }
@@ -164,7 +302,8 @@ table.center{
 
 .facts_label {
 	color: black;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
+	border: 1px solid black;
 	font: 12px tahoma, arial, helvetica, sans-serif;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
@@ -173,7 +312,8 @@ table.center{
 
 .facts_label02, .facts_label03 {
 	color: black;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
+	border: 1px solid black;
 	font: bold 12px tahoma, arial, helvetica, sans-serif;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
@@ -198,7 +338,7 @@ table.center{
 
 .facts_labelred, .facts_labelblue {
 	color: #333333;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
 	font: 12px tahoma, arial, helvetica, sans-serif;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
@@ -226,14 +366,14 @@ table.center{
 
 .tab_cell_active {
 	background-color: white;
-	border-left: outset #aaaaaa 2px;
-	border-top: outset #aaaaaa 2px;
-	border-right: outset #aaaaaa 2px;
+	border-left: outset #eeeeee 2px;
+	border-top: outset #eeeeee 2px;
+	border-right: outset #eeeeee 2px;
 	text-align: center;
 }
 
 .tab_cell_inactive {
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
 	border-left: solid black 2px;
 	border-top: solid black 2px;
 	border-right: outset black 2px;
@@ -443,21 +583,10 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .sublinks_cell {
 	font-size: 12px;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
 }
 
 .sublinks_table .icon {
-	vertical-align: middle;
-	width: 25px;
-	height: 25px;
-}
-
-.menuitem .icon {
-	width: 50px;
-	height: 50px;
-}
-
-.submenu .icon {
 	vertical-align: middle;
 	width: 25px;
 	height: 25px;
@@ -483,7 +612,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 }
 
 .selected-option {
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
 	border: solid black 1px;
 }
 
@@ -529,64 +658,6 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 .help {
 	font-weight: bold;
 	cursor: help;
-}
-
-.menuitem {
-	color: #555555;
-	text-decoration: none;
-	font: 14px tahoma, arial, helvetica, sans-serif;
-	text-align: center;
-	padding: 1px;
-	border: solid black 1px;
-}
-
-.menuitem_hover	{
-	color: black;
-	text-decoration: underline;
-	font: 14px tahoma, arial, helvetica, sans-serif;
-	text-align: center;
-	padding: 1px;
-	border: solid black 1px;
-}
-
-.submenu {
-	visibility: hidden;
-	position: absolute;
-	z-index: 100;
-	color: black;
-	text-decoration: none;
-	font: 11px tahoma, arial, helvetica, sans-serif;
-	text-align: center;
-	background-color: #eeeeee;
-	border: solid black 1px;
-	white-space: nowrap;
-}
-
-.submenuitem {
-	color: #555555;
-	text-decoration: none;
-	font: 11px tahoma, arial, helvetica, sans-serif;
-	background-color: #eeeeee;
-	white-space: nowrap;
-	padding: 5px 10px 5px 10px;
-	text-align: left;
-}
-
-html[dir='rtl'] .submenuitem { text-align: right; }
-
-.submenuitem_hover	{
-	color: black;
-	text-decoration: underline;
-	font: 11px tahoma, arial, helvetica, sans-serif;
-	background-color: white;
-	white-space: nowrap;
-	text-align: left;
-	padding: 5px 10px 5px 10px;
-}
-
-.submenuitem a, .submenuitem_hover a {
-	display: inline-block;
-	vertical-align: middle;
 }
 
 .news_box {
@@ -810,7 +881,7 @@ left:auto;
 }
 
 .person0 {
-	background-color: #a5a5a5;
+	background-color: #eeeeee;
 	border: outset black 1px;
 	vertical-align: top;
 }
@@ -870,7 +941,8 @@ left:auto;
 /* Style for the top and bottom bar */
 .topbottombar {
 	color: black;
-	background-color: #aaaaaa;
+	background-color: #eeeeee;
+	border: 1px solid black;
 	font: bold 12px tahoma, arial, helvetica, sans-serif;
 	padding: 4px;
 	text-align: center;
@@ -1105,41 +1177,37 @@ a.showit:hover span {
 	z-index: 100;
 }
 
-	#map_type
-	{
-		margin: 0;
-		padding: 0;
-		font-family: Arial;
-		font-size: 10px;
-		list-style: none;
-	}
-	#map_type li
-	{
-		display: block;
-		width: 70px;
-		text-align: center;
-		padding: 2px;
-		border: 1px solid black;
-		cursor: pointer;
-		float: left;
-		margin-left: 2px;
-	}
-	#map_type li.non_active
-	{
-		background: white;
-		color: black;
-		font-weight: normal;
-	}
-	#map_type li.active
-	{
-		background: gray;
-		color: white;
-		font-weight: bold;
-	}
-	#map_type li:hover
-	{
-		background: #ddd;
-	}
+#map_type {
+	margin: 0;
+	padding: 0;
+	font-family: Arial;
+	font-size: 10px;
+	list-style: none;
+}
+#map_type li {
+	display: block;
+	width: 70px;
+	text-align: center;
+	padding: 2px;
+	border: 1px solid black;
+	cursor: pointer;
+	float: left;
+	margin-left: 2px;
+}
+#map_type li.non_active {
+	background: white;
+	color: black;
+	font-weight: normal;
+}
+
+#map_type li.active {
+	background: gray;
+	color: white;
+	font-weight: bold;
+}
+#map_type li:hover {
+	background: #ddd;
+}
 
 .tag_cloud {
 	font-family: tahoma, arial, helvetica, sans-serif;
@@ -1237,16 +1305,6 @@ ul.clist {
 	height: 3px;
 	width: 8em;
 }
-
-/*
-.menu_separator {
-	height: 3px;
-	display: block;
-	background-image: url(images/hline.gif);
-	background-repeat: repeat-x;
-	background-position: center middle;
-}
-*/
 
 .statistics_chart {
 	text-align: center;
@@ -1496,9 +1554,12 @@ div.faq_body {
 td.descriptionbox  a { /* this keeps the tag color the same when it is a link as when not */
 	float: left;
 }
+html[dir='rtl'] td.descriptionbox  a {
+	float: right;
+}
 
 .editfacts { /* a container for the following three links */
-	clear: left;
+	clear: both;
 }
 
 .link_text {
@@ -1513,13 +1574,11 @@ td.descriptionbox  a { /* this keeps the tag color the same when it is a link as
 	float:left;
 	padding: 5px 5px 0 0;
 }
+html[dir='rtl'] .editlink, html[dir='rtl'] .copylink , html[dir='rtl'] .deletelink {
+	float:right;
+	padding: 5px 0 0 5px;
+}
 
 .logo {
 	text-align: center;
 }
-#topMenu {
-margin-left: auto;
-margin-right: auto;
-width: 75%;
-border-spacing: 0px;
-} 
