@@ -115,10 +115,10 @@ if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 	<!-- // search terms -->
 	<tr>
 		<td class="list_label" style="padding: 5px;">
-			<label for="squery"><?php echo WT_I18N::translate('Enter search terms'); ?></label>
+			<label for="firstfocus"><?php echo WT_I18N::translate('Enter search terms'); ?></label>
 		</td>
 		<td class="list_value" style="padding: 5px;">
-			<input tabindex="1" id="firstfocus" type="text" id="squery" name="query" value="<?php if (isset($controller->myquery)) echo $controller->myquery; ?>" size="40" />
+			<input tabindex="1" id="firstfocus" type="text" name="query" value="<?php if (isset($controller->myquery)) echo $controller->myquery; ?>" size="40" />
 			<?php print_specialchar_link('firstfocus', false); ?>
 		</td>
 		<td class="list_value" style="vertical-align: middle; text-align: center; padding: 5px;"  rowspan="4">
@@ -133,7 +133,7 @@ if ($ENABLE_AUTOCOMPLETE) require WT_ROOT.'js/autocomplete.js.htm';
 		<td class="list_value" style="padding: 5px;">
 			<input type="checkbox"<?php
 	if (isset ($controller->srindi) || !$controller->isPostBack)
-		echo ' checked="checked" '; ?>value="yes" id="srindi name="srindi" />
+		echo ' checked="checked" '; ?>value="yes" id="srindi" name="srindi" />
 				<label for="srindi"><?php echo WT_I18N::translate('Individuals'); ?></label><br />
 			<input type="checkbox"<?php
 	if (isset ($controller->srfams))

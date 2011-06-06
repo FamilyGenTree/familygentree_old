@@ -917,8 +917,17 @@ class WT_Gedcom_Tag {
 				return self::getLabel($tag, $record);
 			}
 			// Still no translation? Highlight this as an error
-			return '<span class="error" title="'.WT_I18N::translate('Unrecognized GEDCOM Code').'">'.$tag.'</span>';
+			return '<span class="error" title="'.WT_I18N::translate('Unrecognized GEDCOM Code').'">'.htmlspecialchars($tag).'</span>';
 		}
+	}
+
+	// Translate a label/value pair, such as "Occupation: Farmer"
+	public static function getLabelValue($tag, $value, $record=null) {
+		return
+			'<div class="fact_'.preg_replace('/[^_A-Za-z0-9]/', '', $tag).'">'.
+			/* I18N: a label/value pair, such as "Occupation: Farmer".  Some languages may need to change the punctuation. */
+			WT_I18N::translate('<span class="label">%1$s:</span> <span class="field">%2$s</span>', self::getLabel($tag, $record), $value).
+			'</div>';
 	}
 
 	// Get a list of facts, for use in the "fact picker" edit control
@@ -943,6 +952,12 @@ class WT_Gedcom_Tag {
 		uasort($facts, 'utf8_strcasecmp');
 		return $facts;
 	}
+	
+	// Get a list of reference facts that will be displayed in the "Extra information" sidebar module, and at the same time excluded from the personal_facts module
+	public static function getReferenceFacts() {
+		return array('CHAN', 'IDNO', 'RFN', 'AFN', 'REFN', 'RIN', '_UID');
+	}
+
 
 	//////////////////////////////////////////////////////////////////////////////
 	// Definitions for Object, File, Format, Types

@@ -29,6 +29,11 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
+if (!WT_USER_IS_ADMIN) {
+	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'admin.php');
+	exit;
+}
+
 $action   =safe_POST     ('action'                                              );
 $gedcom_id=safe_POST     ('gedcom_id', array_keys(get_all_gedcoms()), WT_GED_ID );
 $openinnew=safe_POST_bool('openinnew'                                           );
@@ -78,8 +83,8 @@ print_header(WT_I18N::translate('Place Check').' - '.WT_GEDCOM);
 $target=$openinnew ? 'target="_blank"' : '';
 
 echo '<table id="gm_config"><tr>',
-	'<th><a ', (safe_GET('mod_action')=="admin_editconfig" ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_editconfig">', WT_I18N::translate('Google Maps configuration'), '</a>', help_link('GOOGLEMAP_CONFIG','googlemap'), '</th>',
-	'<th><a ', (safe_GET('mod_action')=="admin_places" ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_places">', WT_I18N::translate('Edit geographic place locations'), '</a>', help_link('PLE_EDIT','googlemap'), '</th>',
+	'<th><a ', (safe_GET('mod_action')=="admin_editconfig" ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_editconfig">', WT_I18N::translate('Google Maps configuration'), '</a>', '</th>',
+	'<th><a ', (safe_GET('mod_action')=="admin_places" ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_places">', WT_I18N::translate('Edit geographic place locations'), '</a>', '</th>',
 	'<th><a ', (safe_GET('mod_action')=="admin_placecheck" ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_placecheck">', WT_I18N::translate('Place Check'), '</a>', help_link('GOOGLEMAP_PLACECHECK','googlemap'), '</th>',
 '</tr></table>';
 
@@ -361,7 +366,7 @@ case 'go':
 	}
 
 	// echo final row of table
-	echo "<tr><td colspan=\"2\" class=\"accepted\">", WT_I18N::translate('Total unique places'), ": ", $countrows, "</td></tr></table></div>";
+	echo "<tr><td colspan=\"2\" class=\"accepted\">", /* I18N: A count of places */ WT_I18N::translate('Total places: %s', WT_I18N::number($countrows)), "</td></tr></table></div>";
 	break;
 default:
 	// Do not run until user selects a gedcom/place/etc.

@@ -241,7 +241,7 @@ document.onmousemove = MM;
 document.onmouseup = MU;
 //-->
 </script>
-<h2><?php echo WT_I18N::translate('Timeline chart'), help_link('timeline_chart'); ?></h2>
+<h2><?php echo WT_I18N::translate('Timeline'), help_link('timeline_chart'); ?></h2>
 <form name="people" action="timeline.php">
 <?php
 $controller->checkPrivacy();
@@ -304,8 +304,8 @@ $controller->checkPrivacy();
 		if (!isset($col)) $col = 0;
 		?>
 		<td class="person<?php echo $col; ?>" style="padding: 5px" valign="top">
-			<?php echo WT_I18N::translate('Add another person to the chart'), '<br/>', WT_I18N::translate('Person ID'); ?>&nbsp;
-			<input class="pedigree_form" type="text" size="5" id="newpid" name="newpid" />&nbsp;
+			<?php echo WT_I18N::translate('Add another person to the chart'), '<br/>'; ?>
+			<input class="pedigree_form" type="text" size="5" id="newpid" name="newpid" />
 			<?php print_findindi_link("newpid",""); ?>
 			<br />
 			<br />
@@ -323,7 +323,7 @@ $controller->checkPrivacy();
 	<?php } ?>
 	</tr>
 </table>
-<br /><a href="lifespan.php?ged=<?php echo WT_GEDURL; ?>"><b><?php echo WT_I18N::translate('Show Lifespan chart'); ?></b></a>
+<br /><a href="lifespan.php?ged=<?php echo WT_GEDURL; ?>"><b><?php echo WT_I18N::translate('Show lifespans'); ?></b></a>
 </form>
 <?php
 if (count($controller->people)>0) {

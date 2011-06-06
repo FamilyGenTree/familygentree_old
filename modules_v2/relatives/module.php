@@ -68,7 +68,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 	* @param String family type
 	* @return html table rows
 	*/
-	function printParentsRows(&$family, &$people, $type) {
+	function printParentsRows($family, $people, $type) {
 		global $personcount, $WT_IMAGES, $SHOW_PEDIGREE_PLACES;
 
 		$elderdate = "";
@@ -110,7 +110,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 			}
 		}
 		//-- missing husband
-		if ($type=="spouse" && $this->controller->indi->equals($people["wife"]) && !isset($people["husb"]) && !isset($people["newhusb"])) {
+		if ($type=="spouse" && !isset($people["husb"]) && !isset($people["newhusb"])) {
 			if ($this->controller->indi->canEdit()) {
 				?>
 				<tr>
@@ -156,7 +156,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 			}
 		}
 		//-- missing wife
-		if ($type=="spouse" && $this->controller->indi->equals($people["husb"]) && !isset($people["wife"]) && !isset($people["newwife"])) {
+		if ($type=="spouse" && !isset($people["wife"]) && !isset($people["newwife"])) {
 			if ($this->controller->indi->canEdit()) {
 				?>
 				<tr>
@@ -260,7 +260,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 	* @param String family type
 	* @return html table rows
 	*/
-	function printChildrenRows(&$family, &$people, $type) {
+	function printChildrenRows($family, $people, $type) {
 		global $personcount, $WT_IMAGES;
 
 		$elderdate = $family->getMarriageDate();

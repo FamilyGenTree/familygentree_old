@@ -131,7 +131,7 @@ class upcoming_events_WT_Module extends WT_Module implements WT_Module_Block {
 		echo WT_I18N::translate('Number of days to show');
 		echo '</td><td class="optionbox">';
 		echo '<input type="text" name="days" size="2" value="', $days, '" />';
-		echo ' <i>', WT_I18N::plural('maximum %d day', 'maximum %d days', 30, 30) ,'</i>';
+		echo ' <em>', WT_I18N::plural('maximum %d day', 'maximum %d days', 30, 30) ,'</em>';
 		echo '</td></tr>';
 
 		$filter=get_block_setting($block_id, 'filter',     true);
@@ -157,7 +157,7 @@ class upcoming_events_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$sortStyle=get_block_setting($block_id, 'sortStyle',  'alpha');
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Sort Style');
+		echo WT_I18N::translate('Sort style');
 		echo '</td><td class="optionbox">';
 		echo select_edit_control('sortStyle', array('alpha'=>WT_I18N::translate('alphabetically'), 'anniv'=>WT_I18N::translate('By Anniversary')), null, $sortStyle, '');
 		echo '</td></tr>';

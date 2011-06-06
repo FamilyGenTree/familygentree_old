@@ -101,8 +101,10 @@ class WT_Controller_Ancestry extends WT_Controller_Base {
 
 		if ($person) {
 			$pid=$person->getXref();
+			$label=WT_I18N::translate('Ancestors of %s', $person->getFullName());
 		} else {
 			$pid='';
+			$label='';
 		}
 		// child
 		echo "<li>";
@@ -115,12 +117,9 @@ class WT_Controller_Ancestry extends WT_Controller_Base {
 		print_pedigree_person($person, 1);
 		echo "</td>";
 		echo "<td>";
-		if ($TEXT_DIRECTION=="ltr") {
-			$label = WT_I18N::translate('Ancestry chart').": ".$pid;
-		} else {
-			$label = $pid." :".WT_I18N::translate('Ancestry chart');
+		if ($sosa>1) {
+			print_url_arrow($pid, "?rootid={$pid}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;show_full={$this->show_full}&amp;box_width={$box_width}&amp;chart_style={$this->chart_style}", $label, 3);
 		}
-		if ($sosa>1) print_url_arrow($pid, "?rootid={$pid}&amp;PEDIGREE_GENERATIONS={$OLD_PGENS}&amp;show_full={$this->show_full}&amp;box_width={$box_width}&amp;chart_style={$this->chart_style}", $label, 3);
 		echo "</td>";
 		echo "<td class=\"details1\">&nbsp;<span dir=\"ltr\" class=\"person_box". (($sosa==1)?"NN":(($sosa%2)?"F":"")) . "\">&nbsp;$sosa&nbsp;</span>&nbsp;";
 		echo "</td><td class=\"details1\">";
