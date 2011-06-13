@@ -2,7 +2,7 @@
 // System for generating menus.
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2010 webtrees development team.
+// Copyright (C) 2011 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2010 PGV Development Team. All rights reserved.
@@ -23,7 +23,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 //
-// @version $Id$
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -442,7 +442,7 @@ class WT_MenuBar {
 			'placelist.php' =>WT_I18N::translate('Place hierarchy'),
 		);
 		if ($row->obje) {
-			$menulist['medialist.php']=WT_I18N::translate('Multimedia');
+			$menulist['medialist.php']=WT_I18N::translate('Media objects');
 		}
 		if ($row->repo) {
 			$menulist['repolist.php']=WT_I18N::translate('Repositories');
@@ -674,7 +674,6 @@ class WT_MenuBar {
 			$menu->addSubmenu($submenu);
 		}
 		//-- add wiki links
-		$menu->addSeparator();
 		$submenu = new WT_Menu(WT_I18N::translate('Wiki Main Page'), WT_WEBTREES_WIKI.'" target="_blank');
 		$submenu->addIcon('wiki');
 		$submenu->addId('menu-help-wiki');
@@ -682,7 +681,6 @@ class WT_MenuBar {
 		$menu->addSubmenu($submenu);
 
 		//-- add contact links to help menu
-		$menu->addSeparator();
 		$menuitems = contact_menus();
 		foreach ($menuitems as $menu_id=>$menuitem) {
 			$submenu = new WT_Menu($menuitem['label'], $menuitem['link']);
@@ -693,7 +691,6 @@ class WT_MenuBar {
 			$menu->addSubmenu($submenu);
 		}
 		//-- add show/hide context_help
-		$menu->addSeparator();
 		if ($_SESSION['show_context_help']) {
 			$submenu = new WT_Menu(WT_I18N::translate('Hide contextual help'), get_query_url(array('show_context_help'=>'no')));
 			$submenu->addId('menu-help-hide');
@@ -708,26 +705,20 @@ class WT_MenuBar {
 	}
 
 	public static function getThemeMenu() {
-		global $SEARCH_SPIDER, $ALLOW_THEME_DROPDOWN;
-
-		if ($ALLOW_THEME_DROPDOWN && !$SEARCH_SPIDER && get_site_setting('ALLOW_USER_THEMES')) {
-			$menu=new WT_Menu(WT_I18N::translate('Theme'));
-			$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
-			$menu->addId('menu-theme');
-			foreach (get_theme_names() as $themename=>$themedir) {
-				$submenu=new WT_Menu($themename, get_query_url(array('theme'=>$themedir)));
-				if ($themedir==WT_THEME_DIR) {
-					$submenu->addClass('favsubmenuitem_selected', 'favsubmenuitem_hover');
-				} else {
-					$submenu->addClass('favsubmenuitem', 'favsubmenuitem_hover');
-				}
-				$submenu->addId('menu-theme-'.$themedir);
-				$menu->addSubMenu($submenu);
+		$menu=new WT_Menu(WT_I18N::translate('Theme'));
+		$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
+		$menu->addId('menu-theme');
+		foreach (get_theme_names() as $themename=>$themedir) {
+			$submenu=new WT_Menu($themename, get_query_url(array('theme'=>$themedir)));
+			if ($themedir==WT_THEME_DIR) {
+				$submenu->addClass('favsubmenuitem_selected', 'favsubmenuitem_hover');
+			} else {
+				$submenu->addClass('favsubmenuitem', 'favsubmenuitem_hover');
 			}
-			return $menu;
-		} else {
-			return null;
+			$submenu->addId('menu-theme-'.$themedir);
+			$menu->addSubMenu($submenu);
 		}
+		return $menu;
 	}
 
 	public static function getLanguageMenu() {
@@ -830,9 +821,6 @@ class WT_MenuBar {
 						break;
 					}
 					$GEDCOM=WT_GEDCOM;
-				}
-				if ($gedfavs) {
-					$menu->addSeparator();
 				}
 			}
 		}

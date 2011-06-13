@@ -1,31 +1,27 @@
 <?php
-/**
- * Colors theme
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2010  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package webtrees
- * @subpackage Themes
- * @version $Id$
- */
+// Colors theme
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2010  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -34,20 +30,16 @@ if (!defined('WT_WEBTREES')) {
 
 //-- print color theme sub type change dropdown box
 function color_theme_dropdown() {
-	global $ALLOW_THEME_DROPDOWN, $COLOR_THEME_LIST;
-
-	if ($ALLOW_THEME_DROPDOWN && get_site_setting('ALLOW_USER_THEMES')) {
-		$menu=new WT_Menu(WT_I18N::translate('Color Palette'));
-		$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
-		uasort($COLOR_THEME_LIST, 'utf8_strcasecmp');
-		foreach ($COLOR_THEME_LIST as $colorChoice=>$colorName) {
-			$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice)));
-			$menu->addSubMenu($submenu);
-		}
-		return '<div class="color_form">'.$menu->getMenuAsDropdown().'</div>';
-	} else {
-		return '&nbsp;';
+	global $COLOR_THEME_LIST;
+	
+	$menu=new WT_Menu(WT_I18N::translate('Color Palette'));
+	$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
+	uasort($COLOR_THEME_LIST, 'utf8_strcasecmp');
+	foreach ($COLOR_THEME_LIST as $colorChoice=>$colorName) {
+		$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice)));
+		$menu->addSubMenu($submenu);
 	}
+	return '<div class="color_form">'.$menu->getMenuAsDropdown().'</div>';
 }
 
 /**
@@ -195,7 +187,6 @@ $WT_IMAGES=array(
 	'tree'=>WT_THEME_DIR.'images/gedcom.gif',
 	'uarrow'=>WT_THEME_DIR.'images/uarrow.gif',
 	'uarrow2'=>WT_THEME_DIR.'images/uarrow2.gif',
-	'uarrow3'=>WT_THEME_DIR.'images/uarrow3.gif',
 	'udarrow'=>WT_THEME_DIR.'images/udarrow.gif',
 	'vline'=>WT_THEME_DIR.'images/vline.gif',
 	'warning'=>WT_THEME_DIR.'images/warning.gif',
@@ -279,6 +270,3 @@ $WT_STATS_MAP_Y = "220";
 $WT_STATS_CHART_COLOR1 = "ffffff";
 $WT_STATS_CHART_COLOR2 = "95b8e0";
 $WT_STATS_CHART_COLOR3 = "c8e7ff";
-
-// Arrow symbol or icon for up-page links on Help pages
-$UpArrow = "<img src=\"".WT_THEME_DIR."images/uarrow3.gif\" class=\"icon\" border=\"0\" alt=\"^\" />";

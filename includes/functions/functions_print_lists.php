@@ -31,8 +31,6 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-define('WT_FUNCTIONS_PRINT_LISTS_PHP', '');
-
 require_once WT_ROOT.'includes/functions/functions_places.php';
 
 /**
@@ -1026,7 +1024,7 @@ function print_repo_table($repos, $legend='') {
  * @param string $legend legend of the fieldset
  */
 function print_media_table($datalist, $legend) {
-	global $SHOW_LAST_CHANGE, $TEXT_DIRECTION, $WT_IMAGES, $SHOW_MEDIA_FILENAME;
+	global $SHOW_LAST_CHANGE, $TEXT_DIRECTION, $WT_IMAGES;
 
 	if (count($datalist)<1) return;
 	require_once WT_ROOT.'js/sorttable.js.htm';
@@ -1064,7 +1062,7 @@ function print_media_table($datalist, $legend) {
 			echo "<a href=\"", $media->getHtmlUrl(), "\" class=\"list_item name2\">";
 			echo '<img src=', $media->getThumbnail(), ' height="15" /> ';
 			echo PrintReady($name), "</a>";
-			if ($SHOW_MEDIA_FILENAME || WT_USER_IS_ADMIN)
+			if (WT_USER_CAN_EDIT || WT_USER_CAN_ACCEPT)
 				echo "<br /><a href=\"", $media->getHtmlUrl(), "\">", basename($media->getFilename()), "</a>";
 			if ($media->getNote()) echo "<br />", print_fact_notes("1 NOTE ".$media->getNote(), 1);
 			echo "</td>";
@@ -1110,12 +1108,9 @@ function print_media_table($datalist, $legend) {
 function format_surname_table($surnames, $type) {
 	global $GEDCOM;
 
-	require_once WT_ROOT.'js/sorttable.js.htm';
-	$table_id ='ID'.floor(microtime()*1000000); // sorttable requires a unique ID
-	$html='<table id="'.$table_id.'" class="sortable list_table center">';
-	$html.='<tr><th></th>';
-	$html.='<th class="list_label"><a href="javascript:;" onclick="sortByOtherCol(this, 1)">'.WT_Gedcom_Tag::getLabel('SURN').'</a></th>';
-	$html.='<th style="display:none;">SURN</th>'; // hidden column for sorting surnames
+	$html='<table class="sortable list_table center">';
+	$html.='<th>&nbsp;</th>';
+	$html.='<th class="list_label">'.WT_Gedcom_Tag::getLabel('SURN').'</th>';
 	$html.='<th class="list_label">';
 	if ($type=='famlist') {
 		$html.=WT_I18N::translate('Spouses');
@@ -1130,9 +1125,9 @@ function format_surname_table($surnames, $type) {
 	foreach ($surnames as $surn=>$surns) {
 		// Each surname links back to the indi/fam surname list
 		if ($surn) {
-			$url=$type.'.php?surname='.urlencode($surn).'&amp;ged='.rawurlencode($GEDCOM);
+			$url=$type.'.php?surname='.urlencode($surn).'&amp;ged='.WT_GEDURL;
 		} else {
-			$url=$type.'.php?alpha=,&amp;ged='.rawurlencode($GEDCOM);
+			$url=$type.'.php?alpha=,&amp;ged='.WT_GEDURL;
 		}
 		// Row counter
 		++$row_num;
@@ -1159,31 +1154,28 @@ function format_surname_table($surnames, $type) {
 			}
 		}
 		$html.='</td>';
-		// Hidden column for sorting surnames
-		$html.='<td style="display:none;">'.htmlspecialchars($surn).'</td>';
 		// Surname count
 		$html.='<td class="list_value_wrap">';
 		if (count($surns)==1) {
 			// Single surname variant
 			foreach ($surns as $spfxsurn=>$indis) {
 				$subtotal=count($indis);
-				$html.='<a name="'.$subtotal.'">'.$subtotal.'</a>';
+				$html.='<a name="'.$subtotal.'">'.WT_I18N::number($subtotal).'</a>';
 			}
 		} else {
 			// Multiple surname variants, e.g. von Groot, van Groot, van der Groot, etc.
 			$subtotal=0;
 			foreach ($surns as $spfxsurn=>$indis) {
 				$subtotal+=count($indis);
-				$html.=count($indis).'<br />';
+				$html.=WT_I18N::number(count($indis)).'<br />';
 			}
-			$html.='<a name="'.$subtotal.'">'.$subtotal.'</a>';
+			$html.='<a name="'.$subtotal.'">'.WT_I18N::number($subtotal).'</a>';
 		}
 		$html.='</td></tr>';
 	}
 	//-- table footer
 	$html.='<tr class="sortbottom"><td class="list_item">&nbsp;</td>';
 	$html.='<td class="list_item">&nbsp;</td>';
-	$html.='<td style="display:none;">&nbsp;</td>'; // hidden column for sorting surnames
 	$html.='<td class="list_label name2">'. /* I18N: A count of individuals */ WT_I18N::translate('Total individuals: %s', WT_I18N::number(count($unique_indi)));
 	$html.='<br/>'. /* I18N: A count of surnames */ WT_I18N::translate('Total surnames: %s', WT_I18N::number(count($unique_surn))).'</td></tr></table>';
 	return $html;

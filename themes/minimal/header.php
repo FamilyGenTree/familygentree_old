@@ -52,7 +52,6 @@ if (!empty($META_GENERATOR)) {
 }
 
 echo
-	$javascript,
 	'<link type="text/css" href="js/jquery/css/jquery-ui.custom.css" rel="Stylesheet" />',
 	'<link rel="stylesheet" href="', $stylesheet, '" type="text/css" media="all" />';
 
@@ -78,6 +77,7 @@ if (WT_USE_LIGHTBOX) {
 echo
 	'<link type="text/css" href="', WT_THEME_DIR, 'modules.css" rel="Stylesheet" />',
 	'<link rel="stylesheet" href="', $print_stylesheet, '" type="text/css" media="print" />',
+	$javascript,
 	'</head>',
 	'<body id="body">';
 
@@ -101,9 +101,8 @@ if ($view!='simple') {
 	if (empty($SEARCH_SPIDER)) { 
 		echo 
 		'<span class="htheme">';
-		$menu=WT_MenuBar::getThemeMenu();
-		if ($menu) {
-			echo $menu->getMenuAsDropdown();
+		if (get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN') && get_site_setting('ALLOW_USER_THEMES')) {
+			echo WT_MenuBar::getThemeMenu()->getMenuAsDropdown();
 		}
 		$menu=WT_MenuBar::getLanguageMenu();
 		if ($menu) {

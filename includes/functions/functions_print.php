@@ -30,8 +30,6 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-define('WT_FUNCTIONS_PRINT_PHP', '');
-
 require_once WT_ROOT.'includes/functions/functions_charts.php';
 
 /**
@@ -783,9 +781,6 @@ function print_favorite_selector($option=0) {
 					}
 				}
 			}
-			if (count($gedcomfavs)>0) {
-				$menu->addSeparator();
-			}
 		}
 		if (count($gedcomfavs)>0) {
 			$submenu = new WT_Menu("<strong>".WT_I18N::translate('This GEDCOM\'s Favorites')."</strong>", "#", "right");
@@ -1456,7 +1451,7 @@ function format_fact_date(&$eventObj, $anchor=false, $time=false) {
 				$timerec=get_sub_record(2, '2 DATE', $factrec);
 			}
 			if (preg_match('/[2-3] TIME (.*)/', $timerec, $tmatch)) {
-				$html.=' - <span class="date">'.$tmatch[1].'</span>';
+				$html.='<span class="date"> - '.$tmatch[1].'</span>';
 			}
 		}
 		$fact = $eventObj->getTag();

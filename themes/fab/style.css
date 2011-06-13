@@ -1,12 +1,31 @@
 /*
-* Style for FAB theme
-*
-* Copyright (c) 2011 Greg Roach
-*
-* Based on standard theme, which is Copyright (C) 2002 to 2010  PGV Development Team.
-*
-* $Id$
-*/
+ * Style for FAB theme
+ *
+ * webtrees: Web based Family History software
+ * Copyright (C) 2011 webtrees development team.
+ *
+ * Derived from PhpGedView
+ * Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ * $Id$
+ */
+
+/* Add a permanent scrollbar, to prevent "flickering" when hover effects lengthen page */
+html { overflow-y:scroll; }
 
 .submenu {
 	background-color:#EEE;
@@ -37,6 +56,7 @@ fieldset,
 	border-radius:3px;
 	-moz-border-radius:3px;
 	-webkit-border-radius:3px;
+	font-family:inherit;
 }
 
 img.block{
@@ -75,9 +95,11 @@ a.help {
 body {
 	color:DimGray;
 	background-color:White;
-	font:12px sans-serif;
+	font:12px sans-serif; /* Use the browser's default font - give control to the user */
 	margin:0px;
 }
+
+.ui-widget { font-family:inherit; } /* We have one jQuery-UI CSS file for (all* themes.  Don't let it override our font */
 
 img {
 	border:0;
@@ -206,6 +228,9 @@ html[dir='rtl'] .makeMenu li ul li {
     background-color: DarkSlateGray;
 	color: #000;
 }
+
+#menu-language li {text-align:left;} /* The language menu is always LTR, even on RTL pages */
+#menu-theme    li {text-align:left;} /* The theme menu is always LTR, even on RTL pages */
 
 /* person boxes are used in various charts */
 .person_box {
@@ -877,7 +902,6 @@ a.showit:hover span {
 {
 	margin: 0;
 	padding: 0;
-	font-family: Arial;
 	font-size: 10px;
 	list-style: none;
 }
@@ -910,7 +934,6 @@ a.showit:hover span {
 }
 
 .tag_cloud {
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 .tag_cloud a {
 	white-space:nowrap;
@@ -1021,12 +1044,6 @@ div.faq_body {
 	font-weight: bold;
 	font-size: 90%;
 	padding: 0 10px;
-}
-
-/*--- edit links ---*/
-
-.edit_link:after { /* used only on the user list */
-	content: " " url(images/edit_sm.png);
 }
 
 td.descriptionbox  a { 
@@ -1149,9 +1166,9 @@ html[dir='rtl'] .flyout {text-align:right; left:210px;}
 html[dir='rtl'] .flyout2 {text-align:right; right:40px;}
 .flyout2 a:hover{color:#ff0000;}
 .flyout4 {color:#000000;	text-align:left; margin-top:0px;margin-left:0px; padding:3px;}
-#flyout3, #flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
-html[dir='rtl'] #flyout3 {text-align:right;}
-.famnav_link {font:12px tahoma, arial, helvetica, sans-serif; padding:0px; width:100%;}
+.flyout3, .flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
+html[dir='rtl'] .flyout3 {text-align:right;}
+.famnav_link {font-size:12px; padding:0px; width:100%;}
 
 /* Descendancy */
 #sb_desc_content {margin-left:3px; font-size:0.8em;}
@@ -1174,9 +1191,10 @@ html[dir='rtl'] .desc_tree_div ul {margin-right:10px;margin-left:0px;}
 #sb_clippings_content ul {padding:0px;margin:0px;}
 
 /* References */
-#sb_content_references {font-size:80%; font-weight:bold; margin-top:1px; padding:5px;}
-#sb_content_references .editfacts {float:right; margin-top:-10px;}
-html[dir='rtl'] #sb_content_references .editfacts {float:left;}
-#sb_content_references a {display:block;}
-#sb_content_references span {font-weight:normal;}
-#sb_content_references #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}
+#sb_content_extra_info {font-size:80%; font-weight:bold; margin-top:1px; overflow:hidden; padding:5px;}
+#sb_content_extra_info .editfacts {float:right; margin-top:-10px;}
+html[dir='rtl'] #sb_content_extra_info .editfacts {float:left;}
+#sb_content_extra_info a {display:block;}
+#sb_content_extra_info span {font-weight:normal; white-space:nowrap;}
+#sb_content_extra_info span a {display:inline;}
+#sb_content_extra_info #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}

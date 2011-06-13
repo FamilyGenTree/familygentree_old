@@ -1,28 +1,149 @@
 /**
-* Copyright (c) 2011 Rob Peters
-*
-* Based on standard theme, which is Copyright (C) 2002 to 2010  PGV Development Team.        
-*
-* $Id$
+* Style for colors theme
+ *
+ * webtrees: Web based Family History software
+ * Copyright (C) 2011 webtrees development team.
+ *
+ * Derived from PhpGedView Cloudy theme
+ * Original author w.a. bastein http://genealogy.bastein.biz
+ * Copyright (C) 2010  PGV Development Team.  All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ * $Id$
 */
 
-.something {
-/*empty style to make sure that the BODY style is not ignored */
+/* Add a permanent scrollbar, to prevent "flickering" when hover effects lengthen page */
+html { overflow-y:scroll; }
+
+/* Set global defaults */
+
+body { font: 12px tahoma, arial, helvetica, sans-serif; background:#fff; }
+* { margin:0px; padding:0px; }
+
+/* ================= */
+/*   Header Layout   */
+
+#header {height: 65px; }
+.title {display: block; float: left; margin-top: 30px; margin-left: 12px; font-size: 24px; vertical-align:bottom; }
+.makeMenu {display: block; float: right;  margin: 40px 10px 0px 0px; }
+
+html[dir='rtl'] .title {float: right; margin-right: 12px; }
+html[dir='rtl'] .makeMenu {display: block; float: left;  margin: 40px 0px 0px 10px; }
+html[dir='rtl'] .topMenu_right {float: left;} 
+
+
+/* ====================== */
+/* Layout Left Main menu  */
+
+/* set up div container for menu */
+#topMenu { clear: both; height:41px; float: left; width: 100%; margin:0; padding:0; margin-top: 0px; position: relative; }
+
+/* Set up Top Menu */
+
+#topMenu ul { margin: 0; padding: 0; list-style: none; position:relative; }
+#topMenu ul li { display: block; list-style:none; width: auto; float:left; position:relative; }
+#topMenu ul li a { margin: auto; display: block; font-size: 14px; text-align: center; padding: 5px 5px 5px 5px; text-decoration: none;  }
+
+html[dir='rtl'] #topMenu {	float: right;}
+html[dir='rtl'] #topMenu ul li { float: right;}
+
+/* Subnavigation section */
+
+#topMenu ul ul 		{ background: none; display:none;  position:absolute; z-index:2001; top: 28px; left:0; right: auto; width: auto; background: #fff; text-align: left; border: 1px solid #ccc; white-space: nowrap; }
+#topMenu ul ul li 	{ left:auto;  margin:0;  clear:left;  text-align:left;  width:100% }
+#topMenu ul ul li a	{ font-size: 12px;  padding: 5px 5px 5px 5px; text-align: left; white-space: nowrap; }
+
+html[dir='rtl'] #topMenu ul ul 		{right: 0px; left: auto; }
+html[dir='rtl'] #topMenu ul ul li 	{ right:auto; clear:right; text-align:right;}
+html[dir='rtl'] #topMenu ul ul li a	{ text-align: right; float: right; padding-right: 30px;}
+ 
+/* Submenu horizontal */
+
+#topMenu ul ul ul{ display:none!important; } 
+
+/* Set up hover layout and style */
+
+#topMenu ul li:hover ul 	{ display: block; }
+#topMenu ul li:hover li		{ float: none; }
+#topMenu ul li:hover li a 	{ text-decoration: none; }   
+#topMenu ul li li a:hover	{	width: auto; }
+#topMenu ul  ul li:hover ul	{ display:block!important; position: absolute; margin-left: 118px; margin-top: -35px; } 
+
+html[dir='rtl'] #topMenu ul  ul li:hover ul { margin-left: auto; margin-right: 118px; } 
+
+/*  Mainmenu Icons*/
+#topMenu > ul > li {
+	background-image:url(../images/sprites-top-menu.png);
+	background-repeat:no-repeat;
+	width: 29px; 
+	height: 28px;
+	line-height: 28px;
+	text-indent: 32px;
+	margin: 7px 0px 0px 16px;
 }
+html[dir='rtl'] #topMenu > ul > li {margin: 7px 16px 0px 0px; left: auto;}
 
-body {
-font: 12px tahoma, arial, helvetica, sans-serif;
-background:#fff;
-
+/*  Submenu Icons */
+#main-menu li ul li{
+	background-image:url(../images/sprites-sub-menu.png);
+	background-repeat:no-repeat;
+	height: 22px;
+	line-height: 15px;
+	text-indent: 22px;
+	margin: 5px 0px 5px 0px;
 }
+html[dir='rtl'] #main-menu li ul li{ text-indent: 0px;}
 
-* {
-margin:0px;
-padding:0px;
+/*  Delete tag from mainmenu icons */
+#topMenu > ul >  li  > a {
+	color: #98badd;
+	width: 17px; 
+	height: 17px;
+	line-height: 60px;
+	overflow: hidden;
 }
+/* Menu icons moved to file sprite-menu-icons.css */
 
+/* Options Menu, language, theme, login */
+
+.toplinks_right 				{ float: right; padding: 13px 15px 10px 10px; } 
+
+
+.makeMenu li 					{ z-index: 100; display:inline; position:relative; white-space:nowrap; }
+.makeMenu li:before 			{ content:" | "; }
+.makeMenu li ul li:before 		{ content:""; }
+.makeMenu li:first-child:before { content:""; }
+.makeMenu li ul 				{ display:none; position:absolute; left:10px; background-color:#EEE; border:thin solid #AAA; z-index:999; }
+.makeMenu li ul li 				{ display:block; text-align:left; }
+.makeMenu li ul li a 			{ color: #333; }
+.makeMenu, .makeMenu li ul 		{ color: #fff; list-style:none; top: 5px; margin-left: 0px!important; padding:1px; }
+.makeMenu li:hover > ul 		{ display:block; }
+.makeMenu li a 					{ color: #ffffff;}
+.makeMenu li a:hover 			{ color: #f5003d;}
+.makeMenu ul li a 				{ background-color: #fff; padding: 0px 5px 0px 2px; display: block; }
+.makeMenu ul li a:hover  		{ color: #000; }
+li a.link 						{ font-size: 13px; margin-right: 5px; margin-left: 5px; }
+
+html[dir='rtl'] .toplinks_right { float: left; padding: 13px 10px 10px 15px; }
+html[dir='rtl'] .makeMenu li ul { left:auto; right:10px; }
+html[dir='rtl'] .makeMenu li ul li { text-align:right; }
+
+/*   Colors Style */
 /*	Color settings for the this theme	*/
-/*	Define Header and Light Text Colors	*/
+/*	Header and Light Text Colors	*/
 
 #header,
 .gedcomtitle {
@@ -62,7 +183,7 @@ color: #ffffff;
 
 /*	Define TopLink Color				*/
 
-#toplinks {
+#topMenu {
 background:#98badd;
 }
 
@@ -73,12 +194,14 @@ color: #98badd;
 
 /*	Define Base Color					*/
 
+#indi_header h3.person_box, 
+.makeMenu ul li a:hover,
 .descriptionbox .submenu a,
 .blockcontent, 
 .list_value, 
 .list_value_wrap, 
 .tab_cell_active, 
-.news_box, optionbox,
+.news_box, .optionbox,
 .person0,  .center .person_box,
 .small_inner_block .person_box, 
 .submenuitem_hover {
@@ -92,82 +215,13 @@ text-decoration: none;
 
 /*	Define Alert Color					*/
 
-.error, .warning, .red {
-color:#6598cb;
-}
-
-.facts_labelred, .facts_valuered {
-border: solid #6598cb 2px;
-}
+.error, .warning, .red { color:#6598cb; }
+.facts_labelred, .facts_valuered { border: solid #6598cb 2px; }
 
 /*	Define Dark Text Color 				*/
 
-input,button,textarea {
-border-color:#fff #000000 #494949 #fff;
-}
-
-body,
-.subheaders {
-color:#000000;
-}
-
-#toplinks {
-width:100%;
-height:36px;
-}
-
-.toplinks_left {
-min-width: 200px;
-padding-left: 10px;
-}
-
-.toplinks_right {
-padding-right: 13px;
-} 
-
-.icon, .adminicon {
-border:none;
-padding-top:1px;
-padding-left:0px;
-padding-right:8pt;
-}
-
-/*	Submenu style				*/
-
-.submenu {
-visibility: hidden;
-position: absolute;
-z-index: 100;
-font-size: 11px;
-background: #fff;
-border: solid #999 1px;
-}
-
-/*	Submenuitem style			*/
-
-.submenuitem .icon, .submenuitem_hover .icon {
-width: 22px;
-height: 22px;
-vertical-align: middle;
-padding:0px 5px 0px 3px;
-}
-
-.submenuitem, .submenuitem_hover {
-height: 22px;
-padding-right: 5px;
-font-size: 11px;
-border: 1pt solid white;
-white-space: nowrap;
-}
-
-.submenuitem a, .submenuitem_hover a {
-color: #000;
-display: inline-block;
-vertical-align: middle;
-text-decoration:none;
-}
-
-/*	End Toplinks Section				 */
+input,button,textarea 	{ border-color:#fff #000000 #494949 #fff; }
+body, .subheaders 		{ color:#000000; }
 
 /*   Edit Facts */
 td.descriptionbox div a {
@@ -311,7 +365,6 @@ img {
 div.blockcontent {
 	border: solid #999 1px;
 	margin-left:auto;
-	*margin-top: -2px; /* IE7 fix */
 	margin-right:2px;  /* changed from auto for right side match to header */
 	margin-bottom:10px;
 	font-size: 13px;
@@ -320,7 +373,7 @@ div.blockcontent {
 }
 
 .blockheader {
-width:100%;
+	width:100%;
 }
 
 .blockh1 {
@@ -347,6 +400,11 @@ height:24px;
 .blockhc {
 padding-right:15px;
 padding-top: 3px;
+}
+
+#content {
+clear: both;
+padding:10px 10px 0px 10px;
 }
 
 #index_small_blocks .person_box .pedigree_image_portrait,
@@ -837,7 +895,6 @@ display:none;
 font-size: 12px;
 width: 99%;
 direction: ltr;
-caption-side: left;
 text-align: center;
 }
 
@@ -1048,11 +1105,6 @@ background:#FF0;
 color:#000;
 }
 
-.title {
-font-size: 24px;
-vertical-align:bottom;
-}
-
 .accesskeys {
 width:1px;
 height:1px;
@@ -1085,7 +1137,6 @@ padding: 3px;
 }
 
 .optionbox {
-background: #e0e7ff;
 border:solid #999 1px;
 font-size: 12px;
 vertical-align: top;
@@ -1452,11 +1503,6 @@ ul.clist {
 list-style-image: none;
 }
 
-.menu_separator img {
-height: 3px;
-width: 8em;
-} 
-
 .statistics_chart{
 text-align: center;
 } 
@@ -1485,6 +1531,7 @@ dl {
 margin:0;
 }
 
+ 
 dt {
 float:left; 
 font-weight:bold;
@@ -1584,90 +1631,12 @@ font-size: 90%;
 padding: 0 10px;
 }
 
-/* Use CSS menus based on nested <ul> */
-.makeMenu li {
-	display:inline;
-	position:relative;
-	white-space:nowrap;
-}
 
-.makeMenu li:before {
-	content:" | ";
-}
-.makeMenu li ul li:before {
-	content:"";
-}
-.makeMenu li:first-child:before {
-	content:"";
-}
-
-.makeMenu li ul {
-	display:none;
-	position:absolute;
-	left:0px;
-	top: 1.1em;
-	background-color:#EEE;
-	border:thin solid #AAA;
-	z-index:999;
-}
-
-html[dir='rtl'] .makeMenu li ul {
-	left:auto;
-	right:0px;
-}
-
-.makeMenu li ul li {
-	display:block;
-	text-align:left;
-}
-
-.makeMenu li ul li a {
-	color: #333;
-}
-
-html[dir='rtl'] .makeMenu li ul li {
-	text-align:right;
-}
-
-.makeMenu, .makeMenu li ul {
-    color: #fff;
-	list-style:none;
-	margin:0;
-	padding:1px;
-}
-
-.makeMenu li:hover > ul {
-	display:block;
-}
-
-.makeMenu li a {color: #ffffff;}
-.makeMenu li a:hover {color: #f5003d;}
-
-.makeMenu ul li a {
-    background-color: #fff;
-	padding: 0px 5px 0px 2px;
-    display: block;
-}
-
-.makeMenu ul li a:hover  {
-	background: #e0e7ff;
-	color: #000;
-}
-
-li a.link {
-font-size: 13px;
-margin-right: 5px;
-margin-left: 5px;
-}
 
 /*--- edit links ---*/
 
 .descriptionbox a {
 background: transparent;
-}
-
-.edit_link:after { /* used only on the user list */
-	content: " " url(../images/edit_sm.png);
 }
 
 td.descriptionbox  a { 
@@ -1690,12 +1659,12 @@ html[dir='rtl'] .editfacts {
 	visibility : hidden;
 }
 
-.editlink, editlink  {
+.editfacts .editlink, editlink  {
 	background: url(../images/edit_sm.png) no-repeat left center;
 	width: 20px;
 	float: left;
 }
-html[dir='rtl'] .editlink, html[dir='rtl'] editlink  {
+html[dir='rtl'] .editfacts.editlink, html[dir='rtl'] editlink  {
 	background: url(../images/edit_sm.png) no-repeat right center;
 	width: 20px;
 	float: right;
@@ -1712,7 +1681,7 @@ html[dir='rtl'] .copylink, html[dir='rtl'] editlink  {
 	float: right;
 }
 
-.deletelink  {
+.editfacts .deletelink  {
 	background: url(../images/delete.png) no-repeat left center;
 	width: 20px;
 	float: left;
@@ -1755,7 +1724,7 @@ html[dir='rtl'] #indi_header { float:right;}
 #indi_header h3 {color: #707070; font-size: 90%; font-weight:bold; margin: 0; padding: 0 10px 0 30px; text-align:left;}
 html[dir='rtl'] #indi_header h3 { padding: 0 30px 0 10px; text-align:right;}
 #indi_header h3.name_one {overflow:hidden; position:relative; font-size:1.5em;}
-#indi_header h3.person_box, #indi_header h3.person_boxF , #indi_header h3.person_boxNN  {border: 1px solid #999; background:#e0e7ff; }
+#indi_header h3.person_box, #indi_header h3.person_boxF , #indi_header h3.person_boxNN  {border: 1px solid #999;}
 #indi_header h3 .fact_AGE {padding:5px 0 5px 5px; float:right; font-weight:normal; font-size:65%;}
 html[dir='rtl']  #indi_header h3 .fact_AGE {padding:5px 5px 5px 0; float:left;}
 #indi_header h3 a {display:inline;}
@@ -1767,7 +1736,7 @@ html[dir='rtl'] #main_name {float:right;}
 html[dir='rtl'] #indi_mainimage {float:right;}
 #indi_mainimage a img {float:left; padding:0;}
 html[dir='rtl'] #indi_mainimage a img {float:right;}
-#indi_name_details {	margin:0; padding: 5px;}
+#indi_name_details {margin:0; padding: 5px;}
 #indi_name_details a {color:#333377;}
 #indi_name_details dt:after { content:":"; }
 #name1 {}
@@ -1789,10 +1758,13 @@ dd .editlink, dd .deletelink  {float:right;}
 html[dir='rtl']  dd .editlink, html[dir='rtl']  dd .deletelink  {float:left;}
 
 /* INDI IMAGE SPRITE */
-.male_gender, .female_gender, .unknown_gender, .editicon, .copyicon, .deleteicon { display: block; background: url('../images/indi_sprite.png') no-repeat; }
+.male_gender, .female_gender, .unknown_gender, .editicon, .copyicon, .deletelink { display: block; background: url('../images/indi_sprite.png') no-repeat; }
 .female_gender {background-position: -45px 3px; width: 24px;}
 .male_gender {background-position: -72px 3px; width: 24px;}
 .unknown_gender {background-position: -100px 4px; width: 24px;}
+.editicon {background-position: -40px -32px; width: 24px; height:16px;}
+.copyicon {background-position: -70px -32px; width: 24px; height:16px;}
+.deletelink {background-position: -100px -32px; width: 24px; height:16px;}
 
 /* ========= jquery-ui.custom.css changes ============ */
 .ui-widget-content                                         { color:black;  }
@@ -1807,7 +1779,7 @@ html[dir='rtl'] .ui-tabs .ui-tabs-nav li.ui-state-default {float:right; }
 .ui-tabs-nav li.ui-tabs-selected a                                  { font-weight:600; color: black; }
 .ui-tabs-nav li.ui-tabs-selected a:hover                         { font-weight:600; color: black; }
 
-.ui-widget-header { border: 1px solid #fff; background: #6598cb;  opacity: 0.67;  filter: alpha(opacity = 67);}
+.ui-widget-header { border: 1px solid #fff; background: #6598cb; filter: alpha(opacity = 67);}
 .ui-widget-content a:hover {color: #f50;}
 .ui-state-active, .ui-widget-content .ui-state-active { border: 0px ; }
 .ui-state-default a:link { color: #000000;}
@@ -1819,7 +1791,6 @@ html[dir='rtl'] .ui-accordion .ui-accordion-header .ui-icon {right: 0.5em;}
 
 .ui-state-active .ui-icon {
     background-image: url("../../../js/jquery/css/images/ui-icons_222222_256x240.png");
-}
 }
 
 .ui-tabs-nav li.ui-tabs-selected { background: #fff; }
@@ -1861,15 +1832,16 @@ html[dir='rtl'] .use-sidebar #separator {background: #6598cb url('../images/indi
 .nav_content {width:100%; padding:0;}
 .nav_content #spouse {color: #000;}
 .nav_content .facts_label a{color: #ffffff;}
-.flyout {color:#000000; 	text-align:left; margin-top:-20px; right:210px; padding:3px;}
-html[dir='rtl'] .flyout {text-align:right; left:210px;}
-.flyout2 {color:#000000;	text-align:left;margin-top:-2px; left:40px; padding:3px;}
-html[dir='rtl'] .flyout2 {text-align:right; right:40px;}
-.flyout2 a:hover{color:#2f416f; text-decoration:underline;}
+.flyout {color:#000000; text-align:left; margin-top:-20px; right:210px; padding:3px;}
+.flyout2 {color:#000000; text-align:left;margin-top:-2px; left:40px; padding:3px; background: #fff; border: 1px solid #ccc;}
+.flyout2 a:hover{color:#2f416f; text-decoration:underline!important;}
 .flyout4 {color:#000000;	text-align:left; margin-top:0px;margin-left:0px; padding:3px;}
-#flyout3, #flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; color: #000; font-size: 11px; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
-html[dir='rtl'] #flyout3 {text-align:right;}
+.flyout3, .flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; color: #000!important; font-size: 11px; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
 .famnav_link {font:12px tahoma, arial, helvetica, sans-serif; padding:0px; width:100%;}
+
+html[dir='rtl'] .flyout {text-align:right; left:210px;}
+html[dir='rtl'] .flyout2 {text-align:right; right:40px;}
+html[dir='rtl'] .flyout3 {text-align:right;}
 
 /* Descendancy */
 #sb_desc_content {margin-left:3px;}
@@ -1892,9 +1864,10 @@ table.width66{margin-left: auto;margin-right: auto;}.sb_indi_surname_li, .sb_fam
 #sb_clippings_content ul {padding:0px;margin:0px;}
 
 /* References */
-#sb_content_references {font-size:80%; font-weight:bold; margin-top:1px; padding:5px;}
-#sb_content_references .editfacts {float:right; margin-top:-10px;}
-html[dir='rtl'] #sb_content_references .editfacts {float:left;}
-#sb_content_references a {display:block;}
-#sb_content_references span {font-weight:normal;}
-#sb_content_references #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}
+#sb_content_extra_info {font-size:80%; font-weight:bold; margin-top:1px; overflow:hidden; padding:5px;}
+#sb_content_extra_info .editfacts {float:right; margin-top:-10px;}
+html[dir='rtl'] #sb_content_extra_info .editfacts {float:left;}
+#sb_content_extra_info a {display:block;}
+#sb_content_extra_info span {font-weight:normal; white-space:nowrap;}
+#sb_content_extra_info span a {display:inline;}
+#sb_content_extra_info #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}

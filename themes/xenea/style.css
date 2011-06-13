@@ -1,8 +1,5 @@
-/**
+/*
  * Style for Xenea theme
- *
- * Use this stylesheet to customize the display of your site.
- * To learn more about CSS visit http: //www.w3.org/TR/REC-CSS2/
  *
  * webtrees: Web based Family History software
  * Copyright (C) 2011 webtrees development team.
@@ -24,15 +21,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * @package webtrees
- * @subpackage Themes
- * @version $Id$
+ * $Id$
  */
 
-
-.something {
-	/*empty style to make sure that the BODY style is not ignored */
-}
+/* Add a permanent scrollbar, to prevent "flickering" when hover effects lengthen page */
+html { overflow-y:scroll; }
 
 body {
 	color: #000066;
@@ -55,20 +48,17 @@ img {
 
 a.link:link, a.link:active, a.link:visited {
 	color: white;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
 a.link:hover {
 	color: #333366;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
 a {
 	color: blue;
 	text-decoration: none;
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 
 a:hover	{
@@ -132,7 +122,7 @@ th {
 .list_label, .list_label_wrap {
 	color: #000066;
 	background-color: #C3DFFF;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 	text-align: center;
 }
 
@@ -140,7 +130,7 @@ th {
 	background-color: #ECF5FF;
 	border: solid #C3DFFF 1px;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	vertical-align: top;
 }
 
@@ -163,7 +153,7 @@ th {
 .facts_label {
 	color: #000066;
 	background-color: #C3DFFF;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 	width: 20%;
 	text-align: center;
@@ -172,7 +162,7 @@ th {
 .facts_label02, .facts_label03 {
 	color: white;
 	background-color: #84BEFF;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 	text-align: center;
 	font-weight: bold;
@@ -182,7 +172,7 @@ th {
 	background-color: #ECF5FF;
 	border: solid #C3DFFF 1px;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 }
 
@@ -190,14 +180,14 @@ th {
 	background-color: #FBFDFF;
 	border: solid #C3DFFF 1px;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 5px;
 }
 
 .facts_labelred, .facts_labelblue {
 	color: #000066;
 	background-color: #9DD8FF;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 	width: 20%;
 	text-align: center;
@@ -206,7 +196,7 @@ th {
 .facts_valuered, .facts_valueblue {
 	background-color: #FBFDFF;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 }
 
@@ -284,22 +274,22 @@ th {
 
 .name1 {
 	color: #000066;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 }
 
 a:hover .name1 {
 	color: red;
-	font: bold 10px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:10px;
 }
 
 a:hover .name2 {
 	color: red;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 }
 
 a:hover .nameZoom {
 	color: red;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 }
 
 .namered {
@@ -312,7 +302,7 @@ a:hover .nameZoom {
 
 .name2 {
 	color: #000066;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 }
 
 .details1 {
@@ -321,23 +311,23 @@ font-size: 10px;
 
 .details2 {
 	color: #000066;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 }
 
 .nameZoom {
 	color: #000066;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 }
 
 .detailsZoom {
-	font: 14px tahoma, arial, helvetica, sans-serif;
+	font-size:14px;
 	text-decoration: none;
 }
 
 .name_head {
 	color: #000066;
-	font: bold 16px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:16px;
 	letter-spacing: .2px;
 }
 
@@ -354,19 +344,17 @@ font-size: 10px;
 
 .error {
 	color: #DD0000;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
 .largeError {
 	color: #DD0000;
-	font: large tahoma, arial, helvetica, sans-serif;
+	font-size:large;
 	font-weight: bold;
 }
 
 .warning {
 	color: red;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
@@ -464,7 +452,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 }
 
 .subheaders {
-	font: bold 16px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:16px;
 	text-indent: 20px;
 	margin-top: 15px;
 	vertical-align: bottom;
@@ -490,7 +478,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .theme_form {
 	margin-top: 0;
-	font: 14px tahoma, arial, helvetica, sans-serif;
+	font-size:14px;
 	color: white;
 }
 
@@ -498,20 +486,6 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	background: black;
 	color: white;
 	font-weight: bold;
-}
-
-/* This is the original.
- * It's not used, but it's left in in case you want to go back to it. */
-.flag {
-	width: 15px;
-	border: solid black 1px;
-}
-
-/* This one is for a place flag */
-.brightflag {
-	height: 15px;
-	border: none;
-	opacity: 1;		/* IE's support is different */
 }
 
 .border1 {
@@ -533,13 +507,13 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .favorites_form {
 	margin-top: 0px;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 	color: white;
 }
 
 .langmenuitem {
 	color: white;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
@@ -550,14 +524,14 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .langmenuitem_hover {
 	color: red;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
 
 .thememenuitem  {
 	color: white;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
@@ -568,7 +542,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .thememenuitem_hover {
 	color: red;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
@@ -576,7 +550,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 .themesubmenu {
 	color: black;
 	text-decoration: none;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-align: left;
 	background-color: #ECF5FF;
 	border: solid #84BEFF 1px;
@@ -586,7 +560,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .favmenuitem {
 	color: white;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
@@ -597,7 +571,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .favmenuitem_hover {
 	color: red;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 	text-decoration: none;
 	padding: 1px;
 }
@@ -605,7 +579,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 .favsubmenu {
 	color: black;
 	text-decoration: none;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-align: center;
 	background-color: #ECF5FF;
 	border: solid #84BEFF 1px;
@@ -614,7 +588,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .favsubmenuitem a, .favsubmenuitem_selected a {
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	background-color: #ECF5FF;
 	white-space: nowrap;
@@ -627,7 +601,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .favsubmenuitem_hover a {
 	color: red;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	background-color: white;
 	white-space: nowrap;
@@ -641,7 +615,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .menuitem {
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	text-align: center;
 	padding: 1px;
@@ -649,7 +623,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .menuitem_hover {
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	text-align: center;
 	padding: 1px;
@@ -661,7 +635,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	z-index: 100;
 	color: black;
 	text-decoration: none;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	background-color: #ECF5FF;
 	border: solid #84BEFF 1px;
 	white-space: nowrap;
@@ -671,7 +645,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	vertical-align: middle;
 	height: 22px;
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	background-color: #ECF5FF;
 	white-space: nowrap;
@@ -688,7 +662,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	vertical-align: middle;
 	height: 22px;
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	text-decoration: none;
 	background-color: white;
 	white-space: nowrap;
@@ -701,12 +675,12 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 }
 
 .news_title {
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 	color: black;
 }
 
 .news_date {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	color: black;
 	margin-bottom: 12px;
 }
@@ -749,13 +723,13 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .helpstart {
 	margin: 10px;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 	color: Blue;
 	text-decoration: none;
 }
 
 .helptext {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	color: black;
 }
 
@@ -766,7 +740,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 #footer {
 	clear: both;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	width: 99%;
 }
 
@@ -774,7 +748,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 .small_inner_block {
 	max-height: 190px;
 	overflow: auto;
-	font: normal 10px tahoma, arial, helvetica, sans-serif;
+	font-size:10px;
 	text-decoration: none;
 }
 
@@ -786,7 +760,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	background-color: #ECF5FF;
 	border: solid #84BEFF 1px;
 	color: black;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	vertical-align: top;
 	margin-bottom: 5px;
 	padding: 1px;
@@ -961,23 +935,23 @@ left:auto;
 .listlog {
 	line-height: 20pt;
 	color: #555555;
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 
 .barra {
 	color: black;
-	font: normal 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 }
 
 .blanco {
 	color: white;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 }
 
 input, button, textarea {
 	border-color: white #000066 #000066 white;
 	border-width: 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-family:inherit;
+	font-size:12px;
 }
 
 input, textarea {
@@ -988,25 +962,26 @@ input, textarea {
 select {
 	border-color: #84BEFF;
 	border-width: 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-family:inherit;
+	font-size:12px;
 }
 
 form {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 }
 
 h2 {
 	color: #000066;
-	font: bold 18px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:18px;
 }
 
 h4 {
 	color: #000066;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 }
 
 .formField {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 }
 
 .starredname {
@@ -1025,7 +1000,7 @@ h4 {
 .topbottombar {
 	color: white;
 	background-color: #84BEFF;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 	padding: 4px;
 	text-align: center;
 }
@@ -1036,7 +1011,7 @@ h4 {
 	background-color: #ECF5FF;
 	border: solid #C3DFFF 1px;
 	color: #000066;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	padding: 3px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -1046,7 +1021,7 @@ h4 {
 .descriptionbox {
 	color: #000066;
 	background-color: #C3DFFF;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -1057,7 +1032,7 @@ h4 {
 	background-color: #ECF5FF;
 	border: solid #C3DFFF 1px;
 	color: #000066;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 3px;
 	vertical-align: top;
 	white-space: nowrap;
@@ -1210,7 +1185,7 @@ a.showit:hover span {
 	padding: 3px;
 	background: #4F4F4F;
 	color: white;
-	font: 15px tahoma, arial, helvetica, sans-serif;
+	font-size:15px;
 	text-align: left;
 	opacity: .85;
 	z-index: 5;
@@ -1218,7 +1193,8 @@ a.showit:hover span {
 }
 
 .lifespan_people span:first-letter {
-	font: small-caps bold 16px tahoma, arial, helvetica, sans-serif;
+	font-variant:small-caps;
+	font-weight:bold; font-size:16px;
 	padding: 1px;
 }
 
@@ -1281,7 +1257,6 @@ a.showit:hover span {
 	{
 		margin: 0;
 		padding: 0;
-		font-family: Arial;
 		font-size: 10px;
 		list-style: none;
 	}
@@ -1314,7 +1289,6 @@ a.showit:hover span {
 	}
 
 .tag_cloud {
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 .tag_cloud a {
 	white-space:nowrap;
@@ -1386,11 +1360,6 @@ a.showit:hover span {
 ul.clist {
 	list-style-image: none;
 	margin: 0px;
-}
-
-.menu_separator img {
-	height: 3px;
-	width: 8em;
 }
 
 .statistics_chart {
@@ -1592,11 +1561,6 @@ html[dir='rtl'] #extra-menu.makeMenu li ul {
 	right:auto;
 }
 
-/*--- edit links ---*/
-.edit_link:after { /* used only on the user list */
-	content: " " url(images/edit_sm.png);
-}
-
 td.descriptionbox  a { /* this keeps the tag color the same when it is a link as when not */
 	color: blue;
 }
@@ -1708,7 +1672,7 @@ html[dir='rtl'] #sidebar  {margin:5px 0 0 2px;}
 .sidebar-at-right #sidebar {	width:20%;}
 .use-sidebar.sidebar-at-right #sidebar, .sidebar-at-right #separator {float:right;}
 html[dir='rtl'] .use-sidebar.sidebar-at-right #sidebar, html[dir='rtl'] .sidebar-at-right #separator  {float:left;}
-#separator {	display: block; background: #c3dfff url('images/indi_sprite.png') no-repeat -26px 100px; min-width:6px; max-width:10px; width:0.75%; border: 1px solid #999; -moz-border-radius-topleft: 3px; -moz-border-radius-topright: 3px; margin-top:5px;}
+#separator {	display: block; background: #c3dfff url('images/indi_sprite.png') no-repeat -26px 100px; min-width:6px; max-width:10px; width:0.75%; border: 1px solid #999; border-top-left-radius: 3px; border-top-right-radius: 3px; margin-top:5px;}
 html[dir='rtl'] #separator { background: #c3dfff url('images/indi_sprite.png') no-repeat -1px 100px;}
 .use-sidebar #separator { background: #c3dfff url('images/indi_sprite.png') no-repeat -1px 100px;}
 html[dir='rtl'] .use-sidebar #separator {background: #c3dfff url('images/indi_sprite.png') no-repeat -26px 100px;}
@@ -1725,9 +1689,9 @@ html[dir='rtl'] .flyout {text-align:right; left:210px;}
 html[dir='rtl'] .flyout2 {text-align:right; right:40px;}
 .flyout2 a:hover{color:#ff0000;}
 .flyout4 {color:#000000;	text-align:left; margin-top:0px;margin-left:0px; padding:3px;}
-#flyout3, #flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
-html[dir='rtl'] #flyout3 {text-align:right;}.sb_indi_surname_li, .sb_fam_surname_li {list-style-image:url('images/plus.gif');white-space:nowrap;}
-.famnav_link {font:12px tahoma, arial, helvetica, sans-serif; padding:0px; width:100%;}
+.flyout3, .flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
+html[dir='rtl'] .flyout3 {text-align:right;}.sb_indi_surname_li, .sb_fam_surname_li {list-style-image:url('images/plus.gif');white-space:nowrap;}
+.famnav_link {font-size:12px; padding:0px; width:100%;}
 
 /* Descendancy */
 #sb_desc_content {margin-left:3px; font-size:0.8em;}
@@ -1750,10 +1714,11 @@ html[dir='rtl'] .desc_tree_div ul {margin-right:10px;margin-left:0px;}
 #sb_clippings_content ul {padding:0px;margin:0px;}
 
 /* References */
-#sb_content_references {font-size:80%; font-weight:bold; margin-top:1px; padding:5px;}
-#sb_content_references .editfacts {float:right; margin-top:-30px;}
-html[dir='rtl'] #sb_content_references .editfacts {float:left;}
-#sb_content_references a {display:block;}
-#sb_content_references span {font-weight:normal;}
-#sb_content_references #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}
+#sb_content_extra_info {font-size:80%; font-weight:bold; margin-top:1px; overflow:hidden; padding:5px;}
+#sb_content_extra_info .editfacts {float:right; margin-top:-30px;}
+html[dir='rtl'] #sb_content_extra_info .editfacts {float:left;}
+#sb_content_extra_info a {display:block;}
+#sb_content_extra_info span {font-weight:normal; white-space:nowrap;}
+#sb_content_extra_info span a {display:inline;}
+#sb_content_extra_info #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}
 

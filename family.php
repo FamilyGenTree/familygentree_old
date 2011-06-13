@@ -31,26 +31,36 @@ require './includes/session.php';
 $controller = new WT_Controller_Family();
 $controller->init();
 
-print_header($controller->getPageTitle());
-
-if (!$controller->family) {
-	echo '<b>', WT_I18N::translate('Unable to find record with ID'), '</b><br /><br />';
+if ($controller->family && $controller->family->canDisplayName()) {
+	print_header($controller->getPageTitle());
+	if ($controller->family->isMarkedDeleted()) {
+		if (WT_USER_CAN_ACCEPT) {
+			echo '<p class="ui-state-highlight">', WT_I18N::translate('This family has been deleted.  You should review the deletion and then <a href="%1$s">accept</a> or <a href="%2$s">reject</a> it.', $controller->family->getHtmlUrl().'&amp;action=accept', $controller->family->getHtmlUrl().'&amp;action=undo'), '</p>';
+		} elseif (WT_USER_CAN_EDIT) {
+			echo '<p class="ui-state-highlight">', WT_I18N::translate('This family has been deleted.  The deletion will need to be reviewed by a moderator.'), '</p>';
+		}
+	} elseif (find_updated_record($controller->family->getXref(), WT_GED_ID)!==null) {
+		if (WT_USER_CAN_ACCEPT) {
+			echo '<p class="ui-state-highlight">', WT_I18N::translate('This family has been edited.  You should review the changes and then <a href="%1$s">accept</a> or <a href="%2$s">reject</a> them.', $controller->family->getHtmlUrl().'&amp;action=accept', $controller->family->getHtmlUrl().'&amp;action=undo'), '</p>';
+		} elseif (WT_USER_CAN_EDIT) {
+			echo '<p class="ui-state-highlight">', WT_I18N::translate('This family has been edited.  The changes need to be reviewed by a moderator.'), '</p>';
+		}
+	} elseif ($controller->accept_success) {
+		echo '<p class="ui-state-highlight">', WT_I18N::translate('The changes have been accepted.'), '</p>';
+	} elseif ($controller->reject_success) {
+		echo '<p class="ui-state-highlight">', WT_I18N::translate('The changes have been rejected.'), '</p>';
+	}
+} else {
+	print_header(WT_I18N::translate('Family'));
+	echo '<p class="ui-state-error">', WT_I18N::translate('This family does not exist or you do not have permission to view it.'), '</p>';
 	print_footer();
 	exit;
 }
 
-if (!$controller->family->canDisplayDetails()) {
-	print_privacy_error();
-	print_footer();
-	exit;
-}
-
-if ($controller->family->isMarkedDeleted()) {
-	echo '<span class="error">', WT_I18N::translate('This record has been marked for deletion upon admin approval.'), '</span>';
-}
+// We have finished writing session data, so release the lock
+Zend_Session::writeClose();
 
 if (WT_USE_LIGHTBOX) {
-	require WT_ROOT.WT_MODULES_DIR.'lightbox/lb_defaultconfig.php';
 	require_once WT_ROOT.WT_MODULES_DIR.'lightbox/functions/lb_call_js.php';
 }
 
@@ -66,15 +76,10 @@ $show_full = "1";
 		var recwin = window.open("gedrecord.php?pid=<?php echo $controller->getFamilyID(); ?>"+fromfile, "_blank", "top=50, left=50, width=600, height=400, scrollbars=1, scrollable=1, resizable=1");
 	}
 	function showchanges() {
-		window.location = '<?php echo $controller->family->getRawUrl(); ?>&show_changes=yes';
+		window.location = '<?php echo $controller->family->getRawUrl(); ?>';
 	}
 //-->
 </script>
-<?php
-if (empty($SEARCH_SPIDER) && $controller->accept_success) {
-	echo "<b>".WT_I18N::translate('Changes successfully accepted into database')."</b><br />";
-}
-?>
 <table align="center" width="95%">
 	<tr>
 		<td>

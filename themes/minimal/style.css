@@ -1,8 +1,5 @@
-/**
+/*
  * Style for Minimal theme
- *
- * Use this stylesheet to customize the display of your site.
- * To learn more about CSS visit http://www.w3.org/TR/REC-CSS2/
  *
  * webtrees: Web based Family History software
  * Copyright (C) 2011 webtrees development team.
@@ -24,10 +21,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * @package webtrees
- * @subpackage Themes
- * @version $Id$
+ * $Id$
  */
+
+/* Add a permanent scrollbar, to prevent "flickering" when hover effects lengthen page */
+html { overflow-y:scroll; }
+
 body {
 	color: black;
 	background-color: white;
@@ -44,7 +43,6 @@ legend {
 
 a {
 	color: #666666;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	text-decoration: none;
 }
 
@@ -162,8 +160,6 @@ html[dir='rtl'] .favorites_form {
 	text-align: left;
  }
  
-.separator {display:none; }
-
 /* Set up hover layout and style */
 
 /* header hover */
@@ -198,12 +194,12 @@ html[dir='rtl'] .favorites_form {
 
 h2 {
 	color: black;
-	font: bold 18px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:18px;
 }
 
 h4 {
 	color: black;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 }
 
 th {
@@ -227,6 +223,7 @@ img {
 input, textarea {
 	padding-left: 3px;
 	padding-right: 3px;
+	font-family:inherit;
 }
 
 .gedcom_table {
@@ -272,7 +269,7 @@ table.center{
 	color: black;
 	background-color: #eeeeee;
 	border: 1px solid black;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	text-align: center;
 }
 
@@ -280,7 +277,7 @@ table.center{
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	vertical-align: top;
 }
 
@@ -304,7 +301,7 @@ table.center{
 	color: black;
 	background-color: #eeeeee;
 	border: 1px solid black;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
 	text-align: center;
@@ -314,7 +311,7 @@ table.center{
 	color: black;
 	background-color: #eeeeee;
 	border: 1px solid black;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
 	text-align: center;
@@ -324,7 +321,7 @@ table.center{
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px 4px 4px 4px;
 }
 
@@ -332,14 +329,14 @@ table.center{
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 5px;
 }
 
 .facts_labelred, .facts_labelblue {
 	color: #333333;
 	background-color: #eeeeee;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px 4px 4px 4px;
 	width: 20%;
 	text-align: center;
@@ -348,7 +345,7 @@ table.center{
 .facts_valuered, .facts_valueblue {
 	background-color: white;
 	color: black;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 4px 4px 4px 4px;
 }
 
@@ -417,12 +414,12 @@ table.center{
 
 .name1 {
 	color: black;
-	font: bold 11px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:11px;
 }
 
 .name1Hover {
 	color: black;
-	font: bold 10px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:10px;
 	text-decoration: underline;
 }
 
@@ -435,29 +432,29 @@ table.center{
 }
 
 .details1 {
-	font: normal 10px tahoma, arial, helvetica, sans-serif;
+	font-size:10px;
 }
 .name2 {
 	color: black;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 }
 
 .name2Hover {
 	color: black;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 	text-decoration: underline;
 }
 
 .details2 {
-	font: normal 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 }
 
 .nameZoom {
 	color: black;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 }
 .detailsZoom {
-	font: 14px tahoma, arial, helvetica, sans-serif;
+	font-size:14px;
 	text-decoration: none;
 }
 
@@ -467,7 +464,7 @@ table.center{
 
 .name_head {
 	color: black;
-	font: bold 16px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:16px;
 	letter-spacing: .2px;
 }
 
@@ -485,19 +482,17 @@ table.center{
 
 .error {
 	color: #dd0000;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
 .largeError {
 	color: #dd0000;
-	font: large tahoma, arial, helvetica, sans-serif;
+	font-size:large;
 	font-weight: bold;
 }
 
 .warning {
 	color: #dd0000;
-	font-family: tahoma, arial, helvetica, sans-serif;
 	font-weight: bold;
 }
 
@@ -592,7 +587,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 }
 
 .subheaders {
-	font: bold 16px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:16px;
 	text-indent: 20px;
 	margin-top: 15px;
 	vertical-align: bottom;
@@ -629,19 +624,6 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	font-weight: bold;
 }
 
-/* This is the original.
- * It's not used, but it's left in in case you want to go back to it. */
-.flag {
-	width: 15px;
-	border: solid black 1px;
-}
-/* This one is for a place flag */
-.brightflag {
-	height: 15px;
-	border: none;
-	opacity: 1;		/* IE's support is different */
-}
-
 .border1 {
 	border: solid black 1px;
 }
@@ -670,11 +652,11 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 }
 
 .news_title {
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 }
 
 .news_date {
-	font: normal 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	margin-bottom: 12px;
 }
 
@@ -713,13 +695,13 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 
 .helpstart {
 	margin: 10px;
-	font: bold 14px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:14px;
 	color: #444444;
 	text-decoration: none;
 }
 
 .helptext {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	color: black;
 }
 
@@ -730,14 +712,14 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 #footer {
 	clear: both;
 	color: black;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 }
 
 /*-- index.php specific style sheets -- */
 .small_inner_block {
 	max-height: 200px;
 	overflow: auto;
-	font: normal 10px tahoma, tahoma, arial, helvetica, sans-serif;
+	font-size:10px;
 	text-decoration: none;
 }
 
@@ -749,7 +731,7 @@ html[dir='rtl'] .icon, html[dir='rtl'] .adminicon {
 	background-color: white;
 	color: black;
 	border: solid black 2px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	vertical-align: top;
 	margin-bottom: 5px;
 	padding: 1px;
@@ -923,11 +905,10 @@ left:auto;
 .listlog {
 	line-height: 20pt;
 	color: #555555;
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 
 .formField {
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 }
 
 .starredname {
@@ -939,7 +920,7 @@ left:auto;
 }
 
 .title {
-	font: 20px tahoma, arial, helvetica, sans-serif;
+	font-size:20px;
 }
 
 /* Style for the top and bottom bar */
@@ -947,7 +928,7 @@ left:auto;
 	color: black;
 	background-color: #eeeeee;
 	border: 1px solid black;
-	font: bold 12px tahoma, arial, helvetica, sans-serif;
+	font-weight:bold; font-size:12px;
 	padding: 4px;
 	text-align: center;
 }
@@ -957,7 +938,7 @@ left:auto;
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 11px tahoma, arial, helvetica, sans-serif;
+	font-size:11px;
 	padding: 3px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -968,7 +949,7 @@ left:auto;
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	padding: 3px;
 	white-space: nowrap;
 	vertical-align: top;
@@ -979,7 +960,7 @@ left:auto;
 	background-color: white;
 	color: black;
 	border: solid black 1px;
-	font: 12px tahoma, arial, helvetica, sans-serif;
+	font-size:12px;
 	vertical-align: top;
 	white-space: nowrap;
 	padding: 3px;
@@ -1114,14 +1095,14 @@ a.showit:hover span {
 	padding: 3px;
 	background: #4f4f4f;
 	color: white;
-	font: 15px tahoma, arial, helvetica, sans-serif;
+	font-size:15px;
 	text-align: left;
 	opacity: .85;
 	z-index: 5;
 	white-space: normal;
 }
 .lifespan_people span:first-letter {
-   font: bold 16px tahoma, arial, helvetica, sans-serif;
+  font-weight:bold; font-size:16px;
 	font-variant: small-caps;
 	padding: 1px;
 }
@@ -1184,7 +1165,6 @@ a.showit:hover span {
 #map_type {
 	margin: 0;
 	padding: 0;
-	font-family: Arial;
 	font-size: 10px;
 	list-style: none;
 }
@@ -1214,7 +1194,6 @@ a.showit:hover span {
 }
 
 .tag_cloud {
-	font-family: tahoma, arial, helvetica, sans-serif;
 }
 .tag_cloud a {
 	white-space:nowrap;
@@ -1303,11 +1282,6 @@ a.showit:hover span {
 ul.clist {
 	list-style-image: none;
 	margin: 0px;
-}
-
-.menu_separator img {
-	height: 3px;
-	width: 8em;
 }
 
 .statistics_chart {
@@ -1428,12 +1402,6 @@ div.faq_body {
 	font-weight: bold;
 	font-size: 90%;
 	padding: 0 10px;
-}
-
-/*--- edit links ---*/
-
-.edit_link:after { /* used only on the user list */
-	content: " " url(images/edit_sm.png);
 }
 
 td.descriptionbox  a { /* this keeps the tag color the same when it is a link as when not */
@@ -1569,9 +1537,9 @@ html[dir='rtl'] .flyout {text-align:right; left:210px;}
 html[dir='rtl'] .flyout2 {text-align:right; right:40px;}
 .flyout2 a:hover{color:black;}
 .flyout4 {color:#000000;	text-align:left; margin-top:0px;margin-left:0px; padding:3px;}
-#flyout3, #flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
-html[dir='rtl'] #flyout3 {text-align:right;}
-.famnav_link {font:12px tahoma, arial, helvetica, sans-serif; padding:0px; width:100%;}
+.flyout3, .flyout3 a, #phusb, #pwife, #shusb, #swife, #spouse {background:none; border:none; text-decoration:none; text-align:left; margin-top:0px; left:0px; padding:0px;}
+html[dir='rtl'] .flyout3 {text-align:right;}
+.famnav_link {font-size:12px; padding:0px; width:100%;}
 
 /* Descendancy */
 #sb_desc_content {margin-left:3px; font-size:0.8em;}
@@ -1594,9 +1562,10 @@ html[dir='rtl'] .desc_tree_div ul {margin-right:10px;margin-left:0px;}
 #sb_clippings_content ul {padding:0px;margin:0px;}
 
 /* References */
-#sb_content_references {font-size:80%; font-weight:bold; margin-top:1px; padding:5px;}
-#sb_content_references .editfacts {float:right; margin-top:-10px;}
-html[dir='rtl'] #sb_content_references .editfacts {float:left;}
-#sb_content_references a {display:block;}
-#sb_content_references span {font-weight:normal;}
-#sb_content_references #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}
+#sb_content_extra_info {font-size:80%; font-weight:bold; margin-top:1px; overflow:hidden; padding:5px;}
+#sb_content_extra_info .editfacts {float:right; margin-top:-10px;}
+html[dir='rtl'] #sb_content_extra_info .editfacts {float:left;}
+#sb_content_extra_info a {display:block;}
+#sb_content_extra_info span {font-weight:normal; white-space:nowrap;}
+#sb_content_extra_info span a {display:inline;}
+#sb_content_extra_info #hitcounter {border-top: 1px solid #B2C7D7; font-weight: bold; padding-top: 5px;}

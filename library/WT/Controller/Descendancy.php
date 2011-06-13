@@ -36,7 +36,6 @@ class WT_Controller_Descendancy extends WT_Controller_Base {
 
 	var $diffindi = null;
 	var $NAME_LINENUM = 1;
-	var $accept_success = false;
 	var $canedit = false;
 	var $name_count = 0;
 	var $total_names = 0;
@@ -90,7 +89,6 @@ class WT_Controller_Descendancy extends WT_Controller_Base {
 	$pbwidth = $bwidth+12;
 	$pbheight = $bheight+14;
 
-	$this->show_changes=safe_GET('show_changes');
 	$this->action      =safe_GET('action');
 
 	// Validate form variables
