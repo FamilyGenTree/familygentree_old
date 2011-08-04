@@ -21,7 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// @version $Id$
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -31,12 +31,12 @@ if (!defined('WT_WEBTREES')) {
 class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 	// Extend class WT_Module
 	public function getTitle() {
-		return WT_I18N::translate('Login');
+		return /* I18N: Name of a module */ WT_I18N::translate('Login');
 	}
 
 	// Extend class WT_Module
 	public function getDescription() {
-		return WT_I18N::translate('The Login block accepts a user name and password for users to login.');
+		return /* I18N: Description of the "Login" module */ WT_I18N::translate('An alternative way to login and logout.');
 	}
 
 	// Implement class WT_Module_Block
@@ -56,11 +56,6 @@ class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 			$content .= "<br /><br /></form></div>";
 		} else {
 			$title = WT_I18N::translate('Login');
-			if (get_site_setting('USE_REGISTRATION_MODULE')) {
-				$title.=help_link('index_login_register');
-			} else {
-				$title.=help_link('index_login');
-			}
 			$LOGIN_URL=get_site_setting('LOGIN_URL');
 			$content = "<div class=\"center\"><form method=\"post\" action=\"$LOGIN_URL\" name=\"loginform\" onsubmit=\"t = new Date(); document.loginform.usertime.value=t.getFullYear()+'-'+(t.getMonth()+1)+'-'+t.getDate()+' '+t.getHours()+':'+t.getMinutes()+':'+t.getSeconds(); return true;\">";
 			$content .= "<input type=\"hidden\" name=\"url\" value=\"index.php\" />";

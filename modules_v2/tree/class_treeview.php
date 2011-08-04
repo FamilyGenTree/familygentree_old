@@ -375,7 +375,17 @@ class TreeView {
   	if ($this->allPartners) {
     	$f = $p->getPrimaryChildFamily();
     	if ($f) {
-				$title=' title="'.htmlspecialchars(strip_tags(/* I18N: %s is the names of the parents */ WT_I18N::translate('Child of %s', $f->getFullName()))).'"';
+				switch ($p->getSex()) {
+				case 'M':
+					$title=' title="'.htmlspecialchars(strip_tags(/* I18N: e.g. "Son of [father name & mother name]" */ WT_I18N::translate('Son of %s', $f->getFullName()))).'"';
+					break;
+				case 'F':
+					$title=' title="'.htmlspecialchars(strip_tags(/* I18N: e.g. "Daughter of [father name & mother name]" */ WT_I18N::translate('Daughter of %s', $f->getFullName()))).'"';
+					break;
+				case 'U':
+					$title=' title="'.htmlspecialchars(strip_tags(/* I18N: e.g. "Child of [father name & mother name]" */ WT_I18N::translate('Child of %s', $f->getFullName()))).'"';
+					break;
+				}
 			} else {
 				$title='';
 			}
@@ -394,7 +404,7 @@ class TreeView {
   			$sexSymbol = WT_UTF8_NO_SEX;
   			break;
   	}
-  	$r = '<div class="tv'.$sex.'"'.$title.'>'.$p->getLifeSpan().'<a href="'.$p->getHtmlUrl().'"><span class="tvSexSymbol tv'.$sex.' tv_link">'.$sexSymbol.'</span></a>&nbsp;'.$p->getFullName().'</div>';
+  	$r = '<div class="tv'.$sex.'"'.$title.'><span class="dates">'.$p->getLifeSpan().'</span><a href="'.$p->getHtmlUrl().'"><span class="tvSexSymbol tv'.$sex.' tv_link">'.$sexSymbol.'</span></a>&nbsp;'.$p->getFullName().'</div>';
   	return $r;
   }
 
@@ -412,9 +422,8 @@ class TreeView {
 			$object=$person->findHighlightedMedia();
 			$img_title=PrintReady(htmlspecialchars($person->getFullName()));
 			if (!empty($object)) {
-				$which=thumb_or_main($object); // Do we send the main image or a thumbnail?
 				$mediaobject=WT_Media::getInstance($object['mid']);
-				$thumbnail=$mediaobject->displayMedia(array('which'=>$which,'display_type'=>'treeview','img_title'=>$img_title,'clearbox'=>'tvlb'.$personGroup->getXref()));
+				$thumbnail=$mediaobject->displayMedia(array('display_type'=>'treeview','img_title'=>$img_title,'clearbox'=>'tvlb'.$personGroup->getXref()));
 			} else {
 				$thumbnail=display_silhouette(array('sex'=>$person->getSex(),'display_type'=>'treeview','img_title'=>$img_title)); // may return ''
 			}

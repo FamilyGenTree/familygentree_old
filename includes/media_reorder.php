@@ -193,8 +193,8 @@ require_once WT_ROOT.'includes/functions/functions_print_facts.php';
 			echo "<input type=\"checkbox\" name=\"preserve_last_changed\" />";
 		}
 		echo WT_I18N::translate('Do not update the “last change” record'), help_link('no_update_CHAN'), "<br />";
-		$event = new WT_Event(get_sub_record(1, "1 CHAN", $gedrec));
-		echo format_fact_date($event, false, true);
+		$event = new WT_Event(get_sub_record(1, "1 CHAN", $gedrec), null, 0);
+		echo format_fact_date($event, new WT_Person(''), false, true);
 		echo "</td></tr></table><br />";
 	}
 	?>

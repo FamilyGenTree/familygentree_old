@@ -21,7 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// @version $Id$
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -32,13 +32,13 @@ class marriage_report_WT_Module extends WT_Module implements WT_Module_Report {
 	// Extend class WT_Module
 	public function getTitle() {
 		// This text also appears in the .XML file - update both together
-		return /* I18N: Name of a report */ WT_I18N::translate('Marriage Date and Place Report');
+		return /* I18N: Name of a module/report */ WT_I18N::translate('Marriages');
 	}
 
 	// Extend class WT_Module
 	public function getDescription() {
 		// This text also appears in the .XML file - update both together
-		return /* I18N: Description of a report */ WT_I18N::translate('A report of people who were married in a given time or place.');
+		return /* I18N: Description of the "Marriages" module */ WT_I18N::translate('A report of individuals who were married in a given time or place.');
 	}
 
 	// Extend class WT_Module
@@ -49,10 +49,13 @@ class marriage_report_WT_Module extends WT_Module implements WT_Module_Report {
 	// Implement WT_Module_Report - a module can provide many reports
 	public function getReportMenus() {
 		$menus=array();
-		$menu=new WT_Menu($this->getTitle(), 'reportengine.php?ged='.WT_GEDURL.'&amp;action=setup&amp;report='.WT_MODULES_DIR.$this->getName().'/report.xml');
-		$menu->addIcon('sfamily');
+		$menu=new WT_Menu(
+			$this->getTitle(),
+			'reportengine.php?ged='.WT_GEDURL.'&amp;action=setup&amp;report='.WT_MODULES_DIR.$this->getName().'/report.xml',
+			'menu-report-'.$this->getName()
+		);
+		$menu->addIcon('place');
 		$menu->addClass('submenuitem', 'submenuitem_hover', 'submenu', 'icon_small_reports');
-		$menu->addId('menu-report-'.$this->getName());
 		$menus[]=$menu;
 
 		return $menus;

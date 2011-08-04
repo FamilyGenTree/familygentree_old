@@ -430,7 +430,7 @@ function print_family_children($famid, $childid = "", $sosa = 0, $label="", $per
  *
  * @param string $famid family gedcom ID
  */
-function print_family_facts(&$family) {
+function print_family_facts($family) {
 	global $pbwidth, $pbheight;
 	global $TEXT_DIRECTION, $GEDCOM;
 	global $linkToID;
@@ -448,7 +448,7 @@ function print_family_facts(&$family) {
 		if ($indifacts) {
 			sort_facts($indifacts);
 			foreach ($indifacts as $fact) {
-				print_fact($fact);
+				print_fact($fact, $family);
 			}
 			print_main_media($famid);
 		} else {
@@ -617,7 +617,7 @@ function print_url_arrow($id, $url, $label, $dir=2) {
 	$array_style=array("larrow", "rarrow", "uarrow", "darrow");
 	$astyle=$array_style[$adir];
 
-	echo "<a href=\"$url\" onmouseover=\"swap_image('".$astyle.$id."',$adir); window.status ='" . $label . "'; return true; \" onmouseout=\"swap_image('".$astyle.$id."',$adir); window.status=''; return true; \"><img id=\"".$astyle.$id."\" src=\"".$WT_IMAGES[$astyle]."\" hspace=\"0\" vspace=\"0\" border=\"0\" alt=\"$label\" title=\"$label\" /></a>";
+	echo "<a href=\"$url\" onmouseover=\"swap_image('".$astyle.$id."',$adir); window.status ='" . $label . "'; return true;\" onmouseout=\"swap_image('".$astyle.$id."',$adir); window.status=''; return true;\"><img id=\"".$astyle.$id."\" src=\"".$WT_IMAGES[$astyle]."\" hspace=\"0\" vspace=\"0\" border=\"0\" alt=\"$label\" title=\"$label\" /></a>";
 }
 
 /**

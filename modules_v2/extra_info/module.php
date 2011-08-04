@@ -18,7 +18,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-//  $Id: module.php 11459 2011-05-04 23:37:08Z nigel $
+// $Id: module.php 11459 2011-05-04 23:37:08Z nigel $
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -30,12 +30,12 @@ require_once WT_ROOT.'includes/functions/functions_charts.php';
 class extra_info_WT_Module extends WT_Module implements WT_Module_Sidebar {
 	// Extend WT_Module
 	public function getTitle() {
-		return WT_I18N::translate('Extra information');
+		return /* I18N: Name of a module/sidebar */ WT_I18N::translate('Extra information');
 	}
 
 	// Extend WT_Module
 	public function getDescription() {
-		return WT_I18N::translate('A sidebar that shows non-genealogical facts and other information about an indivdual.');
+		return /* I18N: Description of the "Extra information" module */ WT_I18N::translate('A sidebar showing non-genealogical information about an indivdual.');
 	}
 
 	// Implement WT_Module_Sidebar
@@ -69,21 +69,21 @@ class extra_info_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			if (count($indifacts)==0) {
 				echo WT_I18N::translate('There are no Facts for this individual.');
 			}
-			foreach ($indifacts as $value) {
-				if (in_array($value->getTag(), WT_Gedcom_Tag::getReferenceFacts())) {
-					print_fact($value);
+			foreach ($indifacts as $fact) {
+				if (in_array($fact->getTag(), WT_Gedcom_Tag::getReferenceFacts())) {
+					print_fact($fact, $this->controller->indi);
 				}
 				$FACT_COUNT++;
 			}
 		}
 
-		echo '<div id="hitcounter">';
+		echo '<tr><td><div id="hitcounter">';
 		if ($SHOW_COUNTER && (empty($SEARCH_SPIDER))) {
 			//print indi counter only if displaying a non-private person
 			require WT_ROOT.'includes/hitcount.php';
 			echo WT_I18N::translate('Hit Count:'). ' '. $hitCount;
 		}
-		echo '</div>';// close #hitcounter
+		echo '</div></td></tr>';// close #hitcounter
 	}
 	
 	// Implement WT_Module_Sidebar

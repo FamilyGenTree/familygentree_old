@@ -140,7 +140,7 @@ if (preg_match("/=.*:\/\//i", rawurldecode($_SERVER["REQUEST_URI"]))) {
 // check for worms and bad bots
 if ($quitReason == "") {
 	foreach ($worms as $worm) {
-		if (preg_match('/'.$worm.'/i', $ua)) {
+		if (preg_match('/'.$worm.'/', $ua)) {
 			$quitReason = "Blocked crawler detected";
 			break;
 		}
@@ -178,7 +178,8 @@ $real_browsers = array(
 	'MSFrontPage',
 	'RssReader',
 	'Liferea/',
-	'W3C_Validator'
+	'W3C_Validator',
+	'TotalValidator',
 	);
 
 // Here we list the search engines whose accesses we don't need to log.
@@ -191,7 +192,9 @@ $known_spiders = array(
 	'Ask Jeeves',
 	'Mediapartners-Google',
 	'Feedfetcher-Google',
-	'Twiceler'
+	'Twiceler',
+	'YandexBot',   // Popular Russian/cyrillic search engine
+	'Baiduspider', // Popular Chinese search engine
 );
 
 // We overlay the following name with carefully selected characters.

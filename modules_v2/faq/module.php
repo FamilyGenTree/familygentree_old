@@ -21,7 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// @version $Id$
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -31,12 +31,12 @@ if (!defined('WT_WEBTREES')) {
 class faq_WT_Module extends WT_Module implements WT_Module_Block, WT_Module_Config {
 	// Extend class WT_Module
 	public function getTitle() {
-		return /* Abbreviation for "Frequently Asked Questions" */ WT_I18N::translate('FAQ');
+		return /* I18N: Name of a module.  Abbreviation for "Frequently Asked Questions" */ WT_I18N::translate('FAQ');
 	}
 
 	// Extend class WT_Module
 	public function getDescription() {
-		return WT_I18N::translate('A list of frequently asked questions');
+		return /* I18N: Description of the "FAQ" module */ WT_I18N::translate('A list of frequently asked questions and answers.');
 	}
 
 	// Extend WT_Module
@@ -70,7 +70,7 @@ class faq_WT_Module extends WT_Module implements WT_Module_Block, WT_Module_Conf
 
 	// Implement WT_Module_Config
 	public function getConfigLink() {
-		return 'module.php?mod='.$this->getName().'&mod_action=admin_config';
+		return 'module.php?mod='.$this->getName().'&amp;mod_action=admin_config';
 	}
 
 	// Implement class WT_Module_Block
@@ -295,7 +295,7 @@ class faq_WT_Module extends WT_Module implements WT_Module_Block, WT_Module_Conf
 		// Instructions
 		echo '<div class="faq_italic">', WT_I18N::translate('Click on a title to go straight to it, or scroll down to read them all');
 			if (WT_USER_GEDCOM_ADMIN) {
-				echo '<div style="float:right;">',
+				echo '<div class="faq_edit">',
 						'<a href="module.php?mod=faq&mod_action=admin_config">', WT_I18N::translate('Click here to Add, Edit, or Delete'), '</a>',
 				'</div>';
 			}
@@ -327,7 +327,7 @@ class faq_WT_Module extends WT_Module implements WT_Module_Block, WT_Module_Conf
 			if (!$languages || in_array(WT_LOCALE, explode(',', $languages))) {
 				// NOTE: Print the body text of the current item, with its header
 				echo '<div class="faq_title" id="faq', $id, '">', $faq->header;
-				echo '<div style="float:right;" class="faq_italic">';
+				echo '<div class="faq_top faq_italic">';
 				echo '<a href="#body">', WT_I18N::translate('back to top'), '</a>';
 				echo '</div>';
 				echo '</div>';

@@ -20,6 +20,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+// PNG Icons By: Alessandro Rei; License:  GPL; www.deviantdark.com
 //
 // $Id$
 
@@ -27,19 +28,31 @@ if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
+// Convert a menu into our theme-specific format
+function getMenuAsCustomList($menu) {
+		// Create a inert menu - to use as a label
+		$tmp=new WT_Menu(strip_tags($menu->label), '');
+		// Insert the label into the submenu
+		array_unshift($menu->submenus, $tmp);
+		// Neutralise the top-level menu
+		$menu->label='';
+		$menu->onclick='';
+		$menu->iconclass='';
+		return $menu->getMenuAsList();
+}
 
 //-- print color theme sub type change dropdown box
 function color_theme_dropdown() {
 	global $COLOR_THEME_LIST;
 	
-	$menu=new WT_Menu(WT_I18N::translate('Color Palette'));
+	$menu=new WT_Menu(/* I18N: A colour scheme */ WT_I18N::translate('Palette'), '#', 'menu-color');
 	$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
 	uasort($COLOR_THEME_LIST, 'utf8_strcasecmp');
 	foreach ($COLOR_THEME_LIST as $colorChoice=>$colorName) {
-		$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice)));
+		$submenu=new WT_Menu($colorName, get_query_url(array('themecolor'=>$colorChoice)), 'menu-color-'.$colorChoice);
 		$menu->addSubMenu($submenu);
 	}
-	return '<div class="color_form">'.$menu->getMenuAsDropdown().'</div>';
+	return $menu->getMenuAsList();
 }
 
 /**
@@ -49,20 +62,21 @@ function color_theme_dropdown() {
  */
 
 $COLOR_THEME_LIST=array(
-	'aquamarine'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Aqua Marine'),
-	'ash'             => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Ash'),
-	'belgianchocolate'=> /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Belgian Chocolate'),
-	'bluelagoon'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Blue Lagoon'),
-	'bluemarine'      => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Blue Marine'),
-	'coldday'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Cold Day'),
-	'greenbeam'       => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Green Beam'),
-	'mediterranio'    => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Mediterranio'),
-	'mercury'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Mercury'),
-	'nocturnal'       => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Nocturnal'),
-	'olivia'          => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Olivia'),
-	'pinkplastic'     => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Pink Plastic'),
-	'shinytomato'     => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Shiny Tomato'),
-	'tealtop'         => /* I18N: This is the name of theme color-scheme */ WT_I18N::translate('Teal Top'),
+	'aquamarine'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Aqua Marine'),
+	'ash'             => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Ash'),
+	'belgianchocolate'=> /* I18N: The name of a colour-scheme */ WT_I18N::translate('Belgian Chocolate'),
+	'bluelagoon'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Blue Lagoon'),
+	'bluemarine'      => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Blue Marine'),
+	'coffeeandcream'  => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Coffee and Cream'),
+	'coldday'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Cold Day'),
+	'greenbeam'       => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Green Beam'),
+	'mediterranio'    => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Mediterranio'),
+	'mercury'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Mercury'),
+	'nocturnal'       => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Nocturnal'),
+	'olivia'          => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Olivia'),
+	'pinkplastic'     => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Pink Plastic'),
+	'shinytomato'     => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Shiny Tomato'),
+	'tealtop'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Teal Top'),
 );
 
 if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_THEME_LIST)) {
@@ -105,7 +119,7 @@ $WT_IMAGES=array(
 	'ancestry'=>WT_THEME_DIR.'images/ancestry.gif',
 	'calendar'=>WT_THEME_DIR.'images/calendar.gif',
 	'center'=>WT_THEME_DIR.'images/center.gif',
-	'cfamily'=>WT_THEME_DIR.'images/cfamily.gif',
+	'cfamily'=>WT_THEME_DIR.'images/cfamily.png',
 	'charts'=>WT_THEME_DIR.'images/charts.gif',
 	'childless'=>WT_THEME_DIR.'images/childless.gif',
 	'children'=>WT_THEME_DIR.'images/children.gif',
@@ -134,7 +148,7 @@ $WT_IMAGES=array(
 	'hline'=>WT_THEME_DIR.'images/hline.gif',
 	'home'=>WT_THEME_DIR.'images/home.gif',
 	'hourglass'=>WT_THEME_DIR.'images/hourglass.gif',
-	'indis'=>WT_THEME_DIR.'images/indis.gif',
+	'indis'=>WT_THEME_DIR.'images/indis.png',
 	'itree'=>WT_THEME_DIR.'images/itree.gif',
 	'larrow'=>WT_THEME_DIR.'images/larrow.gif',
 	'larrow2'=>WT_THEME_DIR.'images/larrow2.gif',
@@ -150,15 +164,15 @@ $WT_IMAGES=array(
 	'media'=>WT_THEME_DIR.'images/media.gif',
 	'menu_help'=>WT_THEME_DIR.'images/menu_help.gif',
 	'menu_media'=>WT_THEME_DIR.'images/menu_media.gif',
-	'menu_note'=>WT_THEME_DIR.'images/menu_note.gif',
+	'menu_note'=>WT_THEME_DIR.'images/menu_note.png',
 	'menu_repository'=>WT_THEME_DIR.'images/menu_repository.gif',
 	'menu_source'=>WT_THEME_DIR.'images/menu_source.gif',
 	'minus'=>WT_THEME_DIR.'images/minus.gif',
 	'mypage'=>WT_THEME_DIR.'images/mypage.gif',
 	'note'=>WT_THEME_DIR.'images/notes.gif',
-	'patriarch'=>WT_THEME_DIR.'images/patriarch.gif',
+	'patriarch'=>WT_THEME_DIR.'images/patriarch.png',
 	'pedigree'=>WT_THEME_DIR.'images/pedigree.gif',
-	'place'=>WT_THEME_DIR.'images/place.gif',
+	'place'=>WT_THEME_DIR.'images/place.png',
 	'plus'=>WT_THEME_DIR.'images/plus.gif',
 	'rarrow'=>WT_THEME_DIR.'images/rarrow.gif',
 	'rarrow2'=>WT_THEME_DIR.'images/rarrow2.gif',
@@ -177,12 +191,12 @@ $WT_IMAGES=array(
 	'sex_m_9x9'=>WT_THEME_DIR.'images/sex_m_9x9.gif',
 	'sex_u_15x15'=>WT_THEME_DIR.'images/sex_u_15x15.gif',
 	'sex_u_9x9'=>WT_THEME_DIR.'images/sex_u_9x9.gif',
-	'sfamily'=>WT_THEME_DIR.'images/sfamily.gif',
-	'source'=>WT_THEME_DIR.'images/source.gif',
+	'sfamily'=>WT_THEME_DIR.'images/sfamily.png',
+	'source'=>WT_THEME_DIR.'images/source.png',
 	'spacer'=>WT_THEME_DIR.'images/spacer.gif',
 	'statistic'=>WT_THEME_DIR.'images/statistic.gif',
 	'stop'=>WT_THEME_DIR.'images/stop.gif',
-	'target'=>WT_THEME_DIR.'images/buttons/target.gif',
+	'target'=>WT_THEME_DIR.'images/buttons/target.png',
 	'timeline'=>WT_THEME_DIR.'images/timeline.gif',
 	'tree'=>WT_THEME_DIR.'images/gedcom.gif',
 	'uarrow'=>WT_THEME_DIR.'images/uarrow.gif',
@@ -196,36 +210,36 @@ $WT_IMAGES=array(
 	'zoomout'=>WT_THEME_DIR.'images/zoomout.gif',
 
 	//- buttons for data entry pages
-	'button_addmedia'=>WT_THEME_DIR.'images/buttons/addmedia.gif',
-	'button_addnote'=>WT_THEME_DIR.'images/buttons/addnote.gif',
-	'button_addrepository'=>WT_THEME_DIR.'images/buttons/addrepository.gif',
-	'button_addsource'=>WT_THEME_DIR.'images/buttons/addsource.gif',
-	'button_autocomplete'=>WT_THEME_DIR.'images/buttons/autocomplete.gif',
-	'button_calendar'=>WT_THEME_DIR.'images/buttons/calendar.gif',
-	'button_family'=>WT_THEME_DIR.'images/buttons/family.gif',
+//- buttons for data entry pages
+	'button_addmedia'=>WT_THEME_DIR.'images/buttons/addmedia.png',
+	'button_addnote'=>WT_THEME_DIR.'images/buttons/addnote.png',
+	'button_addrepository'=>WT_THEME_DIR.'images/buttons/addrepository.png',
+	'button_addsource'=>WT_THEME_DIR.'images/buttons/addsource.png',
+	'button_calendar'=>WT_THEME_DIR.'images/buttons/calendar.png',
+	'button_family'=>WT_THEME_DIR.'images/buttons/family.png',
 	'button_find_facts'=>WT_THEME_DIR.'images/buttons/find_facts.png',
-	'button_head'=>WT_THEME_DIR.'images/buttons/head.gif',
-	'button_indi'=>WT_THEME_DIR.'images/buttons/indi.gif',
-	'button_keyboard'=>WT_THEME_DIR.'images/buttons/keyboard.gif',
-	'button_media'=>WT_THEME_DIR.'images/buttons/media.gif',
-	'button_note'=>WT_THEME_DIR.'images/buttons/note.gif',
-	'button_place'=>WT_THEME_DIR.'images/buttons/place.gif',
-	'button_repository'=>WT_THEME_DIR.'images/buttons/repository.gif',
-	'button_source'=>WT_THEME_DIR.'images/buttons/source.gif',
+	'button_head'=>WT_THEME_DIR.'images/buttons/head.png',
+	'button_indi'=>WT_THEME_DIR.'images/buttons/indi.png',
+	'button_keyboard'=>WT_THEME_DIR.'images/buttons/keyboard.png',
+	'button_media'=>WT_THEME_DIR.'images/buttons/media.png',
+	'button_note'=>WT_THEME_DIR.'images/buttons/note.png',
+	'button_place'=>WT_THEME_DIR.'images	/buttons/place.png',
+	'button_repository'=>WT_THEME_DIR.'images/buttons/repository.png',
+	'button_source'=>WT_THEME_DIR.'images/buttons/source.png', 
 
 	// media images
 	'media_audio'=>WT_THEME_DIR.'images/media/audio.png',
-	'media_doc'=>WT_THEME_DIR.'images/media/doc.gif',
+	'media_doc'=>WT_THEME_DIR.'images/media/doc.png',
 	'media_flash'=>WT_THEME_DIR.'images/media/flash.png',
 	'media_flashrem'=>WT_THEME_DIR.'images/media/flashrem.png',
-	'media_ged'=>WT_THEME_DIR.'images/media/ged.gif',
+	'media_ged'=>WT_THEME_DIR.'images/media/ged.png',
 	'media_globe'=>WT_THEME_DIR.'images/media/globe.png',
-	'media_html'=>WT_THEME_DIR.'images/media/html.gif',
-	'media_pdf'=>WT_THEME_DIR.'images/media/pdf.gif',
+	'media_html'=>WT_THEME_DIR.'images/media/www.png',
 	'media_picasa'=>WT_THEME_DIR.'images/media/picasa.png',
-	'media_tex'=>WT_THEME_DIR.'images/media/tex.gif',
+	'media_pdf'=>WT_THEME_DIR.'images/media/pdf.png',
+	'media_tex'=>WT_THEME_DIR.'images/media/tex.png',
 	'media_wmv'=>WT_THEME_DIR.'images/media/wmv.png',
-	'media_wmvrem'=>WT_THEME_DIR.'images/media/wmvrem.png',
+	'media_wmvrem'=>WT_THEME_DIR.'images/media/wmvrem.png', 
 );
 
 //-- Variables for the Fan chart

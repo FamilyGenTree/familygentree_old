@@ -100,7 +100,7 @@ if ($action=="sendFiles") {
 				if ($chan) {
 					$date=$chan->getDate();
 					if ($date->isOK()) {
-						echo " <lastmod>", $date->MinDate()->Format('%Y-%d-%m'), "</lastmod>\n";
+						echo " <lastmod>", $date->MinDate()->Format('%Y-%m-%d'), "</lastmod>\n";
 					}
 				}
 				echo " <changefreq>", $indirec_update, "</changefreq>\n";
@@ -122,7 +122,7 @@ if ($action=="sendFiles") {
 				if ($chan) {
 					$date=$chan->getDate();
 					if ($date->isOK()) {
-						echo " <lastmod>", $date->MinDate()->Format('%Y-%d-%m'), "</lastmod>\n";
+						echo " <lastmod>", $date->MinDate()->Format('%Y-%m-%d'), "</lastmod>\n";
 					}
 				}
 				echo " <changefreq>", $famrec_update, "</changefreq>\n";
@@ -177,7 +177,7 @@ if ($action=="sendIndex") {
 			$xml_name = str_ireplace(".ged",".xml", $ged_name);
 			echo " <sitemap>\n";
 			echo " <loc>", WT_SERVER_NAME, WT_SCRIPT_PATH, "SM_", $xml_name, "</loc>\n";
-			echo " <lastmod>", date("Y-m-d"), "</lastmod>\n ";
+			echo " <lastmod>", date("%Y-%m-%d"), "</lastmod>\n ";
 			echo " </sitemap>\n";
 		}
 	}
@@ -196,9 +196,9 @@ if ($action=="generate") {
 	echo "<tr><td class=\"topbottombar\">", WT_I18N::translate('Selected items to store in Sitemap:'), "</td></tr>\n";
 	if (isset($_POST["welcome_page"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Home page'), "</td></tr>\n";
 	if (isset($_POST["indi_recs"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Individual information'), "</td></tr>\n";
-	if (isset($_POST["indi_list"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Individual List'), "</td></tr>\n";
+	if (isset($_POST["indi_list"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Individual list'), "</td></tr>\n";
 	if (isset($_POST["fam_recs"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Family information'), "</td></tr>\n";
-	if (isset($_POST["fam_list"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Family List'), "</td></tr>\n";
+	if (isset($_POST["fam_list"])) echo "<tr><td class=\"optionbox\">", WT_I18N::translate('Family list'), "</td></tr>\n";
 
 	echo "<tr><td class=\"topbottombar\">", WT_I18N::translate('GEDCOMs to store in Sitemap:'), "</td></tr>\n";
 	foreach (get_all_gedcoms() as $ged_id=>$gedcom) {
@@ -318,7 +318,7 @@ if ($action=="") {
 			</td>
 		</tr>
 		<tr>
-			<td><input type="checkbox" name="indi_list"><?php echo WT_I18N::translate('Individual List'); ?></td>
+			<td><input type="checkbox" name="indi_list"><?php echo WT_I18N::translate('Individual list'); ?></td>
 			<td>
 				<select name="indilist_priority">
 					<option value="1">0.1</option>

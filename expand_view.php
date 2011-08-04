@@ -70,7 +70,7 @@ foreach ($events as $event) {
 		case 'ASSO':
 			// Associates
 			echo '<div>';
-			print_asso_rela_record($event);
+			print_asso_rela_record($event, $person);
 			echo '</div>';
 		default:
 			// Simple version of print_fact()
@@ -81,7 +81,7 @@ foreach ($events as $event) {
 			if ($details!='Y' && $details!='N') {
 				echo PrintReady($details);
 			}
-			echo format_fact_date($event, false, false, $event->getTag(), $person->getXref(), $person->getGedcomRecord());
+			echo format_fact_date($event, $person, false, false);
 			// Show spouse/family for family events
 			$spouse=WT_Person::getInstance($event->getSpouseId());
 			if ($spouse) {

@@ -21,7 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// @version $Id$
+// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -31,12 +31,12 @@ if (!defined('WT_WEBTREES')) {
 class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 	// Extend WT_Module
 	public function getTitle() {
-		return WT_I18N::translate('Relatives');
+		return /* I18N: Name of a module */ WT_I18N::translate('Families');
 	}
 
 	// Extend WT_Module
 	public function getDescription() {
-		return WT_I18N::translate('Adds a tab to the individual page which displays the families and close relatives of an individual.');
+		return /* I18N: Description of the "Families" module */ WT_I18N::translate('A tab showing the close relatives of an individual.');
 	}
 
 	// Implement WT_Module_Tab
@@ -361,7 +361,7 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 
 		ob_start();
 		?>
-		<table class="facts_table"><tr><td style="width:20%; padding:4px"></td><td class="descriptionbox rela">
+		<table class="facts_table"><tr><td colspan="2" class="descriptionbox rela">
 		<input id="checkbox_elder" type="checkbox" onclick="toggleByClassName('DIV', 'elderdate');" <?php if ($SHOW_AGE_DIFF) echo "checked=\"checked\""; ?>/>
 		<label for="checkbox_elder"><?php echo WT_I18N::translate('Show date differences'), help_link('age_differences'); ?></label>
 		</td></tr></table>
@@ -490,14 +490,12 @@ class relatives_WT_Module extends WT_Module implements WT_Module_Tab {
 				</td>
 			</tr>
 			<?php } ?>
-<?php if (WT_USER_CAN_ACCEPT) { // NOTE this function is restricted to ACCEPTORS because another bug prevents pending changes being shown on the close relatives tab of the indi page. Once that bug is fixed, this function can be opened up to all! ?>
 			<tr>
 				<td class="facts_value">
 				<a href="javascript:;" onclick="return addopfchild('<?php echo $this->controller->pid; ?>','U');"><?php echo WT_I18N::translate('Add a child to create a one-parent family'); ?></a>
 				<?php echo help_link('add_opf_child'); ?>
 				</td>
 			</tr>
-<?php } ?>
 		</table>
 		<?php } ?>
 		<br />

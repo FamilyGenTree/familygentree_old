@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Report>
 	<!-- $Id$ -->
-	<Title><var var="WT_I18N::translate('Births, Deaths, Marriages')" /></Title>
+	<Title><var var="WT_I18N::translate('Vital records')" /></Title>
 	<Description><var var="WT_I18N::translate('A report of vital records for a given date or place.')" /></Description>
 	<Input name="name" lookup="NAME" type="text"><var var="WT_I18N::translate('Name')" /></Input>
 	<Input name="bdmplace" lookup="PLAC" type="text"><var var="WT_I18N::translate('Place')" /></Input>
@@ -28,7 +28,7 @@
 
 	<Doc pageSize="$pageSize" orientation="landscape">
 		<Header>
-			<Cell align="center" newline="1" style="label"><var var="WT_I18N::translate('Births, Deaths, Marriages')" /></Cell>
+			<Cell align="center" newline="1" style="label"><var var="WT_I18N::translate('Vital records')" /></Cell>
 			<Cell align="center" newline="1" style="header">
 				<if condition="$name!=''">
 				    <var var="name" /> 
@@ -110,10 +110,10 @@
 
 				<TextBox width="205" height="46">
 					<Text style="text">
-						<GetPersonName id="" />
+						<GetPersonName id="" /><br />
 					</Text>
 					<Text style="small">
-						<br />   <var var="WT_I18N::translate('Father')" />
+						   <var var="WT_I18N::translate('Father')" />
 						: <Gedcom id="@FAMC"><GetPersonName id="@HUSB" /></Gedcom>
 						<br />   <var var="WT_I18N::translate('Mother')" />
 						: <Gedcom id="@FAMC"><GetPersonName id="@WIFE" /></Gedcom>
@@ -131,7 +131,7 @@
 							: <GedcomValue tag="BIRT:DATE" />
 							<br />  <var var="WT_I18N::translate('Place')" />
 							: <GedcomValue tag="BIRT:PLAC" />
-							<br />  <var var="WT_I18N::translate('Source')" /> 
+							<br />  <var var="WT_I18N::translate('Source')" />
 							: <RepeatTag tag="BIRT:SOUR">
 								<Gedcom id="@SOUR">
 									<GedcomValue tag="TITL" />

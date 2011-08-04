@@ -14,8 +14,29 @@
 a.showit:hover span {
 	filter: alpha(opacity=85);
 }
+
 .makeMenu li ul {
-top: 2px!important;
-	*top: 8px; 
+top: 0px!important;
+}
+
+div.blockcontent {
+*margin-top: 10px!important; }
+
+#menu-theme, #menu-language, #menu-theme, #menu-favorites {*padding-right: 10px}
+
+div.blockcontent {
+	*margin-top: -2px; 
+}
+
+#topMenu {
+position: relative; z-index: 2001; 
+}
+
+#header {
+  position: relative; z-index: 2002; 
+}
+
+div.blockcontent {
+*margin-top: -2px; 
 }
 

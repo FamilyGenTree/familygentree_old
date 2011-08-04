@@ -215,91 +215,96 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 				}
 			};
 
-			// === Use jquery for info window tabs ===
+			// === Use jquery for info window tabs ===		
+     		google.maps.event.addListener(infowindow, 'domready', function(){ 
+     		
+         		//jQuery code here     
+				jQuery('#EV').click(function() {
+					document.tabLayerEV = eval('document.getElementById("EV")');
+					document.tabLayerEV.style.background = '#ffffff';
+					document.tabLayerEV.style.paddingBottom = '1px';
+					<?php if ($STREETVIEW) { ?>
+					document.tabLayerSV = eval('document.getElementById("SV")');
+					document.tabLayerSV.style.background = '#cccccc';
+					document.tabLayerSV.style.paddingBottom = '0px';
+					<?php } ?>
+			// Please leave (windmillway) ==========================================
+			//		document.tabLayerPH = eval('document.getElementById("PH")');
+			//		document.tabLayerPH.style.background = '#cccccc';
+			//		document.tabLayerPH.style.paddingBottom = '0px';
+			// =====================================================================
+					document.panelLayer1 = eval('document.getElementById("pane1")');
+					document.panelLayer1.style.display = 'block';
+					<?php if ($STREETVIEW) { ?>
+					document.panelLayer2 = eval('document.getElementById("pane2")');
+					document.panelLayer2.style.display = 'none';
+					<?php } ?>
+			// Please leave (windmillway) ==========================================
+			//		document.panelLayer3 = eval('document.getElementById("pane3")');
+			//		document.panelLayer3.style.display = 'none';
+			// =====================================================================
+				});
 
-			jQuery('#EV').click(function() {
-				document.tabLayerEV = eval('document.getElementById("EV")');
-				document.tabLayerEV.style.background = '#ffffff';
-				document.tabLayerEV.style.paddingBottom = '1px';
-				<?php if ($STREETVIEW) { ?>
-				document.tabLayerSV = eval('document.getElementById("SV")');
-				document.tabLayerSV.style.background = '#cccccc';
-				document.tabLayerSV.style.paddingBottom = '0px';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.tabLayerPH = eval('document.getElementById("PH")');
-		//		document.tabLayerPH.style.background = '#cccccc';
-		//		document.tabLayerPH.style.paddingBottom = '0px';
-		// =====================================================================
-				document.panelLayer1 = eval('document.getElementById("pane1")');
-				document.panelLayer1.style.display = 'block';
-				<?php if ($STREETVIEW) { ?>
-				document.panelLayer2 = eval('document.getElementById("pane2")');
-				document.panelLayer2.style.display = 'none';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.panelLayer3 = eval('document.getElementById("pane3")');
-		//		document.panelLayer3.style.display = 'none';
-		// =====================================================================
-			});
+				jQuery('#SV').click(function() {			
+					document.tabLayerEV = eval('document.getElementById("EV")');
+					document.tabLayerEV.style.background = '#cccccc';
+					document.tabLayerEV.style.paddingBottom = '0px';
+					<?php if ($STREETVIEW) { ?>
+					document.tabLayerSV = eval('document.getElementById("SV")');
+					document.tabLayerSV.style.background = '#ffffff';
+					document.tabLayerSV.style.paddingBottom = '1px';
+					<?php } ?>			
+			// Please leave (windmillway) ==========================================
+			//		document.tabLayerPH = eval('document.getElementById("PH")');
+			//		document.tabLayerPH.style.background = '#cccccc';
+			//		document.tabLayerPH.style.paddingBottom = '0px';
+			// =====================================================================				
+					document.panelLayer1 = eval('document.getElementById("pane1")');
+					document.panelLayer1.style.display = 'none';
+					<?php if ($STREETVIEW) { ?>
+					document.panelLayer2 = eval('document.getElementById("pane2")');
+					document.panelLayer2.style.display = 'block';
+					<?php } ?>		
+			// Please leave (windmillway) ==========================================
+			//		document.panelLayer3 = eval('document.getElementById("pane3")');
+			//		document.panelLayer3.style.display = "none";
+			// =====================================================================
+					var panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"), panoramaOptions);
+					setTimeout(function() { panorama.setVisible(true); }, 100);
+      				setTimeout(function() { panorama.setVisible(true); }, 500);				
+				});
 
-			jQuery('#SV').click(function() {
-				document.tabLayerEV = eval('document.getElementById("EV")');
-				document.tabLayerEV.style.background = '#cccccc';
-				document.tabLayerEV.style.paddingBottom = '0px';
-				<?php if ($STREETVIEW) { ?>
-				document.tabLayerSV = eval('document.getElementById("SV")');
-				document.tabLayerSV.style.background = '#ffffff';
-				document.tabLayerSV.style.paddingBottom = '1px';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.tabLayerPH = eval('document.getElementById("PH")');
-		//		document.tabLayerPH.style.background = '#cccccc';
-		//		document.tabLayerPH.style.paddingBottom = '0px';
-		// =====================================================================
-				document.panelLayer1 = eval('document.getElementById("pane1")');
-				document.panelLayer1.style.display = 'none';
-				<?php if ($STREETVIEW) { ?>
-				document.panelLayer2 = eval('document.getElementById("pane2")');
-				document.panelLayer2.style.display = 'block';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.panelLayer3 = eval('document.getElementById("pane3")');
-		//		document.panelLayer3.style.display = "none";
-		// =====================================================================
-				var panorama = new google.maps.StreetViewPanorama(document.getElementById("pano"), panoramaOptions);
-				setTimeout(function() { panorama.setVisible(true); }, 100);
-      			setTimeout(function() { panorama.setVisible(true); }, 500);				
-			});
-
-			jQuery('#PH').click(function() {
-				document.tabLayerEV = eval('document.getElementById("EV")');
-				document.tabLayerEV.style.background = '#cccccc';
-				document.tabLayerEV.style.paddingBottom = '0px';
-				<?php if ($STREETVIEW) { ?>
-				document.tabLayerSV = eval('document.getElementById("SV")');
-				document.tabLayerSV.style.background = '#cccccc';
-				document.tabLayerSV.style.paddingBottom = '0px';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.tabLayerPH = eval('document.getElementById("PH")');
-		//		document.tabLayerPH.style.background = '#ffffff';
-		//		document.tabLayerPH.style.paddingBottom = '1px';
-		// =================================================================
-				document.panelLayer1 = eval('document.getElementById("pane1")');
-				document.panelLayer1.style.display = 'none';
-				<?php if ($STREETVIEW) { ?>
-				document.panelLayer2 = eval('document.getElementById("pane2")');
-				document.panelLayer2.style.display = 'none';
-				<?php } ?>
-		// Please leave (windmillway) ==========================================
-		//		document.panelLayer3 = eval('document.getElementById("pane3")');
-		//		document.panelLayer3.style.display = 'block';
-		// =================================================================
-			});
+				jQuery('#PH').click(function() {
+					document.tabLayerEV = eval('document.getElementById("EV")');
+					document.tabLayerEV.style.background = '#cccccc';
+					document.tabLayerEV.style.paddingBottom = '0px';
+					<?php if ($STREETVIEW) { ?>
+					document.tabLayerSV = eval('document.getElementById("SV")');
+					document.tabLayerSV.style.background = '#cccccc';
+					document.tabLayerSV.style.paddingBottom = '0px';
+					<?php } ?>
+			// Please leave (windmillway) ==========================================
+			//		document.tabLayerPH = eval('document.getElementById("PH")');
+			//		document.tabLayerPH.style.background = '#ffffff';
+			//		document.tabLayerPH.style.paddingBottom = '1px';
+			// =================================================================
+					document.panelLayer1 = eval('document.getElementById("pane1")');
+					document.panelLayer1.style.display = 'none';
+					<?php if ($STREETVIEW) { ?>
+					document.panelLayer2 = eval('document.getElementById("pane2")');
+					document.panelLayer2.style.display = 'none';
+					<?php } ?>
+			// Please leave (windmillway) ==========================================
+			//		document.panelLayer3 = eval('document.getElementById("pane3")');
+			//		document.panelLayer3.style.display = 'block';
+			// =================================================================
+				});
+			
+		  	}); 
+			
 		});
 	}
-
+	
 	// == shows all markers of a particular category, and ensures the checkbox is checked ==
 	function show(category) {
 		for (var i=0; i<gmarkers.length; i++) {
@@ -481,9 +486,8 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 								$object = find_highlighted_object($pid, WT_GED_ID, $indirec);
 							}
 							if (!empty($object)) {
-								// should we call thumb_or_main?
 								$mediaobject=WT_Media::getInstance($object['mid']);
-								$image=$mediaobject->displayMedia(array('which'=>'thumb','display_type'=>'googlemap'));
+								$image=$mediaobject->displayMedia(array('display_type'=>'googlemap'));
 							} else {
 								$sex=$this_person->getSex();
 								$image=display_silhouette(array('sex'=>$sex,'display_type'=>'googlemap')); // may return ''
@@ -501,9 +505,8 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 							$object2 = find_highlighted_object($gmark['name'], WT_GED_ID, $indirec2);
 						}
 						if (!empty($object2)) {
-							// should we call thumb_or_main?
 							$mediaobject=WT_Media::getInstance($object2['mid']);
-							$image2=$mediaobject->displayMedia(array('which'=>'thumb','display_type'=>'googlemap'));
+							$image2=$mediaobject->displayMedia(array('display_type'=>'googlemap'));
 						} else {
 							$sex=$person->getSex();
 							$image2=display_silhouette(array('sex'=>$sex,'display_type'=>'googlemap')); // may return ''

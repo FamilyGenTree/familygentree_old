@@ -222,7 +222,7 @@ case 'load1row':
 	echo '<dd>', edit_field_yes_no_inline('user_setting-'.$user_id.'-auto_accept', get_user_setting($user_id, 'auto_accept')), '</dd>';
 
 	echo '<dt>', WT_I18N::translate('Theme'), '</dt>';
-	echo '<dd>', select_edit_control_inline('user_setting-'.$user_id.'-theme', array_flip(get_theme_names()), html_entity_decode(WT_I18N::translate('&lt;default theme&gt;')), get_user_setting($user_id, 'theme')), '</dd>';
+	echo '<dd>', select_edit_control_inline('user_setting-'.$user_id.'-theme', array_flip(get_theme_names()), WT_I18N::translate('<default theme>'), get_user_setting($user_id, 'theme')), '</dd>';
 
 	echo '<dt>', WT_I18N::translate('Default Tab to show on Individual Information page'), '</dt>';
 	echo '<dd>', edit_field_default_tab_inline('user_setting-'.$user_id.'-defaulttab', get_user_setting($user_id, 'defaulttab', 'personal_facts')), '</dd>';
@@ -427,7 +427,7 @@ case 'createform':
 	//-->
 	</script>
 
-	<form name="newform" method="post" action="admin_users.php?action=createuser" onsubmit="return checkform(this);" autocomplete="off">
+	<form name="newform" method="post" action="admin_users.php?action=createuser" onsubmit="return checkform(this);">
 		<!--table-->
 		<table id="adduser">
 			<tr>
@@ -681,6 +681,7 @@ case 'cleanup2':
 	}
 	break;
 case 'listusers':
+case 'edituser':
 default:
 	echo
 		'<table id="list">',
@@ -760,6 +761,7 @@ default:
 						document.body.appendChild(script);
 					}).remove();
 				}
+				
 			});
 			
 			/* When clicking on the +/- icon, we expand/collapse the details block */
@@ -778,6 +780,12 @@ default:
 				});
 				jQuery(this).addClass("icon-close");
 			});
+			
+			/* Filter immediately for single user name */
+			<?php if ($action=='edituser') { $username=safe_GET('username'); ?>
+				oTable = jQuery('#list').dataTable();			
+				oTable.fnFilter( '<?php echo $username; ?>' );
+			<?php } ?>
 	
 		});
 	<?php

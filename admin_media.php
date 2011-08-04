@@ -54,6 +54,26 @@ if (!WT_USER_IS_ADMIN) {
 	exit;
 }
 
+// media must be enabled
+if (!$MULTI_MEDIA) {
+	print_header(WT_I18N::translate('Manage multimedia'));
+	echo "<span class=\"error\"><b>";
+	echo WT_I18N::translate('Uploading media files is not allowed because multi-media items have been disabled or because the media directory is not writable.');
+	echo "</b></span><br />";
+	print_footer();
+	exit;
+}
+
+// editing must be enabled
+if (!$ALLOW_EDIT_GEDCOM) {
+	print_header(WT_I18N::translate('Manage multimedia'));
+	echo "<span class=\"error\"><b>";
+	echo WT_I18N::translate('Media management features are not available when online editing is disabled.');
+	echo "</b></span><br />";
+	print_footer();
+	exit;
+}
+
 /**
  * This functions checks if an existing directory is physically writeable
  * The standard PHP function only checks for the R/O attribute and doesn't
@@ -253,11 +273,6 @@ $thumbdir = str_replace($MEDIA_DIRECTORY, $MEDIA_DIRECTORY."thumbs/", $directory
 $directory_fw = get_media_firewall_path($directory);
 $thumbdir_fw = get_media_firewall_path($thumbdir);
 
-//-- only allow users with Admin privileges to access script.
-if (!WT_USER_IS_ADMIN || !$ALLOW_EDIT_GEDCOM) {
-	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'login.php?url='.WT_SCRIPT_NAME);
-	exit;
-}
 
 //-- TODO add check for -- admin can manipulate files
 $fileaccess = false;
@@ -756,17 +771,17 @@ if (check_media_structure()) {
 			$menu->addClass("", "", "submenu");
 			$submenu = new WT_Menu(WT_I18N::translate('To Person'));
 			$submenu->addClass("submenuitem".$classSuffix, "submenuitem_hover".$classSuffix);
-			$submenu->addOnclick("return ilinkitem('$mediaid', 'person')");
+			$submenu->addOnClick("return ilinkitem('$mediaid', 'person')");
 			$menu->addSubMenu($submenu);
 
 			$submenu = new WT_Menu(WT_I18N::translate('To Family'));
 			$submenu->addClass("submenuitem".$classSuffix, "submenuitem_hover".$classSuffix);
-			$submenu->addOnclick("return ilinkitem('$mediaid', 'family')");
+			$submenu->addOnClick("return ilinkitem('$mediaid', 'family')");
 			$menu->addSubMenu($submenu);
 
 			$submenu = new WT_Menu(WT_I18N::translate('To Source'));
 			$submenu->addClass("submenuitem".$classSuffix, "submenuitem_hover".$classSuffix);
-			$submenu->addOnclick("return ilinkitem('$mediaid', 'source')");
+			$submenu->addOnClick("return ilinkitem('$mediaid', 'source')");
 			$menu->addSubMenu($submenu);
 		}
 		echo $menu->getMenu();
@@ -1223,7 +1238,7 @@ echo WT_JS_START; ?>
 							} else {
 								echo '<center><a href="', $mediaInfo['url'], '">';
 								//echo '<center><a href="'.$url2.'">';
-								echo '<img src="', $mediaInfo['thumb'], '" align="middle" class="thumbnail" border="none"', $mediaInfo['width'];
+								echo '<img src="', $mediaInfo['thumb'], '" align="middle" class="thumbnail"', $mediaInfo['width'];
 								echo ' title="', $name, '" /></a></center>';
 							}
 							echo '</td>';

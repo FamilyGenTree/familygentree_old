@@ -21,7 +21,7 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
-// @version $Id: module.php 11574 2011-05-22 22:56:28Z nigel $
+// $Id: module.php 11574 2011-05-22 22:56:28Z nigel $
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -31,12 +31,12 @@ if (!defined('WT_WEBTREES')) {
 class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 	// Extend WT_Module
 	public function getTitle() {
-		return WT_I18N::translate('Personal Facts');
+		return /* I18N: Name of a module/tab on the individual page. */ WT_I18N::translate('Facts and events');
 	}
 
 	// Extend WT_Module
 	public function getDescription() {
-		return WT_I18N::translate('Adds a tab to the individual page which displays the facts of an individual and their close relatives.');
+		return /* I18N: Description of the "Facts and events" module */ WT_I18N::translate('A tab showing the facts and events of an individual.');
 	}
 
 	// Implement WT_Module_Tab
@@ -51,7 +51,7 @@ class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 	
 	// Implement WT_Module_Tab
 	public function getTabContent() {
-		global $FACT_COUNT, $EXPAND_RELATIVES_EVENTS, $n_chil, $n_gchi;
+		global $FACT_COUNT, $EXPAND_RELATIVES_EVENTS;
 
 		/*if (isset($_COOKIE['row_rela'])) $EXPAND_RELATIVES_EVENTS = ($_COOKIE['row_rela']);
 		if (isset($_COOKIE['row_histo'])) $EXPAND_HISTO_EVENTS = ($_COOKIE['row_histo']);
@@ -80,8 +80,7 @@ class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 			if (!isset($this->controller->skipFamilyFacts)) {
 			?>
 			<tr id="row_top">
-				<td valign="top"></td>
-				<td class="descriptionbox rela">
+				<td colspan="2" class="descriptionbox rela">
 					<input id="checkbox_rela_facts" type="checkbox" <?php if ($EXPAND_RELATIVES_EVENTS) echo ' checked="checked"'; ?> onclick="toggleByClassName('TR', 'row_rela');" />
 					<label for="checkbox_rela_facts"><?php echo WT_I18N::translate('Events of close relatives'); ?></label>
 					<?php if (file_exists(get_site_setting('INDEX_DIRECTORY').'histo.'.WT_LOCALE.'.php')) { ?>
@@ -93,20 +92,18 @@ class personal_facts_WT_Module extends WT_Module implements WT_Module_Tab {
 			<?php
 			}
 			$yetdied=false;
-			$n_chil=1;
-			$n_gchi=1;
-			foreach ($indifacts as $value) {
-				if (strstr(WT_EVENTS_DEAT, $value->getTag())) {
+			foreach ($indifacts as $fact) {
+				if (strstr(WT_EVENTS_DEAT, $fact->getTag())) {
 					$yetdied = true;
 				}
-				if (!is_null($value->getFamilyId())) {
+				if (!is_null($fact->getFamilyId())) {
 					if (!$yetdied) {
-						print_fact($value);
+						print_fact($fact, $this->controller->indi);
 					}
 				} else {
 					//$reftags = array ('CHAN', 'IDNO', 'RFN', 'AFN', 'REFN', 'RIN', '_UID');// list of tags used in "Extra information" sidebar module
-					if (!in_array($value->getTag(), WT_Gedcom_Tag::getReferenceFacts()) || !array_key_exists('extra_info', WT_Module::getActiveModules())) {
-						print_fact($value);
+					if (!in_array($fact->getTag(), WT_Gedcom_Tag::getReferenceFacts()) || !array_key_exists('extra_info', WT_Module::getActiveSidebars())) {
+						print_fact($fact, $this->controller->indi);
 					}
 				}
 				$FACT_COUNT++;

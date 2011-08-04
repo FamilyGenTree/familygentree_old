@@ -55,12 +55,11 @@ echo
 	'<link type="text/css" href="js/jquery/css/jquery-ui.custom.css" rel="Stylesheet" />',
 	'<link rel="stylesheet" href="', $stylesheet, '" type="text/css" media="all" />';
 
-if ((!empty($rtl_stylesheet))&&($TEXT_DIRECTION=="rtl")) {
-	echo '<link rel="stylesheet" href="', $rtl_stylesheet, '" type="text/css" media="all" />';
-}
-
-if (file_exists(WT_THEME_DIR.$BROWSERTYPE.'.css')) {
-	echo '<link rel="stylesheet" href="', WT_THEME_DIR.$BROWSERTYPE, '.css" type="text/css" media="all" />';
+switch ($BROWSERTYPE) {
+//case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
+case 'msie':
+	echo '<link type="text/css" rel="stylesheet" href="', WT_THEME_DIR, $BROWSERTYPE, '.css" />';
+	break;
 }
 
 // Additional css files required (Only if Lightbox installed)
@@ -76,7 +75,6 @@ if (WT_USE_LIGHTBOX) {
 
 echo
 	'<link type="text/css" href="', WT_THEME_DIR, 'modules.css" rel="Stylesheet" />',
-	'<link rel="stylesheet" href="', $print_stylesheet, '" type="text/css" media="print" />',
 	$javascript,
 	'</head>',
 	'<body id="body">';
@@ -92,7 +90,7 @@ if ($view!='simple') {
 	
 	'<span class="hlogin">';
 	if (WT_USER_ID) {
-		echo '<a href="edituser.php" class="link">', WT_I18N::translate('Logged in as '), ' (', WT_USER_NAME, ')</a> | ', logout_link();
+		echo '<a href="edituser.php" class="link">', WT_I18N::translate('Logged in as '), ' ', getUserFullName(WT_USER_ID), '</a> | ', logout_link();
 	} elseif (empty($SEARCH_SPIDER)) {
 		echo login_link();
 	}
@@ -101,8 +99,9 @@ if ($view!='simple') {
 	if (empty($SEARCH_SPIDER)) { 
 		echo 
 		'<span class="htheme">';
-		if (get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN') && get_site_setting('ALLOW_USER_THEMES')) {
-			echo WT_MenuBar::getThemeMenu()->getMenuAsDropdown();
+		$menu=WT_MenuBar::getThemeMenu();
+		if ($menu) {
+			echo $menu->getMenuAsDropdown();
 		}
 		$menu=WT_MenuBar::getLanguageMenu();
 		if ($menu) {
@@ -113,12 +112,10 @@ if ($view!='simple') {
 		'<div class="hsearch">';
 		if (empty($SEARCH_SPIDER)) {
 			echo 
-			'<form action="search.php" method="post">',
+			'<form style="display:inline;" action="search.php" method="get">',
 			'<input type="hidden" name="action" value="general" />',
 			'<input type="hidden" name="topsearch" value="yes" />',
-			'<input type="text" name="query" size="12" value="', WT_I18N::translate('Search'), '"',
-				'onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();"',
-				'onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
+			'<input type="text" name="query" size="15" value="', WT_I18N::translate('Search'), '" onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();" onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
 			'<input type="submit" name="search" value=" &gt; " />',
 			'</form>';
 		}

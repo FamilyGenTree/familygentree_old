@@ -1,33 +1,30 @@
 <?php
-/**
- * Census Assistant Control module for webtrees
- *
- * Census Search and Add Area File
- *
- * webtrees: Web based Family History software
- * Copyright (C) 2011 webtrees development team.
- *
- * Derived from PhpGedView
- * Copyright (C) 2007 to 2010  PGV Development Team.  All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @package webtrees
- * @version $Id$
- * @author Brian Holland
- */
+// Census Assistant Control module for webtrees
+//
+// Census Search and Add Area File
+//
+// webtrees: Web based Family History software
+// Copyright (C) 2011 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2007 to 2010  PGV Development Team.  All rights reserved.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// $Id$
+
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
@@ -110,7 +107,7 @@ if (!defined('WT_WEBTREES')) {
 					$families = $this->indi->getChildFamilies();
 					foreach ($families as $famid=>$family) {
 						$label = $this->indi->getChildFamilyLabel($family);
-						$people = $this->buildFamilyList($family, "parents");
+						$people = $this->buildFamilyList($family, "parents", false);
 						$marrdate = $family->getMarriageDate();
 
 						//-- Get Parents Children's Name, DOB, DOD --------------------------
@@ -130,7 +127,6 @@ if (!defined('WT_WEBTREES')) {
 						}
 
 						//-- Parents Husband -------------------
-						$styleadd = "";
 						if (isset($people["husb"])) {
 
 							//-- Parents Husbands Parents --------------------------------------
@@ -553,7 +549,7 @@ if (!defined('WT_WEBTREES')) {
 					//-- Build step families ---------------------------------------------------
 					foreach ($this->indi->getChildStepFamilies() as $famid=>$family) {
 						$label = $this->indi->getStepFamilyLabel($family);
-						$people = $this->buildFamilyList($family, "step-parents");
+						$people = $this->buildFamilyList($family, "step-parents", false);
 						if ($people) {
 							echo "<tr><td><br /></td><td></td></tr>";
 						}
@@ -576,7 +572,6 @@ if (!defined('WT_WEBTREES')) {
 						}
 
 						// Step Husband -----------------------------
-						$styleadd = "";
 						$elderdate = "";
 						if (isset($people["husb"])) {
 
@@ -713,7 +708,6 @@ if (!defined('WT_WEBTREES')) {
 						}
 
 						// Step Wife -------------------
-						$styleadd = "";
 						if (isset($people["wife"])) {
 
 							//-- Step Wifes Parent Family --------------------------------------
@@ -859,7 +853,6 @@ if (!defined('WT_WEBTREES')) {
 						}
 
 						// Step Children ---------------------
-						$styleadd = "";
 						if (isset($people["children"])) {
 							$elderdate = $family->getMarriageDate();
 							foreach ($people["children"] as $child) {
@@ -996,7 +989,7 @@ if (!defined('WT_WEBTREES')) {
 					$families = $this->indi->getSpouseFamilies();
 					//$personcount = 0;
 					foreach ($families as $family) {
-						$people = $this->buildFamilyList($family, "spouse");
+						$people = $this->buildFamilyList($family, "spouse", false);
 						if ($this->indi->equals($people["husb"])) {
 							$spousetag = 'WIFE';
 						} else {
@@ -1057,7 +1050,7 @@ if (!defined('WT_WEBTREES')) {
 							if (PrintReady($people["husb"]->getBirthYear()) == 0) { $BirthYr = ""; } else { $BirthYr = PrintReady($people["husb"]->getBirthYear()); }
 							?>
 							<tr class="fact_value">
-								<td align="left" nowrap="nowrap" class="linkcell optionbox<?php echo $styleadd; ?>">
+								<td align="left" nowrap="nowrap" class="linkcell optionbox">
 									<font size=1>
 										<?php
 										if ($people["husb"]->getXref()==$pid) {
@@ -1204,7 +1197,7 @@ if (!defined('WT_WEBTREES')) {
 							if (PrintReady($people["wife"]->getBirthYear()) == 0) { $BirthYr = ""; } else { $BirthYr = PrintReady($people["wife"]->getBirthYear()); }
 							?>
 							<tr>
-								<td align="left" nowrap="nowrap" class="linkcell optionbox<?php echo $styleadd; ?>">
+								<td align="left" nowrap="nowrap" class="linkcell optionbox">
 									<font size=1>
 										<?php
 										if ($people["wife"]->getXref()==$pid) {
