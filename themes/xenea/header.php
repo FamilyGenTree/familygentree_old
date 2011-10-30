@@ -39,64 +39,32 @@ echo
 	'<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />',
 	'<title>', htmlspecialchars($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
-	'<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />',
-	'<link rel="stylesheet" type="text/css" href="js/jquery/css/jquery-ui.custom.css" />',
+	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png" />',
+	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css" />',
 	'<link rel="stylesheet" type="text/css" href="', $stylesheet, '" />';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
 case 'msie':
-	echo '<link type="text/css" rel="stylesheet" href="', WT_THEME_DIR, $BROWSERTYPE, '.css" />';
+	echo '<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, $BROWSERTYPE, '.css" />';
 	break;
 }
 
 // Additional css files required (Only if Lightbox installed)
 if (WT_USE_LIGHTBOX) {
-	if ($TEXT_DIRECTION=='rtl') {
-		echo '<link rel="stylesheet" type="text/css" href="', WT_MODULES_DIR, 'lightbox/css/clearbox_music_RTL.css" />';
-		echo '<link rel="stylesheet" type="text/css" href="', WT_MODULES_DIR, 'lightbox/css/album_page_RTL_ff.css" media="screen" />';
-	} else {
-		echo '<link rel="stylesheet" type="text/css" href="', WT_MODULES_DIR, 'lightbox/css/clearbox_music.css" />';
-		echo '<link rel="stylesheet" type="text/css" href="', WT_MODULES_DIR, 'lightbox/css/album_page.css" media="screen" />';
-	}
+		echo '<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, WT_MODULES_DIR, 'lightbox/css/album_page.css" media="screen" />';
 }
+
 echo
-	'<link rel="stylesheet" type="text/css" href="', WT_THEME_DIR, 'modules.css" />',
 	$javascript,
 	'</head>',
 	'<body id="body">';
 
-// Begin Headers 
-
-if ($SEARCH_SPIDER) {
-	echo '<div id="header"><span class="title">';
-		print_gedcom_title_link(TRUE);
-	echo '</span></div>';
-
-	$menu_items=array(
-		WT_MenuBar::getGedcomMenu(),
-		WT_MenuBar::getListsMenu(),
-		WT_MenuBar::getCalendarMenu()
-	);
-
-	echo
-	'<div id="topMenu">',
-	'<ul id="main-menu">'; 
-	foreach ($menu_items as $menu) {
-		if ($menu) {
-		echo $menu->getMenuAsList();
-		}
-	}
-	unset($menu_items, $menu);
-	echo 
-	'</ul><div>';
-
-// Regular headers
-} elseif ($view!='simple') { // Use "simple" headers for popup windows
+if ($view!='simple') { // Use "simple" headers for popup windows
 	echo 
 	'<div id="header">',
 		'<span class="title">';
-		print_gedcom_title_link(TRUE);
+	print_gedcom_title_link();
 	echo 
 		'</span>',
 		'<div class="hsearch">';

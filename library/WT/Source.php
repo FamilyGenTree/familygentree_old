@@ -49,6 +49,19 @@ class WT_Source extends WT_GedcomRecord {
 		return "0 @".$this->xref."@ ".$this->type."\n1 TITL ".WT_I18N::translate('Private');
 	}
 
+	// Fetch the record from the database
+	protected static function fetchGedcomRecord($xref, $ged_id) {
+		static $statement=null;
+
+		if ($statement===null) {
+			$statement=WT_DB::prepare(
+				"SELECT 'SOUR' AS type, s_id AS xref, s_file AS ged_id, s_gedcom AS gedrec ".
+				"FROM `##sources` WHERE s_id=? AND s_file=?"
+			);
+		}
+		return $statement->execute(array($xref, $ged_id))->fetchOneRow(PDO::FETCH_ASSOC);
+	}
+
 	public function getAuth() {
 		return get_gedcom_value('AUTH', 1, $this->getGedcomRecord(), '', false);
 	}

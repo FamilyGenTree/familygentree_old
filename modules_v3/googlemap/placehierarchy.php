@@ -33,8 +33,6 @@ if (file_exists(WT_ROOT.WT_MODULES_DIR.'googlemap/defaultconfig.php')) {
 	require WT_ROOT.WT_MODULES_DIR.'googlemap/defaultconfig.php';
 }
 
-$stats = new WT_Stats($GEDCOM);
-
 function place_id_to_hierarchy($id) {
 	$statement=
 		WT_DB::prepare("SELECT pl_parent_id, pl_place FROM `##placelocation` WHERE pl_id=?");
@@ -127,7 +125,7 @@ function set_levelm($level, $parent) {
 
 function create_map($placelevels) {
 	$level = safe_GET('level');
-	global $GOOGLEMAP_PH_XSIZE, $GOOGLEMAP_PH_YSIZE, $GOOGLEMAP_MAP_TYPE, $TEXT_DIRECTION, $levelm;
+	global $GOOGLEMAP_PH_XSIZE, $GOOGLEMAP_PH_YSIZE, $GOOGLEMAP_MAP_TYPE, $TEXT_DIRECTION, $levelm, $plzoom;
 	
 	// *** ENABLE STREETVIEW *** (boolean) =========================================================
 	$STREETVIEW = get_module_setting('googlemap', 'GM_USE_STREETVIEW');
@@ -150,9 +148,11 @@ function create_map($placelevels) {
 	} else {
 		echo '<div id="place_map" style="border:1px solid gray; width: ', $GOOGLEMAP_PH_XSIZE, 'px; height: ', $GOOGLEMAP_PH_YSIZE, 'px;" ';	
 	}
-	echo "background-image: url('images/loading.gif'); background-position: center; background-repeat: no-repeat; overflow: hidden;\"></div>";
+	echo "background-image: url('", WT_STATIC_URL, "images/loading.gif'); background-position: center; background-repeat: no-repeat; overflow: hidden;\"></div>";
 	echo '<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>';
 	echo '</td>';
+	
+	$plzoom	= $latlng['pl_zoom'];		// Map zoom level
 
 	if (WT_USER_IS_ADMIN) {
 		$placecheck_url = 'module.php?mod=googlemap&amp;mod_action=admin_placecheck';
@@ -176,9 +176,9 @@ function create_map($placelevels) {
 			$placelevels=preg_replace('/, '.WT_I18N::translate('unknown').'/', ', ', $placelevels); // replace ", unknown" with ", " 
 			$placelevels=substr($placelevels, 2); // remove the leading ", "
 			if ($placelevels) {
-				$batchupdate_url='module.php?mod=batch_update&amp;mod_action=admin_batch_update&amp;plugin=search_replace_bu_plugin&amp;method=exact&amp;GEDCOM='.WT_GEDCOM.'&amp;search='.urlencode($placelevels); // exact match
+				$batchupdate_url='module.php?mod=batch_update&amp;mod_action=admin_batch_update&amp;plugin=search_replace_bu_plugin&amp;method=exact&amp;ged='.WT_GEDCOM.'&amp;search='.urlencode($placelevels); // exact match
 				echo '&nbsp;|&nbsp;';
-				echo '<a href="'.$batchupdate_url.'">', WT_I18N::translate('Batch Update'), '</a>';
+				echo '<a href="'.$batchupdate_url.'">', WT_I18N::translate('Batch update'), '</a>';
 			}
 		}
 	}
@@ -242,7 +242,7 @@ function create_map($placelevels) {
 				$_streetview = /* I18N: http://en.wikipedia.org/wiki/Google_street_view */ WT_I18N::translate('Google Street View');
 			?>
 			<div>
-			<iframe style="background:transparent; margin-top:-3px; margin-left:2px; width:530px;height:405px;padding:0;border:solid 0px black" src="<?php echo WT_MODULES_DIR; ?>googlemap/wt_v3_street_view.php?x=<?php echo $sv_lng; ?>&y=<?php echo $sv_lat; ?>&z=18&t=2&c=1&s=1&b=<?php echo $sv_dir; ?>&p=<?php echo $sv_pitch; ?>&m=<?php echo $sv_zoom; ?>&j=1&k=1&v=1&map=<?php echo $_map; ?>&reset=<?php echo $_reset; ?>&streetview=<?php echo $_streetview; ?>" marginwidth="0" marginheight="0" frameborder="0" scrolling="no"></iframe>
+			<iframe style="background:transparent; margin-top:-3px; margin-left:2px; width:530px;height:405px;padding:0;border:solid 0px black" src="<?php echo WT_STATIC_URL, WT_MODULES_DIR; ?>googlemap/wt_v3_street_view.php?x=<?php echo $sv_lng; ?>&y=<?php echo $sv_lat; ?>&z=18&t=2&c=1&s=1&b=<?php echo $sv_dir; ?>&p=<?php echo $sv_pitch; ?>&m=<?php echo $sv_zoom; ?>&j=1&k=1&v=1&map=<?php echo $_map; ?>&reset=<?php echo $_reset; ?>&streetview=<?php echo $_streetview; ?>" marginwidth="0" marginheight="0" frameborder="0" scrolling="no"></iframe>
 			</div>
 			
 			<?php			
@@ -292,7 +292,7 @@ function check_place($place_names, $place) {
 }
 
 function print_how_many_people($level, $parent) {
-	global $GEDCOM, $stats;
+	$stats = new WT_Stats(WT_GEDCOM);
 
 	$place_count_indi = 0;
 	$place_count_fam = 0;
@@ -317,12 +317,12 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 	global $GOOGLEMAP_COORD, $GOOGLEMAP_PH_MARKER, $GM_DISP_SHORT_PLACE, $GM_DISP_COUNT;
 	
 	if (($place2['lati'] == NULL) || ($place2['long'] == NULL) || (($place2['lati'] == "0") && ($place2['long'] == "0"))) {
-		echo "var icon_type = new google.maps.MarkerImage();\n";
-		echo ' icon_type.image = "', WT_MODULES_DIR, 'googlemap/images/marker_yellow.png";';
-		echo ' icon_type.shadow = "', WT_MODULES_DIR, 'googlemap/images/shadow50.png";';
-		echo " icon_type.iconSize = google.maps.Size(20, 34);\n";
-		echo " icon_type.shadowSize = google.maps.Size(37, 34);\n";
-		echo "var point = new google.maps.LatLng(0, 0);\n";
+		echo 'var icon_type = new google.maps.MarkerImage();\n';
+		echo 'icon_type.image = "', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/marker_yellow.png";';
+		echo 'icon_type.shadow = "', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/shadow50.png";';
+		echo 'icon_type.iconSize = google.maps.Size(20, 34);\n';
+		echo 'icon_type.shadowSize = google.maps.Size(37, 34);\n';
+		echo 'var point = new google.maps.LatLng(0, 0);\n';
 		if ($lastlevel)
 			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?level=", $level, $linklevels, "'><br />";
 		else {
@@ -331,7 +331,7 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 			else echo addslashes($place2['place']), "'><br />";
 		}
 		if (($place2["icon"] != NULL) && ($place2['icon'] != "")) {
-			echo '<img src=\"', WT_MODULES_DIR, 'googlemap/', $place2['icon'], '\">&nbsp;&nbsp;';
+			echo '<img src=\"', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/', $place2['icon'], '\">&nbsp;&nbsp;';
 		}
 		if ($lastlevel) {
 			$placename = substr($placelevels, 2);
@@ -397,8 +397,8 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 			echo "var icon_type = new google.maps.MarkerImage();\n";
 		} else {
 			echo "var icon_type = new google.maps.MarkerImage();\n";
-			echo ' icon_type.image = "', WT_MODULES_DIR, 'googlemap/', $place2['icon'], '";';
-			echo ' icon_type.shadow = "', WT_MODULES_DIR, 'googlemap/images/flag_shadow.png";';
+			echo ' icon_type.image = "', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/', $place2['icon'], '";';
+			echo ' icon_type.shadow = "', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/flag_shadow.png";';
 			echo " icon_type.iconSize = new google.maps.Size(25, 15);\n";
 			echo " icon_type.shadowSize = new google.maps.Size(35, 45);\n";
 		}
@@ -414,7 +414,7 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 			}
 		}
 		if (($place2['icon'] != NULL) && ($place2['icon'] != "")) {
-			echo '<img src=\"', WT_MODULES_DIR, 'googlemap/', $place2['icon'], '\">&nbsp;&nbsp;';
+			echo '<img src=\"', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/', $place2['icon'], '\">&nbsp;&nbsp;';
 		}
 		if ($lastlevel) {
 			$placename = substr($placelevels, 2);
@@ -467,9 +467,13 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 }
 
 function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names) {
-	global $GOOGLEMAP_MAP_TYPE, $GM_MAX_NOF_LEVELS, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER;
+	global $GOOGLEMAP_MAP_TYPE, $GM_MAX_NOF_LEVELS, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER, $plzoom;
 	
-	echo '<link type="text/css" href ="', WT_MODULES_DIR, 'googlemap/css/googlemap_style.css" rel="stylesheet" />';
+	echo "<script> var numMarkers = '".$numfound."';</script>";
+	echo "<script> var mapLevel = '".$level."';</script>";
+	echo "<script> var placezoom = '", $plzoom, "';</script>";
+	
+	echo '<link type="text/css" href ="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/css/googlemap_style.css" rel="stylesheet" />';
 	?>
 	<script type="text/javascript">	
 	// <![CDATA[
@@ -509,17 +513,22 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 		infowindow.close();
 	});
 	
+	// If only one marker, set zoom level to that of place in database
+	if (mapLevel != 0) {
+		var pointZoom = placezoom;
+	}
+	
 	// Creates a marker whose info window displays the given name
 	function createMarker(point, html, icon, name) {	
 		// Choose icon and shadow ============
 		<?php
 		echo "if (icon.image && $level<=3) {";
-			echo "if (icon.image!='", WT_MODULES_DIR, "googlemap/images/marker_yellow.png') {";
+			echo "if (icon.image!='", WT_STATIC_URL, WT_MODULES_DIR, "googlemap/images/marker_yellow.png') {";
 				echo 'var iconImage = new google.maps.MarkerImage(icon.image,'; 
 				echo 'new google.maps.Size(25, 15),';
 				echo 'new google.maps.Point(0,0),';
 				echo 'new google.maps.Point(1, 45));';
-				echo 'var iconShadow = new google.maps.MarkerImage("', WT_MODULES_DIR, 'googlemap/images/flag_shadow.png",';
+				echo 'var iconShadow = new google.maps.MarkerImage("', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/flag_shadow.png",';
 				echo 'new google.maps.Size(35, 45),';
 				echo 'new google.maps.Point(0,0),';
 				echo 'new google.maps.Point(1, 45));';
@@ -560,7 +569,7 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 			icon: iconImage,
 			shadow: iconShadow,
 			map: map,
-			title: name,
+			title: name
 		});		
 		// Show this markers name in the info window when it is clicked
 		google.maps.event.addListener(marker, 'click', function() {
@@ -574,7 +583,15 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 		marker.myposn = posn;
 		gmarkers.push(marker); 
 		bounds.extend(marker.position);	
-		map.fitBounds(bounds);
+		
+		// If only one marker use database place zoom level rather than fitBounds of markers		
+		if (numMarkers > 1) {
+ 			map.fitBounds(bounds);
+		} else {
+ 			map.setCenter(bounds.getCenter());
+  			map.setZoom(parseFloat(pointZoom));
+		}
+		
 		return marker;
 	}
 	
@@ -596,7 +613,7 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 		// echo "zoomlevel = map.getBoundsZoomLevel(bounds);\n";
 		// echo " map.setCenter(new google.maps.LatLng(0, 0), zoomlevel+8);\n";
 	} else if ($numfound<2 && $level>1) {
-		echo "map.maxZoom=".$GOOGLEMAP_MAX_ZOOM.";";
+		// echo "map.maxZoom=".$GOOGLEMAP_MAX_ZOOM.";";
 		// echo "zoomlevel = map.getBoundsZoomLevel(bounds);\n";
 		// echo " map.setCenter(new google.maps.LatLng(0, 0), zoomlevel+18);\n";
 	} 

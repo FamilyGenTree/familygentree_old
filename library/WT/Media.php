@@ -79,6 +79,19 @@ class WT_Media extends WT_GedcomRecord {
 		return parent::_canDisplayDetailsByType($access_level);
 	}
 
+	// Fetch the record from the database
+	protected static function fetchGedcomRecord($xref, $ged_id) {
+		static $statement=null;
+
+		if ($statement===null) {
+			$statement=WT_DB::prepare(
+				"SELECT 'OBJE' AS type, m_media AS xref, m_gedfile AS ged_id, m_gedrec AS gedrec, m_titl, m_file ".
+				"FROM `##media` WHERE m_media=? AND m_gedfile=?"
+			);
+		}
+		return $statement->execute(array($xref, $ged_id))->fetchOneRow(PDO::FETCH_ASSOC);
+	}
+
 	/**
 	 * get the media note from the gedcom
 	 * @return string
@@ -479,8 +492,10 @@ class WT_Media extends WT_GedcomRecord {
 
 		$urltype = get_url_type($this->getLocalFilename());
 		$notes=($this->getNote()) ? htmlspecialchars(print_fact_notes("1 NOTE ".$this->getNote(), 1, true, true)) : '';
-		if (!$config['img_title']) {
-			$config['img_title']=PrintReady(htmlspecialchars($this->getFullName()));
+		if ($config['img_title']) {
+			$config['img_title']=strip_tags($config['img_title']);
+		} else {
+			$config['img_title']=strip_tags($this->getFullName());
 		}
 
 		// -- Determine the correct URL to open this media file
@@ -655,8 +670,10 @@ class WT_Media extends WT_GedcomRecord {
 			$idstr=($config['img_id']) ? 'id="'.$config['img_id'].'"' : '';
 			$alignstr=($config['align']=='auto') ? 'align="'.($TEXT_DIRECTION=="rtl" ? "right":"left").'"' : ''; 
 			$stylestr=($config['show_full']) ? '' : ' style="display: none;" ';
-			if (!$config['img_title']) {
-				$config['img_title']=PrintReady(htmlspecialchars($this->getFullName()));
+			if ($config['img_title']) {
+				$config['img_title']=strip_tags($config['img_title']);
+			} else {
+				$config['img_title']=strip_tags($this->getFullName());
 			}
 			$sizestr='';
 			if ($config['class']=='thumbnail') {

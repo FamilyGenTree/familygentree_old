@@ -2,12 +2,12 @@
 /**
  * Template for drawing person boxes
  * This template expects that the following variables will be set
- *  $pid, $boxID, $personlinks, $icons, $GEDCOM, $style,
+ *  $pid, $boxID, $icons, $GEDCOM, $style,
  * $name, $classfacts, $genderImage, $BirthDeath, $isF, $outBoxAdd,
  * $addname, $showid, $float
  *
  * webtrees: Web based Family History software
- * Copyright (C) 2010 webtrees development team.
+ * Copyright (C) 2011 webtrees development team.
  *
  * Derived from PhpGedView
  * Copyright (C) 2010  PGV Development Team.  All rights reserved.
@@ -35,11 +35,7 @@ if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
-
 ?>
-<div id="I<?php echo $boxID; ?>links"
-	style="position:absolute; left:0px; top:0px; width:<?php echo $lbwidth; ?>px; visibility:hidden; z-index:100;">
-<?php echo $personlinks; ?></div>
 <div id="out-<?php echo $boxID; ?>" <?php echo $outBoxAdd; ?>>
 <!--  table helps to maintain spacing -->
 <table width="100%" cellspacing="0" cellpadding="0" border="0"><tr><td valign="top">
@@ -54,7 +50,7 @@ if (!defined('WT_WEBTREES')) {
 		<span class="name<?php echo $style; ?>"> <?php echo $genderImage; ?></span>
 		<?php echo $showid; ?> </a>
 		<div id="fontdef-<?php echo $boxID; ?>" class="details<?php echo $style; ?>">
-			<div id="inout2-<?php echo $boxID; ?>" style="display: block;"><?php echo $BirthDeath; ?></div>
+			<div id="inout2-<?php echo $boxID; ?>" style="display: block; overflow:hidden; max-height: <?php echo $bheight-25; ?>px;"><?php echo $BirthDeath; ?></div>
 		</div>
 		<div id="inout-<?php echo $boxID; ?>" style="display: none;">
 			<div id="LOADING-inout-<?php echo $boxID; ?>"><?php echo WT_I18N::translate('Loading...'); ?></div>

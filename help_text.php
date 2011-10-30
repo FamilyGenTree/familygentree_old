@@ -1439,11 +1439,6 @@ case 'FULL_SOURCES':
 	$text=WT_I18N::translate('Source citations can include fields to record the quality of the data (primary, secondary, etc.) and the date the event was recorded in the source.  If you don\'t use these fields, you can disable them when creating new source citations.');
 	break;
 
-case 'GEDCOM_DEFAULT_TAB':
-	$title=WT_I18N::translate('Default tab to show on individual page');
-	$text=WT_I18N::translate('This option allows you to choose which tab opens automatically on the Individual page when that page is accessed.');
-	break;
-
 case 'GEDCOM_ID_PREFIX':
 	$title=WT_I18N::translate('Individual ID prefix');
 	$text=WT_I18N::translate('When a new individual record is added online in <b>webtrees</b>, a new ID for that individual will be generated automatically. The individual ID will have this prefix.');
@@ -1504,11 +1499,6 @@ case 'KEEP_ALIVE':
 case 'LANGUAGE':
 	$title=WT_I18N::translate('Language');
 	$text=WT_I18N::translate('If a visitor to the site has not specified a preferred language in their browser configuration, or they have specified an unsupported language, then this language will be used.  Typically, this setting applies to search engines.');
-	break;
-
-case 'LINK_ICONS':
-	$title=WT_I18N::translate('PopUp links on charts');
-	$text=WT_I18N::translate('Allows the user to select links to other charts and close relatives of the person.<br /><br />Set to <b>Disabled</b> to disable this feature.  Set to <b>On Mouse Over</b> to popup the links when the user mouses over the icon in the box.  Set to <b>On Mouse Click</b> to popup the links when the user clicks on the icon in the box.');
 	break;
 
 case 'LOGIN_URL':
@@ -1589,6 +1579,11 @@ case 'MEDIA_ID_PREFIX':
 	$text=WT_I18N::translate('When a new media record is added online in <b>webtrees</b>, a new ID for that media will be generated automatically. The media ID will have this prefix.');
 	break;
 
+case 'MEDIA_UPLOAD':
+	$title=WT_I18N::translate('Who can upload new media files?');
+	$text=WT_I18N::translate('If you are concerned that users might upload inappropriate images, you can restrict media uploads to managers only.');
+	break;
+
 case 'MEMORY_LIMIT':
 	// Find the default value for max_execution_time
 	ini_restore('memory_limit');
@@ -1609,11 +1604,6 @@ case 'META_DESCRIPTION':
 case 'META_TITLE':
 	$title=WT_I18N::translate('Add to TITLE header tag');
 	$text=WT_I18N::translate('This text will be appended to each page title.  It will be shown in the browser\'s title bar, bookmarks, etc.');
-	break;
-
-case 'MULTI_MEDIA':
-	$title=WT_I18N::translate('Enable multimedia features');
-	$text=WT_I18N::translate('<b>webtrees</b> allows you to link pictures, videos, and other multimedia objects to your GEDCOM.  If you do not use multimedia, you can disable the multimedia features.');
 	break;
 
 case 'NOTE_ID_PREFIX':
@@ -2051,11 +2041,6 @@ case 'WORD_WRAPPED_NOTES':
 	$text=WT_I18N::translate('Some genealogy programs wrap notes at word boundaries while others wrap notes anywhere.  This can cause <b>webtrees</b> to run words together.  Setting this to <b>Yes</b> will add a space between words where they are wrapped in the original GEDCOM during the import process. If you have already imported the file you will need to re-import it.');
 	break;
 
-case 'ZOOM_BOXES':
-	$title=WT_I18N::translate('Zoom boxes on charts');
-	$text=WT_I18N::translate('Allows a user to zoom boxes on charts to get more information.<br /><br />Set to <b>Disabled</b> to disable this feature.  Set to <b>On Mouse Over</b> to zoom boxes when the user mouses over the icon in the box.  Set to <b>On Mouse Click</b> to zoom boxes when the user clicks on the icon in the box.');
-	break;
-
 	//////////////////////////////////////////////////////////////////////////////
 	// This section contains all the other help items.
 	//////////////////////////////////////////////////////////////////////////////
@@ -2395,11 +2380,6 @@ case 'edituser_rootid':
 	$text=WT_I18N::translate('This is the starting (Root) person of all your charts.<br /><br />If, for example, you were to click the link to the Pedigree, you would see this root person in the leftmost box.  This root person does not have to be you; you can start with any person (your grandfather or your mother\'s aunt, for instance), as long you have the rights to see that person.<br /><br />This changes the default Root person for most charts.  You can change the Root person on many charts, but that is just for that page at that particular invocation.');
 	break;
 
-case 'edituser_user_default_tab':
-	$title=WT_I18N::translate('Default tab setting');
-	$text=WT_I18N::translate('This setting allows you to specify which tab is opened automatically when you access the Individual Information page.');
-	break;
-
 case 'edituser_username':
 	$title=WT_I18N::translate('Username');
 	$text=WT_I18N::translate('You can change your username by updating it here.  Usernames are case insensitive and ignore accented letters, so that "chloe", "chlo&euml;" and "CHLOE" are considered to be the same.  Usernames may not contain the following characters: &lt;&gt;"%%{};');
@@ -2491,7 +2471,7 @@ case 'help_contents_help':
 			.WT_I18N::translate('Family book').'</a></li><li><a href="?help=gedcom_info">'.WT_I18N::translate('GEDCOM information').'</a></li><li><a href="?help=index_portal">'.WT_I18N::translate('Home page').'</a></li><li><a href="?help=hourglass.php">'.WT_I18N::translate('Hourglass chart').'</a></li><li><a href="?help=individual.php">'
 			.WT_I18N::translate('Individual information').'</a></li><li><a href="?help=indilist.php">'.WT_I18N::translate('Individuals').'</a></li><li><a href="?help=treenav">'.WT_I18N::translate('Interactive tree').'</a></li><li><a href="?help=login.php">'
 			.WT_I18N::translate('Login').'</a></li><li><a href="?help=pls_note11">'.WT_I18N::translate('Lost password request').'</a></li><li><a href="?help=medialist.php">'.WT_I18N::translate('Multimedia').'</a></li><li><a href="?help=edituser.php">'
-			.WT_I18N::translate('My account').'</a></li><li><a href="?help=mypage_portal">'.WT_I18N::translate('My Page').'</a></li><li><a href="?help=edituser_password">'.WT_I18N::translate('Password').'</a></li><li><a href="?help=pedigree.php">'.WT_I18N::translate('Pedigree').'</a></li><li><a href="?help=timeline.php">'.WT_I18N::translate('Timeline').'</a></li><li><a href="?help=edituser_username">'.WT_I18N::translate('Username').'</a></li></ul></td>';
+			.WT_I18N::translate('My account').'</a></li><li><a href="?help=mypage_portal">'.WT_I18N::translate('My page').'</a></li><li><a href="?help=edituser_password">'.WT_I18N::translate('Password').'</a></li><li><a href="?help=pedigree.php">'.WT_I18N::translate('Pedigree').'</a></li><li><a href="?help=timeline.php">'.WT_I18N::translate('Timeline').'</a></li><li><a href="?help=edituser_username">'.WT_I18N::translate('Username').'</a></li></ul></td>';
 		if (WT_USER_IS_ADMIN) {
 			$text.='<td valign="top"><span class="helpstart">'.WT_I18N::translate('Administrator help items').'</span><ul><li><a href="?help=admin.php">'.WT_I18N::translate('Administration').'</a></li><li><a href="?help=help_editconfig.php">'.WT_I18N::translate('Configure').'</a></li><li><a href="?help=help_faq.php">'
 			.WT_I18N::translate('FAQ List: Edit').'</a></li><li><a href="?help=edit_gedcoms">'.WT_I18N::translate('GEDCOM: Administration page').'</a></li><li><a href="?help=edit_config_gedcom">'.WT_I18N::translate('GEDCOM: Configure').'</a></li><li><a href="?help=default_gedcom">'.WT_I18N::translate('GEDCOM: Default').'</a></li><li><a href="readme.html">'.WT_I18N::translate('View readme.html file').'</a></li><li><a href="?help=help_admin_users.php">'.WT_I18N::translate('User administration').'</a></li></ul></td>';
@@ -2900,11 +2880,6 @@ case 'useradmin_gedcomid':
 case 'useradmin_rootid':
 	$title=WT_I18N::translate('Pedigree chart root person');
 	$text=WT_I18N::translate('For each genealogical database, you can designate a <b>Root Person</b> for the user.<br /><br />This Root Person does not need to be the user himself; it can be anybody.  The user will probably want to start the Pedigree chart with himself.  You control that, as well as the default Root person on other charts, here.<br /><br />If the user has Edit rights to his own account information, he can change this setting himself.');
-	break;
-
-case 'useradmin_user_default_tab':
-	$title=WT_I18N::translate('User default tab setting');
-	$text=WT_I18N::translate('This setting allows you to specify which tab is opened automatically when this user accesses the Individual Information page.  If allowed to edit their account, the user can change this setting later.');
 	break;
 
 case 'useradmin_verification':

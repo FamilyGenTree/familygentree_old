@@ -27,6 +27,8 @@
 
 global $ENABLE_AUTOCOMPLETE, $cart, $MAX_PEDIGREE_GENERATIONS, $TEXT_DIRECTION, $GEDCOM, $WT_IMAGES;
 
+require_once WT_ROOT.WT_MODULES_DIR.'clippings/clippings_ctrl.php';
+
 $controller = new WT_Controller_Clippings();
 $controller->init();
 
@@ -280,7 +282,7 @@ if ($ct==0) {
 			if ($tag=='FAM' ) $icon = "sfamily";
 			if ($tag=='SOUR') $icon = "source";
 			if ($tag=='REPO') $icon = "repository";
-			if ($tag=='NOTE') $icon = "notes";
+			if ($tag=='NOTE') $icon = "note";
 			if ($tag=='OBJE') $icon = "media";
 			?>
 			<tr><td class="list_value">
@@ -290,7 +292,7 @@ if ($ct==0) {
 			<td class="list_value">
 			<?php
 			$record=WT_GedcomRecord::getInstance($clipping['id']);
-			if ($record) echo '<a href="', $record->getHtmlUrl(), '">', PrintReady($record->getListName()), '</a>';
+			if ($record) echo '<a href="', $record->getHtmlUrl(), '">', $record->getFullName(), '</a>';
 			?>
 			</td>
 			<td class="list_value center vmiddle"><a href="module.php?mod=clippings&amp;mod_action=index&amp;action=remove&amp;item=<?php echo $i; ?>"><img src="<?php echo $WT_IMAGES["remove"]; ?>" border="0" alt="<?php echo WT_I18N::translate('Remove'); ?>" title="<?php echo WT_I18N::translate('Remove'); ?>" /></a></td>

@@ -1,11 +1,14 @@
-LANGUAGES_BUILD=ca cs da de en_GB en_US es et fa fi fr he hr hu it lt nb nl pl pt ru sk sl sv tr vi
-LANGUAGES_EXTRA=af ar dv el en_AU fo id nn oc pt_BR ro sr sr@Latn ta zh
+LANGUAGES_BUILD=bs ca cs da de en_GB en_US es et fa fi fr he hr hu it lt nb nl pl pt ru sk sl sv tr vi
+LANGUAGES_EXTRA=af ar dv el en_AU fo gl id ja nn oc pt_BR ro sr sr@Latn ta tt zh
 PO_DIR=po
 MO_DIR=mo
 MO_FILES=$(patsubst %,$(MO_DIR)/%.mo,$(LANGUAGES_BUILD) $(LANGUAGES_EXTRA))
 MO_EXTRA=$(patsubst %,webtrees/language/%.mo,$(LANGUAGES_EXTRA))
 SHELL=bash
-SVNVERSION=$(shell svnversion .. | tr -d 'M')
+SVN_VERSION=$(shell svnversion .. | tr -d 'M')
+WT_VERSION=$(shell grep "'WT_VERSION'" ../includes/session.php | cut -d "'" -f 4)
+WT_VERSION_RELEASE=$(shell grep "'WT_VERSION_RELEASE'" ../includes/session.php | cut -d "'" -f 4)
+BUILD_VERSION=$(if $(WT_VERSION_RELEASE),$(SVN_VERSION),$(WT_VERSION)$(WT_VERSION_RELEASE))
 
 ################################################################################
 # Create a release from this SVN working copy
@@ -15,17 +18,17 @@ default: clean webtrees
 	zip -qr language-extra.zip $(MO_EXTRA)
 	rm -f $(MO_EXTRA)
 	zip -qr language.zip webtrees/language
-	zip -qr webtrees-$(SVNVERSION).zip webtrees
+	zip -qr webtrees-$(BUILD_VERSION).zip webtrees
 	# If we have a GNU private key, sign the file with it
-	if test -d ~/.gnupg; then gpg --armor --sign --detach-sig webtrees-$(SVNVERSION).zip; fi
+	if test -d ~/.gnupg; then gpg --armor --sign --detach-sig webtrees-$(BUILD_VERSION).zip; fi
 	# If we have a public html area, publish the files
-	if test -d ~/public_html; then mkdir -p ~/public_html/build && cp language*.zip webtrees*.zip ~/public_html/build/ && echo ${SVNVERSION} > ~/public_html/build/latest-svn.txt; fi
+	if test -d ~/public_html; then mkdir -p ~/public_html/build && cp language*.zip webtrees*.zip ~/public_html/build/ && echo ${BUILD_VERSION} > ~/public_html/build/latest-svn.txt; fi
 	# If we have a public html area, clean up old files
 	if test -d ~/public_html/build; then find ~/public_html/build -ctime +7 -exec rm -f {} \; ; fi
 	# Create an updated message catalog
 	mkdir -p webtrees_tmp
 	rm -Rf webtrees_tmp/*
-	find webtrees/modules_v2 -name "*.xml" | while read file; do sed -e 's~\(WT_I18N::[^)]*[)]\)~<?php echo \1; ?>~g' $$file > webtrees_tmp/$$(echo $$file.php | cut -c 10- | tr / _); done
+	find webtrees/modules_v3 -name "*.xml" | while read file; do sed -e 's~\(WT_I18N::[^)]*[)]\)~<?php echo \1; ?>~g' $$file > webtrees_tmp/$$(echo $$file.php | cut -c 10- | tr / _); done
 	find webtrees webtrees_tmp -name "*.php" | xargs xgettext --package-name=webtrees --package-version=1.0 --msgid-bugs-address=i18n@webtrees.net --output=webtrees.pot --no-wrap --language=PHP --add-comments=I18N --from-code=utf-8 --keyword --keyword=translate:1 --keyword=translate_c:1c,2 --keyword=plural:1,2 --keyword=noop:1
 	rm -Rf webtrees_tmp webtrees
 
@@ -46,20 +49,26 @@ dist-clean: clean
 ################################################################################
 webtrees: $(PO_DIR) $(MO_DIR)
 	svn export .. $@
-	bzr update $(PO_DIR)
 	bzr revert $(PO_DIR)
+	bzr update $(PO_DIR)
 	make $(MO_FILES)
 	# Embed the SVN version number in the code (for SVN builds only)
-	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVNVERSION)')/" $@/includes/session.php
+	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVN_VERSION)')/" $@/includes/session.php
 	# Exclude unused Zend Framework components
 	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Controller,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
 	# Exclude unused locale data
-	rm -f $@/library/Zend/Locale/Data/{aa,ak,am,ar_,as,az,b,ca_,cch,cop,cs_CZ,cy,da_,de_,dv_,dz,ee,el_,en_{AS,B,C,D,GU,H,I,J,M,N,P,S,T,UM,US_,VI,ZA,ZW},eo,es_,eu,et_,fa_,fil,fo_,fr_,fur,g,ha,haw,he_,hi,hr_,hu_,hy,ia,id_,ig,ii,in,is,it_,iu,iw,j,k,ln,lo,lt_,lv,m{k,l,n,o,r,t,y},nb_,nd,ne,nl_,no,nn_,nso,nr,ny,oc_,om,or,pa,pl_,ps,pt_PT,ro_,ru_,rw,sa,se,sh,si,sk_,sl_,so,sq,sr_B,sr_C,sr_Latn_,sr_ME,sr_RS,sr_YU,ss,st,sv_,sw,syr,ta_,te,tg,th,ti,tl,tn,to,tr_,trv,ts,tt,u,ve,vi_,w,x,y,zh_H,zh_{MO,SG,TW},zu}*.xml
+	rm -f $@/library/Zend/Locale/Data/{aa,ak,am,as,az,be,bg,bn,bo,byn,cch,cop,cy,dz,ee,eo,eu,fil,fur,ga,gaa,gez,gsw,gu,gv,ha,haw,hi,hy,ia,ig,ii,in,is,iu,iw,k,ln,lo,lv,mk,ml,mn,mo,mr,mt,my,nd,ne,no,nso,nr,ny,om,or,pa,ps,rw,sa,se,sh,si,so,sq,ss,st,sw,syr,te,tg,th,ti,tl,tn,to,trv,ts,u,ve,w,x,y,zu}*.xml
 	rm -Rf $@/build
 	# Check for syntax errors
 	if find $@ -name '*.php' -exec php -l {} \; | grep -v "No syntax errors"; then false; else true; fi
 	# Add standard language files
 	cp $(MO_FILES) $@/language/
+
+################################################################################
+# Zip a directory to create an archive
+################################################################################
+%.zip: %
+	zip -qrTm $@ $<
 
 ################################################################################
 # PO files are stored in launchpad.net
@@ -71,7 +80,7 @@ $(PO_DIR):
 	bzr checkout lp:~fisharebest/webtrees/translations $@
 
 $(MO_DIR):
-	mkdir -p $(MO_DIR)
+	mkdir -p $@
 
 ################################################################################
 # Compile PO files to make MO files.  Most MO files correspond exactly to their
@@ -88,3 +97,40 @@ $(MO_DIR)/en_US.mo: en_US.po
 
 $(MO_DIR)/%.mo: $(PO_DIR)/%.po
 	msgfmt --output=$@ $<
+
+################################################################################
+# Extract the static files for use on a content-delivery-network.
+# Minify the CSS and JS files, if a suitable tool is available.
+################################################################################
+webtrees-static-$(WT_VERSION):
+	rm -Rf $@
+	mkdir $@
+	cd .. && find . "(" -name "*.css" -o -name "*.gif" -o -name "*.html" -o -name "*.ico" -o -name "*.jpg" -o -name "*.js" -o -name "*.mp3" -o -name "*.png" -o -name "*.swf" ")" -print0 | xargs -0 tar cf - | (cd build/$@ && tar xfp -)
+	# Minify CSS using the YUI compressor
+	if [ -f ~/bin/yuicompressor-2.4.6.jar ]; then find $@ -name "*.css" | while read FILE; do java -jar ~/bin/yuicompressor-2.4.6.jar --charset UTF-8 --verbose -o tmp.css "$$FILE" && mv tmp.css "$$FILE"; done; fi
+	# Minify JS using Google's closure compiler
+	if [ -f ~/bin/compiler.jar ]; then find $@ -name "*.js" | while read FILE; do java -jar ~/bin/compiler.jar --js "$$FILE" --js_output_file tmp.js && mv tmp.js "$$FILE"; done; fi
+
+################################################################################
+# Create a second copy of the static files, with compressed CSS and JS,
+# for servers that require two versions, such as Amazon S3
+################################################################################
+webtrees-static-$(WT_VERSION)z: webtrees-static-$(WT_VERSION)
+	cp -pR $< $@
+	find $@ "(" -name "*.js" -o -name "*.css" ")" -exec gzip {} \; -exec mv {}.gz {} \;
+
+################################################################################
+# Create .ZIP archives of the static files, for use with a CDN.
+################################################################################
+static: webtrees-static-$(WT_VERSION)z.zip webtrees-static-$(WT_VERSION).zip
+
+################################################################################
+# Upload the static files to an S3 bucket.
+# Explicitly set the mime type for files that we have compressed.
+# Set the bucket using, for example, "export S3_BUCKET=my_bucket".
+################################################################################
+static-S3: webtrees-static-$(WT_VERSION) webtrees-static-$(WT_VERSION)z
+	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type webtrees-static-$(WT_VERSION) s3://$(S3_BUCKET)/
+	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rexclude=(css|js)$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/
+	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --mime-type=text/css --add-header=Content-Encoding:gzip "--rinclude=css$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/
+	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --mime-type=application/javascript --add-header=Content-Encoding:gzip "--rinclude=js$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/

@@ -61,19 +61,15 @@ class todays_events_WT_Module extends WT_Module implements WT_Module_Block {
 		$todayjd=WT_CLIENT_JD;
 
 		$id=$this->getName().$block_id;
+		$class=$this->getName().'_block';
 		$title='';
 		if ($ctype=="gedcom" && WT_USER_GEDCOM_ADMIN || $ctype=="user" && WT_USER_ID) {
-			if ($ctype=="gedcom") {
-				$name = WT_GEDCOM;
-			} else {
-				$name = WT_USER_NAME;
-			}
 			$title .= "<a href=\"javascript: configure block\" onclick=\"window.open('index_edit.php?action=configure&amp;ctype={$ctype}&amp;block_id={$block_id}', '_blank', 'top=50,left=50,width=600,height=350,scrollbars=1,resizable=1'); return false;\">";
 			$title .= "<img class=\"adminicon\" src=\"".$WT_IMAGES["admin"]."\" width=\"15\" height=\"15\" border=\"0\" alt=\"".WT_I18N::translate('Configure')."\" /></a>";
 		}
 		$title.=$this->getTitle();
 
-		$content = "";
+		$content = '';
 		switch ($infoStyle) {
 		case 'list':
 			// Output style 1:  Old format, no visible tables, much smaller text.  Better suited to right side of page.

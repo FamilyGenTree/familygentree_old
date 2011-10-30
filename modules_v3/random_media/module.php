@@ -41,9 +41,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Implement class WT_Module_Block
 	public function getBlock($block_id, $template=true, $cfg=null) {
-		global $ctype, $foundlist, $MULTI_MEDIA, $TEXT_DIRECTION, $WT_IMAGES;
-
-		if (!$MULTI_MEDIA) return;
+		global $ctype, $foundlist, $TEXT_DIRECTION, $WT_IMAGES;
 
 		$filter  =get_block_setting($block_id, 'filter',   'all');
 		$controls=get_block_setting($block_id, 'controls', true);
@@ -181,14 +179,10 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 				return false;
 			}
 			$id=$this->getName().$block_id;
+			$class=$this->getName().'_block';
 			$title='';
 			$content = '';
 			if ($ctype=="gedcom" && WT_USER_GEDCOM_ADMIN || $ctype=="user" && WT_USER_ID) {
-				if ($ctype=="gedcom") {
-					$name = WT_GEDCOM;
-				} else {
-					$name = WT_USER_NAME;
-				}
 				$title .= "<a href=\"javascript: configure block\" onclick=\"window.open('index_edit.php?action=configure&amp;ctype={$ctype}&amp;block_id={$block_id}', '_blank', 'top=50,left=50,width=600,height=350,scrollbars=1,resizable=1'); return false;\">";
 				$title .= "<img class=\"adminicon\" src=\"{$WT_IMAGES['admin']}\" width=\"15\" height=\"15\" border=\"0\" alt=\"".WT_I18N::translate('Configure').'" /></a>';
 			}
@@ -250,7 +244,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 
 			if ($block) $content .= '<br />';
 			else $content .= '</td><td class="details2">';
-			$content .= '<a href="'.$mediaobject->getHtmlUrl().'"><b>'. PrintReady(htmlspecialchars($mediaobject->getFullName())) .'</b></a><br />';
+			$content .= '<a href="'.$mediaobject->getHtmlUrl().'"><b>'. $mediaobject->getFullName() .'</b></a><br />';
 
 			ob_start();
 			$content .= $mediaobject->printLinkedRecords('normal');

@@ -35,7 +35,7 @@ class WT_MenuBar {
 		global $WT_IMAGES;
 
 		//-- main menu
-		$menu = new WT_Menu(WT_I18N::translate('Home page'), 'index.php?ctype=gedcom', 'menu-tree', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Home page'), 'index.php?ctype=gedcom&amp;ged='.WT_GEDURL, 'menu-tree', 'down');
 		if (!empty($WT_IMAGES['home'])) {
 			$menu->addIcon('home');
 		}
@@ -46,7 +46,7 @@ class WT_MenuBar {
 		foreach ($gedcom_titles as $gedcom_title) {
 			if ($gedcom_title->gedcom_id==WT_GED_ID || $ALLOW_CHANGE_GEDCOM) {
 				$submenu = new WT_Menu(
-					PrintReady($gedcom_title->gedcom_title, true),
+					PrintReady($gedcom_title->gedcom_title),
 					'index.php?ctype=gedcom&amp;ged='.rawurlencode($gedcom_title->gedcom_name),
 					'menu-tree-'.$gedcom_title->gedcom_id // Cannot use name - it must be a CSS identifier
 				);
@@ -376,7 +376,7 @@ class WT_MenuBar {
 				$link = 'module.php?ged='.WT_GEDURL.'&amp;mod=googlemap&amp;mod_action=pedigree_map';
 				if ($rootid) $link .= '&amp;rootid='.$rootid;
 				$submenu = new WT_Menu($menuName, $link, 'menu-chart-pedigree_map');
-				$WT_IMAGES['pedigree_map']=WT_MODULES_DIR.'googlemap/images/pedigree_map.gif';
+				$WT_IMAGES['pedigree_map']=WT_STATIC_URL.WT_MODULES_DIR.'googlemap/images/pedigree_map.gif';
 				$submenu->addIcon('pedigree_map');
 				$submenu->addClass('submenuitem', 'submenuitem_hover', '', 'icon_small_map');
 				$menu->addSubmenu($submenu);
@@ -387,7 +387,7 @@ class WT_MenuBar {
 	}
 
 	public static function getListsMenu() {
-		global $MULTI_MEDIA, $SEARCH_SPIDER, $controller;
+		global $SEARCH_SPIDER, $controller;
 
 		$surname='';
 		if (isset($controller)) {
@@ -405,11 +405,6 @@ class WT_MenuBar {
 		$menu->addIcon('lists');
 		$menu->addClass('menuitem', 'menuitem_hover', 'submenu', 'icon_large_indis');
  
-		// Search engines only get the individual list
-		if ($SEARCH_SPIDER) {
-			return $menu;
-		}
-
 		// Do not show empty lists
 		$row=WT_DB::prepare(
 			"SELECT SQL_CACHE".
@@ -420,23 +415,24 @@ class WT_MenuBar {
 		)->execute(array(WT_GED_ID, WT_GED_ID, WT_GED_ID, WT_GED_ID))->fetchOneRow();
 
 		// Build a list of submenu items and then sort it in localized name order
-		$menulist=array(
-			'branches.php'  =>WT_I18N::translate('Branches'),
-			'famlist.php'   =>WT_I18N::translate('Families'),
-			'indilist.php'  =>WT_I18N::translate('Individuals'),
-			'placelist.php' =>WT_I18N::translate('Place hierarchy'),
-		);
-		if ($row->obje && $MULTI_MEDIA) {
-			$menulist['medialist.php']=WT_I18N::translate('Media objects');
-		}
-		if ($row->repo) {
-			$menulist['repolist.php']=WT_I18N::translate('Repositories');
-		}
-		if ($row->sour) {
-			$menulist['sourcelist.php']=WT_I18N::translate('Sources');
-		}
-		if ($row->note) {
-			$menulist['notelist.php']=WT_I18N::translate('Shared notes');
+		$menulist=array('indilist.php'  =>WT_I18N::translate('Individuals'));
+		if (!$SEARCH_SPIDER) {
+			$menulist['famlist.php'  ]=WT_I18N::translate('Families');
+			$menulist['branches.php' ]=WT_I18N::translate('Branches');
+			$menulist['placelist.php']=WT_I18N::translate('Place hierarchy');
+			// Build a list of submenu items and then sort it in localized name order
+			if ($row->obje) {
+				$menulist['medialist.php']=WT_I18N::translate('Media objects');
+			}
+			if ($row->repo) {
+				$menulist['repolist.php']=WT_I18N::translate('Repositories');
+			}
+			if ($row->sour) {
+				$menulist['sourcelist.php']=WT_I18N::translate('Sources');
+			}
+			if ($row->note) {
+				$menulist['notelist.php']=WT_I18N::translate('Shared notes');
+			}
 		}
 		asort($menulist);
 
@@ -444,7 +440,7 @@ class WT_MenuBar {
 			$link=$page.'?ged='.WT_GEDURL;
 			switch ($page) {
 			case 'indilist.php':
-				if ($surname) $link .= '&amp;surname='.$surname;
+				if ($surname) $link .= '&amp;surname='.rawurlencode($surname);
 				$submenu = new WT_Menu($name, $link, 'menu-list-indi');
 				$submenu->addIcon('indis');
 				$submenu->addClass('submenuitem', 'submenuitem_hover', '', 'icon_small_indis');
@@ -452,7 +448,7 @@ class WT_MenuBar {
 				break;
 
 			case 'famlist.php':
-				if ($surname) $link .= '&amp;surname='.$surname;
+				if ($surname) $link .= '&amp;surname='.rawurlencode($surname);
 				$submenu = new WT_Menu($name, $link, 'menu-list-fam');
 				$submenu->addIcon('cfamily');
 				$submenu->addClass('submenuitem', 'submenuitem_hover', '', 'icon_small_cfamily');
@@ -460,7 +456,7 @@ class WT_MenuBar {
 				break;
 
 			case 'branches.php':
-				if ($surname) $link .= '&amp;surn='.$surname;
+				if ($surname) $link .= '&amp;surn='.rawurlencode($surname);
 				$submenu = new WT_Menu($name, $link, 'menu-branches');
 				$submenu->addIcon('patriarch');
 				$submenu->addClass('submenuitem', 'submenuitem_hover', '', 'icon_small_patriarch');
@@ -510,9 +506,8 @@ class WT_MenuBar {
 	public static function getCalendarMenu() {
 		global $SEARCH_SPIDER;
 
-		if ((!file_exists(WT_ROOT.'calendar.php')) || (!empty($SEARCH_SPIDER))) {
-			$menu = new WT_Menu();
-			return $menu;
+		if ($SEARCH_SPIDER) {
+			return null;
 		}
 		//-- main calendar menu item
 		$menu = new WT_Menu(WT_I18N::translate('Calendar'), 'calendar.php?ged='.WT_GEDURL, 'menu-calendar', 'down');
@@ -663,7 +658,9 @@ class WT_MenuBar {
 	}
 
 	public static function getThemeMenu() {
-		if (get_site_setting('ALLOW_USER_THEMES') && get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN')) {
+		global $SEARCH_SPIDER;
+
+		if (!$SEARCH_SPIDER && get_site_setting('ALLOW_USER_THEMES') && get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN')) {
 			$menu=new WT_Menu(WT_I18N::translate('Theme'), '#', 'menu-theme');
 			$menu->addClass('thememenuitem', 'thememenuitem_hover', 'themesubmenu', 'icon_small_theme');
 			foreach (get_theme_names() as $themename=>$themedir) {
@@ -682,33 +679,39 @@ class WT_MenuBar {
 	}
 
 	public static function getLanguageMenu() {
-		$menu=new WT_Menu(WT_I18N::translate('Language'), '#', 'menu-language', 'down');
-		$menu->addClass('langmenuitem', 'langmenuitem_hover', 'submenu', 'icon_language');
+		global $SEARCH_SPIDER;
 
-		foreach (WT_I18N::installed_languages() as $lang=>$name) {
-			$submenu=new WT_Menu($name, get_query_url(array('lang'=>$lang)), 'menu-language-'.$lang);
-			if ($lang==WT_LOCALE) {
-				$submenu->addClass('favsubmenuitem_selected', 'favsubmenuitem_hover');
-			} else {
-				$submenu->addClass('favsubmenuitem', 'favsubmenuitem_hover');
-			}
-			$menu->addSubMenu($submenu);
-		}
-		if (count($menu->submenus)>1) {
-			return $menu;
-		} else {
+		if ($SEARCH_SPIDER) {
 			return null;
+		} else {
+			$menu=new WT_Menu(WT_I18N::translate('Language'), '#', 'menu-language', 'down');
+			$menu->addClass('langmenuitem', 'langmenuitem_hover', 'submenu', 'icon_language');
+
+			foreach (WT_I18N::installed_languages() as $lang=>$name) {
+				$submenu=new WT_Menu($name, get_query_url(array('lang'=>$lang)), 'menu-language-'.$lang);
+				if ($lang==WT_LOCALE) {
+					$submenu->addClass('favsubmenuitem_selected', 'favsubmenuitem_hover');
+				} else {
+					$submenu->addClass('favsubmenuitem', 'favsubmenuitem_hover');
+				}
+				$menu->addSubMenu($submenu);
+			}
+			if (count($menu->submenus)>1) {
+				return $menu;
+			} else {
+				return null;
+			}
 		}
 	}
 
 	public static function getFavoritesMenu() {
-		global $REQUIRE_AUTHENTICATION, $controller;
+		global $REQUIRE_AUTHENTICATION, $controller, $SEARCH_SPIDER;
 
 		$show_user_favs=WT_USER_ID               && array_key_exists('user_favorites',   WT_Module::getActiveModules());
 		$show_gedc_favs=!$REQUIRE_AUTHENTICATION && array_key_exists('gedcom_favorites', WT_Module::getActiveModules());
 
-		if ($show_user_favs) {
-			if ($show_gedc_favs) {
+		if ($show_user_favs && !$SEARCH_SPIDER) {
+			if ($show_gedc_favs && !$SEARCH_SPIDER) {
 				$favorites=array_merge(
 					gedcom_favorites_WT_Module::getUserFavorites(WT_GEDCOM),
 					user_favorites_WT_Module::getUserFavorites(WT_USER_NAME)
@@ -717,7 +720,7 @@ class WT_MenuBar {
 				$favorites=user_favorites_WT_Module::getUserFavorites(WT_USER_NAME);
 			}
 		} else {
-			if ($show_gedc_favs) {
+			if ($show_gedc_favs && !$SEARCH_SPIDER) {
 				$favorites=gedcom_favorites_WT_Module::getUserFavorites(WT_GEDCOM);
 			} else {
 				return null;

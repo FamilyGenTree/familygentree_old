@@ -186,7 +186,7 @@ if (isset($content) && $content==1) {
 					</tr>
 					<tr>
 						<td class="facts_value" align="center"><?php echo $stats->totalMarriages(); ?></td>
-						<td class="facts_value" align="center"><?php echo $stats->totalEventsDivorce(); ?></td>
+						<td class="facts_value" align="center"><?php echo $stats->totalDivorces(); ?></td>
 					</tr>
 					<tr>
 						<td class="facts_label"><?php echo WT_I18N::translate('Marriages by century'); ?></td>
@@ -743,7 +743,7 @@ if (isset($content) && $content==1) {
 
 	jQuery(document).ready(function() {
 		// TODO: change images directory when the common images will be deleted.
-		jQuery('#tabs').tabs({ spinner: '<img src="images/loading.gif" height="18" border="0" />' });
+		jQuery('#tabs').tabs({ spinner: '<img src="<?php echo WT_STATIC_URL; ?>images/loading.gif" height="18" border="0" />' });
 		jQuery("#tabs").tabs({ cache: true, selected: selectedTab });
 		var $tabs = jQuery('#tabs');
 		jQuery('#tabs').bind('tabsshow', function(event, ui) {

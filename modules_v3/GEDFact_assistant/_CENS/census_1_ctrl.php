@@ -55,8 +55,8 @@ $wholename = $fulln;
 
 $currpid=$pid;
 
-echo '<script src="', WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/dynamicoptionlist.js" type="text/javascript"></script>';
-echo '<script src="', WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/date.js" type="text/javascript"></script>';
+echo '<script src="', WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/dynamicoptionlist.js" type="text/javascript"></script>';
+echo '<script src="', WT_STATIC_URL, WT_MODULES_DIR, 'GEDFact_assistant/_CENS/js/date.js" type="text/javascript"></script>';
 
 echo WT_JS_START;
 echo "var TheCenYear = opener.document.getElementById('setyear').value;";
@@ -98,7 +98,7 @@ echo '</div>';
 		<input type="button" value="<?php echo WT_I18N::translate('Add/Insert Blank Row'); ?>" onclick="insertRowToTable('', '', '', '', '', '', '', '', 'Age', '', '', '', '', '', '');" />
 	</div>
 	<div class="cens_textinput_right">
-		<?php echo WT_I18N::translate('Add'); ?><br>
+		<?php echo WT_I18N::translate('Add'); ?>
 		<input  type="radio" name="totallyrad" value="0" checked="checked" />
 	</div>
 	<?php

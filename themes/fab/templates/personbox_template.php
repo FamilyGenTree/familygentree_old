@@ -3,7 +3,7 @@
  * Template for drawing person boxes
  *
  * This template expects that the following variables will be set
- *  $pid, $boxID, $personlinks, $icons, $GEDCOM, $style,
+ *  $pid, $boxID, $icons, $GEDCOM, $style,
  * $name, $classfacts, $genderImage, $BirthDeath, $isF, $outBoxAdd,
  * $addname, $showid, $float
  *
@@ -34,11 +34,10 @@ if (!defined('WT_WEBTREES')) {
 }
 
 echo
-	'<div id="I', $boxID, 'links" style="position:absolute;left:0px;top:0px;width:', $lbwidth, 'px;visibility:hidden;z-index:100;">', $personlinks, '</div>',
 	'<div id="out-', $boxID, '" ', $outBoxAdd, '>',
 		'<div class="noprint" id="icons-', $boxID, '" style="', $iconsStyleAdd, 'width:25px;height:50px;">', $icons, '</div>',
 		$thumbnail,
 		'<a class="name', $style, ' ', $classfacts, '" onclick="event.cancelBubble=true;" href="individual.php?pid=', $pid, '&amp;ged=', rawurlencode($GEDCOM), '">', $name.$addname, '</a>',
-		'<div id="inout2-', $boxID, '" class="details', $style, '" style="display:block;">', $BirthDeath, '</div>',
+		'<div id="inout2-', $boxID, '" class="details', $style, '" style="display:block; overflow:hidden; max-height: ', $bheight-35, 'px">', $BirthDeath, '</div>',
 		'<div id="inout-', $boxID, '" style="display:none;"><div id="LOADING-inout-', $boxID, '"></div></div>',
 	'</div>';
