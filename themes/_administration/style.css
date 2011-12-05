@@ -38,8 +38,6 @@ td {vertical-align:top;}
 .warning, .error, .red {font-weight:bold; color:red;}
 .accepted, a.accepted {font-weight:bold; color:green;}
 .center {text-align:center;}
-.ltr {text-align:left;}
-.rtl {text-align:right;}
 .nowrap {white-space:nowrap;}
 .indent {padding-left:15px;}
 html[dir='rtl'] .indent {padding-right:15px;}
@@ -57,6 +55,7 @@ html[dir='rtl'] .indent {padding-right:15px;}
 .css_right {float:right;}
 html[dir='rtl'] .css_right {float:left;}
 html[dir='rtl'] input {padding-right:3px; padding-left:0;}
+html[dir='rtl'] .ui-tabs .ui-tabs-nav li {float: right;}
 
 /* jEditable styling over-rides */
 .editable {width:100%; display:block}
@@ -75,6 +74,7 @@ html[dir='rtl'] input {padding-right:3px; padding-left:0;}
 .dataTables_info {float:left;margin-top:5px;font-weight:normal;}
 .dataTables_length {float:right;}
 .dataTables_length select, .dataTables_filter input {font-size:11px; padding:1px;}
+.dataTables_wrapper th  {white-space:nowrap;}
 .dt-clear {clear:both;}
 html[dir='rtl'] .dataTables_paginate {float:right;}
 html[dir='rtl'] .dataTables_processing {float:right;}
@@ -85,6 +85,11 @@ html[dir='rtl'] .dataTables_length {float:left;}
 /* Drag-n-drop sorting for modules, etc. */
 .sortme {cursor:move;}
 
+/* Find special characters */
+.largechars {
+	font-family: monospace;
+	font-size: 200%;
+}
 /* Page Help links */
 #page_help {margin:-5px 0 15px; text-align:right;}
 html[dir='rtl'] #page_help {text-align:left;}
@@ -112,10 +117,10 @@ html[dir='rtl'] #links li ul {left:auto; right:0;}
 /* SIDE MENU */
 #admin_menu {padding:10px 0 10px 5px;top:92px; left:10px; right:auto; width:200px; float:left; position:absolute; color:#2E6E9E; white-space:nowrap; overflow:hidden;}
 html[dir='rtl'] #admin_menu {top:92px; left:auto; right:10px; padding:10px 5px 10px 0; float:right;}
-#admin_menu ul {list-style:none outside none; margin:0 0 0 -30px;}
-html[dir='rtl'] #admin_menu ul {margin:0 -30px 0 0;}
-#admin_menu li ul {margin:0 0 0 -20px;}
-html[dir='rtl'] #admin_menu li ul {margin:0 -20px 0 0;}
+#admin_menu ul {list-style:none outside none; margin:0 0 0 -40px;}
+html[dir='rtl'] #admin_menu ul {margin:0 -40px 0 0;}
+#admin_menu li ul {margin:0 0 0 -25px;}
+html[dir='rtl'] #admin_menu li ul {margin:0 -25px 0 0;}
 #admin_menu li span {font-style:italic;}
 #admin_menu ul {list-style:none outside none;}
 
@@ -147,19 +152,19 @@ html[dir='rtl'] #tree_stats td, html[dir='rtl'] #recent td {padding:0 0 0 10px; 
 #x h2, #x h3 {padding:0 25px;}
 
 /*SITE CONFIG */
-#site table, #mail table {background:OldLace; border:1px inset #D9D6C4; border-collapse:separate; border-spacing:0; font-size:90%; padding:5px; width:100%;}
+ #site table, #mail table {background:OldLace; border:1px inset #D9D6C4; border-collapse:separate; border-spacing:0; font-size:90%; padding:5px; width:100%;}
 .site_config h2 {font-size:125%; font-weight:bold; margin:10px 0 5px;}
-.site_config dl {float:left;margin:0 0 0 20px;line-height:21px;}
+.site_config dl {float:left;margin:0 0 0 20px;line-height:21px;max-width: 600px;}
 .site_config dt {clear:left; float:left; min-width:170px; margin:0; padding:5px 5px 5px 0; border-bottom:1px solid #999; font-weight:bold;}
 .site_config dd {border-bottom:1px solid #999; margin-left:370px; min-width:370px; padding:5px;}
-html[dir='rtl'] .site_config dl {float:right;margin:0 20px 0;}
+html[dir='rtl'] .site_config dl {float:right;margin:0 20px 0; max-width: 600px;}
 html[dir='rtl'] .site_config dt {clear:right; float:right; padding:5px 0 5px 5px;}
 html[dir='rtl'] .site_config dd {margin-right:370px;}
 
 /*SITE LOGS */
 table.site_logs {background:OldLace; border-collapse:separate; border-spacing:0; border:1px inset #D9D6C4; margin:10px; padding:5px;}
 .site_logs td {text-align:center; vertical-align:middle;}
-input.log-date {text-align:center; width:60px;}
+input.log-date {text-align:center; width:70px;}
 input.log-filter {width:120px;}
 table#log_list {width:100%}
 #log_list th {min-width:80px;white-space:nowrap;}
@@ -326,6 +331,13 @@ html[dir='rtl'] #batch_update2 td+td {text-align:right;}
 table#faq_module, table#faq_module2 {background:OldLace; border:1px inset #D9D6C4; border-collapse:separate; border-spacing:0; margin:0 0 10px 0; padding:5px; width:918px;}
 #faq_module th {font-size:105%; font-weight:bold; text-align:left; vertical-align:top;}
 #faq_module2 th, #faq_module2 td {vertical-align:top; text-align:left;}
+table#faq_edit  {border:1px solid; border-radius:5px;  margin-top:30px; padding:5px;}
+#faq_edit td {padding: 0 10px 10px 10px; vertical-align:top;}
+#faq_edit td p {margin:0;}
+.faq_edit_pos td {white-space:nowrap;}
+.faq_edit_pos td:first-child {width:80%;}
+.faq_edit_title {border-bottom: 1px solid; margin-bottom:10px;}
+.faq_edit_item {background: none repeat scroll 0 0 OldLace; border: 1px inset #D9D6C4; padding: 5px;}
 html[dir='rtl'] #faq_module2 th, html[dir='rtl'] #faq_module2 td {text-align:right;}
 
 /* GOOGLEMAP MODULE*/

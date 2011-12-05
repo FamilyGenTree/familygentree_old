@@ -28,10 +28,10 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 echo
-	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	'<html xmlns="http://www.w3.org/1999/xhtml" ', WT_I18N::html_markup(), '>',
+	'<!DOCTYPE html>',
+	'<html ', WT_I18N::html_markup(), '>',
 	'<head>',
-	'<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />',
+	'<meta charset="UTF-8">',
 	'<title>', htmlspecialchars($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png" />',
@@ -52,31 +52,15 @@ if (WT_USE_LIGHTBOX) {
 }
 
 echo
-	$javascript,
 	'</head>',
 	'<body id="body">';
-?>
-<!-- Remove submenu from home -->
-<script type="text/javascript">
-jQuery(document).ready(function() {
-	var obj = {};
-	var num = 0;
-    var num = jQuery('#menu-tree ul li').length; 
-	if(num == 2) { 
-		jQuery('#menu-tree ul').remove();
-	}
-});
-</script>
-<!-- begin header section -->
-<?php
 
 if  ($view!='simple') { // Use "simple" headers for popup windows
 	echo
 	// Top row left
 	'<div id="header">',
-	'<span class="title">';
-		print_gedcom_title_link();
-	echo 
+	'<span class="title">',
+		htmlspecialchars($GEDCOM_TITLE),
 	'</span>';
 
 	// Top row right 
@@ -87,7 +71,7 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	if (WT_USER_ID) {
 		echo '<li><a href="edituser.php" class="link">', getUserFullName(WT_USER_ID), '</a></li><li>', logout_link(), '</li>';
 		if (WT_USER_CAN_ACCEPT && exists_pending_change()) {
-			echo ' <li><a href="javascript:;" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
+			echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
 		}
 	} else {
 		echo '<li>', login_link(),'</li>';
@@ -115,13 +99,12 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 			'<form style="display:inline;" action="search.php" method="get">',
 			'<input type="hidden" name="action" value="general" />',
 			'<input type="hidden" name="topsearch" value="yes" />',
-			'<input type="text" name="query" size="10" value="', WT_I18N::translate('Search'), '" onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();" onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
+			'<input type="text" name="query" size="10" placeholder="', WT_I18N::translate('Search'), '"/>',
 			'<input type="image" src="', WT_THEME_URL, 'images/go.png', '" align="top" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '" />',
 			'</form>',
 		'</li>',
 	'</ul>',
-	'</div>',
-	'</div>'; // end header
+	'</div>';
 
 	// Second Row menu and palette selection
 	// Menu
@@ -141,7 +124,7 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 
 	// Print the menu bar
 	echo
-	'<div id="topMenu">',
+		'<div id="topMenu">',
 		'<ul id="main-menu">'; 
 		foreach ($menu_items as $menu) {
 			if ($menu) {
@@ -150,14 +133,21 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 		}
 	unset($menu_items, $menu);
 	echo
-	'</ul>';
+		'</ul>',
+		'</div>'; // <div id="topMenu">
+	echo '</div>'; // <div id="header">
 
-
-echo 
-	'</div>'; // close topMenu
+	// NOTE: in other themes, the flash-messages are inside #header.
+	// However, in this theme, it causes them to overlap with #content.
+	// Display feedback from asynchronous actions
+	echo '<div id="flash-messages">';
+	foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->getMessages() as $message) {
+		echo '<p class="ui-state-highlight">', $message, '</p>';
+	}
+	echo '</div>'; // <div id="flash-messages">
 }
-// end header section -->
-?>
-<!-- end menu section -->
-<!-- begin content section -->
-<div id="content">
+// Remove submenu from home
+$this->addInlineJavaScript(
+	'if (jQuery("#menu-tree ul li").length == 2) jQuery("#menu-tree ul").remove();'
+);
+echo $javascript, '<div id="content">';

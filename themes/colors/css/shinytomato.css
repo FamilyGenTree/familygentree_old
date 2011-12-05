@@ -47,10 +47,10 @@
 .facts_label .date,
 .facts_label03,
 .facts_table h2,
-.facts_table .ltr .descriptionbox a,
+.facts_table .descriptionbox a,
 .blockcontent .facts_label
 {
-	background:#F96058;
+	background-color:#F96058;
 	color: #ffffff;
 }
 
@@ -75,8 +75,6 @@
 .list_value_wrap,
 .tab_cell_active,
 .news_box, .optionbox,
-.person0,  .center .person_box,
-.small_inner_block .person_box,
 .submenuitem_hover
 {
 	background:#f0eaf0;

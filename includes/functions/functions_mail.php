@@ -83,10 +83,10 @@ function webtreesMail($to, $from, $subject, $message) {
 	if ($mailFormat == "html") {
 		//wrap message in html
 		$htmlMessage = "";
-		$htmlMessage .= "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
-		$htmlMessage .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" ".WT_I18N::html_markup().">";
+		$htmlMessage .= "<!DOCTYPE html>";
+		$htmlMessage .= "<html ".WT_I18N::html_markup().">";
 		$htmlMessage .= "<head>";
-		$htmlMessage .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />";
+		$htmlMessage .= '<meta charset="UTF-8">';
 		$htmlMessage .= "</head>";
 		$htmlMessage .= "<body dir=\"$TEXT_DIRECTION\"><pre>";
 		$htmlMessage .= $message; //add message
@@ -102,10 +102,10 @@ function webtreesMail($to, $from, $subject, $message) {
 		$htmlMessage .= $message;
 		$htmlMessage .= "\n\n--$boundary2\n";
 		$htmlMessage .= "Content-Type: text/html; \n\tcharset=\"UTF-8\";\n\tformat=\"flowed\"\nContent-Transfer-Encoding: 8bit\n\n";
-		$htmlMessage .= "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
-		$htmlMessage .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" ".WT_I18N::html_markup().">";
+		$htmlMessage .= "<!DOCTYPE html>";
+		$htmlMessage .= "<html ".WT_I18N::html_markup().">";
 		$htmlMessage .= "<head>";
-		$htmlMessage .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />";
+		$htmlMessage .= '<meta charset="UTF-8">';
 		$htmlMessage .= "</head>";
 		$htmlMessage .= "<body dir=\"$TEXT_DIRECTION\"><pre>";
 		$htmlMessage .= $message; //add message
@@ -186,7 +186,7 @@ function webtreesMail($to, $from, $subject, $message) {
 		// use original PHP mail sending function
 		if (!mail($to, hex4email($subject, 'UTF-8'), $message, $extraHeaders)) {
 			echo WT_I18N::translate('Message was not sent'), '<br />';
-			echo /* I18N: %s is an error message */ WT_I18N::translate('Mailer error: PHP mail() failed'), '<br />';
+			echo WT_I18N::translate('Mailer error: %s', 'PHP mail() failed'), '<br />';
 			return false;
 		} else {
 			// original PHP mail sending function OK

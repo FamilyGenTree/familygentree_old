@@ -87,9 +87,9 @@ if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_T
 		set_site_setting('DEFAULT_COLOR_PALETTE', $subColor);
 	}
 	unset($_GET['themecolor']);
-} elseif (isset($_SESSION['themecolor']))  {
+} elseif ($WT_SESSION->themecolor)  {
 	// Previously selected color
-	$subColor=$_SESSION['themecolor'];
+	$subColor=$WT_SESSION->themecolor;
 } else {
 	if (WT_USER_ID) {
 		$subColor=get_user_setting(WT_USER_ID, 'themecolor');
@@ -101,7 +101,7 @@ if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_T
 	}
 }
 
-$_SESSION['themecolor']=$subColor;
+$WT_SESSION->themecolor=$subColor;
 
 $theme_name       = "colors"; // need double quotes, as file is scanned/parsed by script
 $footerfile       = WT_THEME_DIR . 'footer.php';
@@ -183,6 +183,7 @@ $WT_IMAGES=array(
 	'relationship'=>WT_THEME_URL.'images/relationship.png',
 	'reminder'=>WT_THEME_URL.'images/reminder.png',
 	'remove'=>WT_THEME_URL.'images/delete.png',
+	'reorder'=>WT_THEME_URL.'images/reorder_images.png',
 	'reports'=>WT_THEME_URL.'images/report.png',
 	'repository'=>WT_THEME_URL.'images/repository.png',
 	'repo-list'=>WT_THEME_URL.'images/repository.png',
@@ -257,26 +258,22 @@ $fanChart = array(
 	'bgFColor' => '#e9daf1'
 );
 
-//-- This section defines variables for the pedigree chart
-$bwidth = 240; // -- width of boxes on pedigree chart
-$bheight = 80; // -- height of boxes on pedigree chart
-$baseyoffset = 10; // -- position the entire pedigree tree relative to the top of the page
-$basexoffset = 10; // -- position the entire pedigree tree relative to the left of the page
+//-- This section defines variables for the charts
+$bwidth = 250; // -- width of boxes on all person-box based charts
+$bheight = 80; // -- height of boxes on all person-box based chart
+$baseyoffset = 10; // -- position the timeline chart relative to the top of the page
+$basexoffset = 10; // -- position the pedigree and timeline charts relative to the left of the page
 $bxspacing = 4; // -- horizontal spacing between boxes on the pedigree chart
 $byspacing = 5; // -- vertical spacing between boxes on the pedigree chart
-$brborder = 1; // -- box right border thickness
+$brborder = 1; // -- pedigree chart box right border thickness 
 
-// -- global variables for the descendancy chart
-$Dbaseyoffset = 20; // -- position the entire descendancy tree relative to the top of the page
-$Dbasexoffset = 20; // -- position the entire descendancy tree relative to the left of the page
-$Dbxspacing = 0; // -- horizontal spacing between boxes
-$Dbyspacing = 10; // -- vertical spacing between boxes
-$Dbwidth = 250; // -- width of DIV layer boxes
-$Dbheight = 78; // -- height of DIV layer boxes
-$Dindent = 15; // -- width to indent descendancy boxes
-$Darrowwidth = 30; // -- additional width to include for the up arrows
-
-$CHARTS_CLOSE_HTML = true;                //-- should the charts, pedigree, descendacy, etc close the HTML on the page
+//-- Other settings that should not be touched
+$Dbxspacing = 5; // -- position vertical line between boxes in relationship chart
+$Dbyspacing = 10; // -- position vertical spacing between boxes in relationship chart
+$Dbwidth = 240; // -- horizontal spacing between boxes in all charts
+$Dbheight = 78; // -- horizontal spacing between boxes in all charts
+$Dindent = 15; // -- width to indent ancestry and descendancy charts boxes
+$Darrowwidth = 300; // -- not used that I can see ***
 
 // --  The largest possible area for charts is 300,000 pixels. As the maximum height or width is 1000 pixels
 $WT_STATS_S_CHART_X = "440";

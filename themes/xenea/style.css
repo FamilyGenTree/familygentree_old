@@ -60,6 +60,8 @@ html[dir='rtl'] .hsearch {float:left; padding-left:10px;}
 
 #header, .gedcomtitle {color:#ffffff;}
 
+#flash-messages { clear:both; }
+
 /* Options Menu Layout */
 #optionsmenu {
 	background:#84beff;
@@ -103,7 +105,7 @@ html[dir='rtl'] #extra-menu {text-align:left;}
 html[dir='rtl'] #extra-menu.makeMenu li ul {left:0; right:auto;}
 
 /* ======= Main menu items ========== */
-#topMenu                   {float:left; width:100%; height:45px; padding:5px 0; position:relative;}
+#topMenu                   {border-bottom: 2px solid #0073CF; float:left; height:45px; margin-bottom: 10px; padding:5px 0 10px 0; position:relative; width:100%;}
 #main-menu                 {clear:both; position:relative; z-index:500; float:right; right:50%; margin-top:5px;}
 #main-menu,
 #main-menu ul              {padding:0; list-style-type:none;}
@@ -325,16 +327,19 @@ th {
 .person_box {
 	background-color:#F0F9FF;
 	border:1px solid #84BEFF;
+	padding:3px;
 }
 
 .person_boxF {
 	background-color:#FFF0F0;
 	border:1px solid #FF2080;
+	padding:3px;
 }
 
 .person_boxNN {
 	background-color:white;
 	border:dashed #008080 1px;
+	padding:3px;
 }
 
 .person_box:target, .news_box:target, #gedcom_stats:target {
@@ -605,7 +610,7 @@ font-size:10px;
 .pedigree_image_portrait, .pedigree_image_landscape {
 	float:left;
 	max-height:50px;
-	max-width:50px;
+	max-width:37px;
 	border:solid black 1px;
 	margin-right:3px;
 }
@@ -613,7 +618,7 @@ font-size:10px;
 .pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
 	float:right;
 	max-height:50px;
-	max-width:50px;
+	max-width:37px;
 	border:solid black 1px;
 	margin-left:3px;
 }
@@ -894,6 +899,12 @@ html[dir='rtl'] .themesubmenu {margin-right:0;}
 	padding:1px;
 }
 
+.journal_box {
+	padding: 3pt;
+	border:thin solid #AAA;
+	overflow:visible;
+}
+
 .news_box {
 	background-color:#F0F9FF;
 	border:1px solid #84BEFF;
@@ -934,6 +945,7 @@ html[dir='rtl'] .themesubmenu {margin-right:0;}
 	margin-left:10px;
 	margin-right:10px;
 }
+.helpcontent dt {clear:both;}
 
 .helpfooter {
 	margin:10px;
@@ -959,6 +971,7 @@ html[dir='rtl'] .themesubmenu {margin-right:0;}
 }
 
 #content {
+	clear: both;
 	margin-left:1px;
 }
 
@@ -973,7 +986,6 @@ html[dir='rtl'] .themesubmenu {margin-right:0;}
 .small_inner_block {
 	max-height:190px;
 	overflow:auto;
-	font-size:10px;
 	text-decoration:none;
 }
 
@@ -1011,11 +1023,18 @@ html[dir='rtl'] .themesubmenu {margin-right:0;}
 	border-right:solid #84BEFF 1px;
 }
 
+.blockheader {font-weight:bold;}
+
 img.block {
 	border:none;
 	height:20px;
 	vertical-align:middle;
 }
+
+.line1, .line2, .line3 {vertical-align:bottom;} 
+.line4 {vertical-align:middle;}
+.line5 {vertical-align:top;}
+
 
 #index_main_blocks {
 	clear:none;
@@ -1218,6 +1237,7 @@ h4 {
 .search_hit {
 	background-color:yellow;
 }
+.search_item{font-weight:600;}
 
 .details_label {
 	font-weight:bold;
@@ -1265,10 +1285,6 @@ h4 {
 	white-space:nowrap;
 }
 
-.ltr {
-	text-align:left;
-}
-
 .vmiddle {
 	vertical-align:middle;
 }
@@ -1280,16 +1296,6 @@ h4 {
 
 .rela {
 	opacity:0.67;
-}
-
-/* Text direction */
-.ltr {
-	text-align:left;
-}
-
-.rtl {
-	text-align:right;
-	direction:rtl;
 }
 
 /* Width settings */
@@ -1637,6 +1643,12 @@ dd {
 	top: 0;
 }
 
+#pending h2 {text-align:center; margin-bottom:20px;}
+#pending h3 {text-align:center; margin-top:20px;}
+
+.gedcom_favorites_block  .person_box .details2, .gedcom_favorites_block  .person_boxF.details2, .gedcom_favorites_block  .person_boxNN.details2 {min-height:40px;}
+.user_favorites_block  .person_box .details2, .user_favorites_block  .person_boxF.details2, .user_favorites_block  .person_boxNN.details2 {min-height:40px;}
+
 .user_favorites_block, .gedcom_favorites_block,
 #family_page .person_box, #family_page .person_boxF, #family_page .person_boxNN,
 #ancestry_chart .person_box, #ancestry_chart .person_boxF, #ancestry_chart .person_boxNN,
@@ -1645,7 +1657,11 @@ dd {
 #familybook_chart_rtl .person_box, #familybook_chart_rtl .person_boxF, #familybook_chart_rtl .person_boxNN,
 #hourglass_chart .person_box, #hourglass_chart .person_boxF, #hourglass_chart .person_boxNN,
 #hourglass_chart_rtl .person_box, #hourglass_chart_rtl .person_boxF, #hourglass_chart_rtl .person_boxNN,
-#relatives_content .person_box, #relatives_content .person_boxF, #relatives_content .person_boxNN {overflow: visible !important;}
+#relatives_content .person_box, #relatives_content .person_boxF, #relatives_content .person_boxNN,
+.charts_block .person_box, .charts_block .person_boxF, .charts_block .person_boxNN {overflow: visible !important;}
+
+#register-page table, #login-page table, #branches-page table, #media-list-page .list_table  {margin:auto;}
+#register-page table a {display:block; text-align:center;}
 
 .popup {
 	display:none;
@@ -1771,6 +1787,12 @@ td.descriptionbox a { /* this keeps the tag color the same when it is a link as 
 	text-align:center;
 }
 
+/* Find special characters */
+.largechars {
+	font-family: monospace;
+	font-size: 200%;
+}
+
 /* ========= Positioning edit, copy, delete links ============= */
 /* General use */
 .editfacts {clear:left; padding-top:15px;} /* a container for the following three links */
@@ -1845,7 +1867,7 @@ html[dir='rtl'] dd .editlink, html[dir='rtl'] dd .deletelink {float:left;}
 
 /* =========== Indi tabs ================== */
 /* Facts & Events tab */
-#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR {margin:5px 3px 5px 0;}
+#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family_page .fact_NOTE, #family_page .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
 #media-display-image {float:left;}
 #media-display-title {float:left; font-style:italic; margin:10px;}
 
@@ -1890,12 +1912,15 @@ html[dir='rtl'] .ui-accordion .ui-accordion-header .ui-icon {right:0.5em;}
 .dataTables_processing {float:left; margin:5px;}
 .dataTables_filter {float:right; margin:4px;}
 .dataTables_info {float:left; margin:5px;}
+.recent_changes_block .dataTables_info, .upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info, .todo_block .dataTables_info, .yahrzeit_block .dataTables_info {padding: 0;}
+.upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info {padding: 2px 0 0 0;}
+.upcoming_events_block  button, .todays_events_block  button {margin: 5px 20px;}
 .dataTables_length {float:right; margin:5px;}
 .dataTables_length select, .dataTables_filter input {font-size:11px; padding:1px;}
 .ui-widget-header {font-weight:normal;}
 .dt-clear {clear:both;}
 #loading {text-align:center;}
-.DataTables_sort_wrapper {position:relative;margin-left:20px;}
+.DataTables_sort_wrapper {position:relative; margin: 0 20px;}
 .DataTables_sort_wrapper span {left:0; margin-left:-20px; margin-top:-8px; position:absolute; top:50%;}
 
 html[dir='rtl'] .css_right {float:right;}
@@ -1908,21 +1933,28 @@ html[dir='rtl'] .DataTables_sort_wrapper {margin-right:20px;}
 html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:-20px;}
 
 /* ========= List styles ================= */
-.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list {margin:5px auto; text-align:center; visibility:hidden; width:98%;}
+.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list {margin:5px auto; visibility:hidden; width:98%;}
+.surname-list, .givn-list  {margin:5px auto;}
 .source-list table, .note-list table, .repo-list table, .media-list table, .indi-list table, .fam-list table {width:100%;}
-.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td {padding:2px 5px;}
+.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td, .recent_changes_block td, .upcoming_events_block, .surname-list td, .givn-list td {padding:2px 5px;}
 .indi-list td, .fam-list td {color:#555;}
+.surname-list  td {vertical-align:top;}
 .indi-list .stats, .fam-list .stats {margin:0 auto; width:auto;}
-.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th {cursor:pointer; white-space:nowrap;}
+.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th, .recent_changes_block th, .upcoming_events_block th, .todays_events_block th, .todo_block th, .yahrzeit_block th, .surname-list th, .givn-list th {cursor:pointer; white-space:nowrap;}
 .source-list th:last-child, .note-list th:last-child, .repo-list th:last-child {margin:0 -2px 1px 1px; padding:3px 0 4px; width:24px;}
-#source-details h2, #note-details h2, #repo-details h2, #media-details h2 {margin-bottom:20px; text-align:center;}
+.givn-list th{cursor:pointer;white-space: nowrap;padding:2px;text-align:center;}
+#source-details h2,#source-list-page h2, #note-details h2, #note-list-page h2, #repo-details h2, #repo-list-page h2, #media-details h2, #media-list-page h2  {margin-bottom:20px; text-align:center;}
 #source-tabs, #note-tabs, #repo-tabs, #media-tabs {margin:auto; visibility:hidden; width:80%;}
 #source-edit, #note-edit, #repo-edit, #media-edit {overflow-x:auto;}
 .media-list td img {display:block; height:40px; margin:3px auto;}
 .filtersH, .filtersF {margin:4px}
 .filtersH img {margin-bottom:2px;}
 .filtersH .ui-state-default,.filtersF .ui-state-default {margin:0 2px; padding:2px;}
-.loading-image{background:#fff url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+.loading-image{background:transparent url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+#search-result-tabs, #places-tabs {margin:auto; width:98%; visibility:hidden;}
+#search-result-tabs h3 {text-align:center;}
+#searchAccordion-indi, #searchAccordion-fam, #searchAccordion-source, #searchAccordion-note {margin:auto; width:99%;}
+#place-heirarchy h2, #place-heirarchy h4 {text-align:center;}
 
 html[dir='rtl'] .source-list th:last-child, html[dir='rtl'] .note-list th:last-child, html[dir='rtl'] .repo-list th:last-child {margin:0 1px 1px -2px;}
 

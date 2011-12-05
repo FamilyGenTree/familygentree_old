@@ -61,6 +61,9 @@ img.block {
 	height:20px;
 	vertical-align:middle;
 }
+.line1, .line3 {vertical-align:bottom;} 
+.line2, .line4 {vertical-align:middle;}
+.line5 {vertical-align:top;}
 
 legend {
 	font-weight:bold;
@@ -137,13 +140,9 @@ img {
 }
 
 /* Block level objects, such as header, footer, etc. */
-.block {
-	background-color:#EEE;
-	clear:none;
-}
-.blockheader {
-	font-weight:bold;
-}
+.block {background-color:#EEE; clear:none;}
+.blockheader {font-weight:bold;}
+.charts_block {overflow:auto;}
 
 /* Pending edits */
 .change_new, .nameblue {
@@ -232,27 +231,31 @@ html[dir='rtl'] .makeMenu li ul li {
 #menu-theme    li {text-align:left;} /* The theme menu is always LTR, even on RTL pages */
 
 /* person boxes are used in various charts */
+
+.person_box img{background-color:#DDF;}
+.person_boxF img{background-color:#FDD;}
+.person_boxNN img{background-color:#DFD;}
+
 .person_box {
 	background-color:#DDF;
 	overflow:visible;
-	height:56px;
+	font: 13px  arial;
 }
 
 .person_boxF {
 	background-color:#FDD;
+	font: 13px  arial;
 	overflow:visible;
-	height:56px;
 }
 
 .person_boxNN {
 	background-color:#DFD;
 	overflow:visible;
-	height:56px;
+	font: 13px  arial;
 }
 
-.person_box img{background-color:#DDF;}
-.person_boxF img{background-color:#FDD;}
-.person_boxNN img{background-color:#DFD;}
+.action_headerF {background: #FDD;}
+.action_header {background: #DDF;}
 
 /* index.php */
 #index_main_blocks {
@@ -275,14 +278,14 @@ html[dir='rtl'] .makeMenu li ul li {
 .pedigree_image_portrait, .pedigree_image_landscape {
 	float:left;
 	max-height:48px;
-	max-width:48px;
+	max-width:37px;
 	margin-right:3px;
 }
 
 .pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
 	float:right;
 	max-height:48px;
-	max-width:48px;
+	max-width:37px;
 	margin-left:3px;
 }
 
@@ -354,6 +357,12 @@ right:10px;
 
 .list_value, .list_value_wrap {
 	background-color:#DDD;
+}
+
+.journal_box {
+	padding: 3pt;
+	border:thin solid #AAA;
+	overflow:visible;
 }
 
 .news_title {
@@ -551,6 +560,7 @@ right:10px;
 	margin-left:10px;
 	margin-right:10px;
 }
+.helpcontent dt {clear:both;}
 
 .helpfooter {
 	margin:10px;
@@ -588,7 +598,7 @@ right:10px;
 
 #descendancy_chart li {
 	list-style:none;
-	margin:0 0 0 -15px; /* top right bottom left */
+	margin:0 0 0 -13px; /* top right bottom left */
 	padding-top:0;
 	padding-right:0;
 	padding-bottom:0;
@@ -597,14 +607,15 @@ right:10px;
 /*-- descendancy chart rtl specific stylesheets --*/
 html[dir='rtl'] #descendancy_chart ul {
 background-position:right top;
-margin:0 18px 0 0;
 left:auto;
+margin:0 15px 0 0;
+
 }
 
 html[dir='rtl'] #descendancy_chart li {
-	list-style:none;
-	margin:0; /* top right bottom left */
-	padding:0 30px 0 0; /* top right bottom left */
+margin:0 -13px 0 0;
+padding:0 2px 0 0;
+left:auto;
 }
 
 /*-- relationship chart specific stylesheets --*/
@@ -649,7 +660,7 @@ left:auto;
 }
 
 html[dir='rtl'] #ancestry_chart li {
-margin:0 25px 0 0;
+margin:0 -13px 0 0;
 padding:0 2px 0 0;
 left:auto;
 }
@@ -703,6 +714,7 @@ left:auto;
 .search_hit {
 	background-color:yellow;
 }
+.search_item{font-weight:600;}
 
 .title {
 	font-size:150%;
@@ -729,16 +741,6 @@ left:auto;
 
 .rela {
 	opacity:0.67;
-}
-
-/* Text direction */
-.ltr {
-	text-align:left;
-}
-
-.rtl {
-	text-align:right;
-	direction:rtl;
 }
 
 /* Width settings */
@@ -988,6 +990,9 @@ dd {
 	top: 0;
 }
 
+#pending h2 {text-align:center; margin-bottom:20px;}
+#pending h3 {text-align:center; margin-top:20px;}
+
 .user_favorites_block, .gedcom_favorites_block,
 #family_page .person_box, #family_page .person_boxF, #family_page .person_boxNN,
 #ancestry_chart .person_box, #ancestry_chart .person_boxF, #ancestry_chart .person_boxNN,
@@ -996,12 +1001,18 @@ dd {
 #familybook_chart_rtl .person_box, #familybook_chart_rtl .person_boxF, #familybook_chart_rtl .person_boxNN,
 #hourglass_chart .person_box, #hourglass_chart .person_boxF, #hourglass_chart .person_boxNN,
 #hourglass_chart_rtl .person_box, #hourglass_chart_rtl .person_boxF, #hourglass_chart_rtl .person_boxNN,
-#relatives_content .person_box, #relatives_content .person_boxF, #relatives_content .person_boxNN {
+#relatives_content .person_box, #relatives_content .person_boxF, #relatives_content .person_boxNN,
+.charts_block .person_box, .charts_block .person_boxF, .charts_block .person_boxNN {
 	overflow: visible !important;
 }
 
+#register-page table, #login-page table, #branches-page table, #media-list-page .list_table  {margin:auto;}
+#register-page table a {display:block; text-align:center;}
+
 .gedcom_favorites_block  .person_box, .gedcom_favorites_block  .person_boxF, .gedcom_favorites_block  .person_boxNN {height:auto;}
+.user_favorites_block  .person_box, .user_favorites_block  .person_boxF, .user_favorites_block  .person_boxNN {height:auto;}
 .gedcom_favorites_block  .person_box .details2, .gedcom_favorites_block  .person_boxF.details2, .gedcom_favorites_block  .person_boxNN.details2 {min-height:40px;}
+.user_favorites_block  .person_box .details2, .user_favorites_block  .person_boxF.details2, .user_favorites_block  .person_boxNN.details2 {min-height:40px;}
 
 .popup {
 	display:none;
@@ -1132,6 +1143,11 @@ ul.clist {
 	margin-left:-23px;
 }
 
+/* Find special characters */
+.largechars {
+	font-family: monospace;
+	font-size: 200%;
+}
 /* ========= Positioning edit, copy, delete links ============= */
 /* General use */
 .editfacts {clear:left; padding-top:15px;} /* a container for the following three links */
@@ -1201,7 +1217,7 @@ html[dir='rtl']  dd .editlink, html[dir='rtl']  dd .deletelink  {float:left;}
 
 /* =========== Indi tabs ================== */
 /* Facts & Events tab */
-#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR {margin:5px 3px 5px 0;}
+#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family_page .fact_NOTE, #family_page .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
 #media-display-image {float:left;}
 #media-display-title {float:left; font-style:italic; margin:10px;}
 
@@ -1234,12 +1250,15 @@ html[dir='rtl'] .ui-accordion .ui-accordion-header .ui-icon {right:0.5em;}
 .dataTables_processing {float:left; margin:5px;}
 .dataTables_filter  {float:right; margin:4px;}
 .dataTables_info {float:left; margin:5px;}
+.recent_changes_block .dataTables_info, .upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info, .todo_block .dataTables_info, .yahrzeit_block .dataTables_info {padding: 0;}
+.upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info {padding: 2px 0 0 0;}
+.upcoming_events_block  button, .todays_events_block  button {margin: 5px 20px;}
 .dataTables_length {float:right; margin:5px;}
 .dataTables_length select, .dataTables_filter input {font-size:11px; padding:1px;}
 .ui-widget-header {font-weight:normal;}
 .dt-clear {clear:both;}
 #loading {text-align:center;}
-.DataTables_sort_wrapper {position:relative;margin-left:20px;}
+.DataTables_sort_wrapper {position:relative; margin: 0 20px;}
 .DataTables_sort_wrapper span {left:0; margin-left:-20px; margin-top:-8px; position:absolute; top:50%;}
 
 html[dir='rtl'] .css_right {float:right;}
@@ -1252,21 +1271,28 @@ html[dir='rtl'] .DataTables_sort_wrapper {margin-right:20px;}
 html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:-20px;}
 
 /* ========= List styles ================= */
-.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list  {margin:5px auto; text-align:center; visibility:hidden; width:98%;}
+.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list  {margin:5px auto; visibility:hidden; width:98%;}
+.surname-list, .givn-list  {margin:5px auto;}
 .source-list table, .note-list table, .repo-list table, .media-list table, .indi-list table, .fam-list table  {width:100%;}
-.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td {padding:2px 5px;}
+.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td, .recent_changes_block td, .upcoming_events_block, .surname-list td, .givn-list td {padding:2px 5px;}
 .indi-list td, .fam-list td {color:#555;}
+.surname-list  td {vertical-align:top;}
 .indi-list .stats, .fam-list .stats {margin:0 auto; width:auto;}
-.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th {cursor:pointer; white-space:nowrap;}
+.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th, .recent_changes_block th, .upcoming_events_block th, .todays_events_block th, .todo_block th, .yahrzeit_block th, .surname-list th, .givn-list th {cursor:pointer; white-space:nowrap;}
 .source-list th:last-child, .note-list th:last-child, .repo-list th:last-child {margin:0 -2px 1px 1px; padding:3px 0 4px; width:24px;}
-#source-details h2, #note-details h2, #repo-details h2, #media-details h2 {margin-bottom:20px; text-align:center;}
+.givn-list th{cursor:pointer;white-space: nowrap;padding:2px;text-align:center;}
+#source-details h2,#source-list-page h2, #note-details h2, #note-list-page h2, #repo-details h2, #repo-list-page h2, #media-details h2, #media-list-page h2  {margin-bottom:20px; text-align:center;}
 #source-tabs, #note-tabs, #repo-tabs, #media-tabs {margin:auto; visibility:hidden; width:80%;}
 #source-edit, #note-edit, #repo-edit, #media-edit {overflow-x:auto;}
 .media-list td img {display:block; height:40px; margin:3px auto;}
 .filtersH, .filtersF {margin:4px}
 .filtersH img {margin-bottom:2px;}
 .filtersH .ui-state-default,.filtersF .ui-state-default {margin:0 2px; padding:2px;}
-.loading-image{background:#fff url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+.loading-image{background:transparent url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+#search-result-tabs, #places-tabs {margin:auto; width:98%; visibility:hidden;}
+#search-result-tabs h3 {text-align:center;}
+#searchAccordion-indi, #searchAccordion-fam, #searchAccordion-source, #searchAccordion-note {margin:auto; width:99%;}
+#place-heirarchy h2, #place-heirarchy h4 {text-align:center;}
 
 html[dir='rtl'] .source-list th:last-child, html[dir='rtl'] .note-list th:last-child, html[dir='rtl'] .repo-list th:last-child {margin:0 1px 1px -2px;}
 

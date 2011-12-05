@@ -30,19 +30,12 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-//-- make sure that they have admin status before they can use this page
-//-- otherwise have them login again
-if (!WT_USER_IS_ADMIN) {
-	if (WT_USER_ID) {
-		header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH);
-		exit;
-	} else {
-		header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'login.php?url=module.php?mod=sitemap');
-		exit;
-	}
-}
+$controller=new WT_Controller_Base();
+$controller
+	->requireAdminLogin()
+	->setPageTitle(WT_I18N::translate('Generate Sitemap files'));
 
-global $GEDCOM, $SHOW_MARRIED_NAMES;
+global $GEDCOM;
 
 $action = safe_REQUEST($_REQUEST, 'action', WT_REGEX_XREF);
 $welcome = safe_REQUEST($_REQUEST, 'welcome', WT_REGEX_XREF);
@@ -130,7 +123,7 @@ if ($action=="sendFiles") {
 	}
 
 	if (isset($fam_lists)) {
-		foreach (WT_Query_Name::surnameAlpha($SHOW_MARRIED_NAMES, true, $index) as $letter=>$count) {
+		foreach (WT_Query_Name::surnameAlpha(true, true, $index) as $letter=>$count) {
 			if ($letter!='@') {
 				echo " <url>\n";
 				echo " <loc>", WT_SERVER_NAME, WT_SCRIPT_PATH, "famlist.php?alpha=", urlencode($letter), "&amp;ged=", rawurlencode($gedcom_name), "</loc>\n";
@@ -142,7 +135,7 @@ if ($action=="sendFiles") {
 	}
 
 	if (isset($indi_lists)) {
-		foreach (WT_Query_Name::surnameAlpha($SHOW_MARRIED_NAMES, false, $index) as $letter=>$count) {
+		foreach (WT_Query_Name::surnameAlpha(true, false, $index) as $letter=>$count) {
 			if ($letter!='@') {
 				echo " <url>\n";
 				echo " <loc>", WT_SERVER_NAME, WT_SCRIPT_PATH, "indilist.php?alpha=", urlencode($letter), "&amp;ged=", rawurlencode($gedcom_name), "</loc>\n";
@@ -181,7 +174,7 @@ if ($action=="sendIndex") {
 	exit;
 }
 
-print_header(WT_I18N::translate('Generate Sitemap files'));
+$controller->pageHeader();
 
 if ($action=="generate") {
 	echo "<h3>";
@@ -400,4 +393,3 @@ if ($action=="") {
 
 <?php
 }
-print_footer();

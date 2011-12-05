@@ -1173,7 +1173,6 @@ function accept_all_changes($xref, $ged_id) {
 			" WHERE status='pending' AND xref=? AND gedcom_id=?"
 		)->execute(array($xref, $ged_id));
 		AddToLog("Accepted change {$change->change_id} for {$xref} / {$change->gedcom_name} into database", 'edit');
-		//Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->addMessage(WT_I18N::translate('The changes have been accepted.'));
 	}
 }
 
@@ -1188,7 +1187,7 @@ function reject_all_changes($xref, $ged_id) {
 }
 
 // Find a string in a file, preceded by a any form of line-ending.
-// Although PGV always writes them as WT_EOL, it is possible that the file was
+// Although webtrees always writes them as WT_EOL, it is possible that the file was
 // edited externally by an editor that uses different endings.
 function find_newline_string($haystack, $needle, $offset=0) {
 	if ($pos=strpos($haystack, "\r\n{$needle}", $offset)) {

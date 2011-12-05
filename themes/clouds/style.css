@@ -51,7 +51,7 @@ body {
 /* ================= */
 /*   Header Layout   */
 
-#header {height: 29px; background-image:url(images/clouds.png);}
+#header {height: 30px; background-image:url(images/clouds.png);}
 .title {display: block; float: left; margin-top: 5px; margin-left: 12px; font-size: 24px; vertical-align:bottom; width: 70%; text-decoration: none;}
 .hsearch {display: block; float: right; padding-top: 5px; padding-right: 10px;}
 .title .gedcomtitle {text-decoration:none; color: #003399;}
@@ -276,9 +276,9 @@ html[dir='rtl'] .makeMenu li ul li {text-align:right;}
 .facts_label .date,
 .facts_label03,
 .facts_table h2,
-.facts_table .ltr .descriptionbox a,
+.facts_table .descriptionbox a,
 .blockcontent .facts_label {
-	background:#95B8E0;
+	background-color:#95B8E0;
 	color: #003399;
 }
 /* Define Menu Color */
@@ -295,8 +295,6 @@ background:#aaccff;
 .list_value_wrap,
 .tab_cell_active,
 .news_box, optionbox,
-.person0,  .center .person_box,
-.small_inner_block .person_box,
 .submenuitem_hover {
 	background:#fff;
 }
@@ -315,7 +313,7 @@ a:hover, .blanco a.link:hover {color: red; text-decoration: none;}
 /* Define Dark Text Color */
 
 input,button,textarea {border-color:#fff #000066 #000066 #fff;}
-body, .subheaders {color:#000066;}
+.subheaders {color:#000066;}
 
 /*   Edit Facts */
 td.descriptionbox div a {color: white;}
@@ -388,57 +386,23 @@ clear: both;
 width: 99%;
 }
 
-#index_main_blocks {
-clear:none;
-float:left;
-width:66%;
-}
+/* ======= Block styles ========== */
+#index_main_blocks {clear:none; float:left; width:66%;}
+#index_small_blocks {clear:none; float:right; width:33%;}
+#index_full_blocks {clear:none; width:100%;}
+#index_small_blocks .name1 {color:#333;}
+#random_picture {text-align:center;}
+.small_inner_block {max-height: 200px; overflow: auto;}
+.block {color: #000;vertical-align: top;margin-bottom: 5px;padding: 1px;}
+.blockcontent {border: solid #999 1px; margin-left:auto; margin-right:2px; margin-bottom:10px; overflow:auto;padding: 5px;}
+.blockheader {width:100%;}
 
-#index_small_blocks {
-clear:none;
-float:right;
-width:33%;
-}
-
-#index_full_blocks {
-clear:none;
-width:100%;
-}
-
-#index_small_blocks .name1 {
-color:#333;
-}
-
-.small_inner_block {
-max-height: 200px;
-overflow: auto;
-}
-
-img {
-    border: 0 none;
-}
-
-.block {
-color: #000;
-vertical-align: top;
-margin-bottom: 5px;
-padding: 1px;
-}
-
+img {border: 0 none;}
 img.block {height: 25px;}
 
-.blockcontent {
-border: solid #999 1px;
-margin-left:auto;
-margin-right:2px;
-margin-bottom:10px;
-overflow:auto;
-padding: 5px;
-}
-
-.blockheader {
-width:100%;
-}
+.line1, .line2, .line3 {vertical-align:bottom;} 
+.line4 {vertical-align:middle;}
+.line5 {vertical-align:top;}
 
 .blockh1 {
 background-image:url(images/left1B.png);
@@ -465,10 +429,11 @@ height:24px;
 
 html[dir='rtl'] .blockh3 {background-image: url(images/right3.png);}
 
-.blockhc {
-padding-right:15px;
-padding-top: 2px;
-}
+.blockhc {padding:3px 3px 0 3px;}
+.blockhc img {padding-right: 3px;}
+
+html[dir='rtl'] .blockhc {padding:3px 0 0 3px;}
+html[dir='rtl'] .blockhc img {padding-left:3px;}
 
 #index_small_blocks .person_box .pedigree_image_portrait,
 #index_small_blocks .person_boxF .pedigree_image_portrait,
@@ -488,22 +453,6 @@ visibility:visible;
 
 #index_title {
 float: left;
-}
-
-#random_picture {
-height:auto;
-}
-
-#random_picture_box {
-width:99%;
-}
-
-#random_picture .blockheader .ltr {
-text-align:left;
-}
-
-#random_picture .blockheader .rtl {
-text-align:right;
 }
 
 #pedigree_chart {
@@ -576,6 +525,8 @@ padding-right:0;
 padding-bottom:0;
 }
 
+#ancestry_chart > .person_box, #ancestry_chart > .person_boxF {margin: 0 0 10px 0px;}
+
 html[dir='rtl'] #ancestry_chart ul {
 background-position:right top;
 margin:0 15px 0 0;
@@ -598,7 +549,6 @@ ul {
 padding-left: 15px;
 padding-right: 15px;
 margin: 8px;
-font-size: 13px;
 }
 
 .center {
@@ -624,6 +574,7 @@ border:1px solid #999;
 margin:0;
 width:99%;
 }
+/* person boxes are used in various charts */
 
 .person_box {
 background:#ddf;
@@ -643,11 +594,8 @@ border:1px solid #CCC;
 padding:3px;
 }
 
-.person_box:target,
-.news_box:target,
-#gedcom_stats:target {
-background:#ffc;
-}
+.action_headerF {background: #FDD;}
+.action_header {background: #DDF;}
 
 .list_table {
 margin:0 auto;
@@ -804,7 +752,7 @@ a:hover .name1, a:hover.name2,  a:hover .nameZoom  {color: #f00; font-weight: bo
 
 .details1 {
 text-decoration:none;
-font-size: 10px;
+font-size: 11px;
 }
 
 .details2 {
@@ -879,14 +827,14 @@ vertical-align: middle;
 .pedigree_image_portrait, .pedigree_image_landscape {
 float: left;
 max-height: 50px;
-max-width: 50px;
+max-width: 37px;
 margin-right: 3px;
 }
 
 .pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
 float: right;
 max-height: 50px;
-max-width: 50px;
+max-width: 37px;
 margin-left: 3px;
 }
 
@@ -1036,6 +984,12 @@ white-space:nowrap;
 padding:3px 3px 0 3px;
 }
 
+.journal_box {
+padding: 3pt;
+border:thin solid #AAA;
+overflow:visible;
+}
+
 .news_box {
 padding: 3pt;
 }
@@ -1061,6 +1015,7 @@ left: 0;
 }
 
 .person0 {
+background:#ddf;
 border:outset #999 1px;
 vertical-align:top;
 }
@@ -1140,6 +1095,7 @@ text-decoration:underline;
 background:#FF0;
 color:#000;
 }
+.search_item{font-weight:600;}
 
 .title {
 font-size: 20px;
@@ -1228,8 +1184,16 @@ background: transparent;
 legend {
 font-weight:bold;
 }
+
 .details_label {
 font-weight:bold;
+}
+
+.name_head {
+color:#333;
+font-weight:bold; font-size:16px;
+line-height:2;
+padding:0 5px;
 }
 
 form .rtl {
@@ -1582,6 +1546,8 @@ display: inline;
 margin: 0;
 }
 
+.helpcontent dt {clear:both;}
+
 .itr {
 	position: absolute;
 	top: 3em;
@@ -1593,17 +1559,24 @@ margin: 0;
 	top: 0;
 }
 
+#pending h2 {text-align:center; margin-bottom:20px;}
+#pending h3 {text-align:center; margin-top:20px;}
+
+.gedcom_favorites_block  .person_box .details2, .gedcom_favorites_block  .person_boxF.details2, .gedcom_favorites_block  .person_boxNN.details2 {min-height:40px;}
+.user_favorites_block  .person_box .details2, .user_favorites_block  .person_boxF.details2, .user_favorites_block  .person_boxNN.details2 {min-height:40px;}
+
 .user_favorites_block, .gedcom_favorites_block,
-#family_page .person_box, #family_page .person_boxF, #family_page .person_boxNN,
-#ancestry_chart .person_box, #ancestry_chart .person_boxF, #ancestry_chart .person_boxNN,
-#descendancy_chart .person_box, #descendancy_chart .person_boxF, #descendancy_chart .person_boxNN,
-#familybook_chart .person_box, #familybook_chart .person_boxF, #familybook_chart .person_boxNN,
-#familybook_chart_rtl .person_box, #familybook_chart_rtl .person_boxF, #familybook_chart_rtl .person_boxNN,
-#hourglass_chart .person_box, #hourglass_chart .person_boxF, #hourglass_chart .person_boxNN,
-#hourglass_chart_rtl .person_box, #hourglass_chart_rtl .person_boxF, #hourglass_chart_rtl .person_boxNN,
-#relatives_content .person_box, #relatives_content .person_boxF, #relatives_content .person_boxNN {
+#ancestry_chart .person_box, #ancestry_chart .person_boxF,
+#descendancy_chart .person_box, #descendancy_chart .person_boxF,
+#familybook_chart .person_box, #familybook_chart .person_boxF,
+#familybook_chart_rtl .person_box, #familybook_chart_rtl .person_boxF,
+#hourglass_chart .person_box, #hourglass_chart .person_boxF,
+#hourglass_chart_rtl .person_box, #hourglass_chart_rtl .person_boxF {
 	overflow: visible !important;
 }
+
+#register-page table, #login-page table, #branches-page table, #media-list-page .list_table  {margin:auto;}
+#register-page table a {display:block; text-align:center;}
 
 .popup {
 	display:none;
@@ -1636,88 +1609,25 @@ html[dir='rtl'] .popup dd {margin-right:10px;}
 html[dir='rtl'] .itr:hover .popup {left:0; right:auto;}
 
 /* styles for FindFacts pop-up */
-#layDefinedTags, #tabDefinedTagsShow {
-	width:450px;
-}
-#tabDefinedTags {
-	width:430px;
-	border-collapse:collapse;
-}
-#layDefinedTags {
-	margin-left:auto;
-	margin-right:auto;
-	height:285px;
-	overflow:auto;
-	border:inset 2px buttonface;
-}
-#tabDefinedTags th,#tabDefinedTags td {
-	border:solid 1px #000;
-	margin:0;
-	padding:3px;
-}
-#tabDefinedTags tbody th {
-	text-align:left;
-	font-weight:bold;
-}
-#tabDefinedTags tr.sel {
-	background-color:#D1D9EF;
-	color:#888;
-}
-#tabDefinedTags tr.unsel {
-	background-color:#fff;
-	color:#888;
-}
-#tabDefinedTagsShow {
-	margin-left:auto;
-	margin-right:auto;
-}
-#tabDefinedTagsShow td {
-	width:50%;
-	text-align:center;
-}
-#tabFilterAndCustom {
-	margin-left:auto;
-	margin-right:auto;
-}
-#tabAction {
-	margin-left:auto;
-	margin-right:auto;
-}
-#tabAction td {
-	width:50%;
-	text-align:center;
+#layDefinedTags, #tabDefinedTagsShow {width:450px;}
+#tabDefinedTags {width:430px; border-collapse:collapse;}
+#layDefinedTags {margin-left:auto; margin-right:auto; height:285px;overflow:auto; border:inset 2px buttonface;}
+#tabDefinedTags th,#tabDefinedTags td {border:solid 1px #000; margin:0; padding:3px;}
+#tabDefinedTags tbody th {text-align:left; font-weight:bold;}
+#tabDefinedTags tr.sel {background-color:#D1D9EF; color:#888;}
+#tabDefinedTags tr.unsel {background-color:#fff; color:#888;}
+#tabDefinedTagsShow {margin-left:auto; margin-right:auto;}
+#tabDefinedTagsShow td {width:50%; text-align:center;}
+#tabFilterAndCustom {margin-left:auto; margin-right:auto;}
+#tabAction {margin-left:auto; margin-right:auto;}
+#tabAction td {width:50%; text-align:center;
 }
 /* FAQ table styles */
-table.faq   {
-background-color: #eee;
-margin:5px 0 50px 5px;
-width: 98%;
-}
-
-table.faq  tr.odd td {
-background-color:#eee;
-}
-div.faq_title {
-background-color: #eee;
-margin: 1em 0;
-padding: .25em;
-font-weight:bold;
-width: 98%;
-}
-
-div.faq_body {
-clear:both;
-margin: 1em 0;
-padding: 1em;
-}
-
-.faq_italic {
-font-style: italic;
-font-weight: bold;
-font-size: 10px;
-padding: 0 10px;
-}
-
+table.faq   {background-color: #eee; margin:5px 0 50px 5px; width: 98%;}
+table.faq  tr.odd td {background-color:#eee;}
+div.faq_title {background-color:#eee; margin:1em 0; padding:.25em; font-weight:bold; width:98%;}
+div.faq_body {clear:both; margin:1em 0; padding:1em;}
+.faq_italic {font-style:italic; font-weight: bold;font-size:10px;padding: 0 10px;}
 .faq_top {float:right;}
 .faq_edit {float:right;}
 
@@ -1740,6 +1650,11 @@ ul.clist {
 	margin-left: 0;
 }
 
+/* Find special characters */
+.largechars {
+	font-family: monospace;
+	font-size: 200%;
+}
 /* ========= Positioning edit, copy, delete links ============= */
 .editfacts {clear:left; padding-top:15px;} /* a container for the following three links */
 .editlink, .copylink, .deletelink {float:left;}
@@ -1809,7 +1724,7 @@ html[dir='rtl'] .indi_table {clear:right;}
 
 /* =========== Indi tabs ================== */
 /* Facts & Events tab */
-#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR {margin: 5px 3px 5px 0;}
+#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family_page .fact_NOTE, #family_page .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
 #media-display-image {float:left;}
 #media-display-title {float:left; font-style:italic; margin:10px;}
 
@@ -1844,11 +1759,14 @@ html[dir='rtl'] .ui-tabs .ui-tabs-nav li.ui-state-default {float:right;}
 .dataTables_processing {float:left; margin:5px;}
 .dataTables_filter  {float:right; margin:4px;}
 .dataTables_info {float:left; margin:5px;}
+.recent_changes_block .dataTables_info, .upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info, .todo_block .dataTables_info, .yahrzeit_block .dataTables_info {padding: 0;}
+.upcoming_events_block .dataTables_info, .todays_events_block .dataTables_info {padding: 2px 0 0 0;}
+.upcoming_events_block  button, .todays_events_block  button {margin: 5px 20px;}
 .dataTables_length {float:right;}
 .dataTables_length select, .dataTables_filter input {font-size:11px; padding:1px;}
 .dt-clear {clear:both;}
 #loading {text-align:center;}
-.DataTables_sort_wrapper {position:relative;margin-left:20px;}
+.DataTables_sort_wrapper {position:relative; margin: 0 20px;}
 .DataTables_sort_wrapper span {left:0; margin-left:-20px; margin-top:-8px; position:absolute; top:50%;}
 
 html[dir='rtl'] .css_right {float:right;}
@@ -1861,21 +1779,28 @@ html[dir='rtl'] .DataTables_sort_wrapper {margin-right:20px;}
 html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:-20px;}
 
 /* ========= List styles ================= */
-.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list  {margin:5px auto; text-align:center; visibility:hidden; width:98%;}
+.source-list, .note-list, .repo-list, .media-list, .indi-list, .fam-list  {margin:5px auto; visibility:hidden; width:98%;}
+.surname-list, .givn-list  {margin:5px auto;}
 .source-list table, .note-list table, .repo-list table, .media-list table, .indi-list table, .fam-list table  {width:100%;}
-.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td {padding:2px 5px;}
+.source-list td, .note-list td, .repo-list td, .media-list td, .indi-list td, .fam-list td, .recent_changes_block td, .upcoming_events_block, .surname-list td, .givn-list td {padding:2px 5px;}
 .indi-list td, .fam-list td {color:#555;}
+.surname-list  td {vertical-align:top;}
 .indi-list .stats, .fam-list .stats {margin:0 auto; width:auto;}
-.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th {cursor:pointer; white-space: nowrap;}
+.source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th, .recent_changes_block th, .upcoming_events_block th, .todays_events_block th, .todo_block th, .yahrzeit_block th, .surname-list th, .givn-list th {cursor:pointer; white-space: nowrap;}
 .source-list th:last-child, .note-list th:last-child, .repo-list th:last-child {margin:0 -2px 1px 1px; padding:3px 0 4px; width:24px;}
-#source-details h2, #note-details h2, #repo-details h2, #media-details h2 {margin-bottom:20px; text-align:center;}
+.givn-list th{cursor:pointer;white-space: nowrap;padding:2px;text-align:center;}
+#source-details h2,#source-list-page h2, #note-details h2, #note-list-page h2, #repo-details h2, #repo-list-page h2, #media-details h2, #media-list-page h2  {margin-bottom:20px; text-align:center;}
 #source-tabs, #note-tabs, #repo-tabs, #media-tabs {margin:auto; visibility:hidden; width:80%;}
 #source-edit, #note-edit, #repo-edit, #media-edit {overflow-x:auto;}
 .media-list td img {display:block; height:40px; margin:3px auto;}
 .filtersH, .filtersF {margin:4px}
 .filtersH img {margin-bottom:2px;}
 .filters .ui-state-default {margin: 0 2px;padding: 2px;}
-.loading-image{background:#fff url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+.loading-image{background:transparent url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+#search-result-tabs, #places-tabs {margin:auto; width:98%; visibility:hidden;}
+#search-result-tabs h3 {text-align:center;}
+#searchAccordion-indi, #searchAccordion-fam, #searchAccordion-source, #searchAccordion-note {margin:auto; width:99%;}
+#place-heirarchy h2, #place-heirarchy h4 {text-align:center;}
 
 html[dir='rtl'] .source-list th:last-child, html[dir='rtl'] .note-list th:last-child, html[dir='rtl'] .repo-list th:last-child {margin:0 1px 1px -2px;}
 

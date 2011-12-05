@@ -29,10 +29,10 @@ if (!defined('WT_WEBTREES')) {
 }
 
 echo
-	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	'<html xmlns="http://www.w3.org/1999/xhtml" ', WT_I18N::html_markup(), '>',
+	'<!DOCTYPE html>',
+	'<html ', WT_I18N::html_markup(), '>',
 	'<head>',
-	'<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />',
+	'<meta charset="UTF-8">',
 	'<title>', htmlspecialchars($title), '</title>',
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png" />';
 
@@ -64,7 +64,6 @@ if (WT_USE_LIGHTBOX) {
 }
 
 echo
-	$javascript,
 	'</head>',
 	'<body id="body">';
 
@@ -72,9 +71,8 @@ echo
 if ($view!='simple') {
 	echo 
 		'<div id="header" class="', $TEXT_DIRECTION, '">',
-		'<span class="title">';
-	print_gedcom_title_link();
-	echo
+		'<span class="title">',
+			htmlspecialchars($GEDCOM_TITLE),
 		'</span>',
 		'<span class="hlogin">';
 	if (WT_USER_ID) {
@@ -98,12 +96,12 @@ if ($view!='simple') {
 		'<form style="display:inline;" action="search.php" method="get">',
 		'<input type="hidden" name="action" value="general" />',
 		'<input type="hidden" name="topsearch" value="yes" />',
-		'<input type="text" name="query" size="15" value="', WT_I18N::translate('Search'), '" onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();" onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
+		'<input type="text" name="query" size="15" placeholder="', WT_I18N::translate('Search'), '"/>',
 		'<input type="submit" name="search" value=" &gt; " />',
 		'</form>';
 	print_favorite_selector();
 	echo 
-		'</div></div>';
+		'</div>';
 	
 	//  begin top links section
 	echo 
@@ -158,10 +156,14 @@ if ($view!='simple') {
 	}
 	echo 
 		'</ul>',
-		'</div>',
-		'<img src="', $WT_IMAGES['hline'], '" width="100%" height="3" alt="" />';
-} 
-?>
-<!-- end menu section -->
-<!-- begin content section -->
-<div id="content">
+		'</div>';
+	echo '</div>'; // <div id="header">
+	// Display feedback from asynchronous actions
+	echo '<div id="flash-messages">';
+	foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->getMessages() as $message) {
+		echo '<p class="ui-state-highlight">', $message, '</p>';
+	}
+	echo '</div>'; // <div id="flash-messages">
+	echo '</div>'; // <div id="header">
+}
+echo $javascript, '<div id="content">';

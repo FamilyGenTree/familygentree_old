@@ -170,7 +170,9 @@ if ($action=='ExportFile' && WT_USER_IS_ADMIN) {
 	exit;
 }
 
-print_header(WT_I18N::translate('Edit geographic place locations'));
+$controller=new WT_Controller_Base();
+$controller->setPageTitle(WT_I18N::translate('Edit geographic place locations'));
+$controller->pageHeader();
 
 echo '<table id="gm_config"><tr>',
 	'<th><a ', (safe_GET('mod_action')=='admin_editconfig' ? 'class="current" ' : ''), 'href="module.php?mod=googlemap&mod_action=admin_editconfig">', WT_I18N::translate('Google Maps configuration'), '</a>', '</th>',
@@ -344,7 +346,6 @@ if ($action=='ImportFile') {
 	<input id="savebutton" type="submit" value="<?php echo WT_I18N::translate('Continue Adding'); ?>" /><br />
 </form>
 <?php
-	print_footer();
 	exit;
 }
 
@@ -612,15 +613,15 @@ foreach ($placelist as $place) {
 		echo '<img src="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/', $place['icon'], '" width="25" height="15">';
 	}
 	echo '</td>';
-	echo '<td class="narrow"><a href="javascript:;" onclick="edit_place_location(', $place['place_id'], ');return false;"><img src="', $WT_IMAGES['edit'], '" border="0" alt="', WT_I18N::translate("Edit"), '" /></a></td>';
+	echo '<td class="narrow"><a href="#" onclick="edit_place_location(', $place['place_id'], ');return false;"><img src="', $WT_IMAGES['edit'], '" alt="', WT_I18N::translate("Edit"), '"></a></td>';
 	$noRows=
 		WT_DB::prepare("SELECT COUNT(pl_id) FROM `##placelocation` WHERE pl_parent_id=?")
 		->execute(array($place['place_id']))
 		->fetchOne();
 	if ($noRows==0) { ?>
-	<td><a href="javascript:;" onclick="delete_place(<?php echo $place['place_id'], ');return false;">'; ?><img src="<?php echo $WT_IMAGES['remove'];?>" border="0" alt="<?php echo WT_I18N::translate('Remove'); ?>" /></a></td>
+	<td><a href="#" onclick="delete_place(<?php echo $place['place_id'], ');return false;">'; ?><img src="<?php echo $WT_IMAGES['remove'];?>" alt="<?php echo WT_I18N::translate('Remove'); ?>"></a></td>
 <?php       } else { ?>
-		<td><img src="<?php echo $WT_IMAGES['remove_grey'];?>" border="0" alt="" /> </td>
+		<td><img src="<?php echo $WT_IMAGES['remove_grey'];?>" alt=""> </td>
 <?php       } ?>
 	</tr>
 	<?php
@@ -630,7 +631,7 @@ foreach ($placelist as $place) {
 </div>
 <table id="gm_manage">
 	<tr>
-		<td colspan="3"><a href="javascript:;" onclick="add_place_location(<?php echo $parent; ?>);return false;"><?php echo WT_I18N::translate('Add place'); ?></a><?php echo help_link('PL_ADD_LOCATION','googlemap'); ?></td>
+		<td colspan="3"><a href="#" onclick="add_place_location(<?php echo $parent; ?>);return false;"><?php echo WT_I18N::translate('Add place'); ?></a><?php echo help_link('PL_ADD_LOCATION','googlemap'); ?></td>
 	</tr>
 	<tr>
 		<td><a href="module.php?mod=googlemap&mod_action=admin_places&action=ImportGedcom&mode=curr"><?php echo WT_I18N::translate('Import from current GEDCOM'); ?></a><?php echo help_link('PL_IMPORT_GEDCOM','googlemap'); ?></td>
@@ -653,7 +654,6 @@ foreach ($placelist as $place) {
 	echo help_link('PL_EXPORT_ALL_FILE','googlemap');
 	echo '</td></tr></table>';
 if (empty($SEARCH_SPIDER)) {
-	print_footer();
 } else {
 	echo WT_I18N::translate('Search Engine Spider Detected'), ': ', $SEARCH_SPIDER;
 	echo '</div></body></html>';

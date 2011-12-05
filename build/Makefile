@@ -1,5 +1,5 @@
-LANGUAGES_BUILD=bs ca cs da de en_GB en_US es et fa fi fr he hr hu it lt nb nl pl pt ru sk sl sv tr vi
-LANGUAGES_EXTRA=af ar dv el en_AU fo gl id ja nn oc pt_BR ro sr sr@Latn ta tt zh
+LANGUAGES_BUILD=ar bs ca cs da de en_GB en_US es et fa fi fr he hr hu it lt nb nl pl pt ru sk sl sv tr vi
+LANGUAGES_EXTRA=af dv el en_AU fo gl id is ja nn oc pt_BR ro sr sr@Latn ta tt zh
 PO_DIR=po
 MO_DIR=mo
 MO_FILES=$(patsubst %,$(MO_DIR)/%.mo,$(LANGUAGES_BUILD) $(LANGUAGES_EXTRA))
@@ -22,7 +22,7 @@ default: clean webtrees
 	# If we have a GNU private key, sign the file with it
 	if test -d ~/.gnupg; then gpg --armor --sign --detach-sig webtrees-$(BUILD_VERSION).zip; fi
 	# If we have a public html area, publish the files
-	if test -d ~/public_html; then mkdir -p ~/public_html/build && cp language*.zip webtrees*.zip ~/public_html/build/ && echo ${BUILD_VERSION} > ~/public_html/build/latest-svn.txt; fi
+	if test -d ~/public_html/build; then cp language*.zip webtrees*.zip ~/public_html/build/ && echo ${BUILD_VERSION} > ~/public_html/build/latest-svn.txt; fi
 	# If we have a public html area, clean up old files
 	if test -d ~/public_html/build; then find ~/public_html/build -ctime +7 -exec rm -f {} \; ; fi
 	# Create an updated message catalog
@@ -55,9 +55,9 @@ webtrees: $(PO_DIR) $(MO_DIR)
 	# Embed the SVN version number in the code (for SVN builds only)
 	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVN_VERSION)')/" $@/includes/session.php
 	# Exclude unused Zend Framework components
-	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Controller,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
+	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
 	# Exclude unused locale data
-	rm -f $@/library/Zend/Locale/Data/{aa,ak,am,as,az,be,bg,bn,bo,byn,cch,cop,cy,dz,ee,eo,eu,fil,fur,ga,gaa,gez,gsw,gu,gv,ha,haw,hi,hy,ia,ig,ii,in,is,iu,iw,k,ln,lo,lv,mk,ml,mn,mo,mr,mt,my,nd,ne,no,nso,nr,ny,om,or,pa,ps,rw,sa,se,sh,si,so,sq,ss,st,sw,syr,te,tg,th,ti,tl,tn,to,trv,ts,u,ve,w,x,y,zu}*.xml
+	rm -f $@/library/Zend/Locale/Data/{aa,ak,am,as,az,be,bg,bn,bo,byn,cch,cop,cy,dz,ee,eo,eu,fil,fur,ga,gaa,gez,gsw,gu,gv,ha,haw,hi,hy,ia,ig,ii,in,iu,iw,k,ln,lo,lv,mk,ml,mn,mo,mr,mt,my,nd,ne,no,nso,nr,ny,om,or,pa,ps,rw,sa,se,sh,si,so,sq,ss,st,sw,syr,te,tg,th,ti,tl,tn,to,trv,ts,u,ve,w,x,y,zu}*.xml
 	rm -Rf $@/build
 	# Check for syntax errors
 	if find $@ -name '*.php' -exec php -l {} \; | grep -v "No syntax errors"; then false; else true; fi

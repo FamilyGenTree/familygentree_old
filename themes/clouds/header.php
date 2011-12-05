@@ -28,10 +28,10 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 echo
-	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-	'<html xmlns="http://www.w3.org/1999/xhtml" ', WT_I18N::html_markup(), '>',
+	'<!DOCTYPE html>',
+	'<html ', WT_I18N::html_markup(), '>',
 	'<head>',
-	'<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />',
+	'<meta charset="UTF-8">',
 	'<title>', htmlspecialchars($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png" />',
@@ -51,7 +51,6 @@ if (WT_USE_LIGHTBOX) {
 }
 
 echo
-	$javascript,
 	'</head>',
 	'<body id="body">';
 
@@ -60,15 +59,14 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	'<div id="clouds-container">',
 		'<div id="header">',
 			'<div class="header" >',
-				'<span class="title">';
-				print_gedcom_title_link();
-				echo 
+				'<span class="title">',
+					htmlspecialchars($GEDCOM_TITLE),
 				'</span>',
 				'<div class="hsearch">',
 					'<form style="display:inline;" action="search.php" method="get">',
 						'<input type="hidden" name="action" value="general" />',
 						'<input type="hidden" name="topsearch" value="yes" />',
-						'<input type="text" name="query" size="15" value="', WT_I18N::translate('Search'), '" onfocus="if (this.value==\'', WT_I18N::translate('Search'), '\') this.value=\'\'; focusHandler();" onblur="if (this.value==\'\') this.value=\'', WT_I18N::translate('Search'), '\';" />',
+						'<input type="text" name="query" size="15" placeholder="', WT_I18N::translate('Search'), '"/>',
 						'<input type="image" src="', WT_THEME_URL, 'images/go.png', '" align="top" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '" />',
 					'</form>',
 				'</div>',
@@ -110,7 +108,7 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	if (WT_USER_ID) {
 		echo '<li><a href="edituser.php" class="link">', getUserFullName(WT_USER_ID), '</a></li><li>', logout_link(), '</li>';
 		if (WT_USER_CAN_ACCEPT && exists_pending_change()) {
-			echo ' <li><a href="javascript:;" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
+			echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
 		}
 	} else {
 		echo '<li>', login_link(),'</li>';
@@ -127,9 +125,16 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	if ($menu) {
 		echo $menu->getMenuAsList();
 	}
-	echo '</ul></div></div>';
+	echo
+		'</ul>',
+		'</div>', // <div id="menu-right">
+		'</div>'; // <div id="topMenu">
+	// Display feedback from asynchronous actions
+	echo '<div id="flash-messages">';
+	foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->getMessages() as $message) {
+		echo '<p class="ui-state-highlight">', $message, '</p>';
+	}
+	echo '</div>'; // <div id="flash-messages">
+	'</div>'; // <div id="clouds-container">
 }
-?>
-<!-- end menu section -->
-<!-- begin content section -->
-<div id="content">
+echo $javascript, '<div id="content">';
