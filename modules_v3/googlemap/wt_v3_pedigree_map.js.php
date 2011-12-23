@@ -400,7 +400,7 @@ function createMarker(point, name, html, mhtml, icontype) {
 	// save the info we need to use later for the side_bar
 	gmarkers[i] = marker;
 	// add a line to the side_bar html
-	side_bar_html += '<br /><div id="'+linkid+'"><a href="#" onclick="myclick(' + i + ')">' + html +'</a><br></div>';
+	side_bar_html += '<br><div id="'+linkid+'"><a href="#" onclick="myclick(' + i + ')">' + html +'</a><br></div>';
 	i++;
 	return marker;	
 };
@@ -494,8 +494,8 @@ for ($i=0; $i<($controller->treesize); $i++) {
 		
 		$datamid .= '('.WT_I18N::translate('View Person').')';
 		$datamid  .= '</a></span>';
-		$dataright = '<br /><strong>'. WT_I18N::translate('Birth:') . '&nbsp;</strong>' .
-				addslashes($bdate->Display(false)).'<br />'.$bplace;
+		$dataright = '<br><strong>'. WT_I18N::translate('Birth:') . '&nbsp;</strong>' .
+				addslashes($bdate->Display(false)).'<br>'.$bplace;
 
 		$latlongval[$i] = get_lati_long_placelocation($person->getBirthPlace());
 		if ($latlongval[$i] != NULL) {
@@ -552,10 +552,10 @@ for ($i=0; $i<($controller->treesize); $i++) {
 				echo 'var point = new google.maps.LatLng(', $lat[$i], ',', $lon[$i], ');';
 				echo "var marker = createMarker(point, \"", addslashes($name), "\",\n\t\"<div>",$dataleft,$datamid,$dataright,"</div>\", \"";
 				echo "<div class='iwstyle'>";
-				echo "<a href='module.php?ged=", WT_GEDURL, "&mod=googlemap&mod_action=pedigree_map&rootid={$pid}&PEDIGREE_GENERATIONS={$PEDIGREE_GENERATIONS}";
-				if ($hideflags) echo '&hideflags=1';
-				if ($hidelines) echo '&hidelines=1';
-				if ($clustersize != 5) echo '&clustersize=', $clustersize; // ignoring the default of 5
+				echo "<a href='module.php?ged=", WT_GEDURL, "&amp;mod=googlemap&amp;mod_action=pedigree_map&amp;rootid={$pid}&amp;PEDIGREE_GENERATIONS={$PEDIGREE_GENERATIONS}";
+				if ($hideflags) echo '&amp;hideflags=1';
+				if ($hidelines) echo '&amp;hidelines=1';
+				if ($clustersize != 5) echo '&amp;clustersize=', $clustersize; // ignoring the default of 5
 				echo "' title='", WT_I18N::translate('Pedigree map'), "'>", $dataleft, "</a>", $datamid, $dataright, "</div>\", \"", $marker_number, "\");\n";
 				//BH echo "pm_map.addOverlay(marker);\n";
 

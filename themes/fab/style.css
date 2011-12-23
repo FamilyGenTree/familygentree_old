@@ -61,8 +61,9 @@ img.block {
 	height:20px;
 	vertical-align:middle;
 }
-.line1, .line3 {vertical-align:bottom;} 
-.line2, .line4 {vertical-align:middle;}
+
+.line1, .line2, .line3 {vertical-align:bottom;} 
+.line4 {vertical-align:middle;}
 .line5 {vertical-align:top;}
 
 legend {
@@ -254,6 +255,12 @@ html[dir='rtl'] .makeMenu li ul li {
 	font: 13px  arial;
 }
 
+.person_box, .person_boxF, .person_boxNN {margin: 0 0 0 3px;}
+
+
+html[dir='rtl'] .person_box html[dir='rtl'] .person_boxF html[dir='rtl'] .person_boxNN {margin: 0 3px 0 0;}
+
+
 .action_headerF {background: #FDD;}
 .action_header {background: #DDF;}
 
@@ -277,14 +284,14 @@ html[dir='rtl'] .makeMenu li ul li {
 /* pedigree.php */
 .pedigree_image_portrait, .pedigree_image_landscape {
 	float:left;
-	max-height:48px;
+	max-height:45px;
 	max-width:37px;
 	margin-right:3px;
 }
 
 .pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
 	float:right;
-	max-height:48px;
+	max-height:45px;
 	max-width:37px;
 	margin-left:3px;
 }
@@ -603,6 +610,7 @@ right:10px;
 	padding-right:0;
 	padding-bottom:0;
 }
+li .person_box, li .person_boxF {margin: 3px 0 3px 0;}
 
 /*-- descendancy chart rtl specific stylesheets --*/
 html[dir='rtl'] #descendancy_chart ul {
@@ -985,7 +993,7 @@ dd {
 	line-height: 1.5;
 }
 
-.block .itr, #family_page .itr, #ancestry_chart .itr, #descendancy_chart .itr, #familybook_chart .itr, #familybook_chart_rtl .itr, #hourglass_chart .itr, #hourglass_chart_rtl .itr, #relatives_content .itr {
+.block .itr, #family-table .itr, #ancestry_chart .itr, #descendancy_chart .itr, #familybook_chart .itr, #familybook_chart_rtl .itr, #hourglass_chart .itr, #hourglass_chart_rtl .itr, #relatives_content .itr {
 	position: relative;
 	top: 0;
 }
@@ -994,7 +1002,7 @@ dd {
 #pending h3 {text-align:center; margin-top:20px;}
 
 .user_favorites_block, .gedcom_favorites_block,
-#family_page .person_box, #family_page .person_boxF, #family_page .person_boxNN,
+#family-table .person_box, #family-table .person_boxF, #family-table .person_boxNN,
 #ancestry_chart .person_box, #ancestry_chart .person_boxF, #ancestry_chart .person_boxNN,
 #descendancy_chart .person_box, #descendancy_chart .person_boxF, #descendancy_chart .person_boxNN,
 #familybook_chart .person_box, #familybook_chart .person_boxF, #familybook_chart .person_boxNN,
@@ -1006,8 +1014,12 @@ dd {
 	overflow: visible !important;
 }
 
-#register-page table, #login-page table, #branches-page table, #media-list-page .list_table  {margin:auto;}
-#register-page table a {display:block; text-align:center;}
+#login-register-page table, #login-page table, #branches-page table, #medialist-page .list_table  {margin:auto;}
+#login-register-page table a {display:block; text-align:center;}
+#reportengine-page table {margin:20px auto;}
+#reportengine-page .report-type {overflow:hidden; margin:auto; width:180px;}
+#reportengine-page .report-type div {float:left;margin: 0 20px;}
+#reportengine-page .report-type p {margin: 0; text-align:center;}
 
 .gedcom_favorites_block  .person_box, .gedcom_favorites_block  .person_boxF, .gedcom_favorites_block  .person_boxNN {height:auto;}
 .user_favorites_block  .person_box, .user_favorites_block  .person_boxF, .user_favorites_block  .person_boxNN {height:auto;}
@@ -1217,7 +1229,7 @@ html[dir='rtl']  dd .editlink, html[dir='rtl']  dd .deletelink  {float:left;}
 
 /* =========== Indi tabs ================== */
 /* Facts & Events tab */
-#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family_page .fact_NOTE, #family_page .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
+#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family-table .fact_NOTE, #family-table .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
 #media-display-image {float:left;}
 #media-display-title {float:left; font-style:italic; margin:10px;}
 
@@ -1281,7 +1293,7 @@ html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:
 .source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th, .recent_changes_block th, .upcoming_events_block th, .todays_events_block th, .todo_block th, .yahrzeit_block th, .surname-list th, .givn-list th {cursor:pointer; white-space:nowrap;}
 .source-list th:last-child, .note-list th:last-child, .repo-list th:last-child {margin:0 -2px 1px 1px; padding:3px 0 4px; width:24px;}
 .givn-list th{cursor:pointer;white-space: nowrap;padding:2px;text-align:center;}
-#source-details h2,#source-list-page h2, #note-details h2, #note-list-page h2, #repo-details h2, #repo-list-page h2, #media-details h2, #media-list-page h2  {margin-bottom:20px; text-align:center;}
+#source-details h2,#sourcelist-page h2, #note-details h2, #notelist-page h2, #repo-details h2, #repolist-page h2, #media-details h2, #medialist-page h2  {margin-bottom:20px; text-align:center;}
 #source-tabs, #note-tabs, #repo-tabs, #media-tabs {margin:auto; visibility:hidden; width:80%;}
 #source-edit, #note-edit, #repo-edit, #media-edit {overflow-x:auto;}
 .media-list td img {display:block; height:40px; margin:3px auto;}
@@ -1369,3 +1381,32 @@ fieldset {
 	text-align:left;
 }
 html[dir='rtl'] fieldset {text-align:right;}
+
+/* ============== find.php ======================= */
+#find-page h3, #find-page h4{margin: 10px; text-align:center;}
+#find-header {background-color:#ccc; border:1px solid darkGray; border-radius:3px; margin:10px auto; padding:5px 20px; width:50%;}
+#find-header p {margin:5px; text-align:center;}
+#find-header span {}
+#find-output, #find-output-special {background-color:#ddd; border:1px solid darkGray; border-radius:3px; margin:20px 5px; padding:10px;}
+#find-output p {border-top:1px solid darkGray; font-weight: bold; margin:0; padding-top:10px; text-align: center;}
+#find-media {background-color:#ccc; border:1px solid darkGray; padding:5px; text-align:center;}
+#find-media span {border:0; font-weight: bold; margin:auto; padding:5px;}
+.find-media-dirs {border-bottom:1px solid darkGray; padding:3px;}
+.find-media-media {border:1px solid darkGray; overflow: hidden; margin:1px; padding:2px;}
+.find-media-thumb {clear:left; float:left;}
+.find-media-thumb img {width:50px;}
+.find-media-details {float:left;}
+#find-output .find-media-details p {border:0; padding:0 5px 2px 5px; font-weight:normal; text-align:left;}
+#find-output .find-media-details div span {font-weight:normal; padding:0 5px 2px 5px;}
+#find-output p.find-media-title {font-weight:bold;}
+.find-media-details ul {padding:0; margin:0px 20px 10px 20px; list-style-type:none;}
+#find-facts-header .list_label {text-align:inherit;}
+
+/* ============== search.php ======================= */
+#search-page h2, #search_submit {margin:20px; text-align:center;}
+#search-page-table {background-color:#ccc; border:1px solid darkGray; border-radius:3px; margin:20px auto 0; width:580px;}
+#search-page-table .label{float:left; font-weight:bold; margin:1px; padding:5px 10px 0; width:150px;}
+#search-page-table .value {background-color:#ddd; border:1px solid #fff; margin:0 0 0 170px; padding:5px; white-space:nowrap;}
+#search-page-table p {margin:0;}
+html[dir='rtl'] #search-page-table .label{float:right;}
+html[dir='rtl'] #search-page-table .value {margin:0 170px 0 0;}

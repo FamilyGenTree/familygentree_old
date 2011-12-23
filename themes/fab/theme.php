@@ -78,7 +78,6 @@ $WT_IMAGES=array(
 	'fambook'             =>WT_THEME_URL.'images/fambook.png',
 	'fanchart'            =>WT_THEME_URL.'images/fanchart.png',
 	'favorites'           =>WT_THEME_URL.'images/favorites.png',
-	'fscreen'             =>WT_THEME_URL.'images/fscreen.png',
 	'gedcom'              =>WT_THEME_URL.'images/gedcom.png',
 	'help'                =>WT_THEME_URL.'images/help.png',
 	'hline'               =>WT_THEME_URL.'images/hline.png',
@@ -172,8 +171,8 @@ $fanChart=array(
 );
 
 // variables for the pedigree chart
-$bwidth=260;     // width of boxes on pedigree chart
-$bheight=90;     // height of boxes on pedigree chart
+$bwidth=276;     // width of boxes on pedigree chart
+$bheight=85;     // height of boxes on pedigree chart
 $baseyoffset=10; // position the entire pedigree tree relative to the top of the page
 $basexoffset=10; // position the entire pedigree tree relative to the left of the page
 $bxspacing=0;    // horizontal spacing between boxes on the pedigree chart

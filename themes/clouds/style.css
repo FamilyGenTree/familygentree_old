@@ -578,19 +578,19 @@ width:99%;
 
 .person_box {
 background:#ddf;
-border:1px solid #999;
+border:1px solid #AAA;
 padding:3px;
 }
 
 .person_boxF {
 background:#fdd;
-border:1px solid #f28;
+border:1px solid #AAA;
 padding:3px;
 }
 
 .person_boxNN {
 background:#fff;
-border:1px solid #CCC;
+border:1px solid #AAA;
 padding:3px;
 }
 
@@ -1554,7 +1554,7 @@ margin: 0;
 	line-height: 1.5;
 }
 
-.block .itr, #family_page .itr, #ancestry_chart .itr, #descendancy_chart .itr, #familybook_chart .itr, #familybook_chart_rtl .itr, #hourglass_chart .itr, #hourglass_chart_rtl .itr, #relatives_content .itr {
+.block .itr, #family-table .itr, #ancestry_chart .itr, #descendancy_chart .itr, #familybook_chart .itr, #familybook_chart_rtl .itr, #hourglass_chart .itr, #hourglass_chart_rtl .itr, #relatives_content .itr {
 	position: relative;
 	top: 0;
 }
@@ -1575,8 +1575,12 @@ margin: 0;
 	overflow: visible !important;
 }
 
-#register-page table, #login-page table, #branches-page table, #media-list-page .list_table  {margin:auto;}
-#register-page table a {display:block; text-align:center;}
+#login-register-page table, #login-page table, #branches-page table, #medialist-page .list_table  {margin:auto;}
+#login-register-page table a {display:block; text-align:center;}
+#reportengine-page table {margin:20px auto;}
+#reportengine-page .report-type {overflow:hidden; margin:auto; width:180px;}
+#reportengine-page .report-type div {float:left;margin: 0 20px;}
+#reportengine-page .report-type p {margin: 0; text-align:center;}
 
 .popup {
 	display:none;
@@ -1724,7 +1728,7 @@ html[dir='rtl'] .indi_table {clear:right;}
 
 /* =========== Indi tabs ================== */
 /* Facts & Events tab */
-#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family_page .fact_NOTE, #family_page .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
+#personal_facts_content .fact_NOTE, #personal_facts_content .fact_SOUR, #family-table .fact_NOTE, #family-table .fact_SOUR {margin: 5px 3px 5px 0; clear: both;}
 #media-display-image {float:left;}
 #media-display-title {float:left; font-style:italic; margin:10px;}
 
@@ -1755,6 +1759,7 @@ html[dir='rtl'] .ui-tabs .ui-tabs-nav li.ui-state-default {float:right;}
 .even {background-color:#fff;}
 .css_right {float:left;}
 .fg-button {padding:2px 6px;}
+.fg-toolbar button {margin:2px; padding:1px 6px;}
 .dataTables_paginate   {float:left; margin:5px;}
 .dataTables_processing {float:left; margin:5px;}
 .dataTables_filter  {float:right; margin:4px;}
@@ -1789,7 +1794,7 @@ html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:
 .source-list th, .note-list th, .repo-list th, .media-list th, .indi-list th, .fam-list th, .recent_changes_block th, .upcoming_events_block th, .todays_events_block th, .todo_block th, .yahrzeit_block th, .surname-list th, .givn-list th {cursor:pointer; white-space: nowrap;}
 .source-list th:last-child, .note-list th:last-child, .repo-list th:last-child {margin:0 -2px 1px 1px; padding:3px 0 4px; width:24px;}
 .givn-list th{cursor:pointer;white-space: nowrap;padding:2px;text-align:center;}
-#source-details h2,#source-list-page h2, #note-details h2, #note-list-page h2, #repo-details h2, #repo-list-page h2, #media-details h2, #media-list-page h2  {margin-bottom:20px; text-align:center;}
+#source-details h2,#sourcelist-page h2, #note-details h2, #notelist-page h2, #repo-details h2, #repolist-page h2, #media-details h2, #medialist-page h2  {margin-bottom:20px; text-align:center;}
 #source-tabs, #note-tabs, #repo-tabs, #media-tabs {margin:auto; visibility:hidden; width:80%;}
 #source-edit, #note-edit, #repo-edit, #media-edit {overflow-x:auto;}
 .media-list td img {display:block; height:40px; margin:3px auto;}
@@ -1877,6 +1882,35 @@ html[dir='rtl'] .desc_tree_div ul {margin-right:10px; margin-left:0;}
 #sb_content_extra_info span a {display:inline;}
 
 html[dir='rtl'] #sb_content_extra_info .editfacts {float:left;}
+
+/* ============== find.php ======================= */
+#find-page h3, #find-page h4{margin: 10px; text-align:center;}
+#find-header {background-color:#95B8E0; border:1px solid #95B8E0; border-radius:3px; margin:10px auto; padding:5px 20px; width:50%;}
+#find-header p {margin:5px; text-align:center;}
+#find-header span {color:#fff; font-weight:bold;}
+#find-output, #find-output-special {background-color:#fff; border:1px solid #95B8E0; border-radius:3px; margin:20px 5px; padding:10px;}
+#find-output p {border-top:1px solid #95B8E0; font-weight: bold; margin:0; padding-top:10px; text-align: center;}
+#find-media {background-color:#95B8E0; border:1px solid #95B8E0; color:#fff; padding:5px; text-align:center;}
+#find-media span {border:0; font-weight: bold; margin:auto; padding:5px;}
+.find-media-dirs {border-bottom:1px solid #95B8E0; padding:3px;}
+.find-media-media {border:1px solid #95B8E0; overflow: hidden; margin:1px; padding:2px;}
+.find-media-thumb {clear:left; float:left;}
+.find-media-thumb img {width:50px;}
+.find-media-details {float:left;}
+#find-output .find-media-details p {border:0; padding:0 5px 2px 5px; font-weight:normal; text-align:left;}
+#find-output .find-media-details div span {font-weight:normal; padding:0 5px 2px 5px;}
+#find-output p.find-media-title {font-weight:bold;}
+.find-media-details ul {padding:0; margin:0px 20px 10px 20px; list-style-type:none;}
+#find-facts-header .list_label {text-align:inherit;}
+
+/* ============== search.php ======================= */
+#search-page h2, #search_submit {margin:20px; text-align:center;}
+#search-page-table {background-color:#95B8E0; border:1px outset #95B8E0; border-top:0; margin:20px auto 0; width:580px;}
+#search-page-table .label{color:#fff; float:left; font-weight:bold; padding:5px 10px 0; width:150px;}
+#search-page-table .value {background-color:#fff; border-top:1px solid #95B8E0; margin:0 0 0 170px; padding:5px; white-space:nowrap;}
+#search-page-table p {margin:0;}
+html[dir='rtl'] #search-page-table .label{float:right;}
+html[dir='rtl'] #search-page-table .value {margin:0 170px 0 0;}
 
 @media print {
 #topMenu, #header select, #header input, #footer select, #backprint, #sidebar {display:none;}
