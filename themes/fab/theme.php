@@ -2,7 +2,7 @@
 // FAB theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Based on standard theme, which is Copyright (C) 2002 to 2010  PGV Development Team.
 //
@@ -54,7 +54,6 @@ $WT_IMAGES=array(
 	'button_repository'   =>WT_THEME_URL.'images/buttons/repository.png',
 	'button_source'       =>WT_THEME_URL.'images/buttons/source.png',
 	'calendar'            =>WT_THEME_URL.'images/calendar.png',
-	'center'              =>WT_THEME_URL.'images/center.png',
 	'cfamily'             =>WT_THEME_URL.'images/cfamily.png',
 	'childless'           =>WT_THEME_URL.'images/childless.png',
 	'children'            =>WT_THEME_URL.'images/children.png',
@@ -171,8 +170,8 @@ $fanChart=array(
 );
 
 // variables for the pedigree chart
-$bwidth=276;     // width of boxes on pedigree chart
-$bheight=85;     // height of boxes on pedigree chart
+$bwidth=275;     // width of boxes on pedigree chart
+$bheight=80;     // height of boxes on pedigree chart
 $baseyoffset=10; // position the entire pedigree tree relative to the top of the page
 $basexoffset=10; // position the entire pedigree tree relative to the left of the page
 $bxspacing=0;    // horizontal spacing between boxes on the pedigree chart
@@ -184,10 +183,14 @@ $Dbaseyoffset=20; // -- position the entire descendancy tree relative to the top
 $Dbasexoffset=20; // -- position the entire descendancy tree relative to the left of the page
 $Dbxspacing=5;   // -- horizontal spacing between boxes
 $Dbyspacing=10;   // -- vertical spacing between boxes
-$Dbwidth=250;    // -- width of DIV layer boxes
-$Dbheight=85;    // -- height of DIV layer boxes
+$Dbwidth=290;    // -- width of DIV layer boxes
+$Dbheight=80;    // -- height of DIV layer boxes
 $Dindent=15;     // -- width to indent descendancy boxes
 $Darrowwidth=30; // -- additional width to include for the up arrows
+
+// -- Dimensions for compact version of chart displays
+$cbwidth=240;
+$cbheight=50;
 
 // The largest possible area for charts is 300,000 pixels. As the maximum height or width is 1000 pixels
 $WT_STATS_S_CHART_X=440;

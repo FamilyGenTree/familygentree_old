@@ -355,7 +355,10 @@ html[dir='rtl'] .gm_edit_config td {padding-right:50px;}
 #gm_advanced td {padding:0;}
 table#gm_levels {margin-left:20px;}
 html[dir='rtl'] table#gm_levels {margin-right:20px;}
-#gm_levels th {color:green;}
+.gm_levels th, .gm_prefix {color:green;}
+#gm_level_titles th {text-align:center;}
+.gm_levels input{width:90%;}
+
 
 /* Place edit */
 table.gm_plac_edit {background:OldLace; border:1px inset #D9D6C4; border-collapse:separate; border-spacing:0; margin:0 0 10px 0; padding:0 5px; width:100%;}
@@ -443,10 +446,10 @@ table#story_table {width:100%}
 .icon-repository {background-position:-91px -180px; width:15px; height:15px;}
 .icon-help-15 {background-position:-10px -181px; width:15px; height:15px;}
 .icon-indi {background-position:-116px -180px; width:11px; height:15px; display:inline;}
-.icon-open {background-position:-64px -205px; width:12px; height:12px;}
+.icon-open {background-position:-64px -205px; margin-top:4px; width:12px; height:12px;}
 .icon-close {background-position:-86px -205px; width:12px; height:12px;}
 #page_help .icon-help-15 {background-position:-45px 0; width:24px; height:24px;} /* switch to larger version icon-help-24 */
 
 /* These two needed for now to suppress standard help icons */
-.help {display:inline; margin-left:5px; padding-right:15px; padding-bottom:5px;}
+.help {cursor:help; display:inline; margin-left:5px; padding-right:15px; padding-bottom:5px;}
 .icon {display:none;}

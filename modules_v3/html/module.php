@@ -2,7 +2,7 @@
 // Classes and libraries for module system
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2010 John Finlay
@@ -202,10 +202,6 @@ class html_WT_Module extends WT_Module implements WT_Module_Block {
 								<tr>
 									<td class="facts_label">'.WT_I18N::translate('Repositories').'</td>
 									<td class="facts_value" align="right"><a href="repolist.php?ged='.WT_GEDURL.'">#totalRepositories#</a></td>
-								</tr>
-								<tr>
-									<td class="facts_label">'.WT_I18N::translate('Other records').'</td>
-									<td class="facts_value" align="right">#totalOtherRecords#</td>
 								</tr>
 								<tr>
 									<td class="facts_label">'.WT_I18N::translate('Total events').'</td>

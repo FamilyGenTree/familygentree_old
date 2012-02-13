@@ -1,12 +1,15 @@
 <?php
 // Template for drawing person boxes
-//
 // This template expects that the following variables will be set
-// $pid, $boxID, $icons, $GEDCOM, $style,
+//  $pid, $boxID, $icons, $GEDCOM, $style,
 // $name, $classfacts, $genderImage, $BirthDeath, $isF, $outBoxAdd,
-// $addname, $showid, $float
+// $addname
 //
-// Copyright (c) 2010 Greg Roach
+// webtrees: Web based Family History software
+// Copyright (C) 2012 webtrees development team.
+//
+// Derived from PhpGedView
+// Copyright (C) 2010  PGV Development Team.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -28,16 +31,21 @@ if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
-echo
-	'<div id="out-', $boxID, '" ', $outBoxAdd, '>';
-	if ($show_full) { 
-		echo '<div class="noprint" id="icons-',$boxID,'"';
-		echo 'style="',$iconsStyleAdd,' width: 25px; height: 50px">';
-		echo $icons;
-		echo '</div>';
-	}	
-		echo $thumbnail,
-		'<a class="name', $style, ' ', $classfacts, '" onclick="event.cancelBubble=true;" href="individual.php?pid=', $pid, '&amp;ged=', rawurlencode($GEDCOM), '">', $name.$addname, '</a>',
-		'<div id="inout2-', $boxID, '" class="details', $style, '" style="display:block; max-height: ', $bheight*.9, 'px">', $BirthDeath, '</div>',
-		'<div id="inout-', $boxID, '" style="display:none;"><div id="LOADING-inout-', $boxID, '"></div></div>',
-	'</div>';
+
+echo '<div id="out-',$boxID,'" ',$outBoxAdd,'>
+	<div class="noprint" id="icons-',$boxID,'" style="',$iconsStyleAdd,' width: 25px; height: 50px; position: relative;">', $icons, '</div>',
+	'<div class="chart_textbox" style="height:auto; max-height:', $bheight,'px; overflow: hidden; ">',
+	$thumbnail,
+	'<a onclick="event.cancelBubble=true;" href="individual.php?pid=', $pid, '&amp;ged=', rawurlencode($GEDCOM), '">
+		<span id="namedef-',$boxID, '" class="name',$style,' ',$classfacts,'">', $name.$addname,  '</span>
+		<span class="name',$style,'"> ',$genderImage,'</span>
+	</a>
+	<div id="fontdef-',$boxID,'" class="details',$style,'">
+		<div id="inout2-',$boxID,'" style="display:block; max-height:', ($bheight*.9),'px;">',$BirthDeath,'</div>
+	</div>
+	</div>
+	<div id="inout-',$boxID,'" style="display:none;">
+		<div id="LOADING-inout-',$boxID,'">',WT_I18N::translate('Loading...'),'</div>
+	</div>
+</div>';
+?>

@@ -2,7 +2,7 @@
 // Clouds theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView Cloudy theme
 // Original author w.a. bastein http://genealogy.bastein.biz
@@ -43,7 +43,6 @@ $WT_IMAGES=array(
 	'admin'=>WT_THEME_URL.'images/admin.png',
 	'ancestry'=>WT_THEME_URL.'images/ancestry.png',
 	'calendar'=>WT_THEME_URL.'images/calendar.png',
-	'center'=>WT_THEME_URL.'images/center.png',
 	'cfamily'=>WT_THEME_URL.'images/cfamily.png',
 	'charts'=>WT_THEME_URL.'images/charts.png',
 	'childless'=>WT_THEME_URL.'images/childless.png',
@@ -194,10 +193,14 @@ $brborder = 1; // -- pedigree chart box right border thickness
 //-- Other settings that should not be touched
 $Dbxspacing = 5; // -- position vertical line between boxes in relationship chart
 $Dbyspacing = 10; // -- position vertical spacing between boxes in relationship chart
-$Dbwidth = 260; // -- horizontal spacing between boxes in all charts
-$Dbheight = 78; // -- horizontal spacing between boxes in all charts
+$Dbwidth = 250; // -- horizontal spacing between boxes in all charts
+$Dbheight = 80; // -- horizontal spacing between boxes in all charts
 $Dindent = 15; // -- width to indent ancestry and descendancy charts boxes
 $Darrowwidth = 300; // -- not used that I can see ***
+
+// -- Dimensions for compact version of chart displays
+$cbwidth=240;
+$cbheight=50;
 
 // --  The largest possible area for charts is 300,000 pixels. As the maximum height or width is 1000 pixels
 $WT_STATS_S_CHART_X = "440";

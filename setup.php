@@ -2,7 +2,7 @@
 // Setup Wizard
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -92,6 +92,7 @@ require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance()->registerNamespace('WT_');
 require 'includes/functions/functions.php';
 require 'includes/functions/functions_edit.php';
+$WT_SESSION=new Zend_Session_Namespace('WEBTREES');
 define('WT_LOCALE', WT_I18N::init(safe_POST('lang', '[@a-zA-Z_]+')));
 
 echo
@@ -922,7 +923,7 @@ try {
 	);
 	$dbh->exec(
 		"CREATE TABLE IF NOT EXISTS `{$TBLPREFIX}session` (".
-		" session_id   CHAR(32)    NOT NULL,".
+		" session_id   CHAR(128)   NOT NULL,".
 		" session_time TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,".
 		" user_id      INTEGER     NOT NULL,".
 		" ip_address   VARCHAR(32) NOT NULL,".
@@ -975,7 +976,7 @@ try {
 		" (1, 'auto_accept',       ?),".
 		" (1, 'visibleonline',     ?)"
 	)->execute(array(
-		1, Zend_Registry::get('Zend_Locale'), 1, 1, 1, 0, 1
+		1, WT_LOCALE, 1, 1, 1, 0, 1
 	));
 
 	$dbh->prepare(
@@ -988,8 +989,6 @@ try {
 		"('ALLOW_USER_THEMES',               '1'),".
 		"('ALLOW_CHANGE_GEDCOM',             '1'),".
 		"('SESSION_TIME',                    '7200'),".
-		"('SERVER_URL',                      ''),".
-		"('LOGIN_URL',                       'login.php'),".
 		"('SMTP_ACTIVE',                     ?),".
 		"('SMTP_HOST',                       ?),".
 		"('SMTP_HELO',                       ?),".

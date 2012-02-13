@@ -194,13 +194,7 @@ function create_map($placelevels) {
 				var svbear = document.getElementById("sv_bearText").value.slice(0, -1);
 				var svelev = document.getElementById("sv_elevText").value.slice(0, -1);
 				var svzoom = document.getElementById("sv_zoomText").value;
-				win03 = window.open("module.php?mod=googlemap&mod_action=places_edit&action=update_sv_params&placeid="+placeid+"&"+sessionname+"="+sessionid+
-					"&svlati="+svlati+
-					"&svlong="+svlong+
-					"&svbear="+svbear+
-					"&svelev="+svelev+
-					"&svzoom="+svzoom, 
-				"win03", "top=50, left=50, width=680, height=550, resizable=1, scrollbars=1");	
+				win03 = window.open("module.php?mod=googlemap&mod_action=places_edit&action=update_sv_params&placeid="+placeid+"&svlati="+svlati+"&svlong="+svlong+"&svbear="+svbear+"&svelev="+svelev+"&svzoom="+svzoom, "win03", "top=50, left=50, width=680, height=550, resizable=1, scrollbars=1");	
 				if (window.focus) {win03.focus();}
 			}
 		');
@@ -465,7 +459,7 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 }
 
 function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names) {
-	global $GOOGLEMAP_MAP_TYPE, $GM_MAX_NOF_LEVELS, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER, $plzoom, $controller;
+	global $GOOGLEMAP_MAP_TYPE, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER, $plzoom, $controller;
 
 	$controller->addInlineJavaScript('
 		jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="'.WT_STATIC_URL.WT_MODULES_DIR.'googlemap/css/wt_v3_googlemap.css" />\');

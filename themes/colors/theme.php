@@ -2,7 +2,7 @@
 // Colors theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2010  PGV Development Team.  All rights reserved.
@@ -79,29 +79,37 @@ $COLOR_THEME_LIST=array(
 	'tealtop'         => /* I18N: The name of a colour-scheme */ WT_I18N::translate('Teal Top'),
 );
 
+// If we've selected a new palette, and we are logged in, set this value as a default.
 if (isset($_GET['themecolor']) && array_key_exists($_GET['themecolor'], $COLOR_THEME_LIST)) {
 	// Request to change color
 	$subColor=$_GET['themecolor'];
 	if (WT_USER_ID) {
 		set_user_setting(WT_USER_ID, 'themecolor', $subColor);
-		set_site_setting('DEFAULT_COLOR_PALETTE', $subColor);
+		if (WT_USER_IS_ADMIN) {
+			set_site_setting('DEFAULT_COLOR_PALETTE', $subColor);
+		}
 	}
 	unset($_GET['themecolor']);
-} elseif ($WT_SESSION->themecolor)  {
-	// Previously selected color
-	$subColor=$WT_SESSION->themecolor;
-} else {
-	if (WT_USER_ID) {
-		$subColor=get_user_setting(WT_USER_ID, 'themecolor');
-		if (!array_key_exists($subColor, $COLOR_THEME_LIST)) {
-			$subColor = get_site_setting('DEFAULT_COLOR_PALETTE','ash');
-		}
-	} else {
-		$subColor=get_site_setting('DEFAULT_COLOR_PALETTE','ash');
-	}
+	// Rember that we have selected a value
+	$WT_SESSION->subColor=$subColor;
 }
-
-$WT_SESSION->themecolor=$subColor;
+// If we are logged in, use our preference
+$subColor=null;
+if (WT_USER_ID) {
+	$subColor=get_user_setting(WT_USER_ID, 'themecolor');
+}
+// If not logged in or no preference, use one we selected earlier in the session?
+if (!$subColor) {
+	$subColor=$WT_SESSION->subColor;
+}
+// We haven't selected one this session?  Use the site default
+if (!$subColor) {
+	$subColor=get_site_setting('DEFAULT_COLOR_PALETTE','ash');
+}
+// Make sure our selected palette actually exists
+if (!array_key_exists($subColor, $COLOR_THEME_LIST)) {
+	$subColor='ash';
+}
 
 $theme_name       = "colors"; // need double quotes, as file is scanned/parsed by script
 $footerfile       = WT_THEME_DIR . 'footer.php';
@@ -117,7 +125,6 @@ $WT_IMAGES=array(
 	'admin'=>WT_THEME_URL.'images/admin.png',
 	'ancestry'=>WT_THEME_URL.'images/ancestry.png',
 	'calendar'=>WT_THEME_URL.'images/calendar.png',
-	'center'=>WT_THEME_URL.'images/center.png',
 	'cfamily'=>WT_THEME_URL.'images/cfamily.png',
 	'charts'=>WT_THEME_URL.'images/charts.png',
 	'childless'=>WT_THEME_URL.'images/childless.png',
@@ -269,10 +276,14 @@ $brborder = 1; // -- pedigree chart box right border thickness
 //-- Other settings that should not be touched
 $Dbxspacing = 5; // -- position vertical line between boxes in relationship chart
 $Dbyspacing = 10; // -- position vertical spacing between boxes in relationship chart
-$Dbwidth = 240; // -- horizontal spacing between boxes in all charts
-$Dbheight = 78; // -- horizontal spacing between boxes in all charts
+$Dbwidth = 250; // -- horizontal spacing between boxes in all charts
+$Dbheight = 80; // -- horizontal spacing between boxes in all charts
 $Dindent = 15; // -- width to indent ancestry and descendancy charts boxes
 $Darrowwidth = 300; // -- not used that I can see ***
+
+// -- Dimensions for compact version of chart displays
+$cbwidth=240;
+$cbheight=50;
 
 // --  The largest possible area for charts is 300,000 pixels. As the maximum height or width is 1000 pixels
 $WT_STATS_S_CHART_X = "440";
