@@ -29,17 +29,9 @@
 
 define('WT_SCRIPT_NAME', 'individual.php');
 require './includes/session.php';
-
-// -- array of GEDCOM elements that will be found but should not be displayed
-$nonfacts = array('FAMS', 'FAMC', 'MAY', 'BLOB', 'CHIL', 'HUSB', 'WIFE', 'RFN', '_WT_OBJE_SORT', '');
-$nonfamfacts = array(/*'NCHI',*/ 'UID', '');
-
 $controller=new WT_Controller_Individual();
-
-// This page uses jquery.cookie.js to record the sidebar state
-$controller->addExternalJavaScript(WT_STATIC_URL.'js/jquery/jquery.cookie.js');
-
-$controller->addInlineJavaScript('var catch_and_ignore; function paste_id(value) {catch_and_ignore = value;}');
+$controller->addExternalJavaScript(WT_STATIC_URL.'js/jquery/jquery.cookie.js');// This page uses jquery.cookie.js to record the sidebar state
+$controller->addInlineJavaScript('var catch_and_ignore; function paste_id(value) {catch_and_ignore = value;}'); // For the "find" links
 	
 if ($controller->record && $controller->record->canDisplayDetails()) {
 	if (safe_GET('action')=='ajax') {
@@ -95,39 +87,27 @@ if ($controller->record && $controller->record->canDisplayDetails()) {
 	echo '<p class="ui-state-highlight">', WT_I18N::translate('The details of this individual are private.'), '</p>';
 	exit;
 } else {
-	header($_SERVER['SERVER_PROTOCOL'].' 403 Forbidden');
+	header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
 	$controller->pageHeader();
 	echo '<p class="ui-state-error">', WT_I18N::translate('This individual does not exist or you do not have permission to view it.'), '</p>';
 	exit;
 }
 
-// tell tabs that use jquery that it is already loaded
-define('WT_JQUERY_LOADED', 1);
-
 $linkToID=$controller->record->getXref(); // -- Tell addmedia.php what to link to
 
-echo WT_JS_START;
-echo 'function show_gedcom_record() {';
-echo ' var recwin=window.open("gedrecord.php?pid=', $controller->record->getXref(), '", "_blank", "top=0, left=0, width=600, height=400, scrollbars=1, scrollable=1, resizable=1");';
-echo '}';
-echo 'function showchanges() { window.location="'.$controller->record->getRawUrl().'"; }';
-
-?>
-
-jQuery(document).ready(function() {
+$callbacks='';
+foreach ($controller->tabs as $tab) {
+  $callbacks.=$tab->getJSCallback()."\n";
+}
+$controller->addInlineJavaScript('
 	jQuery("#tabs").tabs({
-		spinner: '<img src="<?php echo WT_STATIC_URL; ?>images/loading.gif" height="18" alt="">',
+		spinner: \'<i class="icon-loading-small"></i>\',
 		cache: true
 	});
 	jQuery("#tabs").tabs("select",jQuery.cookie("indi-tab"));
 	jQuery("#tabs").bind("tabsshow", function(event, ui) {
-		jQuery.cookie("indi-tab", ui.panel.id);
-		<?php
-		foreach ($controller->tabs as $tab) {
-			echo $tab->getJSCallback()."\n";
-		}
-		?>
-	});
+		jQuery.cookie("indi-tab", ui.panel.id);'.$callbacks.
+	'});
 
 	// sidebar settings 
 	// Variables
@@ -172,27 +152,37 @@ jQuery(document).ready(function() {
 			adjHeader();
 		}
 	});
-
 	// Load preference
 	if (jQuery.cookie("hide-sb")=="1"){
 		hideSidebar();
 	} else {
 		showSidebar();
 	}
-	
 	adjHeader();
 	jQuery("#main").css("visibility", "visible");
-});
-<?php
-echo WT_JS_END;
-// ===================================== header area
+	
+	function show_gedcom_record() {
+		var recwin=window.open("gedrecord.php?pid='. $controller->record->getXref(). '", "_blank", edit_window_specs);
+	}	
+	function showchanges(){window.location="'.$controller->record->getRawUrl().'";}
 
+	jQuery("#header_accordion1").accordion({
+		active: 0,
+		icons: {"header": "ui-icon-triangle-1-s", "headerSelected": "ui-icon-triangle-1-n" },
+		autoHeight: false,
+		collapsible: true
+	});
+
+');
+
+// ===================================== header area
 echo
 	'<div id="main" class="use-sidebar sidebar-at-right" style="visibility:hidden;">', //overall page container
 	'<div id="indi_left">',
 	'<div id="indi_header">';
 if ($controller->record->canDisplayDetails()) {
-	echo '<div id="indi_mainimage">'; // Display highlight image
+	echo '<div id="indi_mainimage" '; // Display highlight image
+	if ($USE_SILHOUETTE) {echo 'style="min-width:', $THUMBNAIL_WIDTH, 'px;">';} else {echo '>';}
 	if ($controller->canShowHighlightedObject()) {
 		echo $controller->getHighlightedObject();
 	}
@@ -218,24 +208,13 @@ if ($controller->record->canDisplayDetails()) {
 		$fact = $value->getTag();
 		if ($fact=="SEX") $controller->print_sex_record($value);
 	}
-	echo '</h3>'; // close first name accordion header
-	
+	echo '</h3>'; // close first name accordion header	
 	//Display name details
 	foreach ($globalfacts as $key=>$value) {
 		$fact = $value->getTag();
 		if ($fact=="NAME") $controller->print_name_record($value);
 	}
-
-	echo
-		'</div>', // close header_accordion1
-		WT_JS_START,
-		'jQuery("#header_accordion1").accordion({',
-		' active: 0,',
-		' icons: {"header": "ui-icon-triangle-1-s", "headerSelected": "ui-icon-triangle-1-n" },',
-		' autoHeight: false,',
-		' collapsible: true',
-		'});',
-		WT_JS_END; //accordion details
+	echo '</div>'; // close header_accordion1
 }
 echo '</div>';// close #indi_header
 // ===================================== main content tabs
@@ -269,7 +248,7 @@ foreach ($controller->tabs as $tab) {
 			// Non-AJAX tabs load immediately
 			echo '#', $tab->getName();
 		}
-		echo '"><div title="', $tab->getDescription(), '">', $tab->getTitle(), '</div></a></li>';
+		echo '"><div title="', $tab->getDescription(), '"><span>', $tab->getTitle(), '</span></div></a></li>';
 	}
 }
 echo '</ul>';

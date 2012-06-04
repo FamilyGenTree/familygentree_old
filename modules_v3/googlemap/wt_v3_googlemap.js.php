@@ -2,7 +2,7 @@
 // Google map module for phpGedView
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -29,13 +29,11 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 
 ?>
 
-<script type="text/javascript">var ie = 0;</script>
+<script>var ie = 0;</script>
 <!--[if IE]>
-<script type="text/javascript">ie = 1;</script>
+<script>ie = 1;</script>
 <![endif]-->
-<script type="text/javascript">
-
-//<![CDATA[
+<script>
 
 	// this variable will collect the html which will eventually be placed in the side_bar
 	var side_bar_html = '';
@@ -402,7 +400,7 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 
 	function loadMap() {
 		<?php
-			global $GOOGLEMAP_MAP_TYPE, $PEDIGREE_GENERATIONS, $MAX_PEDIGREE_GENERATIONS, $ENABLE_AUTOCOMPLETE, $SHOW_HIGHLIGHT_IMAGES, $WT_IMAGES, $GEDCOM;
+			global $GOOGLEMAP_MAP_TYPE, $PEDIGREE_GENERATIONS, $MAX_PEDIGREE_GENERATIONS, $SHOW_HIGHLIGHT_IMAGES;
 		?>
 
 		// Create the map and mapOptions
@@ -451,25 +449,25 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 
 				// The current indi ================================
 				if (!empty($this_person)) {
-					$class = 'pedigree_image_portrait';
+					$class = 'pedigree_image';
 					if ($gmark['fact'] == 'Census') {
-						$image = "<img class='icon_cens' src='././images/pix1.gif'>";
+						$image = "<i class='icon_cens'></i>";
 					} else if ($gmark['fact'] == 'Birth') {
-						$image = "<img class='icon_birt' src='././images/pix1.gif'>";
+						$image = "<i class='icon_birt'></i>";
 					} else if ($gmark['fact'] == 'Baptism' || $gmark['fact'] == 'Christening') {
-						$image = "<img class='icon_bapm' src='././images/pix1.gif'>";
+						$image = "<i class='icon_bapm'></i>";
 					} else if ($gmark['fact'] == 'Military') {
-						$image = "<img class='icon_mili' src='././images/pix1.gif'>";
+						$image = "<i class='icon_mili'></i>";
 					} else if ($gmark['fact'] == 'Occupation') {
-						$image = "<img class='icon_occu' src='././images/pix1.gif'>";
+						$image = "<i class='icon_occu'></i>";
 					} else if ($gmark['fact'] == 'Residence') {
-						$image = "<img class='icon_resi' src='././images/pix1.gif'>";
+						$image = "<i class='icon_resi'></i>";
 					} else if ($gmark['fact'] == 'Death') {
-						$image = "<img class='icon_deat' src='././images/pix1.gif'>";
+						$image = "<i class='icon_deat'></i>";
 					} else if ($gmark['fact'] == 'Burial' || $gmark['fact'] == 'Cremation') {
-						$image = "<img class='icon_buri' src='././images/pix1.gif'>";
+						$image = "<i class='icon_buri'></i>";
 					} else if ($gmark['fact'] == 'Retirement' ) {
-						$image = "<img class='icon_reti' src='././images/pix1.gif'>";
+						$image = "<i class='icon_reti'></i>";
 					} else {
 						$indirec = $this_person->getGedcomRecord();
 						$image = '';
@@ -488,7 +486,7 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 					}
 				}
 
-				// Other people ====================================
+				// Other people
 				if (!empty($person)) {
 					$indirec2 = $person->getGedcomRecord();
 					$image2 = '';
@@ -548,10 +546,10 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 			locations.length=locations.length - 1;
 		}
 
-		// Set the Marker bounds ===============================================
+		// Set the Marker bounds
 		var bounds = new google.maps.LatLngBounds ();
 
-		// Calculate tabs to be placed for each marker =========================
+		// Calculate tabs to be placed for each marker
 		var np = new Array();
 		var numtabs = new Array();
 		var npo = new Array();
@@ -568,7 +566,7 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 			}
 		}
 
-		// Loop through all location markers ===================================
+		// Loop through all location markers
 		for (var i = 0; i < locations.length; i++) {
 			// obtain the attributes of each marker
 			var event = locations[i][0];							// Event or Fact
@@ -608,7 +606,7 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 				var addr2 = locations[i][10];						// printable address for marker title
 			}
 
-			// If a fact with info or a persons name ===========================
+			// If a fact with info or a persons name
 			var event_item ='';
 			var event_tab ='';
 			var tabcontid = '';
@@ -642,7 +640,7 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 						'<ul class="tabs" >',
 							'<li><a href="#event" id="EV"><?php echo WT_I18N::translate('Events'); ?><\/a><\/li>',
 							<?php if ($STREETVIEW) { ?>
-							'<li><a href="#sview" id="SV"><?php echo WT_I18N::translate('Google Street View'); ?><\/a><\/li>',
+							'<li><a href="#sview" id="SV"><?php echo WT_I18N::translate('Google Street View™'); ?><\/a><\/li>',
 							<?php } ?>
 							
 						// === To be used later === Do not delete ==============
@@ -720,5 +718,4 @@ $STREETVIEW=get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 		
 	}	// end loadMap()
 	
-//]]>
 </script>

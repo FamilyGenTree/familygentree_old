@@ -2,7 +2,7 @@
 // Header for Minimal theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
@@ -34,22 +34,10 @@ echo
 	'<head>',
 	'<meta charset="UTF-8">',
 	'<title>', htmlspecialchars($title), '</title>',
-	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">';
-
-if (!empty($LINK_CANONICAL)) {
-	echo '<link rel="canonical" href="', $LINK_CANONICAL, '">';
-}
-if (!empty($META_DESCRIPTION)) {
-	echo '<meta name="description" content="', htmlspecialchars($META_DESCRIPTION), '">';
-}
-echo '<meta name="robots" content="', $META_ROBOTS, '">';
-if (!empty($META_GENERATOR)) {
-	echo '<meta name="generator" content="', $META_GENERATOR, '">';
-}
-
-echo
-	'<link type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css" rel="Stylesheet">',
-	'<link rel="stylesheet" href="', $stylesheet, '" type="text/css" media="all">';
+	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
+	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
+	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
+	'<link rel="stylesheet" type="text/css" href="', $stylesheet, '">';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
@@ -69,95 +57,65 @@ echo
 
 // begin header section
 if ($view!='simple') {
-	echo 
-		'<div id="header" class="', $TEXT_DIRECTION, '">',
-		'<span class="title">',
-			htmlspecialchars($GEDCOM_TITLE),
-		'</span>',
-		'<span class="hlogin">';
+	echo '<div id="header">';
+	echo '<ul class="makeMenu">';
+	echo '<li class="title" dir="auto">',htmlspecialchars($GEDCOM_TITLE),'</li>';
+	echo '<div>';
 	if (WT_USER_ID) {
-		echo '<a href="edituser.php" class="link">', WT_I18N::translate('Logged in as '), ' ', getUserFullName(WT_USER_ID), '</a> | ', logout_link();
+		echo '<li><a href="edituser.php">', getUserFullName(WT_USER_ID), '</a></li> <li>', logout_link(), '</li>';
+		if (WT_USER_CAN_ACCEPT && exists_pending_change()) {
+			echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',chan_window_specs); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
+		}
 	} else {
-		echo login_link();
+		echo '<li>', login_link(), '</li> ';
 	}
-	echo '</span>';
-	echo '<span class="htheme">';
-	$menu=WT_MenuBar::getThemeMenu();
+	$menu=WT_MenuBar::getFavoritesMenu();
 	if ($menu) {
-		echo $menu->getMenuAsDropdown();
+		echo $menu->getMenuAsList();
 	}
 	$menu=WT_MenuBar::getLanguageMenu();
 	if ($menu) {
-		echo $menu->getMenuAsDropdown();
+		echo $menu->getMenuAsList();
+	}
+	$menu=WT_MenuBar::getThemeMenu();
+	if ($menu) {
+		echo $menu->getMenuAsList();
 	}
 	echo
-		'</span>',
-		'<div class="hsearch">',
-		'<form style="display:inline;" action="search.php" method="get">',
+		'<li><form style="display:inline;" action="search.php" method="post">',
 		'<input type="hidden" name="action" value="general">',
 		'<input type="hidden" name="topsearch" value="yes">',
-		'<input type="text" name="query" size="15" placeholder="', WT_I18N::translate('Search'), '">',
-		'<input type="submit" name="search" value=" &gt; ">',
-		'</form>';
-	print_favorite_selector();
-	echo 
-		'</div>';
-	
-	//  begin top links section
-	echo 
-		'<div id="topMenu">', 
-		'<ul class="makeMenu">'; 
-
-	$menu=WT_MenuBar::getGedcomMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
+		'<input type="search" name="query" size="20" placeholder="', WT_I18N::translate('Search'), '" dir="auto">',
+		'</form></li></div>',
+		'</ul>';
+	$menu_items=array(
+		WT_MenuBar::getGedcomMenu(),
+		WT_MenuBar::getMyPageMenu(),
+		WT_MenuBar::getChartsMenu(),
+		WT_MenuBar::getListsMenu(),
+		WT_MenuBar::getCalendarMenu(),
+		WT_MenuBar::getReportsMenu(),
+		WT_MenuBar::getSearchMenu(),
+	);
+	foreach (WT_MenuBar::getModuleMenus() as $menu) {
+		$menu_items[]=$menu;
 	}
-	$menu=WT_MenuBar::getMyPageMenu();
-	if ($menu) {
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getChartsMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getListsMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getCalendarMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getReportsMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getSearchMenu();
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	$menus=WT_MenuBar::getModuleMenus();
-	foreach ($menus as $menu) {
+	// Print the menu bar
+	echo
+		'<div id="topMenu">',
+		'<ul id="main-menu">';
+	foreach ($menu_items as $menu) {
 		if ($menu) {
-			$menu->addIcon(null);
-		echo $menu->getMenuAsList();
+			echo $menu->getMenuAsList();
 		}
 	}
-	if ($menu) {
-		$menu->addIcon(null);
-		echo $menu->getMenuAsList();
-	}
-	echo 
-		'</ul>',
-		'</div>';
-	echo '</div>'; // <div id="header">
-	// Display feedback from asynchronous actions
+	unset($menu_items, $menu);
+	echo
+		'</ul>',  // <ul id="main-menu">
+		'</div>'; // <div id="topMenu">
+
+
+		// Display feedback from asynchronous actions
 	echo '<div id="flash-messages">';
 	foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->getMessages() as $message) {
 		echo '<p class="ui-state-highlight">', $message, '</p>';

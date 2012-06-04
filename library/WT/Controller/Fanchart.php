@@ -28,8 +28,6 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
-require_once WT_ROOT.'includes/functions/functions_charts.php';
-
 class WT_Controller_Fanchart extends WT_Controller_Chart {
 	// Variables for the view
 	public $fan_style      =null;
@@ -131,7 +129,7 @@ class WT_Controller_Fanchart extends WT_Controller_Chart {
 	 * print ancestors on a fan chart
 	 */
 	public function generate_fan_chart() {
-		global $WT_IMAGES, $GEDCOM, $fanChart;
+		global $GEDCOM, $fanChart;
 
 		$treeid=ancestry_array($this->root->getXref(), $this->generations);
 		$fanw  =640*$this->fan_width/100;
@@ -140,13 +138,9 @@ class WT_Controller_Fanchart extends WT_Controller_Chart {
 
 		// check for GD 2.x library
 		if (!defined("IMG_ARC_PIE")) {
-			$html.= "<span class=\"error\">".WT_I18N::translate('PHP server misconfiguration: GD 2.x library required to use image functions.')."</span>";
-			$html.= " <a href=\"" . WT_I18N::translate('http://www.php.net/gd') . "\"><img src=\"".$WT_IMAGES["help"]."\" class=\"icon\" alt=\"\"></a><br><br>";
 			return false;
 		}
 		if (!function_exists("ImageTtfBbox")) {
-			$html.= "<span class=\"error\">".WT_I18N::translate('PHP server misconfiguration: FreeType library required to use TrueType fonts.')."</span>";
-			$html.= " <a href=\"" . WT_I18N::translate('http://www.php.net/gd') . "\"><img src=\"".$WT_IMAGES["help"]."\" class=\"icon\" alt=\"\"></a><br><br>";
 			return false;
 		}
 

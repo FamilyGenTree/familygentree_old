@@ -2,7 +2,7 @@
 // Header for FAB theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Modifications Copyright (c) 2010 Greg Roach
@@ -72,7 +72,7 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 	if (WT_USER_ID) {
 		echo '<li><a href="edituser.php">', getUserFullName(WT_USER_ID), '</a></li> <li>', logout_link(), '</li>';
 		if (WT_USER_CAN_ACCEPT && exists_pending_change()) {
-			echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
+			echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',chan_window_specs); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
 		}
 	} else {
 		echo '<li>', login_link(), '</li> ';
@@ -90,10 +90,10 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 		echo $menu->getMenuAsList();
 	}
 	echo
-		'<li><form style="display:inline;" action="search.php" method="get">',
+		'<li><form style="display:inline;" action="search.php" method="post">',
 		'<input type="hidden" name="action" value="general">',
 		'<input type="hidden" name="topsearch" value="yes">',
-		'<input type="text" name="query" size="20" placeholder="', WT_I18N::translate('Search'), '">',
+		'<input type="search" name="query" size="20" placeholder="', WT_I18N::translate('Search'), '" dir="auto">',
 		'</form></li>',
 		'</ul></div>';
 	$menu_items=array(
@@ -110,7 +110,7 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 	}
 
 	echo
-		'<div style="float:', WT_CSS_ALIGN, '; clear:', WT_CSS_ALIGN, '; font-size:175%;">',
+		'<div style="float:', WT_CSS_ALIGN, '; clear:', WT_CSS_ALIGN, '; font-size:175%;" dir="auto">',
 			htmlspecialchars($GEDCOM_TITLE),
 		'</div>';
 

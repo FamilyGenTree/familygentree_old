@@ -30,11 +30,8 @@ require WT_ROOT.'includes/functions/functions_edit.php';
 $controller=new WT_Controller_Fanchart();
 $controller
 	->pageHeader()
-	->addInlineJavaScript('var pastefield; function paste_id(value) { pastefield.value=value; }'); // For the "find indi" link
-
-if ($ENABLE_AUTOCOMPLETE) {
-	require WT_ROOT.'js/autocomplete.js.htm';
-}
+	->addInlineJavaScript('var pastefield; function paste_id(value) { pastefield.value=value; }') // For the 'find indi' link
+	->addExternalJavaScript('js/autocomplete.js');
 
 ?>
 <table class="list_table">
@@ -52,7 +49,7 @@ if ($ENABLE_AUTOCOMPLETE) {
 						</td>
 						<td class="optionbox">
 							<input class="pedigree_form" type="text" name="rootid" id="rootid" size="3" value="<?php echo $controller->rootid; ?>">
-							<?php print_findindi_link('rootid', ''); ?>
+							<?php echo print_findindi_link('rootid'); ?>
 						</td>
 						<td class="descriptionbox">
 							<?php echo WT_I18N::translate('Layout'); ?>

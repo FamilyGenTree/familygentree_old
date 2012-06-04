@@ -2,7 +2,7 @@
 // Footer for Colors theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
@@ -35,14 +35,13 @@ if ($view!='simple') {
 	echo contact_links();
 	echo '<br>';
 	echo '<p class="logo">';
-	echo '<a href="', WT_WEBTREES_URL, '" target="_blank">';
-	echo '<img src="', $WT_IMAGES['webtrees'], '" width="100" height="21" alt="', WT_WEBTREES, '" title="', WT_WEBTREES, ' ', WT_VERSION_TEXT, '"></a>';
+	echo '<a href="', WT_WEBTREES_URL, '" target="_blank" class="icon-webtrees" title="', WT_WEBTREES, ' ', WT_VERSION_TEXT, '"></a>';
 	echo '</p>';
 	if (WT_DEBUG || get_gedcom_setting(WT_GED_ID, 'SHOW_STATS')) {
 		echo execution_stats();
 	}
 	if (exists_pending_change()) {
-		echo '<a href="#" onclick="window.open(\'edit_changes.php\', \'_blank\', \'width=600, height=500, resizable=1, scrollbars=1\'); return false;">';
+		echo '<a href="#" onclick="window.open(\'edit_changes.php\', \'_blank\', chan_window_specs); return false;">';
 		echo '<p class="error center">', WT_I18N::translate('There are pending changes for you to moderate.'), '</p>';
 		echo '</a>';
 	}

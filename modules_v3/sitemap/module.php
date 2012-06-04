@@ -49,6 +49,7 @@ class sitemap_WT_Module extends WT_Module implements WT_Module_Config {
 			$this->admin();
 			break;
 		case 'generate':
+			Zend_Session::writeClose();
 			$this->generate(safe_GET('file'));
 			break;
 		default:
@@ -169,7 +170,7 @@ class sitemap_WT_Module extends WT_Module implements WT_Module_Config {
 				break;
 			case 'r':
 				$rows=WT_DB::prepare(
-					"SELECT 'SOUR' AS type, o_id AS xref, o_file AS ged_id, o_gedcom AS gedrec".
+					"SELECT 'REPO' AS type, o_id AS xref, o_file AS ged_id, o_gedcom AS gedrec".
 					" FROM `##other`".
 					" WHERE o_file=? AND o_type='REPO'".
 					" ORDER BY o_id".
@@ -181,7 +182,7 @@ class sitemap_WT_Module extends WT_Module implements WT_Module_Config {
 				break;
 			case 'n':
 				$rows=WT_DB::prepare(
-					"SELECT 'SOUR' AS type, o_id AS xref, o_file AS ged_id, o_gedcom AS gedrec".
+					"SELECT 'NOTE' AS type, o_id AS xref, o_file AS ged_id, o_gedcom AS gedrec".
 					" FROM `##other`".
 					" WHERE o_file=? AND o_type='NOTE'".
 					" ORDER BY o_id".

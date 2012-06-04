@@ -5,7 +5,7 @@
 // Print pedigree map using Googlemaps.
 // It requires that your place coordinates are stored on the Google Map
 // 'place_locations' table. It will NOT find coordinates stored only as tags in
-// your GEDCOM file. As in the Google Maps module, it can only display place
+// your GEDCOM file. As in the Google Maps™ module, it can only display place
 // markers where the location exists with identical spelling in both your
 // GEDCOM '2 PLAC' tag (within the '1 BIRT' event) and the place_locations table.
 //
@@ -35,11 +35,10 @@ if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
+global $SHOW_HIGHLIGHT_IMAGES;
 ?>
 
-<script type="text/javascript">
-//<![CDATA[
-
+<script>
 // The HomeControl returns the map to the original position and style ==============
 function HomeControl(controlDiv, pm_map) {
 	// Set CSS styles for the DIV containing the control
@@ -376,7 +375,7 @@ gicons['8Rs'] 		= 	new google.maps.MarkerImage(WT_STATIC_URL+WT_MODULES_DIR+'goo
 // / A function to create the marker and set up the event window
 function createMarker(point, name, html, mhtml, icontype) {
 	// alert(i+'. '+name+', '+icontype);
-	var contentString = '<div id="iwcontent">'+mhtml+'<\/div>';
+	var contentString = '<div id="iwcontent_edit">'+mhtml+'<\/div>';
 	// === create a marker with the requested icon ===
 	var marker = new google.maps.Marker({
 		icon: 		gicons[icontype],
@@ -676,5 +675,4 @@ google.maps.event.addListener(pm_map, 'click', function() {
 	contextmenu.style.visibility='hidden';
 });
 
-//]]>
 </script>

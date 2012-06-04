@@ -115,6 +115,8 @@ img {
 	font-weight:bold;
 }
 
+.quickfacts a {font-size:9px; padding:0 3px;}
+
 /* Main name on INDI/FAM/etc. pages */
 .name_head {
 	font-size:150%;
@@ -144,6 +146,16 @@ img {
 .block {background-color:#EEE; clear:none;}
 .blockheader {font-weight:bold;}
 .charts_block {overflow:auto;}
+#link_change_blocks {clear:both; margin:0 auto; padding:25px 0 0 0; text-align:center; width:400px;}
+#link_change_blocks span {padding:0 50px;}
+#link_change_blocks span span {padding:0 3px;}
+
+#random_picture {
+	text-align:center;
+}
+#random_picture_box {
+width:100%;
+}
 
 /* Pending edits */
 .change_new, .nameblue {
@@ -279,25 +291,28 @@ html[dir='rtl'] .person_box html[dir='rtl'] .person_boxF html[dir='rtl'] .person
 }
 #index_full_blocks {
 }
+html[dir='rtl'] #index_main_blocks {float:right;}
+html[dir='rtl'] #index_small_blocks {float:left;}
 
+#main_select,#available_select,#right_select{min-width:150px;}
+
+.user_welcome_block table, .gedcom_block_block  table{margin:auto;}
+.user_welcome_block td, .gedcom_block_block  td{width:33%;text-align:center;vertical-align: top;}
 
 .facts_table, .facts_table_rtl {
 	width:100%;
 }
 
 /* pedigree.php */
-.pedigree_image_portrait, .pedigree_image_landscape {
+.pedigree_image {
 	float:left;
 	max-height:45px;
 	max-width:37px;
 	margin-right:3px;
 }
-
-.pedigree_image_portrait_rtl, .pedigree_image_landscape_rtl {
+html[dir="rtl"] .pedigree_image {
 	float:right;
-	max-height:45px;
-	max-width:37px;
-	margin-left:3px;
+	margin:0 0 0 3px;
 }
 
 /*-- pedigree chart specific stylesheets --*/
@@ -307,6 +322,7 @@ html[dir='rtl'] .person_box html[dir='rtl'] .person_boxF html[dir='rtl'] .person
 	left:0;
 }
 
+.compact_view {cursor:url(images/zoomin.png),n-resize;}
 .compact_view p {font-size:90%; margin:0;}
 
 .thumbnail {
@@ -389,24 +405,22 @@ right:10px;
 }
 
 /* Autocomplete styles*/
-.ac_input {
+.ui-autocomplete-input {
 	background-color:#EEE8AA;
 }
-.ac_results {
+.ui-autocomplete {
 	padding:0;
 	border:thin solid #AAA;
 	background-color:white;
-	overflow:hidden;
 	z-index:99999;
-}
-.ac_results ul {
-	width:100%;
 	list-style-position:outside;
 	list-style:none;
 	padding:0;
 	margin:0;
+	max-height:200px;
+	overflow-y:auto;
 }
-.ac_results li {
+.ui-autocomplete li {
 	margin:0;
 	padding:2px 5px;
 	cursor:default;
@@ -415,18 +429,13 @@ right:10px;
 	line-height:14px; /* absolute setting required for firefox? */
 	overflow:hidden;
 }
-.ac_loading {
+.ui-autocomplete-loading {
 	background:white url(images/indicator.gif) right center no-repeat;
 }
-.ac_odd {
+.ui-autocomplete li:nth-child(odd) {
 	background-color:#eee;
 }
-.ac_over {
-	background-color:navy;
-	color:white;
-}
 
-/* Review everything below this line */
 
 .center {
 	text-align:center;
@@ -512,7 +521,7 @@ right:10px;
 	margin:2px;
 }
 
-.icon, .adminicon {
+.icon {
 	padding-left:0;
 	padding-right:5pt;
 }
@@ -580,12 +589,7 @@ right:10px;
 	margin:10px;
 }
 
-.helpheader {
-	margin:10px;
-	font-size:18px;
-	font-weight:bold;
-	color:black;
-}
+.helpheader {}
 
 .helpstart {
 	margin:10px;
@@ -978,11 +982,6 @@ html[dir="rtl"] dt {
 	margin-left:10px;
 }
 
-dd {
-	display:inline;
-	margin:0;
-}
-
 #pending h2 {text-align:center; margin-bottom:20px;}
 #pending h3 {text-align:center; margin-top:20px;}
 
@@ -999,7 +998,9 @@ dd {
 overflow: visible !important;
 }
 
-#branches-page table, #medialist-page .list_table  {margin:auto;}
+#branches-page table, #medialist-page .list_table, #medialist-page .list_table_controls  {margin:0 auto;}
+#medialist-page .list_table_controls  {width:100%;}
+.list_table_controls td {min-width:40px;text-align:center;}
 
 /* ============== login.php ======================= */
 #login-register-page h2 {text-align:center;}
@@ -1034,6 +1035,19 @@ html[dir='rtl'] #login-form label, html[dir='rtl'] #new_passwd_form label, html[
 .gedcom_favorites_block  .person_box .details2, .gedcom_favorites_block  .person_boxF.details2, .gedcom_favorites_block  .person_boxNN.details2 {min-height:40px;}
 .user_favorites_block  .person_box .details2, .user_favorites_block  .person_boxF.details2, .user_favorites_block  .person_boxNN.details2 {min-height:40px;}
 
+/* ============= Statistics block ============ */
+.gedcom_stats_block table td {vertical-align:top;}
+.gedcom_stats_block table td td {vertical-align:middle;}
+.gedcom_stats_block td .stats_value {text-align:center;}
+
+ /* ======= Favourites block ========== */
+.user_favorites_block .person_box, .gedcom_favorites_block .person_box {margin:5px 0;}
+.add_fav_head {font-weight:900; margin:5px 0;}
+.add_fav_head i {margin:0 5px 1px 5px;}
+.add_fav_ref label {display: inline-block; min-width:100px;}
+.add_fav_ref label:after {content:":";}
+.add_fav_ref input {margin: 0 5px;}
+
 .itr {
 	position: absolute;
 	line-height: 1.5;
@@ -1048,20 +1062,24 @@ html[dir='rtl'] #login-form label, html[dir='rtl'] #new_passwd_form label, html[
 	display:none;
 }
 
-.popup dl {
+.popup ul {
+	background-image:none !important;
 	font-size:9px;
-	height:auto;
-	padding:5px;
-	min-height:100px;
+	list-style:none;
+	margin:0;
+	padding:0 10px;
 }
 
-.popup dt {
-	float:none;
+.popup  li {
+	padding:1px 5px;
 }
 
-.popup dd {
-	display: block;
-	margin-left:10px;
+.popup  li span {
+	padding:0 5px;
+}
+
+.popup  li ul, .popup  li ul li, .popup  li span span {
+	padding:0;
 }
 
 .itr:hover .popup {
@@ -1072,8 +1090,6 @@ html[dir='rtl'] #login-form label, html[dir='rtl'] #new_passwd_form label, html[
 	z-index: 9999;
 }
 
-html[dir='rtl'] .popup dt {float:none;}
-html[dir='rtl'] .popup dd {margin-right:10px;}
 html[dir='rtl'] .itr:hover .popup {left:0; right:auto;}
 
 /* styles for FindFacts pop-up */
@@ -1237,7 +1253,7 @@ html[dir='rtl']  #dates {float:left;}
 html[dir='rtl']  dd .editlink, html[dir='rtl']  dd .deletelink  {float:left;}
 
 /* INDI IMAGE SPRITE */
-.male_gender, .female_gender, .unknown_gender, .editicon, .copyicon, .deleteicon {display:block; background:url('images/indi_sprite.png') no-repeat;}
+.male_gender, .female_gender, .unknown_gender, .editicon, .copyicon, .deleteicon {display:block; background:url(images/indi_sprite.png) no-repeat;}
 .female_gender {background-position:-45px 3px; width:24px;}
 .male_gender {background-position:-72px 3px; width:24px;}
 .unknown_gender {background-position:-100px 4px; width:24px;}
@@ -1269,6 +1285,8 @@ html[dir='rtl'] .ui-tabs {direction:rtl;}
 html[dir='rtl'] ui-tabs .ui-tabs-nav li.ui-tabs-selected,
 html[dir='rtl'] .ui-tabs .ui-tabs-nav li.ui-state-default {float:right;}
 html[dir='rtl'] .ui-accordion .ui-accordion-header .ui-icon {right:0.5em;}
+html[dir='rtl'] .ui-dialog-title{float:right;}
+html[dir='rtl'] .ui-dialog-titlebar-close{left:.3em; right:auto;}
 
 /* ========= jQuery.datatable styling over-rides ============ */
 .odd {background-color:LightGrey;}
@@ -1319,7 +1337,7 @@ html[dir='rtl'] .DataTables_sort_wrapper span {left:auto; right:0; margin-right:
 .filtersH, .filtersF {margin:4px}
 .filtersH img {margin-bottom:2px;}
 .filtersH .ui-state-default,.filtersF .ui-state-default {margin:0 2px; padding:2px;}
-.loading-image{background:transparent url(../../images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
+.loading-image{background:transparent url(images/loading.gif) 50% 50% no-repeat; height:50px; margin:50px;}
 #search-result-tabs, #places-tabs {margin:auto; width:98%; visibility:hidden;}
 #search-result-tabs h3 {text-align:center;}
 #searchAccordion-indi, #searchAccordion-fam, #searchAccordion-source, #searchAccordion-note {margin:auto; width:99%;}
@@ -1338,15 +1356,15 @@ html[dir='rtl'] .source-list th:last-child, html[dir='rtl'] .note-list th:last-c
 .use-sidebar #sidebar {display:block;}
 .sidebar-at-right #sidebar {width:20%;}
 .use-sidebar.sidebar-at-right #sidebar, .sidebar-at-right #separator {float:right;}
-#separator {float:right; display:block; background:#ccc url('images/indi_sprite.png') no-repeat -26px 100px; min-width:6px; max-width:10px; width:0.75%; border:1px solid darkGray; border-radius-topleft:3px; border-radius-topright:3px; margin-top:5px;}
-.use-sidebar #separator {background:#ccc url('images/indi_sprite.png') no-repeat -1px 100px;}
+#separator {float:right; display:block; background:#ccc url(images/indi_sprite.png) no-repeat -26px 100px; min-width:6px; max-width:10px; width:0.75%; border:1px solid darkGray; border-radius-topleft:3px; border-radius-topright:3px; margin-top:5px;}
+.use-sidebar #separator {background:#ccc url(images/indi_sprite.png) no-repeat -1px 100px;}
 
 html[dir='rtl'] #indi_left {float:right;}
 html[dir='rtl'] #tabs {float:right;}
 html[dir='rtl'] #sidebar  {margin:5px 0 0 2px;}
 html[dir='rtl'] .use-sidebar.sidebar-at-right #sidebar, html[dir='rtl'] .sidebar-at-right #separator  {float:left;}
-html[dir='rtl'] #separator {float:left; background:#ccc url('images/indi_sprite.png') no-repeat -1px 100px;}
-html[dir='rtl'] .use-sidebar #separator {background:#ccc url('images/indi_sprite.png') no-repeat -26px 100px;}
+html[dir='rtl'] #separator {float:left; background:#ccc url(images/indi_sprite.png) no-repeat -1px 100px;}
+html[dir='rtl'] .use-sidebar #separator {background:#ccc url(images/indi_sprite.png) no-repeat -26px 100px;}
 
 /* ============== Sidebar content items ============== */
 /* Family navigator */
@@ -1376,7 +1394,7 @@ html[dir='rtl'] #sb_desc_content {margin-right:3px;}
 html[dir='rtl'] .desc_tree_div ul {margin-right:10px; margin-left:0;}
 
 /* Individuals, Families */
-.sb_indi_surname_li, .sb_fam_surname_li {list-style-image:url('images/plus.png');}
+.sb_indi_surname_li, .sb_fam_surname_li {list-style-image:url(images/plus.png);}
 .name_tree_div li, .name_tree_div_visible li {white-space:normal;}
 .name_tree_div {display:none;}
 .name_tree_div li,  .name_tree_div_visible li {list-style:none; margin:0; padding:0;}
@@ -1429,3 +1447,119 @@ html[dir='rtl'] fieldset {text-align:right;}
 #search-page-table p {margin:0;}
 html[dir='rtl'] #search-page-table .label{float:right;}
 html[dir='rtl'] #search-page-table .value {margin:0 170px 0 0;}
+
+ /* ======= Who is online block ========== */
+.logged_in_list{margin:5px 0 0 0;padding:0;line-height:20px;}
+
+/* Icons */
+[class^="icon-"], [class*=" icon-"]{display:inline-block;vertical-align:text-bottom;background-repeat:no-repeat;}
+.icon-add{width:14px;height:15px;background-image:url(images/add.png);}
+.icon-admin{width:30px;height:30px;background-image:url(images/admin.png);}
+.icon-bing{width:16px;height:16px;background-image:url(images/bing.png);}
+.icon-button_addmedia{width:18px;height:16px;background-image:url(images/buttons/addmedia.png);}
+.icon-button_addnote{width:17px;height:15px;background-image:url(images/buttons/addnote.png);}
+.icon-button_addrepository{width:15px;height:15px;background-image:url(images/buttons/addrepository.png);}
+.icon-button_addsource{width:18px;height:16px;background-image:url(images/buttons/addsource.png);}
+.icon-button_calendar{width:19px;height:15px;background-image:url(images/buttons/calendar.png);}
+.icon-button_family{width:14px;height:15px;background-image:url(images/buttons/family.png);}
+.icon-button_find_facts{width:20px;height:20px;background-image:url(images/buttons/find_facts.png);}
+.icon-button_head{width:12px;height:18px;background-image:url(images/buttons/head.png);}
+.icon-button_indi{width:11px;height:15px;background-image:url(images/buttons/indi.png);}
+.icon-button_keyboard{width:30px;height:15px;background-image:url(images/buttons/keyboard.png);}
+.icon-button_media{width:18px;height:16px;background-image:url(images/buttons/media.png);}
+.icon-button_note{width:17px;height:15px;background-image:url(images/buttons/note.png);}
+.icon-button_place{width:15px;height:15px;background-image:url(images/buttons/place.png);}
+.icon-button_repository{width:15px;height:15px;background-image:url(images/buttons/repository.png);}
+.icon-button_source{width:18px;height:16px;background-image:url(images/buttons/source.png);}
+.icon-cfamily{width:24px;height:24px;background-image:url(images/cfamily.png);}
+.icon-childless{width:25px;height:25px;background-image:url(images/childless.png);}
+.icon-children{width:16px;height:16px;background-image:url(images/children.png);}
+.icon-clippings{width:24px;height:24px;background-image:url(images/clippings.png);}
+.icon-darrow{width:20px;height:20px;background-image:url(images/darrow.png);}
+a.icon-darrow:hover{width:20px;height:20px;background-image:url(images/darrow2.png);}
+.icon-ddarrow{width:20px;height:20px;background-image:url(images/ddarrow.png);}
+.icon-default_image_F{width:99px;height:106px;background-image:url(images/silhouette_female.png);}
+.icon-default_image_M{width:99px;height:99px;background-image:url(images/silhouette_male.png);}
+.icon-default_image_U{width:100px;height:97px;background-image:url(images/silhouette_unknown.png);}
+.icon-edit_indi{width:25px;height:25px;background-image:url(images/edit_indi.png);}
+.icon-email{width:16px;height:16px;background-image:url(images/email.png);}
+.icon-fam-list{width:24px;height:24px;background-image:url(images/sfamily.png);}
+.icon-googlemaps{width:16px;height:16px;background-image:url(images/googlemaps.png);}
+.icon-help{width:15px;height:15px;background-image:url(images/help.png);}
+.icon-indis{width:24px;height:24px;background-image:url(images/indis.png);}
+.icon-indi-list{width:50px;height:50px;background-image:url(images/indis.png);}
+.icon-larrow{width:20px;height:20px;background-image:url(images/larrow.png);}
+a.icon-larrow:hover{width:20px;height:20px;background-image:url(images/larrow2.png);}
+.icon-ldarrow{width:20px;height:20px;background-image:url(images/ldarrow.png);}
+.icon-lifespan-chunk{width:50px;height:37px;background-image:url(images/lifespan-chunk.png);}
+.icon-loading-small{width:16px;height:16px;background-image:url(images/indicator.gif);}
+.icon-loading-large{width:32px;height:32px;background-image:url(images/loading.gif);}
+.icon-lsdnarrow{width:48px;height:48px;background-image:url(images/lifespan-down.png);}
+.icon-lsltarrow{width:48px;height:48px;background-image:url(images/lifespan-left.png);}
+.icon-lsrtarrow{width:48px;height:48px;background-image:url(images/lifespan-right.png);}
+.icon-lsuparrow{width:48px;height:48px;background-image:url(images/lifespan-up.png);}
+.icon-mapquest{width:16px;height:16px;background-image:url(images/mapquest.png);}
+.icon-media{width:24px;height:24px;background-image:url(images/media.png);}
+.icon-media-list{width:24px;height:24px;background-image:url(images/media.png);}
+.icon-media-next{width:20px;height:20px;background-image:url(images/rdarrow.png);}
+.icon-media-play{width:20px;height:20px;background-image:url(images/rarrow.png);}
+.icon-media-prev{width:20px;height:20px;background-image:url(images/ldarrow.png);}
+.icon-media-shuffle{width:10px;height:10px;background-image:url(images/reorder.png);}
+.icon-media-stop{width:20px;height:20px;background-image:url(images/stop.png);}
+.icon-minus{width:11px;height:11px;background-image:url(images/minus.png);}
+.icon-mypage{width:25px;height:25px;background-image:url(images/mypage.png);}
+.icon-note{width:16px;height:16px;background-image:url(images/notes.png);}
+.icon-note-list{width:16px;height:16px;background-image:url(images/notes.png);}
+.icon-patriarch{width:24px;height:24px;background-image:url(images/patriarch.png);}
+.icon-pedigree{width:24px;height:24px;background-image:url(images/pedigree.png);}
+.icon-pin-in{width:16px;height:16px;background-image:url(images/pin-in.png);}
+.icon-pin-out{width:16px;height:16px;background-image:url(images/pin-out.png);}
+.icon-place{width:24px;height:24px;background-image:url(images/place.png);}
+.icon-plus{width:11px;height:11px;background-image:url(images/plus.png);}
+.icon-rarrow{width:20px;height:20px;background-image:url(images/rarrow.png);}
+a.icon-rarrow:hover{width:20px;height:20px;background-image:url(images/rarrow2.png);}
+.icon-rdarrow{width:20px;height:20px;background-image:url(images/rdarrow.png);}
+.icon-reminder{width:15px;height:12px;background-image:url(images/reminder.png);}
+.icon-remove{width:14px;height:15px;background-image:url(images/remove.png);}
+.icon-repository{width:30px;height:30px;background-image:url(images/repository.png);}
+.icon-repo-list{width:30px;height:30px;background-image:url(images/repository.png);}
+.icon-resn-confidential{width:16px;height:16px;background-image:url(images/resn_confidential.png);}
+.icon-resn-locked{width:16px;height:16px;background-image:url(images/resn_locked.png);}
+.icon-resn-none{width:16px;height:16px;background-image:url(images/resn_none.png);}
+.icon-resn-privacy{width:16px;height:16px;background-image:url(images/resn_privacy.png);}
+.icon-rings{width:9px;height:9px;background-image:url(images/rings.png);}
+.icon-search{width:24px;height:24px;background-image:url(images/search.png);}
+.icon-selected{width:12px;height:12px;background-image:url(images/selected.png);}
+.icon-sex_f_15x15{width:15px;height:15px;background-image:url(images/sex_f_15x15.png);}
+.icon-sex_f_9x9{width:9px;height:9px;background-image:url(images/sex_f_9x9.png);}
+.icon-sex_m_15x15{width:15px;height:15px;background-image:url(images/sex_m_15x15.png);}
+.icon-sex_m_9x9{width:9px;height:9px;background-image:url(images/sex_m_9x9.png);}
+.icon-sex_u_15x15{width:15px;height:15px;background-image:url(images/sex_u_15x15.png);}
+.icon-sex_u_9x9{width:9px;height:9px;background-image:url(images/sex_u_9x9.png);}
+.icon-sfamily{width:24px;height:24px;background-image:url(images/sfamily.png);}
+.icon-slide_close{width:22px;height:20px;background-image:url(images/close.png);}
+.icon-slide_open{width:20px;height:22px;background-image:url(images/open.png);}
+.icon-source{width:24px;height:24px;background-image:url(images/source.png);}
+.icon-source-list{width:24px;height:24px;background-image:url(images/source.png);}
+.icon-terraserver{width:16px;height:16px;background-image:url(images/terraserver.png);}
+.icon-target{width:15px;height:15px;background-image:url(images/buttons/target.png);}
+.icon-tree{width:24px;height:24px;background-image:url(images/gedcom.png);}
+.icon-uarrow{width:20px;height:20px;background-image:url(images/uarrow.png);}
+a.icon-uarrow:hover{width:20px;height:20px;background-image:url(images/uarrow2.png);}
+.icon-udarrow{width:20px;height:20px;background-image:url(images/udarrow.png);}
+.icon-user_add{width:24px;height:24px;background-image:url(images/user_add.png);}
+.icon-warning{width:17px;height:17px;background-image:url(images/warning.png);}
+.icon-webtrees{width:100px;height:21px;background-image:url(images/webtrees.png);}
+.icon-wiki{width:16px;height:16px;background-image:url(images/w_button.png);}
+.icon-zoomin{width:25px;height:25px;background-image:url(images/zoomin.png);}
+.icon-zoomout{width:25px;height:25px;background-image:url(images/zoomout.png);}
+/* Generic MIME types */
+[class^="icon-mime-"],[class*=" icon-mime-"]{}
+[class^="icon-mime-application-"],[class*=" icon-mime-audio-"]{}
+[class^="icon-mime-audio-"],[class*=" icon-mime-audio-"]{width:48px;height:64px;background-image:url(images/media/audio.png);}
+[class^="icon-mime-image-"],[class*=" icon-mime-image-"]{}
+[class^="icon-mime-text-"],[class*=" icon-mime-text-"]{}
+[class^="icon-mime-video-"],[class*=" icon-mime-video-"]{}
+/* Specific MIME types */
+.icon-mime-application-pdf{width:50px;height:32px;background-image:url(images/media/pdf.png);}
+.icon-mime-text-html{width:50px;height:32px;background-image:url(images/media/html.png);}

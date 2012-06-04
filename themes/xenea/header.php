@@ -2,7 +2,7 @@
 // Header for xenea theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
@@ -29,8 +29,6 @@ if (!defined('WT_WEBTREES')) {
 }
 
 global $DATE_FORMAT;
-
-$displayDate=timestamp_to_gedcom_date(client_time())->Display(false, $DATE_FORMAT);
 
 echo
 	'<!DOCTYPE html>',
@@ -62,7 +60,7 @@ echo
 if ($view!='simple') { // Use "simple" headers for popup windows
 	echo 
 	'<div id="header">',
-		'<span class="title">',
+		'<span class="title" dir="auto">',
 			htmlspecialchars($GEDCOM_TITLE),
 		'</span>',
 		'<div class="hsearch">';
@@ -70,7 +68,7 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 			'<form action="search.php" method="post">',
 			'<input type="hidden" name="action" value="general">',
 			'<input type="hidden" name="topsearch" value="yes">',
-			'<input type="text" name="query" size="12" placeholder="', WT_I18N::translate('Search'), '">',
+			'<input type="search" name="query" size="12" placeholder="', WT_I18N::translate('Search'), '" dir="auto">',
 			'<input type="submit" name="search" value="&gt;">',
 			'</form>',
 		'</div>',
@@ -100,7 +98,7 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 				if (WT_USER_ID) {
 					echo '<li><a href="edituser.php">', getUserFullName(WT_USER_ID), '</a></li> <li>', logout_link(), '</li>';
 					if (WT_USER_CAN_ACCEPT && exists_pending_change()) {
-						echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\',\'_blank\',\'width=600,height=500,resizable=1,scrollbars=1\'); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
+						echo ' <li><a href="#" onclick="window.open(\'edit_changes.php\', \'_blank\', chan_window_specs); return false;" style="color:red;">', WT_I18N::translate('Pending changes'), '</a></li>';
 					}
 				} else {
 					echo '<li>', login_link(), '</li> ';
@@ -117,7 +115,6 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 				}
 	echo 
 			'</ul>',
-			'<div id="favdate">', $displayDate, '</div>',
 		'</div>',
 	'</div>';
 // Menu 

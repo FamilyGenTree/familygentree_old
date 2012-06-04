@@ -29,14 +29,12 @@ require './includes/session.php';
 $controller=new WT_Controller_Familybook();
 $controller
 	->pageHeader()
-	->addInlineJavaScript('var pastefield; function paste_id(value) { pastefield.value=value; }'); // For the "find indi" link
-
-if ($ENABLE_AUTOCOMPLETE) {
-	require WT_ROOT.'js/autocomplete.js.htm';
-}
+	->addInlineJavaScript('var pastefield; function paste_id(value) { pastefield.value=value; }') // For the "find indi" link
+	->addExternalJavaScript('js/autocomplete.js');
 
 if (WT_USE_LIGHTBOX) {
-	require WT_ROOT.WT_MODULES_DIR.'lightbox/functions/lb_call_js.php';
+	$album = new lightbox_WT_Module();
+	$album->getPreLoadContent();
 }
 
 ?>
@@ -56,7 +54,7 @@ if (WT_USE_LIGHTBOX) {
 						</td>
 						<td class="optionbox">
 							<input class="pedigree_form" type="text" name="rootid" id="rootid" size="3" value="<?php echo $controller->rootid; ?>">
-							<?php print_findindi_link('rootid',''); ?>
+							<?php echo print_findindi_link('rootid'); ?>
 						</td>
 						<td class="descriptionbox">
 							<?php echo WT_I18N::translate('Show Details'); ?>

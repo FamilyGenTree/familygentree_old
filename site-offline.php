@@ -2,7 +2,7 @@
 // Site Unavailable
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2012 webtrees development team.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ define('WT_SCRIPT_NAME', 'site-offline.php');
 // This script does not load session.php.
 // session.php won't run until a configuration file and database connection exist...
 // This next block of code is a minimal version of session.php
-define('WT_WEBTREES', true);
+define('WT_WEBTREES', 'webtrees');
 define('WT_ROOT', '');
 define('WT_GED_ID', 0);
 define('WT_USER_ID', 0);
@@ -38,6 +38,7 @@ set_include_path(WT_ROOT.'library'.PATH_SEPARATOR.get_include_path());
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance()->registerNamespace('WT_');
 require 'includes/functions/functions.php';
+require WT_ROOT.'includes/functions/functions_utf-8.php';
 define('WT_LOCALE', WT_I18N::init());
 
 if (file_exists(WT_DATA_DIR.'offline.txt')) {
@@ -56,7 +57,7 @@ echo
 	'<html ', WT_I18N::html_markup(), '>',
 	'<head>',
 	'<meta charset="UTF-8">',
-	'<title>Site Unavailable - webtrees</title>',
+	'<title>', WT_WEBTREES, '</title>',
 	'<meta name="robots" content="noindex,follow">',
 	'<style type="text/css">
 		body {color: gray; background-color: white; font: 14px tahoma, arial, helvetica, sans-serif; padding:10px; }

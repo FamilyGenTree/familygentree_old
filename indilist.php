@@ -126,6 +126,7 @@ if ($show_all=='yes') {
 	$url=WT_SCRIPT_NAME.'?ged='.WT_GEDURL;
 	$show='none'; // Don't show lists until something is chosen
 }
+$legend='<span dir="auto">'.$legend.'</span>';
 
 $controller
 	->setPageTitle(WT_I18N::translate('Individuals').' : '.$legend)
@@ -253,7 +254,7 @@ if ($show=='indi' || $show=='surn') {
 					}
 				}
 				if ($show_all=='no') {
-					echo '<h2 class="center">', WT_I18N::translate('Individuals with surname %s', check_NN($surname)), '</h2>';
+					echo '<h2 class="center">', WT_I18N::translate('Individuals with surname %s', $legend), '</h2>';
 				}
 				echo '<p class="center alpha_index">', join(' | ', $list), '</p>';
 			}
