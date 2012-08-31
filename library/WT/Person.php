@@ -558,7 +558,7 @@ class WT_Person extends WT_GedcomRecord {
 					}
 				}
 				if ($min && $max) {
-					list($y)=WT_Date_Gregorian::JDtoYMD(floor((max($min)+min($max))/2));
+					list($y)=WT_Date_Gregorian::JDtoYMD((int)((max($min)+min($max))/2));
 					$this->_getEstimatedBirthDate=new WT_Date("EST {$y}");
 				} else {
 					$this->_getEstimatedBirthDate=new WT_Date(''); // always return a date object
@@ -1810,7 +1810,7 @@ class WT_Person extends WT_GedcomRecord {
 			}
 			$max_surn = $char-$i*2;
 			if ($len_surn > $max_surn) {
-				$surn = substr($surn, 0, $max_surn).'...';
+				$surn = substr($surn, 0, $max_surn).'…';
 				$len_surn = utf8_strlen($surn);
 			}
 			$shortname =  str_replace(

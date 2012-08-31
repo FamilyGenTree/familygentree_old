@@ -33,12 +33,12 @@ if (!defined('WT_WEBTREES')) {
 class WT_MenuBar {
 	public static function getGedcomMenu() {
 		//-- main menu
-		$menu = new WT_Menu(WT_I18N::translate('Home page'), 'index.php?ctype=gedcom&amp;ged='.WT_GEDURL, 'menu-tree', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Home page'), 'index.php?ctype=gedcom&amp;ged='.WT_GEDURL, 'menu-tree');
 		//-- gedcom list
 		$gedcom_titles=get_gedcom_titles();
 		$ALLOW_CHANGE_GEDCOM=get_site_setting('ALLOW_CHANGE_GEDCOM');
 		foreach ($gedcom_titles as $gedcom_title) {
-			if ($gedcom_title->gedcom_id==WT_GED_ID || $ALLOW_CHANGE_GEDCOM) {
+			if (($gedcom_title->gedcom_id==WT_GED_ID || $ALLOW_CHANGE_GEDCOM) && count($gedcom_titles)>1) {
 				$submenu = new WT_Menu(
 					'<span dir="auto">'.htmlspecialchars($gedcom_title->gedcom_title).'</span>',
 					'index.php?ctype=gedcom&amp;ged='.rawurlencode($gedcom_title->gedcom_name),
@@ -61,7 +61,7 @@ class WT_MenuBar {
 		}
 
 		//-- main menu
-		$menu = new WT_Menu(WT_I18N::translate('My page'), 'index.php?ctype=user&amp;ged='.WT_GEDURL, 'menu-mymenu', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('My page'), 'index.php?ctype=user&amp;ged='.WT_GEDURL, 'menu-mymenu');
 
 		//-- mypage submenu
 		$submenu = new WT_Menu(WT_I18N::translate('My page'), 'index.php?ctype=user&amp;ged='.WT_GEDURL, 'menu-mypage');
@@ -100,7 +100,7 @@ class WT_MenuBar {
 
 		$indi_xref=$controller->getSignificantIndividual()->getXref();
 
-		$menu = new WT_Menu(WT_I18N::translate('Charts'), 'pedigree.php?rootid='.$indi_xref.'&amp;ged='.WT_GEDURL, 'menu-chart', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Charts'), 'pedigree.php?rootid='.$indi_xref.'&amp;ged='.WT_GEDURL, 'menu-chart');
 
 		// Build a sortable list of submenu items and then sort it in localized name order
 		$menuList = array(
@@ -231,7 +231,7 @@ class WT_MenuBar {
 					}
 					$submenu = new WT_Menu(
 						WT_I18N::translate('Relationships'),
-						'relationship.php?pid1='.$pid1.'&amp;pid2='.$pid2.'&amp;pretty=2&amp;followspouse=1&amp;ged='.WT_GEDURL,
+						'relationship.php?pid1='.$pid1.'&amp;pid2='.$pid2.'&amp;ged='.WT_GEDURL,
 						'menu-chart-relationship'
 					);
 					if (array_key_exists('user_favorites', WT_Module::getActiveModules())) {
@@ -242,7 +242,7 @@ class WT_MenuBar {
 								if ($person instanceof WT_Person) {
 									$subsubmenu = new WT_Menu(
 										$person->getFullName(),
-										'relationship.php?pid1='.$person->getXref().'&amp;pid2='.$pid2.'&amp;pretty=2&amp;followspouse=1&amp;ged='.WT_GEDURL,
+										'relationship.php?pid1='.$person->getXref().'&amp;pid2='.$pid2.'&amp;ged='.WT_GEDURL,
 										'menu-chart-relationship-'.$person->getXref().'-'.$pid2 // We don't use these, but a custom theme might
 									);
 									$submenu->addSubmenu($subsubmenu);
@@ -256,7 +256,7 @@ class WT_MenuBar {
 					$pid2='';
 					$submenu = new WT_Menu(
 						WT_I18N::translate('Relationships'),
-						'relationship.php?pid1='.$pid1.'&amp;pid2='.$pid2.'&amp;pretty=2&amp;followspouse=1&amp;ged='.WT_GEDURL,
+						'relationship.php?pid1='.$pid1.'&amp;pid2='.$pid2.'&amp;ged='.WT_GEDURL,
 						'menu-chart-relationship'
 					);
 				}
@@ -286,7 +286,7 @@ class WT_MenuBar {
 		global $SEARCH_SPIDER, $controller;
 
 		// The top level menu shows the individual list
-		$menu=new WT_Menu(WT_I18N::translate('Lists'), 'indilist.php?ged='.WT_GEDURL, 'menu-list', 'down');
+		$menu=new WT_Menu(WT_I18N::translate('Lists'), 'indilist.php?ged='.WT_GEDURL, 'menu-list');
  
 		// Do not show empty lists
 		$row=WT_DB::prepare(
@@ -374,7 +374,7 @@ class WT_MenuBar {
 			return null;
 		}
 		//-- main calendar menu item
-		$menu = new WT_Menu(WT_I18N::translate('Calendar'), 'calendar.php?ged='.WT_GEDURL, 'menu-calendar', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Calendar'), 'calendar.php?ged='.WT_GEDURL, 'menu-calendar');
 		//-- viewday sub menu
 		$submenu = new WT_Menu(WT_I18N::translate('Day'), 'calendar.php?ged='.WT_GEDURL, 'menu-calendar-day');
 		$menu->addSubmenu($submenu);
@@ -399,7 +399,7 @@ class WT_MenuBar {
 			return null;
 		}
 
-		$menu = new WT_Menu(WT_I18N::translate('Reports'), 'reportengine.php?ged='.WT_GEDURL, 'menu-report', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Reports'), 'reportengine.php?ged='.WT_GEDURL, 'menu-report');
 
 		foreach ($active_reports as $report) {
 			foreach ($report->getReportMenus() as $submenu) {
@@ -416,7 +416,7 @@ class WT_MenuBar {
 			return null;
 		}
 		//-- main search menu item
-		$menu = new WT_Menu(WT_I18N::translate('Search'), 'search.php?ged='.WT_GEDURL, 'menu-search', 'down');
+		$menu = new WT_Menu(WT_I18N::translate('Search'), 'search.php?ged='.WT_GEDURL, 'menu-search');
 		//-- search_general sub menu
 		$submenu = new WT_Menu(WT_I18N::translate('General search'), 'search.php?ged='.WT_GEDURL, 'menu-search-general');
 		$menu->addSubmenu($submenu);
@@ -466,7 +466,7 @@ class WT_MenuBar {
 		if ($SEARCH_SPIDER) {
 			return null;
 		} else {
-			$menu=new WT_Menu(WT_I18N::translate('Language'), '#', 'menu-language', 'down');
+			$menu=new WT_Menu(WT_I18N::translate('Language'), '#', 'menu-language');
 
 			foreach (WT_I18N::installed_languages() as $lang=>$name) {
 				$submenu=new WT_Menu($name, get_query_url(array('lang'=>$lang), '&amp;'), 'menu-language-'.$lang);

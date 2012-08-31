@@ -64,7 +64,7 @@ class WT_Date_Calendar {
 		}
 
 		// Construct from an equivalent xxxxDate object
-		if ($this->CALENDAR_ESCAPE()==$date->CALENDAR_ESCAPE()) {
+		if (get_class($this)==get_class($date)) {
 			// NOTE - can't copy whole object - need to be able to copy Hebrew to Jewish, etc.
 			$this->y=$date->y;
 			$this->m=$date->m;
@@ -81,7 +81,7 @@ class WT_Date_Calendar {
 			$jd=$date->YMDtoJD($today[0], $date->m, $date->d==0?$today[2]:$date->d);
 		} else {
 			// Complete date
-			$jd=floor(($date->maxJD+$date->minJD)/2);
+			$jd=(int)(($date->maxJD+$date->minJD)/2);
 		}
 		list($this->y, $this->m, $this->d)=$this->JDtoYMD($jd);
 		// New date has same precision as original date

@@ -40,6 +40,10 @@ $block=new $class_name;
 $controller=new WT_Controller_Ajax();
 $controller->pageHeader();
 
+if (array_key_exists('ckeditor', WT_Module::getActiveModules())) {
+	ckeditor_WT_Module::enableEditor($controller);
+}
+
 ?>
 <form name="block" method="post" action="block_edit.php?block_id=<?php echo $block_id; ?>" onsubmit="return modalDialogSubmitAjax(this);" >
 	<input type="hidden" name="save" value="1">

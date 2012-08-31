@@ -80,7 +80,7 @@ function get_place_list_loc($parent_id, $inactive=false) {
 			WT_DB::prepare(
 				"SELECT DISTINCT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon".
 				" FROM `##placelocation`".
-				" INNER JOIN `##places` ON `##placelocation`.pl_place=`##places`.p_place AND `##placelocation`.pl_level=`##places`.p_level".
+				" INNER JOIN `##places` ON `##placelocation`.pl_place=`##places`.p_place".
 				" WHERE pl_parent_id=? ORDER BY pl_place"
 			)
 			->execute(array($parent_id))
@@ -91,7 +91,6 @@ function get_place_list_loc($parent_id, $inactive=false) {
 	foreach ($rows as $row) {
 		$placelist[]=array('place_id'=>$row->pl_id, 'place'=>$row->pl_place, 'lati'=>$row->pl_lati, 'long'=>$row->pl_long, 'zoom'=>$row->pl_zoom, 'icon'=>$row->pl_icon);
 	}
-	uasort($placelist, 'placesort');
 	return $placelist;
 }
 
@@ -140,13 +139,9 @@ function findFiles($path) {
 	}
 }
 
-if (!WT_USER_IS_ADMIN) {
-	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.'admin.php');
-	exit;
-}
-
-global $GOOGLEMAP_MAX_ZOOM;
-
+$controller=new WT_Controller_Base();
+$controller->requireAdminLogin();
+	
 if ($action=='ExportFile' && WT_USER_IS_ADMIN) {
 	$tmp = place_id_to_hierarchy($parent);
 	$maxLevel = getHighestLevel();
@@ -170,9 +165,9 @@ if ($action=='ExportFile' && WT_USER_IS_ADMIN) {
 	exit;
 }
 
-$controller=new WT_Controller_Base();
-$controller->setPageTitle(WT_I18N::translate('Google Maps™'));
-$controller->pageHeader();
+$controller
+	->setPageTitle(WT_I18N::translate('Google Maps™'))
+	->pageHeader();
 
 ?>
 <table id="gm_config">
@@ -531,12 +526,7 @@ if ($action=='DeleteRecord') {
 }
 
 ?>
-<script type="text/javascript">
-<!--
-function showchanges() {
-	window.location = '<?php echo basename($_SERVER['REQUEST_URI']); ?>&show_changes=yes';
-}
-
+<script>
 function updateList(inactive) {
 	window.location.href='<?php if (strstrb($_SERVER['REQUEST_URI'], '&inactive')) { $uri=strstrb($_SERVER['REQUEST_URI'], '&inactive');} else { $uri=$_SERVER['REQUEST_URI']; } echo $uri, '&inactive='; ?>'+inactive;
 }
@@ -557,8 +547,6 @@ function delete_place(placeid) {
 		window.location = '<?php echo $_SERVER['REQUEST_URI']; ?>&action=DeleteRecord&deleteRecord=' + placeid;
 	}
 }
-
-//-->
 </script>
 <?php
 echo '<div id="gm_breadcrumb">';
@@ -612,12 +600,10 @@ foreach ($placelist as $place) {
 	echo '<td>';
 	if (($place['icon'] == NULL) || ($place['icon'] == '')) {
 		if (($place['lati'] == NULL) || ($place['long'] == NULL) || (($place['lati'] == '0') && ($place['long'] == '0'))) {
-			echo '&nbsp;';
-			echo '<img src="http://labs.google.com/ridefinder/images/mm_20_yellow.png">';
+			echo '<img src="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/mm_20_yellow.png">';
 		}
 		else {
-			echo '&nbsp;';
-			echo '<img src="http://labs.google.com/ridefinder/images/mm_20_red.png">';
+			echo '<img src="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/images/mm_20_red.png">';
 		}
 	} else {
 		echo '<img src="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/', $place['icon'], '" width="25" height="15">';

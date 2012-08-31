@@ -30,8 +30,9 @@
 define('WT_SCRIPT_NAME', 'individual.php');
 require './includes/session.php';
 $controller=new WT_Controller_Individual();
-$controller->addExternalJavaScript(WT_STATIC_URL.'js/jquery/jquery.cookie.js');// This page uses jquery.cookie.js to record the sidebar state
-$controller->addInlineJavaScript('var catch_and_ignore; function paste_id(value) {catch_and_ignore = value;}'); // For the "find" links
+$controller
+	->addExternalJavascript(WT_STATIC_URL.'js/jquery/jquery.cookie.js') // We use this to record the sidebar state
+	->addInlineJavascript('var catch_and_ignore; function paste_id(value) {catch_and_ignore = value;}'); // For the "find" links
 	
 if ($controller->record && $controller->record->canDisplayDetails()) {
 	if (safe_GET('action')=='ajax') {
@@ -99,7 +100,7 @@ $callbacks='';
 foreach ($controller->tabs as $tab) {
   $callbacks.=$tab->getJSCallback()."\n";
 }
-$controller->addInlineJavaScript('
+$controller->addInlineJavascript('
 	jQuery("#tabs").tabs({
 		spinner: \'<i class="icon-loading-small"></i>\',
 		cache: true
@@ -164,7 +165,6 @@ $controller->addInlineJavaScript('
 	function show_gedcom_record() {
 		var recwin=window.open("gedrecord.php?pid='. $controller->record->getXref(). '", "_blank", edit_window_specs);
 	}	
-	function showchanges(){window.location="'.$controller->record->getRawUrl().'";}
 
 	jQuery("#header_accordion1").accordion({
 		active: 0,
@@ -195,10 +195,10 @@ if ($controller->record->canDisplayDetails()) {
 	echo '<span class="header_age">';
 	if ($bdate->isOK() && !$controller->record->isDead()) {
 		// If living display age
-		echo WT_Gedcom_Tag::getLabelValue('AGE', get_age_at_event(WT_Date::GetAgeGedcom($bdate), true), '<span>');
+		echo WT_Gedcom_Tag::getLabelValue('AGE', get_age_at_event(WT_Date::GetAgeGedcom($bdate), true), '', 'span');
 	} elseif ($bdate->isOK() && $ddate->isOK()) {
 		// If dead, show age at death
-		echo WT_Gedcom_Tag::getLabelValue('AGE', get_age_at_event(WT_Date::GetAgeGedcom($bdate, $ddate), false), '<span>');
+		echo WT_Gedcom_Tag::getLabelValue('AGE', get_age_at_event(WT_Date::GetAgeGedcom($bdate, $ddate), false), '', 'span');
 	}
 	echo '</span>';
 	// Display summary birth/death info.

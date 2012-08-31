@@ -75,8 +75,8 @@ function get_p_id($place) {
 		$placelist = create_possible_place_names($par[$i], $i+1);
 		foreach ($placelist as $key => $placename) {
 			$pl_id=
-				WT_DB::prepare("SELECT p_id FROM `##places` WHERE p_level=? AND p_parent_id=? AND p_file=? AND p_place LIKE ? ORDER BY p_place")
-				->execute(array($i, $place_id, WT_GED_ID, $placename))
+				WT_DB::prepare("SELECT p_id FROM `##places` WHERE p_parent_id=? AND p_file=? AND p_place LIKE ? ORDER BY p_place")
+				->execute(array($place_id, WT_GED_ID, $placename))
 				->fetchOne();
 			if (!empty($pl_id)) break;
 		}
@@ -124,7 +124,7 @@ function set_levelm($level, $parent) {
 }
 
 function create_map($placelevels) {
-	$level = safe_GET('level');
+	global $level;
 	global $GOOGLEMAP_PH_XSIZE, $GOOGLEMAP_PH_YSIZE, $GOOGLEMAP_MAP_TYPE, $levelm, $plzoom, $controller;
 	
 	// *** ENABLE STREETVIEW *** (boolean) =========================================================
@@ -149,7 +149,7 @@ function create_map($placelevels) {
 		echo '<div id="place_map" style="border:1px solid gray; width:', $GOOGLEMAP_PH_XSIZE, 'px; height:', $GOOGLEMAP_PH_YSIZE, 'px; ';	
 	}
 	echo "\"><i class=\"icon-loading-large\"></i></div>";
-	echo '<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>';
+	echo '<script src="', WT_GM_SCRIPT, '"></script>';
 	echo '</td>';
 	
 	$plzoom	= $latlng['pl_zoom'];		// Map zoom level
@@ -187,7 +187,7 @@ function create_map($placelevels) {
 	echo '<td style="margin-left:15px; float:right; ">';
 
 	if ($STREETVIEW) {
-		$controller->addInlineJavaScript('
+		$controller->addInlineJavascript('
 			function update_sv_params(placeid) {
 				var svlati = document.getElementById("sv_latiText").value.slice(0, -1);
 				var svlong = document.getElementById("sv_longText").value.slice(0, -1);
@@ -316,9 +316,9 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 		echo 'icon_type.shadowSize = google.maps.Size(37, 34);';
 		echo 'var point = new google.maps.LatLng(0, 0);';
 		if ($lastlevel)
-			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?level=", $level, $linklevels, "'><br>";
+			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?action=find", $linklevels, "'><br>";
 		else {
-			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?level=", ($level+1), $linklevels, "&amp;parent[{$level}]=";
+			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?action=find", $linklevels, "&amp;parent[{$level}]=";
 			if ($place2['place'] == "Unknown") echo "'><br>";
 			else echo addslashes($place2['place']), "'><br>";
 		}
@@ -396,9 +396,9 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 		}
 		echo "var point = new google.maps.LatLng({$lati}, {$long});";
 		if ($lastlevel) {
-			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?level=", $level, $linklevels, "'><br>";
+			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?action=find", $linklevels, "'><br>";
 		} else {
-			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?level=", ($level+1), $linklevels, "&amp;parent[{$level}]=";
+			echo "var marker = createMarker(point, \"<div class='iwstyle' style='width: 250px;'><a href='?action=find", $linklevels, "&amp;parent[{$level}]=";
 			if ($place2['place'] == 'Unknown') {
 				echo "'><br>";
 			} else {
@@ -461,7 +461,7 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names) {
 	global $GOOGLEMAP_MAP_TYPE, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER, $plzoom, $controller;
 
-	$controller->addInlineJavaScript('
+	$controller->addInlineJavascript('
 		jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="'.WT_STATIC_URL.WT_MODULES_DIR.'googlemap/css/wt_v3_googlemap.css" />\');
 		var numMarkers = "'.$numfound.'";
 		var mapLevel   = "'.$level.   '";
@@ -526,7 +526,7 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 					new google.maps.Size(20, 34),
 					new google.maps.Point(0,0),
 					new google.maps.Point(9, 34));
-					var iconShadow = new google.maps.MarkerImage("http://www.google.com/mapfiles/shadow50.png",
+					var iconShadow = new google.maps.MarkerImage("https://www.google.com/mapfiles/shadow50.png",
 					new google.maps.Size(37, 34),
 					new google.maps.Point(0,0),
 					new google.maps.Point(9, 34));
@@ -537,11 +537,11 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 				//	type: "poly"
 				//	};
 			} else {
-				var iconImage = new google.maps.MarkerImage("http://maps.google.com/mapfiles/marker.png",
+				var iconImage = new google.maps.MarkerImage("https://maps.google.com/mapfiles/marker.png",
 				new google.maps.Size(20, 34),
 				new google.maps.Point(0,0),
 				new google.maps.Point(9, 34));
-				var iconShadow = new google.maps.MarkerImage("http://www.google.com/mapfiles/shadow50.png",
+				var iconShadow = new google.maps.MarkerImage("https://www.google.com/mapfiles/shadow50.png",
 				new google.maps.Size(37, 34),
 				new google.maps.Point(0,0),
 				new google.maps.Point(9, 34));
@@ -589,14 +589,14 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 	$numls = count($parent)-1;
 	$levelo=check_were_am_i($numls, $levelm);
 	if ($numfound<2 && ($level==1 || !(isset($levelo[($level-1)])))) {
-		$controller->addInlineJavaScript('map.maxZoom=6;');
+		$controller->addInlineJavascript('map.maxZoom=6;');
 		// echo "zoomlevel = map.getBoundsZoomLevel(bounds);\n";
 		// echo " map.setCenter(new google.maps.LatLng(0, 0), zoomlevel+5);\n";
 	} else if ($numfound<2 && !isset($levelo[($level-2)])) {
 		// echo "zoomlevel = map.getBoundsZoomLevel(bounds);\n";
 		// echo " map.setCenter(new google.maps.LatLng(0, 0), zoomlevel+6);\n";
 	} else if ($level==2) {
-		$controller->addInlineJavaScript('map.maxZoom=10');
+		$controller->addInlineJavascript('map.maxZoom=10;');
 		// echo "zoomlevel = map.getBoundsZoomLevel(bounds);\n";
 		// echo " map.setCenter(new google.maps.LatLng(0, 0), zoomlevel+8);\n";
 	} else if ($numfound<2 && $level>1) {
@@ -662,5 +662,5 @@ function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $pla
 			print_gm_markers($place, $level, $parent, $place['place_id'], $linklevels, $placelevels);
 		}
 	}
-	$controller->addInlineJavaScript(ob_get_clean());
+	$controller->addInlineJavascript(ob_get_clean());
 }

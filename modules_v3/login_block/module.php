@@ -44,7 +44,7 @@ class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 		global $controller;
 		$id=$this->getName().$block_id;
 		$class=$this->getName().'_block';
-		$controller->addInlineJavaScript('
+		$controller->addInlineJavascript('
 				jQuery("#new_passwd").hide();
 				jQuery("#passwd_click").click(function() {
 					jQuery("#new_passwd").slideToggle(100, function() {
@@ -94,7 +94,7 @@ class login_block_WT_Module extends WT_Module implements WT_Module_Block {
 		
 		// hidden New Password block
 		$content.= '<div id="new_passwd">
-			<form id="new_passwd_form" name="new_passwd_form" action="'.WT_LOGIN_URL.'" method="post" onsubmit="t = new Date(); document.new_passwd_form.time.value=t.toUTCString(); return checkform(this);">
+			<form id="new_passwd_form" name="new_passwd_form" action="'.WT_LOGIN_URL.'" method="post">
 			<input type="hidden" name="time" value="">
 			<input type="hidden" name="action" value="requestpw">
 			<h4>'. WT_I18N::translate('Lost password request').'</h4>

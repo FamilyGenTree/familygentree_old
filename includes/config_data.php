@@ -247,9 +247,6 @@ $level2_tags=array(
 		'ORDN',
 		'RETI',
 	),
-	'CAUS'=>array(
-		'DEAT',
-	),
 	'CALN'=>array(
 		'REPO',
 	),
@@ -305,6 +302,10 @@ $level2_tags=array(
 		'SLGS',
 		'WILL',
 		'_TODO',
+	),
+	'AGE'=>array(
+		'CENS',
+		'DEAT',
 	),
 	'TEMP'=>array(
 		'BAPL',
@@ -384,6 +385,9 @@ $level2_tags=array(
 		'PROP',
 		'RESI',
 	),
+	'CAUS'=>array(
+		'DEAT',
+	),
 	'PHON'=>array(
 		'OCCU',
 		'RESI',
@@ -399,10 +403,6 @@ $level2_tags=array(
 	'EMAIL'=>array(
 		'OCCU',
 		'RESI',
-	),
-	'AGE'=>array(
-		'CENS',
-		'DEAT',
 	),
 	'HUSB'=>array(
 		'MARR',

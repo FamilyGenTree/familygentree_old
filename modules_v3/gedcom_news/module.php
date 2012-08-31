@@ -30,7 +30,7 @@ if (!defined('WT_WEBTREES')) {
 
 // Create tables, if not already present
 try {
-	WT_DB::updateSchema(WT_ROOT.WT_MODULES_DIR.'gedcom_news/db_schema/', 'NB_SCHEMA_VERSION', 2);
+	WT_DB::updateSchema(WT_ROOT.WT_MODULES_DIR.'gedcom_news/db_schema/', 'NB_SCHEMA_VERSION', 3);
 } catch (PDOException $ex) {
 	// The schema update scripts should never fail.  If they do, there is no clean recovery.
 	die($ex);
@@ -104,7 +104,7 @@ class gedcom_news_WT_Module extends WT_Module implements WT_Module_Block {
 				$c++;
 			}
 			if ($limit=='date') {
-				if (floor(($td - $news['date']) / 86400) > $flag) {
+				if ((int)(($td - $news['date']) / 86400) > $flag) {
 					break;
 				}
 			}
@@ -162,7 +162,6 @@ class gedcom_news_WT_Module extends WT_Module implements WT_Module_Block {
 		if (safe_POST_bool('save')) {
 			set_block_setting($block_id, 'limit', safe_POST('limit'));
 			set_block_setting($block_id, 'flag',  safe_POST('flag'));
-			echo WT_JS_START, 'window.opener.location.href=window.opener.location.href;window.close();', WT_JS_END;
 			exit;
 		}
 

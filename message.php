@@ -48,7 +48,7 @@ if ((!$to_user_id || $to=='all' || $to=='last_6mo' || $to=='never_logged') && !W
 	// TODO, what if we have a user called "all" or "last_6mo" or "never_logged" ???
 	Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->addMessage(WT_I18N::translate('Message was not sent'));
 	$controller->pageHeader();
-	$controller->addInlineJavaScript('window.opener.location.reload(); window.close();');
+	$controller->addInlineJavascript('window.opener.location.reload(); window.close();');
 	exit;
 }
 
@@ -100,7 +100,7 @@ switch ($action) {
 case 'compose':
 	$controller
 		->pageHeader()
-		->addInlineJavaScript('
+		->addInlineJavascript('
 		function checkForm(frm) {
 			if (frm.subject.value=="") {
 				alert("'.WT_I18N::translate('Please enter a message subject.').'");
@@ -201,9 +201,9 @@ case 'send':
 			AddToLog('Unable to send message.  FROM:'.$from.' TO:'.$to.' (failed to send)', 'error');
 		}
 		$i++;
-		$controller
-			->pageHeader()
-			->addInlineJavaScript('window.opener.location.reload(); window.close();');
 	}
+	$controller
+		->pageHeader()
+		->addInlineJavascript('window.opener.location.reload(); window.close();');
 	break;
 }

@@ -49,10 +49,7 @@ fetch_latest_version();
 // We generate individual blocks using AJAX
 if ($action=='ajax') {
 	$controller=new WT_Controller_Ajax();
-	$controller
-		->pageHeader()
-		->addExternalJavaScript(WT_JQUERY_URL)
-		->addExternalJavaScript(WT_JQUERYUI_URL);
+	$controller->pageHeader();
 
 	// Check we're displaying an allowable block.
 	$block_id=safe_GET('block_id');
@@ -86,7 +83,7 @@ $controller
 	->setMetaRobots('index,follow')
 	->pageHeader()
 	// By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
-	->addInlineJavaScript('jQuery.ajaxSetup({cache:true});');
+	->addInlineJavascript('jQuery.ajaxSetup({cache:true});');
 
 if (WT_USE_LIGHTBOX) {
 	$album = new lightbox_WT_Module();
@@ -114,7 +111,7 @@ if ($blocks['main']) {
 		} else {
 			// Load the block asynchronously
 			echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-			$controller->addInlineJavaScript(
+			$controller->addInlineJavascript(
 				'jQuery("#block_'.$block_id.'").load("index.php?ctype='.$ctype.'&action=ajax&block_id='.$block_id.'");'
 			);
 		}
@@ -136,7 +133,7 @@ if ($blocks['side']) {
 		} else {
 			// Load the block asynchronously
 			echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-			$controller->addInlineJavaScript(
+			$controller->addInlineJavascript(
 				'jQuery("#block_'.$block_id.'").load("index.php?ctype='.$ctype.'&action=ajax&block_id='.$block_id.'");'
 			);
 		}

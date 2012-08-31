@@ -70,9 +70,6 @@ class individuals_WT_Module extends WT_Module implements WT_Module_Sidebar {
 		$surname =safe_GET('surname', '[^<>&%{};]*'); // All indis with this surname.  NB - allow ' and "
 		$search   =safe_GET('search');
 
-		$last = array('alpha'=>$alpha, 'surname'=>$surname, 'search'=>$search);
-		$_SESSION['sb_individuals_last'] = $last;
-
 		if ($search) {
 			return $this->search($search);
 		} elseif ($alpha=='@' || $alpha==',' || $surname) {
@@ -91,7 +88,7 @@ class individuals_WT_Module extends WT_Module implements WT_Module_Sidebar {
 		// Fetch a list of the initial letters of all surnames in the database
 		$initials=WT_Query_Name::surnameAlpha(true, false, WT_GED_ID);
 
-		$controller->addInlineJavaScript('
+		$controller->addInlineJavascript('
 			var loadedNames = new Array();
 
 			function isearchQ() {
@@ -141,10 +138,7 @@ class individuals_WT_Module extends WT_Module implements WT_Module_Sidebar {
 		');
 
 		
-		$out='
-		<form method="post" action="module.php?mod='.$this->getName().'&amp;mod_action=ajax" onsubmit="return false;">
-		<input type="search" name="sb_indi_name" id="sb_indi_name" placeholder="'.WT_I18N::translate('Search').'">
-		<p>';
+		$out='<form method="post" action="module.php?mod='.$this->getName().'&amp;mod_action=ajax" onsubmit="return false;"><input type="search" name="sb_indi_name" id="sb_indi_name" placeholder="'.WT_I18N::translate('Search').'"><p>';
 		foreach ($initials as $letter=>$count) {
 			switch ($letter) {
 				case '@':
@@ -166,21 +160,6 @@ class individuals_WT_Module extends WT_Module implements WT_Module_Sidebar {
 
 		$out .= '</p>';
 		$out .= '<div id="sb_indi_content">';
-
-		if (isset($_SESSION['sb_individuals_last'])) {
-			$alpha   = $_SESSION['sb_individuals_last']['alpha'];
-			$search  = $_SESSION['sb_individuals_last']['search'];
-			$surname = $_SESSION['sb_individuals_last']['surname'];
-			
-			if ($search) {
-				$out.=$this->search($search);
-			} elseif ($alpha=='@' || $alpha==',' || $surname) {
-				$out.=$this->getSurnameIndis($alpha, $surname);
-			} elseif ($alpha) {
-				$out.=$this->getAlphaSurnames($alpha, $surname);
-			}
-		}
-
 		$out .= '</div></form>';
 		return $out;
 	}

@@ -1,5 +1,5 @@
-LANGUAGES_BUILD=ar bg bs ca cs da de en_GB en_US es et fa fi fr he hr hu is it lt nb nl pl pt ru sk sl sv tr tt vi
-LANGUAGES_EXTRA=af dv el en_AU fo fr_CA gl id ja ka ne nn oc pt_BR ro sr sr@Latn ta zh
+LANGUAGES_BUILD=ar bg bs ca cs da de en_GB en_US es et fa fi fr he hr hu is it lt nb nl nn pl pt ru sk sl sv tr tt uk vi
+LANGUAGES_EXTRA=af dv el en_AU fo fr_CA gl id ja lv ka mr ms ne oc pt_BR ro sr sr@Latn ta zh
 # Note that we also have translations for mi (maori) and yi (yiddish), although Zend Framework v1 does not include support for these.
 PO_DIR=po
 MO_DIR=mo
@@ -10,6 +10,15 @@ SVN_VERSION=$(shell svnversion .. | tr -d 'M')
 WT_VERSION=$(shell grep "'WT_VERSION'" ../includes/session.php | cut -d "'" -f 4)
 WT_VERSION_RELEASE=$(shell grep "'WT_VERSION_RELEASE'" ../includes/session.php | cut -d "'" -f 4)
 BUILD_VERSION=$(if $(WT_VERSION_RELEASE),$(SVN_VERSION),$(WT_VERSION)$(WT_VERSION_RELEASE))
+
+# Location of google's "closure" tools for compressing CSS and JS
+CLOSURE_JS=~/bin/compiler.jar
+CLOSURE_CSS=~/bin/closure-stylesheets.jar
+
+# Use maximum compression
+GZIP=gzip -9
+
+#.PHONY: clean dist-clean default webtrees webtrees-static-$(WT_VERSION)
 
 ################################################################################
 # Create a release from this SVN working copy
@@ -24,8 +33,6 @@ default: clean webtrees
 	if test -d ~/.gnupg; then gpg --armor --sign --detach-sig webtrees-$(BUILD_VERSION).zip; fi
 	# If we have a public html area, publish the files
 	if test -d ~/public_html/build; then cp language*.zip webtrees*.zip ~/public_html/build/ && echo ${BUILD_VERSION} > ~/public_html/build/latest-svn.txt; fi
-	# If we have a public html area, clean up old files
-	if test -d ~/public_html/build; then find ~/public_html/build -ctime +7 -exec rm -f {} \; ; fi
 	# Create an updated message catalog
 	mkdir -p webtrees_tmp
 	rm -Rf webtrees_tmp/*
@@ -49,7 +56,7 @@ dist-clean: clean
 # Create a release from this SVN working copy
 ################################################################################
 webtrees: $(PO_DIR) $(MO_DIR)
-	svn export .. $@
+	svn export --quiet .. $@
 	bzr revert $(PO_DIR)
 	bzr update $(PO_DIR)
 	make $(MO_FILES)
@@ -57,8 +64,7 @@ webtrees: $(PO_DIR) $(MO_DIR)
 	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVN_VERSION)')/" $@/includes/session.php
 	# Exclude some unused Zend Framework components to reduce the size of the distribution
 	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
-	# Exclude some unused locale data to reduce the size of the distribution
-	rm -f $@/library/Zend/Locale/Data/{aa,ak,am,as,az,be,bn,bo,byn,cch,cop,cy,dz,ee,eo,eu,fil,fur,ga,gaa,gez,gsw,gu,gv,ha,haw,hi,hy,ia,ig,ii,in,iu,iw,ln,lo,lv,mk,ml,mn,mo,mr,mt,my,om,or,pa,ps,rw,sa,se,sh,si,so,sq,ss,st,sw,syr,te,tg,th,ti,tl,tn,to,trv,ts,u,ve,w,x,y,zu}*.xml
+	# Exclude the build scripts from the distribution
 	rm -Rf $@/build
 	# Check for syntax errors
 	if find $@ -name '*.php' -exec php -l {} \; | grep -v "No syntax errors"; then false; else true; fi
@@ -100,38 +106,25 @@ $(MO_DIR)/%.mo: $(PO_DIR)/%.po
 	msgfmt --output=$@ $<
 
 ################################################################################
-# Extract the static files for use on a content-delivery-network.
-# Minify the CSS and JS files, if a suitable tool is available.
+# Extract and minify the static files for use on a content-delivery-network.
 ################################################################################
-webtrees-static-$(WT_VERSION):
-	rm -Rf $@
+webtrees-static-$(WT_VERSION): clean
 	mkdir $@
 	cd .. && find . "(" -name "*.css" -o -name "*.gif" -o -name "*.html" -o -name "*.ico" -o -name "*.jpg" -o -name "*.js" -o -name "*.mp3" -o -name "*.png" -o -name "*.swf" ")" -print0 | xargs -0 tar cf - | (cd build/$@ && tar xfp -)
-	# Minify CSS using the YUI compressor
-	if [ -f ~/bin/yuicompressor-2.4.6.jar ]; then find $@ -name "*.css" | while read FILE; do java -jar ~/bin/yuicompressor-2.4.6.jar --charset UTF-8 --verbose -o tmp.css "$$FILE" && mv tmp.css "$$FILE"; done; fi
-	# Minify JS using Google's closure compiler
-	if [ -f ~/bin/compiler.jar ]; then find $@ -name "*.js" | while read FILE; do java -jar ~/bin/compiler.jar --js "$$FILE" --js_output_file tmp.js && mv tmp.js "$$FILE"; done; fi
-
-################################################################################
-# Create a second copy of the static files, with compressed CSS and JS,
-# for servers that require two versions, such as Amazon S3
-################################################################################
-webtrees-static-$(WT_VERSION)z: webtrees-static-$(WT_VERSION)
-	cp -pR $< $@
-	find $@ "(" -name "*.js" -o -name "*.css" ")" -exec gzip {} \; -exec mv {}.gz {} \;
-
-################################################################################
-# Create .ZIP archives of the static files, for use with a CDN.
-################################################################################
-static: webtrees-static-$(WT_VERSION)z.zip webtrees-static-$(WT_VERSION).zip
+	# Minify CSS
+	find $@ -name "*.css" -exec java -jar $(CLOSURE_CSS) --output-file "{}.tmp" "{}" \; -exec mv "{}.tmp" "{}" \;
+	# Minify JS
+	find $@ -name "*.js" -exec java -jar $(CLOSURE_JS) --js "{}" --js_output_file "{}.tmp" \; -exec mv "{}.tmp" "{}" \;
 
 ################################################################################
 # Upload the static files to an S3 bucket.
-# Explicitly set the mime type for files that we have compressed.
-# Set the bucket using, for example, "export S3_BUCKET=my_bucket".
+# Pre-compress CSS and JS files using GZIP, and set the Content-Encoding header.
+# Sprecify the bucket using "S3_BUCKET=<<my_bucket>> make static-S3".
 ################################################################################
-static-S3: webtrees-static-$(WT_VERSION) webtrees-static-$(WT_VERSION)z
-	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type webtrees-static-$(WT_VERSION) s3://$(S3_BUCKET)/
-	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rexclude=(css|js)$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/
-	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --mime-type=text/css --add-header=Content-Encoding:gzip "--rinclude=css$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/
-	s3cmd sync --acl-private --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --mime-type=application/javascript --add-header=Content-Encoding:gzip "--rinclude=js$$" webtrees-static-$(WT_VERSION)z s3://$(S3_BUCKET)/
+static-S3: webtrees-static-$(WT_VERSION)
+	# Compress CSS and JS files - but keep the names the same
+	find $< "(" -name "*.js" -o -name "*.css" ")" -exec $(GZIP) {} \; -exec mv {}.gz {} \;
+	# Upload uncompressed files
+	s3cmd sync --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rexclude=(css|js)$$" $< s3://$(S3_BUCKET)/
+	# Upload compressed files
+	s3cmd sync --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rinclude=(css|js)$$" --add-header=Content-Encoding:gzip $< s3://$(S3_BUCKET)/
