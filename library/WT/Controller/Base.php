@@ -213,7 +213,7 @@ class WT_Controller_Base {
 	public function pageHeader() {
 		// Import global variables into the local scope, for the theme's header.php
 		global $BROWSERTYPE, $SEARCH_SPIDER, $TEXT_DIRECTION, $REQUIRE_AUTHENTICATION;
-		global $stylesheet, $headerfile, $view;
+		global $headerfile, $view;
 
 		// The title often includes the names of records, which may have markup
 		// that cannot be used in the page title.
@@ -222,10 +222,12 @@ class WT_Controller_Base {
 		// Initialise variables for the theme's header.php
 		$LINK_CANONICAL  =$this->canonical_url;
 		$META_ROBOTS     =$this->meta_robots;
-		$GEDCOM_TITLE    =get_gedcom_setting(WT_GED_ID, 'title');
-		$META_DESCRIPTION=get_gedcom_setting(WT_GED_ID, 'META_DESCRIPTION', $GEDCOM_TITLE);
+		$META_DESCRIPTION=WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_DESCRIPTION') : '';
+		if (!$META_DESCRIPTION) {
+			$META_DESCRIPTION=WT_TREE_TITLE;
+		}
 		$META_GENERATOR  =WT_WEBTREES.'-'.WT_VERSION_TEXT.' - '.WT_WEBTREES_URL;
-		$META_TITLE      =get_gedcom_setting(WT_GED_ID, 'META_TITLE');
+		$META_TITLE      =WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_TITLE') : '';
 		if ($META_TITLE) {
 			$title.=' - '.$META_TITLE;
 		}
@@ -245,7 +247,7 @@ class WT_Controller_Base {
 			var browserType    = "'.$BROWSERTYPE.'";
 			var WT_SCRIPT_NAME = "'.WT_SCRIPT_NAME.'";
 			var WT_LOCALE      = "'.WT_LOCALE.'";
-			var accesstime     = '.WT_DB::prepare("SELECT UNIX_TIMESTAMP(NOW())")->fetchOne().';
+			var accesstime     = '.WT_TIMESTAMP.';
 		', self::JS_PRIORITY_HIGH);
 	
 		// Temporary fix for access to main menu hover elements on android touch devices
@@ -285,7 +287,9 @@ class WT_Controller_Base {
 	protected function pageFooter() {
 		global $footerfile, $TEXT_DIRECTION, $view;
 
-		require WT_ROOT.$footerfile;
+		if (WT_GED_ID) {
+			require WT_ROOT.$footerfile;
+		}
 
 		if (WT_DEBUG_SQL) {
 			echo WT_DB::getQueryLog();

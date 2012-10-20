@@ -118,10 +118,10 @@ function move_file($src, $dest) {
 */
 function move_files($path, $protect) {
 	global $MEDIA_FIREWALL_THUMBS, $starttime, $operation_count;
-	$timelimit=get_site_setting('MAX_EXECUTION_TIME');
+	$timelimit=WT_Site::preference('MAX_EXECUTION_TIME');
 	if ($dir=@opendir($path)) {
 		while (($element=readdir($dir))!== false) {
-			$exectime = time() - $starttime;
+			$exectime = WT_TIMESTAMP - $starttime;
 			if (($timelimit != 0) && ($timelimit - $exectime) < 3) {
 				// bail now to ensure nothing is lost
 				echo "<div class=\"error\">".WT_I18N::translate('The execution time limit was reached.  Try the command again to move the rest of the files.')."</div>";
@@ -180,10 +180,10 @@ function set_perms($path) {
 	if (strpos($path."/", $MEDIA_FIREWALL_ROOTDIR.$MEDIA_DIRECTORY)!==0 && strpos($path."/", $MEDIA_DIRECTORY)!==0) {
 		return false;
 	}
-	$timelimit=get_site_setting('MAX_EXECUTION_TIME');
+	$timelimit=WT_Site::preference('MAX_EXECUTION_TIME');
 	if ($dir=@opendir($path)) {
 		while (($element=readdir($dir))!== false) {
-			$exectime = time() - $starttime;
+			$exectime = WT_TIMESTAMP - $starttime;
 			if (($timelimit != 0) && ($timelimit - $exectime) < 3) {
 				// bail now to ensure nothing is lost
 				echo "<div class=\"error\">".WT_I18N::translate('The execution time limit was reached.  Try the command again on a smaller directory.')."</div>";
@@ -220,7 +220,7 @@ function set_perms($path) {
 }
 
 // global var used by recursive functions
-$starttime = time();
+$starttime = WT_TIMESTAMP;
 $operation_count = 0;
 
 // TODO Determine source and validation requirements for these variables

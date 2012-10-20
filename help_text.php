@@ -706,7 +706,7 @@ case 'MEDIA_EXTERNAL':
 
 case 'MEDIA_FIREWALL_ROOTDIR':
 	$title=WT_I18N::translate('Media firewall root directory');
-	$text=WT_I18N::translate('Directory in which the protected Media directory can be created.  When this field is empty, the <b>%s</b> directory will be used.', get_site_setting('INDEX_DIRECTORY'));
+	$text=WT_I18N::translate('Directory in which the protected Media directory can be created.  When this field is empty, the <b>%s</b> directory will be used.', WT_Site::preference('INDEX_DIRECTORY'));
 	break;
 
 case 'MEDIA_FIREWALL_THUMBS':
@@ -979,11 +979,6 @@ case 'SHOW_REGISTER_CAUTION':
 	$text=WT_I18N::translate('When set to <b>Yes</b>, the following message will appear above the input fields on the «Request new user account» page:<div class="list_value_wrap"><div class="largeError">Notice:</div><div class="error">By completing and submitting this form, you agree:<ul><li>to protect the privacy of living people listed on our site;</li><li>and in the text box below, to explain to whom you are related, or to provide us with information on someone who should be listed on our site.</li></ul></div></div>');
 	break;
 
-case 'SHOW_RELATIVES_EVENTS':
-	$title=WT_I18N::translate('Show events of close relatives on individual page');
-	$text=WT_I18N::translate('Births, marriages, and deaths of relatives are important events in one\'s life. This option controls whether or not to show these events on the <i>Personal facts and details</i> tab on the Individual page.<br /><br />The events affected by this option are:<ul><li>Death of spouse</li><li>Birth and death of children</li><li>Death of parents</li><li>Birth and death of siblings</li><li>Death of grand-parents</li><li>Birth and death of parents\' siblings</li></ul>');
-	break;
-
 case 'SHOW_STATS':
 	$title=WT_I18N::translate('Execution statistics');
 	$text=WT_I18N::translate('Show runtime statistics and database queries at the bottom of every page.');
@@ -1009,19 +1004,9 @@ case 'SOUR_FACTS_UNIQUE':
 	$text=WT_I18N::translate('This is the list of GEDCOM facts that your users can only add <u>once</u> to sources.  For example, if TITL is in this list, users will not be able to add more than one TITL record to a source.  Fact names that appear in this list must not also appear in the <i>Source Add Facts</i> list.');
 	break;
 
-case 'SUBLIST_TRIGGER_F':
-	$title=WT_I18N::translate('Maximum number of surnames on family list');
-	$text=WT_I18N::translate('Long lists of families with the same name can be broken into smaller sub-lists according to the first letter of the given name.<br /><br />This option determines when sub-listing of family names will occur.  To disable sub-listing completely, set this option to zero.');
-	break;
-
 case 'SUBLIST_TRIGGER_I':
 	$title=WT_I18N::translate('Maximum number of surnames on individual list');
 	$text=WT_I18N::translate('Long lists of persons with the same surname can be broken into smaller sub-lists according to the first letter of the individual\'s given name.<br /><br />This option determines when sub-listing of surnames will occur.  To disable sub-listing completely, set this option to zero.');
-	break;
-
-case 'SURNAME_LIST_STYLE':
-	$title=WT_I18N::translate('Surname list style');
-	$text=WT_I18N::translate('<p>Lists of surnames, as they appear in the Top 10 Surnames block, the Individual lists, and the Family lists, can be shown in different styles.</p><dl><dt>Table</dt><dd>In this style, the surnames are shown in a table that can be sorted either by surname or by count.</dd><dt>Tag cloud</dt><dd>In this style, the surnames are shown in a list, and the font size used for each name depends on the number of occurrences of that name in the database.  The list is not sortable.</dd><dt>List</dt><dd>This is a simple list of names, with a count of each name, in a tabulated format of up to four columns</dd></dl>');
 	break;
 
 case 'SURNAME_TRADITION':
@@ -1029,29 +1014,52 @@ case 'SURNAME_TRADITION':
 	$text=
 		WT_I18N::translate('When you add a new family member, a default surname can be provided.  This surname will depend on the local tradition.').
 		'<br /><br /><dl><dt>'.
+		/* I18N: https://en.wikipedia.org/wiki/Patrilineal (a system where children take their father’s surname */
+		WT_I18N::translate('patrilineal').
+		'</dt><dd>'.
+		/* I18N: In the patrilineal surname tradition, ... */
+		WT_I18N::translate('Children take their father’s surname.').
+		'</dd></dl><dl><dt>'.
+		/* I18N: https://en.wikipedia.org/wiki/Matrilineal (a system where children take their mother’s surname */
+		WT_I18N::translate('matrilineal').
+		'</dt><dd>'.
+		/* I18N: In the matrilineal surname tradition, ... */
+		WT_I18N::translate('Children take their mother’s surname.').
+		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'paternal').
 		'</dt><dd>'.
-		/* I18N: In the paternal surname tradition, ... */ WT_I18N::translate('All family members take the father\'s surname.').
+		WT_I18N::translate('Children take their father’s surname.') . '<br>' .
+		/* I18N: In the paternal surname tradition, ... */
+		WT_I18N::translate('Wives take their husband’s surname.').
 		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'Spanish').
 		'</dt><dd>'.
-		/* I18N: In the Spanish surname tradition, ... */ WT_I18N::translate('Children take one surname from the father and one surname from the mother.').
+		/* I18N: In the Spanish surname tradition, ... */
+		WT_I18N::translate('Children take one surname from the father and one surname from the mother.').
 		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'Portuguese').
 		'</dt><dd>'.
-		/* I18N: In the Portuguese surname tradition, ... */ WT_I18N::translate('Children take one surname from the mother and one surname from the father.').
+		/* I18N: In the Portuguese surname tradition, ... */
+		WT_I18N::translate('Children take one surname from the mother and one surname from the father.').
 		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'Icelandic').
 		'</dt><dd>'.
-		/* I18N: In the Icelandic surname tradition, ... */ WT_I18N::translate('Children take a surname based on their father\'s given name.').
+		/* I18N: In the Icelandic surname tradition, ... */
+		WT_I18N::translate('Children take a patronym instead of a surname.').
 		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'Polish').
 		'</dt><dd>'.
-		/* I18N: In the Polish surname tradition, ... */ WT_I18N::translate('All family members take the father\'s surname, but the suffix may change to indicate the person\'s gender.').
+		WT_I18N::translate('Children take their father’s surname.') . '<br>' .
+		WT_I18N::translate('Wives take their husband’s surname.') . '<br>' .
+		/* I18N: In the Polish surname tradition, ... */
+		WT_I18N::translate('Surnames are inflected to indicate an individual’s gender.').
 		'</dd></dl><dl><dt>'.
 		WT_I18N::translate_c('Surname tradition', 'Lithuanian').
 		'</dt><dd>'.
-		/* I18N: In the Lithuanian surname tradition, ... */ WT_I18N::translate('All family members take the father\'s surname, but the suffix may change to indicate the person\'s gender and marital status.').
+		WT_I18N::translate('Children take their father’s surname.') . '<br>' .
+		WT_I18N::translate('Wives take their husband’s surname.') . '<br>' .
+		/* I18N: In the Lithuanian surname tradition, ... */
+		WT_I18N::translate('Surnames are inflected to indicate an individual’s gender and marital status.').
 		'</dd></dl>';
 	break;
 

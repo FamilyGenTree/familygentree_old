@@ -815,7 +815,7 @@ class WT_Person extends WT_GedcomRecord {
 	*/
 	function getChildFamilyPedigree($famid) {
 		$subrec = get_sub_record(1, '1 FAMC @'.$famid.'@', $this->getGedcomRecord());
-		$pedi = get_gedcom_value('PEDI', 2, $subrec, '', false);
+		$pedi = get_gedcom_value('PEDI', 2, $subrec);
 		// birth=default => return an empty string
 		return ($pedi=='birth') ? '' : $pedi;
 	}
@@ -1339,10 +1339,10 @@ class WT_Person extends WT_GedcomRecord {
 		$dDate=$this->getEstimatedDeathDate();
 		if (!$bDate->isOK()) return;
 
-		if (file_exists(get_site_setting('INDEX_DIRECTORY').'histo.'.WT_LOCALE.'.php')) {
-			require get_site_setting('INDEX_DIRECTORY').'histo.'.WT_LOCALE.'.php';
+		if (file_exists(WT_Site::preference('INDEX_DIRECTORY').'histo.'.WT_LOCALE.'.php')) {
+			require WT_Site::preference('INDEX_DIRECTORY').'histo.'.WT_LOCALE.'.php';
 			foreach ($histo as $indexval=>$hrec) {
-				$sdate=new WT_Date(get_gedcom_value('DATE', 2, $hrec, '', false));
+				$sdate=new WT_Date(get_gedcom_value('DATE', 2, $hrec));
 				if ($sdate->isOK() && WT_Date::Compare($this->getEstimatedBirthDate(), $sdate)<=0 && WT_Date::Compare($sdate, $this->getEstimatedDeathDate())<=0) {
 					$event = new WT_Event($hrec, null, -1);
 					$this->indifacts[] = $event;
@@ -1394,8 +1394,8 @@ class WT_Person extends WT_GedcomRecord {
 								break;
 							}
 						}
-						$this->indifacts[] = new WT_Event($factrec, $associate, 0);
 					}
+					$this->indifacts[] = new WT_Event($factrec, $associate, 0);
 				}
 			}
 		}

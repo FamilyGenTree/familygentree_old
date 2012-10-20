@@ -173,7 +173,7 @@ function applyWatermark($im) {
 	// in the future these options will be set in the gedcom configuration area
 
 	// text to watermark with
-	$word1_text   = get_gedcom_setting(WT_GED_ID, 'title');
+	$word1_text   = WT_TREE_TITLE;
 	// maximum font size for "word1" ; will be automaticaly reduced to fit in the image
 	$word1_maxsize = 100;
 	// rgb color codes for text
@@ -390,7 +390,7 @@ $filetime = $controller->record->getFiletime($which);
 $filetimeHeader = gmdate("D, d M Y H:i:s", $filetime).' GMT';
 $expireOffset = 3600 * 24;  // tell browser to cache this image for 24 hours
 if (safe_GET('cb')) $expireOffset = $expireOffset * 7; // if cb parameter was sent, cache for 7 days 
-$expireHeader = gmdate("D, d M Y H:i:s", time() + $expireOffset) . " GMT";
+$expireHeader = gmdate("D, d M Y H:i:s", WT_TIMESTAMP + $expireOffset) . " GMT";
 
 $type = isImageTypeSupported($imgsize['ext']);
 $usewatermark = false;

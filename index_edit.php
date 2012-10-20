@@ -36,10 +36,12 @@ if ($user_id) {
 	$gedcom_id=safe_REQUEST($_REQUEST, 'gedcom_id');
 }
 
+// Only an admin can edit the "default" page
 // Only managers can edit the "home page"
 // Only a user or an admin can edit a user's "my page"
 if (
-	$gedcom_id && !userGedcomAdmin(WT_USER_ID, $gedcom_id) ||
+	$gedcom_id<0 && !WT_USER_IS_ADMIN ||
+	$gedcom_id>0 && !userGedcomAdmin(WT_USER_ID, $gedcom_id) ||
 	$user_id && WT_USER_ID!=$user_id && !WT_USER_IS_ADMIN
 ) {
 	$controller->pageHeader();
@@ -83,10 +85,8 @@ foreach (WT_Module::getActiveBlocks() as $name=>$block) {
 }
 
 if ($user_id) {
-	$controller->setPageTitle(WT_I18N::translate('My page'));
 	$blocks=get_user_blocks($user_id);
 } elseif ($gedcom_id) {
-	$controller->setPageTitle(WT_I18N::translate(get_gedcom_setting(WT_GED_ID, 'title')));
 	$blocks=get_gedcom_blocks($gedcom_id);
 }
 

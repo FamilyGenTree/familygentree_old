@@ -1,5 +1,5 @@
-LANGUAGES_BUILD=ar bg bs ca cs da de en_GB en_US es et fa fi fr he hr hu is it lt nb nl nn pl pt ru sk sl sv tr tt uk vi
-LANGUAGES_EXTRA=af dv el en_AU fo fr_CA gl id ja lv ka mr ms ne oc pt_BR ro sr sr@Latn ta zh
+LANGUAGES_BUILD=ar bg bs ca cs da de en_GB en_US es et fa fi fr he hr hu is it lt nb nl nn pl pt pt_BR ru sk sl sv tr tt uk vi
+LANGUAGES_EXTRA=af dv el en_AU fo fr_CA gl id ja ko lv ka mr ms ne oc ro sr sr@Latn ta zh
 # Note that we also have translations for mi (maori) and yi (yiddish), although Zend Framework v1 does not include support for these.
 PO_DIR=po
 MO_DIR=mo
@@ -11,9 +11,11 @@ WT_VERSION=$(shell grep "'WT_VERSION'" ../includes/session.php | cut -d "'" -f 4
 WT_VERSION_RELEASE=$(shell grep "'WT_VERSION_RELEASE'" ../includes/session.php | cut -d "'" -f 4)
 BUILD_VERSION=$(if $(WT_VERSION_RELEASE),$(SVN_VERSION),$(WT_VERSION)$(WT_VERSION_RELEASE))
 
-# Location of google's "closure" tools for compressing CSS and JS
-CLOSURE_JS=~/bin/compiler.jar
-CLOSURE_CSS=~/bin/closure-stylesheets.jar
+# Location of minification tools
+CLOSURE_JS=~/bin/compiler-20120917.jar
+CLOSURE_CSS=~/bin/closure-stylesheets-20111230.jar
+YUI_COMPRESSOR=~/bin/yuicompressor.2.4.2.jar
+HTML_COMPRESSION=~/bin/htmlcompressor-1.5.3.jar
 
 # Use maximum compression
 GZIP=gzip -9
@@ -24,6 +26,10 @@ GZIP=gzip -9
 # Create a release from this SVN working copy
 ################################################################################
 default: clean webtrees
+	# Remove the group-write permission - some badly configured hosts don't like it.
+	chmod -R go-w webtrees
+	# Hosts running PHP as an Apache module may need this
+	chmod go+w webtrees/media webtrees/media/thumbs webtrees/data
 	# Package up the extra language files
 	zip -qr language-extra.zip $(MO_EXTRA)
 	rm -f $(MO_EXTRA)
@@ -57,8 +63,8 @@ dist-clean: clean
 ################################################################################
 webtrees: $(PO_DIR) $(MO_DIR)
 	svn export --quiet .. $@
-	bzr revert $(PO_DIR)
-	bzr update $(PO_DIR)
+	bzr revert --quiet $(PO_DIR)
+	bzr update --quiet $(PO_DIR)
 	make $(MO_FILES)
 	# Embed the SVN version number in the code (for SVN builds only)
 	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVN_VERSION)')/" $@/includes/session.php
@@ -70,12 +76,6 @@ webtrees: $(PO_DIR) $(MO_DIR)
 	if find $@ -name '*.php' -exec php -l {} \; | grep -v "No syntax errors"; then false; else true; fi
 	# Add standard language files
 	cp $(MO_FILES) $@/language/
-
-################################################################################
-# Zip a directory to create an archive
-################################################################################
-%.zip: %
-	zip -qrTm $@ $<
 
 ################################################################################
 # PO files are stored in launchpad.net

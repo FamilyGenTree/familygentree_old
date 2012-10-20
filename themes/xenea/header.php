@@ -39,7 +39,7 @@ echo
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
 	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
-	'<link rel="stylesheet" type="text/css" href="', $stylesheet, '">';
+	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
@@ -60,9 +60,7 @@ echo
 if ($view!='simple') { // Use "simple" headers for popup windows
 	echo 
 	'<div id="header">',
-		'<span class="title" dir="auto">',
-			htmlspecialchars($GEDCOM_TITLE),
-		'</span>',
+		'<span class="title" dir="auto">', WT_TREE_TITLE, '</span>',
 		'<div class="hsearch">';
 	echo 
 			'<form action="search.php" method="post">',

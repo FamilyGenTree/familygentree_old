@@ -48,7 +48,7 @@ echo
 	
 echo
 	'<link type="text/css" rel="stylesheet" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
-	'<link type="text/css" rel="stylesheet" href="', $stylesheet, '">';
+	'<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
@@ -109,10 +109,7 @@ if ($view!='simple') { // Use "simple" headers for popup windows
 		$menu_items[]=$menu;
 	}
 
-	echo
-		'<div style="float:', WT_CSS_ALIGN, '; clear:', WT_CSS_ALIGN, '; font-size:175%;" dir="auto">',
-			htmlspecialchars($GEDCOM_TITLE),
-		'</div>';
+	echo '<div style="float:', WT_CSS_ALIGN, '; clear:', WT_CSS_ALIGN, '; font-size:175%;" dir="auto">', WT_TREE_TITLE, '</div>';
 
 	// Print the menu bar
 	echo '<div id="topMenu"><ul class="makeMenu">';

@@ -36,7 +36,7 @@ echo
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
 	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
-	'<link rel="stylesheet" type="text/css" href="', $stylesheet, '">';
+	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
@@ -60,15 +60,13 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	'<div id="clouds-container">',
 		'<div id="header">',
 			'<div class="header" >',
-				'<span class="title" dir="auto">',
-					htmlspecialchars($GEDCOM_TITLE),
-				'</span>',
+				'<span class="title" dir="auto">', WT_TREE_TITLE, '</span>',
 				'<div class="hsearch">',
 					'<form style="display:inline;" action="search.php" method="post">',
 						'<input type="hidden" name="action" value="general">',
 						'<input type="hidden" name="topsearch" value="yes">',
 						'<input type="search" name="query" size="15" placeholder="', WT_I18N::translate('Search'), '" dir="auto">',
-						'<input type="image" src="', $WT_IMAGES['search'], '" align="top" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '">',
+						'<input class="search-icon" type="image" src="', $WT_IMAGES['search'], '" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '">',
 					'</form>',
 				'</div>',
 			'</div>',

@@ -667,7 +667,7 @@ class WT_Media extends WT_GedcomRecord {
 			}
 
 			$output='';
-			if ($config['oktolink'] && $mainexists) $output .= '<a href="'.$this->getHtmlUrlSnippet($config).'">';
+			if ($config['oktolink'] && $mainexists) $output .= '<a class="media_container" href="'.$this->getHtmlUrlSnippet($config).'">';
 			$output .= '<img '.$idstr.' src="'.$this->getHtmlUrlDirect('thumb').'" '.$sizestr.' class="'.$config['class'].'"';
 			$output .= ' alt="'.$config['img_title'].'" title="'.$config['img_title'].'" '.$stylestr.'>';
 			if ($config['oktolink'] && $mainexists) {
@@ -731,7 +731,7 @@ class WT_Media extends WT_GedcomRecord {
 			if ($prev_record && $prev_record->getType()!=$record->getType()) {
 				$output.='<br>';
 			}
-			$output.='<br><a href="'.$record->getHtmlUrl().'">';
+			$output.='<br><a class="media_link" href="'.$record->getHtmlUrl().'">';
 			switch ($record->getType()) {
 			case 'INDI':
 				$output.=WT_I18N::translate('View Person');

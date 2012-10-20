@@ -37,7 +37,7 @@ echo
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
 	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
-	'<link rel="stylesheet" type="text/css" href="', $stylesheet, '">';
+	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {
 //case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
@@ -59,7 +59,7 @@ echo
 if ($view!='simple') {
 	echo '<div id="header">';
 	echo '<ul class="makeMenu">';
-	echo '<li class="title" dir="auto">',htmlspecialchars($GEDCOM_TITLE),'</li>';
+	echo '<li class="title" dir="auto">', WT_TREE_TITLE ,'</li>';
 	echo '<div>';
 	if (WT_USER_ID) {
 		echo '<li><a href="edituser.php">', getUserFullName(WT_USER_ID), '</a></li> <li>', logout_link(), '</li>';
