@@ -36,7 +36,7 @@ class sources_tab_WT_Module extends WT_Module implements WT_Module_Tab {
 
 	// Extend WT_Module
 	public function getDescription() {
-		return /* I18N: Description of the "Sources" module */ WT_I18N::translate('A tab showing the sources linked to an individual.');
+		return /* I18N: Description of the “Sources” module */ WT_I18N::translate('A tab showing the sources linked to an individual.');
 	}
 
 	// Implement WT_Module_Tab
@@ -76,10 +76,10 @@ class sources_tab_WT_Module extends WT_Module implements WT_Module_Tab {
 			if ($controller->record->canEdit()) {
 			?>
 				<tr>
-					<td class="facts_label"><?php echo WT_I18N::translate('Add Source Citation'), help_link('add_source'); ?></td>
+					<td class="facts_label"><?php echo WT_Gedcom_Tag::getLabel('SOUR'); ?></td>
 					<td class="facts_value">
 					<a href="#" onclick="add_new_record('<?php echo $controller->record->getXref(); ?>','SOUR'); return false;"><?php echo WT_I18N::translate('Add a new source citation'); ?></a>
-					<br>
+					<?php echo help_link('add_source'); ?>
 					</td>
 				</tr>
 			<?php
@@ -123,11 +123,6 @@ class sources_tab_WT_Module extends WT_Module implements WT_Module_Tab {
 
 	// Implement WT_Module_Tab
 	public function getPreLoadContent() {
-		return '';
-	}
-
-	// Implement WT_Module_Tab
-	public function getJSCallback() {
 		return '';
 	}
 }

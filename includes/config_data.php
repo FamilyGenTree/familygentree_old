@@ -170,6 +170,7 @@ $emptyfacts=array(
 	'WILL',
 	'_HOL',
 	'_NMR',
+	'_NMAR',
 	'_SEPR',
 );
 
@@ -425,6 +426,14 @@ $level2_tags=array(
 	),
 	'_WT_USER'=>array(
 		'_TODO',
+	),
+	// See https://bugs.launchpad.net/webtrees/+bug/1082666
+	'RELI'=>array(
+		//'CHR',
+		//'CHRA',
+		//'BAPM',
+		//'MARR',
+		//'BURI',
 	),
 );
 

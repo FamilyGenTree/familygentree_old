@@ -12,10 +12,10 @@ WT_VERSION_RELEASE=$(shell grep "'WT_VERSION_RELEASE'" ../includes/session.php |
 BUILD_VERSION=$(if $(WT_VERSION_RELEASE),$(SVN_VERSION),$(WT_VERSION)$(WT_VERSION_RELEASE))
 
 # Location of minification tools
-CLOSURE_JS=~/bin/compiler-20120917.jar
-CLOSURE_CSS=~/bin/closure-stylesheets-20111230.jar
-YUI_COMPRESSOR=~/bin/yuicompressor.2.4.2.jar
-HTML_COMPRESSION=~/bin/htmlcompressor-1.5.3.jar
+CLOSURE_JS=compiler-20121212.jar
+CLOSURE_CSS=closure-stylesheets-20111230.jar
+YUI_COMPRESSOR=yuicompressor-2.4.7.jar
+HTML_COMPRESSION=htmlcompressor-1.5.3.jar
 
 # Use maximum compression
 GZIP=gzip -9
@@ -69,13 +69,19 @@ webtrees: $(PO_DIR) $(MO_DIR)
 	# Embed the SVN version number in the code (for SVN builds only)
 	sed -i "s/define('WT_VERSION_RELEASE', 'svn')/define('WT_VERSION_RELEASE', 'svn$(SVN_VERSION)')/" $@/includes/session.php
 	# Exclude some unused Zend Framework components to reduce the size of the distribution
-	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Uri,Validate,Version,View,Wildfire,XmlRpc}*
+	rm -R $@/library/Zend/{Acl,Amf,Application,Auth,Barcode,Captcha,CodeGenerator,Console,Config,Crypt,Currency,Date,Db,Debug,Dojo,Dom,Feed,File,Form,Gdata,Http,InfoCard,Json,Layout,Ldap,Log,Mail,Markup,Measure,Memory,Mime,Navigation,Oauth,OpenId,Paginator,Pdf,ProgressBar,Queue,Reflection,Rest,Search,Serializer,Service,Soap,Test,Text,TimeSync,Tool,Validate,Version,View,Wildfire,XmlRpc}*
 	# Exclude the build scripts from the distribution
 	rm -Rf $@/build
 	# Check for syntax errors
 	if find $@ -name '*.php' -exec php -l {} \; | grep -v "No syntax errors"; then false; else true; fi
 	# Add standard language files
 	cp $(MO_FILES) $@/language/
+	# Minification - first pass - using closure tools
+	#find $@ -name "*.js" -exec java -jar $(CLOSURE_JS) --js "{}" --js_output_file "{}.tmp" \; -exec mv "{}.tmp" "{}" \;
+	#find $@ -name "*.css" -exec java -jar $(CLOSURE_CSS) --output-file "{}.tmp" "{}" \; -exec mv "{}.tmp" "{}" \;
+	# Minification - second pass - using YUI tools
+	#find $@ -name "*.js"  -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
+	#find $@ -name "*.css" -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
 
 ################################################################################
 # PO files are stored in launchpad.net
@@ -128,3 +134,31 @@ static-S3: webtrees-static-$(WT_VERSION)
 	s3cmd sync --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rexclude=(css|js)$$" $< s3://$(S3_BUCKET)/
 	# Upload compressed files
 	s3cmd sync --no-delete-removed --add-header=Cache-Control:public,max-age=864000 --guess-mime-type "--rinclude=(css|js)$$" --add-header=Content-Encoding:gzip $< s3://$(S3_BUCKET)/
+
+
+################################################################################
+# Automatically generate RTL stylesheets from LTR stylesheets
+################################################################################
+CSS_LTR_FILES=$(shell find .. -name "*-ltr.css")
+CSS_RTL_FILES=$(patsubst %-ltr.css,%-rtl.css,$(CSS_LTR_FILES))
+
+%-rtl.css: %-ltr.css
+	java -jar $(CLOSURE_STYLESHEETS) --output-orientation RTL -o $@ $<
+
+css-rtl: $(CSS_RTL_FILES)
+
+
+################################################################################
+# Minify static resources - DO NOT COMMIT MINIFIED RESOURCES TO SVN!
+################################################################################
+CSS_FILES=$(shell find .. -name "*.css")
+JS_FILES=$(shell find .. -name "*.js")
+
+minify: clean css-rtl
+	# Minification - first pass - using closure tools
+	find .. -name "*.js" -exec java -jar $(CLOSURE_JS) --js "{}" --js_output_file "{}.tmp" \; -exec mv "{}.tmp" "{}" \;
+	find .. -name "*.css" -exec java -jar $(CLOSURE_CSS) --output-file "{}.tmp" "{}" \; -exec mv "{}.tmp" "{}" \;
+	# Minification - second pass - using YUI tools
+	find .. -name "*.js"  -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
+	find .. -name "*.css" -exec java -jar $(YUI_COMPRESSOR) -o "{}" "{}" \;
+

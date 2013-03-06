@@ -41,4 +41,16 @@ class WT_Controller_Ajax extends WT_Controller_Base {
 		echo $this->getJavascript();
 		return $this;
 	}
+	
+	// Restrict access
+	public function requireManagerLogin($ged_id=WT_GED_ID) {
+		if (
+			$ged_id==WT_GED_ID && !WT_USER_GEDCOM_ADMIN ||
+			$ged_id!=WT_GED_ID && userGedcomAdmin(WT_USER_ID, $gedcom_id)
+		) {
+			header('HTTP/1.0 403 Access Denied');
+			exit;
+		}
+		return $this;
+	}
 }

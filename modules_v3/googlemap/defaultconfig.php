@@ -79,13 +79,6 @@ global $GOOGLEMAP_PH_MARKER;
 $GOOGLEMAP_PH_MARKER      =get_module_setting('googlemap', 'GM_PH_MARKER',        'G_FLAG'); // Possible values: G_FLAG = Flag, G_DEFAULT_ICON = Standard icon
 global $GM_DISP_SHORT_PLACE;
 $GM_DISP_SHORT_PLACE      =get_module_setting('googlemap', 'GM_DISP_SHORT_PLACE', '0'); // Display full place name or only the actual level name
-global $GM_DISP_COUNT;
-$GM_DISP_COUNT            =get_module_setting('googlemap', 'GM_DISP_COUNT',       '0'); // Display the count of individuals and families connected to the place
-global $GOOGLEMAP_PH_WHEEL;
-$GOOGLEMAP_PH_WHEEL       =get_module_setting('googlemap', 'GM_PH_WHEEL',         '0'); // Use mouse wheel for zooming
-global $GOOGLEMAP_PH_CONTROLS;
-$GOOGLEMAP_PH_CONTROLS    =get_module_setting('googlemap', 'GM_PH_CONTROLS',      '1'); // Hide map controls when mouse is out
-
 
 // Configuration-options per location-level
 global $GM_MARKER_COLOR;

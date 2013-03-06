@@ -130,7 +130,7 @@ function create_map($placelevels) {
 	// *** ENABLE STREETVIEW *** (boolean) =========================================================
 	$STREETVIEW = get_module_setting('googlemap', 'GM_USE_STREETVIEW');
 	// =============================================================================================
-	$parent = safe_GET('parent');
+	$parent = safe_GET('parent', WT_REGEX_UNSAFE);
 	
 	// create the map
 	echo '<table style="margin:20px auto 0 auto;"><tr valign="top"><td>';
@@ -184,7 +184,7 @@ function create_map($placelevels) {
 	}
 	echo '</td></tr></table>';
 	echo '</td>';
-	echo '<td style="margin-left:15px; float:right; ">';
+	echo '<td style="margin-left:15px; float:right;">';
 
 	if ($STREETVIEW) {
 		$controller->addInlineJavascript('
@@ -253,7 +253,7 @@ function create_map($placelevels) {
 			echo "<tr><td>";
 			echo "<form style=\"text-align:left; margin-left:5px; font:11px verdana; color:blue;\" method=\"post\" action=\"\">";
 			echo $list_latlon;
-			echo "<input type=\"submit\" name=\"Submit\" onclick=\"update_sv_params($placeid);\" value=\"", WT_I18N::translate('Save'), "\">";
+			echo "<input type=\"submit\" name=\"Submit\" onclick=\"update_sv_params($placeid);\" value=\"", WT_I18N::translate('save'), "\">";
 			echo "</form>";
 			echo "</td></tr>";
 			echo "</table>";
@@ -306,7 +306,7 @@ function print_how_many_people($level, $parent) {
 }
 
 function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $placelevels, $lastlevel=false) {
-	global $GOOGLEMAP_COORD, $GOOGLEMAP_PH_MARKER, $GM_DISP_SHORT_PLACE, $GM_DISP_COUNT;
+	global $GOOGLEMAP_COORD, $GOOGLEMAP_PH_MARKER, $GM_DISP_SHORT_PLACE;
 	
 	if (($place2['lati'] == NULL) || ($place2['long'] == NULL) || (($place2['lati'] == '0') && ($place2['long'] == '0'))) {
 		echo 'var icon_type = new google.maps.MarkerImage();';
@@ -357,13 +357,11 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 			}
 		}
 		echo '</a>';
-		if ($GM_DISP_COUNT) {
-			if ($lastlevel) {
-				print_how_many_people($level, $parent);
-			} else {
-				$parent[$level]=$place2['place'];
-				print_how_many_people($level+1, $parent);
-			}
+		if ($lastlevel) {
+			print_how_many_people($level, $parent);
+		} else {
+			$parent[$level]=$place2['place'];
+			print_how_many_people($level+1, $parent);
 		}
 		echo '<br>', WT_I18N::translate('This place has no coordinates');
 		if (WT_USER_IS_ADMIN)
@@ -440,13 +438,11 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 			}
 		}
 		echo '</a>';
-		if ($GM_DISP_COUNT) {
-			if ($lastlevel) {
-				print_how_many_people($level, $parent);
-			} else {
-				$parent[$level]=$place2['place'];
-				print_how_many_people($level+1, $parent);
-			}
+		if ($lastlevel) {
+			print_how_many_people($level, $parent);
+		} else {
+			$parent[$level]=$place2['place'];
+			print_how_many_people($level+1, $parent);
 		}
 		$temp=addslashes($place2['place']);
 		$temp=str_replace(array('&lrm;', '&rlm;'), array(WT_UTF8_LRM, WT_UTF8_RLM), $temp);
@@ -459,7 +455,7 @@ function print_gm_markers($place2, $level, $parent, $levelm, $linklevels, $place
 }
 
 function map_scripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names) {
-	global $GOOGLEMAP_MAP_TYPE, $GOOGLEMAP_PH_WHEEL, $GOOGLEMAP_PH_CONTROLS, $GOOGLEMAP_PH_MARKER, $plzoom, $controller;
+	global $GOOGLEMAP_MAP_TYPE, $GOOGLEMAP_PH_MARKER, $plzoom, $controller;
 
 	$controller->addInlineJavascript('
 		jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="'.WT_STATIC_URL.WT_MODULES_DIR.'googlemap/css/wt_v3_googlemap.css" />\');

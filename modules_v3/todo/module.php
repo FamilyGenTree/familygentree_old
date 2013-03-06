@@ -36,7 +36,7 @@ class todo_WT_Module extends WT_Module implements WT_Module_Block {
 
 	// Extend class WT_Module
 	public function getDescription() {
-		return /* I18N: Description of "Research tasks" module */ WT_I18N::translate('A list of tasks and activities that are linked to the family tree.');
+		return /* I18N: Description of “Research tasks” module */ WT_I18N::translate('A list of tasks and activities that are linked to the family tree.');
 	}
 
 	// Implement class WT_Module_Block
@@ -66,7 +66,7 @@ class todo_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$table_id = 'ID'.(int)(microtime()*1000000); // create a unique ID
 		$controller
-			->addExternalJavascript(WT_STATIC_URL.'js/jquery/jquery.dataTables.min.js')
+			->addExternalJavascript(WT_JQUERY_DATATABLES_URL)
 			->addInlineJavascript('
 				jQuery("#'.$table_id.'").dataTable( {
 				"sDom": \'t\',

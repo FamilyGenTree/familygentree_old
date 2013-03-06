@@ -74,7 +74,7 @@ if ($action=='ajax') {
 	exit;
 }
 
-$controller=new WT_Controller_Base();
+$controller=new WT_Controller_Page();
 if ($ctype=='user') {
 	$controller->requireMemberLogin();
 }
@@ -84,11 +84,6 @@ $controller
 	->pageHeader()
 	// By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
 	->addInlineJavascript('jQuery.ajaxSetup({cache:true});');
-
-if (WT_USE_LIGHTBOX) {
-	$album = new lightbox_WT_Module();
-	$album->getPreLoadContent();
-}
 
 if ($ctype=='user') {
 	echo '<div id="my-page">';

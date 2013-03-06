@@ -2,7 +2,7 @@
 // Miscellaneous administrative functions
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Partly Derived from PhpGedView
 // Copyright (C) 2002 to 2010  PGV Development Team.  All rights reserved.
@@ -27,9 +27,11 @@ define('WT_SCRIPT_NAME', 'admin_site_other.php');
 require './includes/session.php';
 require WT_ROOT.'includes/functions/functions_edit.php';
 
-$controller=new WT_Controller_Base();
-$controller->setPageTitle(WT_I18N::translate('Add unlinked records'));
-$controller->pageHeader();
+$controller=new WT_Controller_Page();
+$controller
+	->requireManagerLogin()
+	->setPageTitle(WT_I18N::translate('Add unlinked records'))
+	->pageHeader();
 
 ?>
 <div id="other">
@@ -45,25 +47,29 @@ $controller->pageHeader();
 		<tr>
 			<td>
 				<a href="#" onclick="addnewchild(''); return false;">
-					<?php echo WT_I18N::translate('Add an unlinked person'); ?>
+					<?php echo /* I18N: An individual that is not linked to any other record */ WT_I18N::translate('Create a new individual'); ?>
 				</a>
-				<?php echo help_link('edit_add_unlinked_person'); ?>
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<a href="#" onclick="addnewnote(''); return false;">
-					<?php echo WT_I18N::translate('Add an unlinked note'); ?>
+					<?php echo /* I18N: An note that is not linked to any other record */ WT_I18N::translate('Create a new note'); ?>
 				</a>
-				<?php echo help_link('edit_add_unlinked_note'); ?>
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<a href="#" onclick="addnewsource(''); return false;">
-					<?php echo WT_I18N::translate('Add an unlinked source'); ?>
+					<?php echo /* I18N: A source that is not linked to any other record */ WT_I18N::translate('Create a new source'); ?>
 				</a>
-				<?php echo help_link('edit_add_unlinked_source'); ?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="#" onclick="window.open('addmedia.php?action=showmediaform&amp;linktoid=new', '_blank', edit_window_specs); return false;">
+					<?php echo /* I18N: A media object that is not linked to any other record */ WT_I18N::translate('Create a new media object'); ?>
+				</a>
 			</td>
 		</tr>
 	</table>

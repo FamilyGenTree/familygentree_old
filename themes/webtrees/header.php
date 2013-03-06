@@ -2,7 +2,7 @@
 // Header for webtrees theme
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
@@ -28,6 +28,12 @@ if (!defined('WT_WEBTREES')) {
 	exit;
 }
 
+// This theme uses the jQuery “colorbox” plugin to display images
+$this
+	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
+	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
+	->addInlineJavascript('activate_colorbox();');
+
 echo
 	'<!DOCTYPE html>',
 	'<html ', WT_I18N::html_markup(), '>',
@@ -36,11 +42,10 @@ echo
 	'<title>', htmlspecialchars($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
-	'<link rel="stylesheet" type="text/css" href="', WT_STATIC_URL, 'js/jquery/css/jquery-ui.custom.css">',
+	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'jquery-ui-1.10.0/jquery-ui-1.10.0.custom.css">',
 	'<link rel="stylesheet" type="text/css" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {
-//case 'chrome': uncomment when chrome.css file needs to be added, or add others as needed
 case 'msie':
 	echo '<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, $BROWSERTYPE, '.css">';
 	break;
@@ -57,6 +62,7 @@ echo
 
 // begin header section
 if ($view!='simple') {
+	global $WT_IMAGES;
 	echo
 		'<div id="header">',
 		'<div class="header_img"><img src="', WT_THEME_URL, 'images/webtrees.png" width="242" height="50" alt="', WT_WEBTREES, '"></div>',
@@ -66,20 +72,11 @@ if ($view!='simple') {
 	} else {
 		echo '<li>', login_link(), '</li> ';
 	}
-	$menu=WT_MenuBar::getFavoritesMenu();
-	if ($menu) {
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getThemeMenu();
-	if ($menu) {
-		echo $menu->getMenuAsList();
-	}
-	$menu=WT_MenuBar::getLanguageMenu();
-	if ($menu) {
-		echo $menu->getMenuAsList();
-	}
-	global $WT_IMAGES;
-	echo '</ul>',
+	echo
+		WT_MenuBar::getFavoritesMenu(),
+		WT_MenuBar::getThemeMenu(),
+		WT_MenuBar::getLanguageMenu(),
+		'</ul>',
 		'<div class="title" dir="auto">', WT_TREE_TITLE, '</div>',
 		'<div class="header_search">',
 		'<form action="search.php" method="post">',
@@ -88,8 +85,9 @@ if ($view!='simple') {
 		'<input type="search" name="query" size="25" placeholder="', WT_I18N::translate('Search'), '" dir="auto">',
 		'<input type="image" class="image" src="', $WT_IMAGES['search'], '" alt="', WT_I18N::translate('Search'), '" title="', WT_I18N::translate('Search'), '">',
 		'</form>',
-		'</div>';
-	$menu_items=array(
+		'</div>',
+		'<div id="topMenu">',
+		'<ul id="main-menu">',
 		WT_MenuBar::getGedcomMenu(),
 		WT_MenuBar::getMyPageMenu(),
 		WT_MenuBar::getChartsMenu(),
@@ -97,30 +95,12 @@ if ($view!='simple') {
 		WT_MenuBar::getCalendarMenu(),
 		WT_MenuBar::getReportsMenu(),
 		WT_MenuBar::getSearchMenu(),
-	);
-	foreach (WT_MenuBar::getModuleMenus() as $menu) {
-		$menu_items[]=$menu;
-	}
-	// Print the menu bar
-	echo
-		'<div id="topMenu">',
-		'<ul id="main-menu">';
-	foreach ($menu_items as $menu) {
-		if ($menu) {
-			echo $menu->getMenuAsList();
-		}
-	}
-	unset($menu_items, $menu);
-	echo
+		implode('', WT_MenuBar::getModuleMenus()),
 		'</ul>',  // <ul id="main-menu">
-		'</div>'; // <div id="topMenu">
-	// Display feedback from asynchronous actions
-	echo '<div id="flash-messages">';
-	foreach (Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger')->getMessages() as $message) {
-		echo '<p class="ui-state-highlight">', $message, '</p>';
-	}
-	echo '</div>'; // <div id="flash-messages">
-	echo '</div>'; // <div id="header">
+		'</div>', // <div id="topMenu">
+		'</div>'; // <div id="header">
 }
-echo $javascript, '<div id="content">';
-
+echo
+	$javascript,
+	WT_FlashMessages::getHtmlMessages(), // Feedback from asynchronous actions
+	'<div id="content">';
