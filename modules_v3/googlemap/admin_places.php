@@ -72,7 +72,7 @@ function getHighestLevel() {
 function get_place_list_loc($parent_id, $inactive=false) {
 	if ($inactive) {
 		$rows=
-			WT_DB::prepare("SELECT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon FROM `##placelocation` WHERE pl_parent_id=? ORDER BY pl_place")
+			WT_DB::prepare("SELECT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon FROM `##placelocation` WHERE pl_parent_id=? ORDER BY pl_place COLLATE ".WT_I18N::$collation)
 			->execute(array($parent_id))
 			->fetchAll();
 	} else {
@@ -81,7 +81,7 @@ function get_place_list_loc($parent_id, $inactive=false) {
 				"SELECT DISTINCT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon".
 				" FROM `##placelocation`".
 				" INNER JOIN `##places` ON `##placelocation`.pl_place=`##places`.p_place".
-				" WHERE pl_parent_id=? ORDER BY pl_place"
+				" WHERE pl_parent_id=? ORDER BY pl_place COLLATE ".WT_I18N::$collation
 			)
 			->execute(array($parent_id))
 			->fetchAll();
@@ -532,12 +532,12 @@ function updateList(inactive) {
 }
 
 function edit_place_location(placeid) {
-	window.open('module.php?mod=googlemap&mod_action=places_edit&action=update&placeid='+placeid, '_blank', indx_window_specs);
+	window.open('module.php?mod=googlemap&mod_action=places_edit&action=update&placeid='+placeid, '_blank', gmap_window_specs);
 	return false;
 }
 
 function add_place_location(placeid) {
-	window.open('module.php?mod=googlemap&mod_action=places_edit&action=add&placeid='+placeid, '_blank', indx_window_specs);
+	window.open('module.php?mod=googlemap&mod_action=places_edit&action=add&placeid='+placeid, '_blank', gmap_window_specs);
 	return false;
 }
 

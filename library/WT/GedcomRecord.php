@@ -2,7 +2,7 @@
 // Base class for all gedcom records
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009 PGV Development Team.  All rights reserved.
@@ -71,6 +71,7 @@ class WT_GedcomRecord {
 	// been fetched previously).
 	static public function getInstance($data) {
 		global $gedcom_record_cache, $GEDCOM;
+		static $pending_record_cache;
 
 		$is_pending=false; // Did this record come from a pending edit
 
@@ -102,10 +103,27 @@ class WT_GedcomRecord {
 			// Otherwise relationship privacy rules will not allow us to see
 			// newly added records.
 			if (WT_USER_CAN_EDIT) {
-				$tmp=find_updated_record($pid, $ged_id, true);
-				if ($tmp) {
-					$is_pending=true;
-					$data=$tmp;
+				if (!isset($pending_record_cache[$ged_id])) {
+					// Fetch all pending records in one database query
+					$pending_record_cache[$ged_id]=array();
+					$rows = WT_DB::prepare(
+						"SELECT xref, new_gedcom FROM `##change` WHERE status='pending' AND gedcom_id=?"
+					)->execute(array($ged_id))->fetchAll();
+					foreach ($rows as $row) {
+						$pending_record_cache[$ged_id][$row->xref] = $row->new_gedcom;
+					}
+				}
+
+				if (isset($pending_record_cache[$ged_id][$pid])) {
+					// A pending edit exists for this record
+					$tmp = $pending_record_cache[$ged_id][$pid];
+					// $tmp can be an empty string, indicating the record has
+					// a pending deletion.  Ignore this, as we handle pending
+					// deletions separately.
+					if ($tmp) {
+						$is_pending=true;
+						$data=$tmp;
+					}
 				}
 			}
 
@@ -393,11 +411,7 @@ class WT_GedcomRecord {
 	// We use the unprivatized _gedrec as we must take account
 	// of the RESN tag, even if we are not permitted to see it.
 	public function canEdit() {
-		return
-			get_gedcom_setting($this->ged_id, 'ALLOW_EDIT_GEDCOM') && (
-				WT_USER_GEDCOM_ADMIN ||
-				WT_USER_CAN_EDIT && strpos($this->_gedrec, "\n1 RESN locked")===false
-			);
+		return WT_USER_GEDCOM_ADMIN || WT_USER_CAN_EDIT && strpos($this->_gedrec, "\n1 RESN locked")===false;
 	}
 
 	// Remove private data from the raw gedcom record.
@@ -655,7 +669,7 @@ class WT_GedcomRecord {
 		}
 		$html='<a href="'.$this->getHtmlUrl().'"';
 		if ($find) {
-			$html.=' onclick="pasteid(\''.$this->getXref().'\');"';
+			$html.=' onclick="pasteid(\''.$this->getXref().'\', \'' . htmlentities($name) . '\');"';
 		}
 		$html.=' class="list_item"><b>'.$name.'</b>';
 		$html.=$this->format_list_details();
@@ -683,26 +697,6 @@ class WT_GedcomRecord {
 			}
 		}
 		return '';
-	}
-
-	// Count the number of records that link to this one
-	public function countLinkedIndividuals() {
-		return count_linked_indi($this->getXref(), $this->getType(), $this->ged_id);
-	}
-	public function countLinkedFamilies() {
-		return count_linked_fam($this->getXref(), $this->getType(), $this->ged_id);
-	}
-	public function countLinkedNotes() {
-		return count_linked_note($this->getXref(), $this->getType(), $this->ged_id);
-	}
-	public function countLinkedSources() {
-		return count_linked_sour($this->getXref(), $this->getType(), $this->ged_id);
-	}
-	public function countLinkedRepositories() {
-		return count_linked_repo($this->getXref(), $this->getType(), $this->ged_id);
-	}
-	public function countLinkedMedia() {
-		return count_linked_obje($this->getXref(), $this->getType(), $this->ged_id);
 	}
 
 	// Fetch the records that link to this one

@@ -33,6 +33,7 @@ $this
 	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
 	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
 	->addInlineJavascript('activate_colorbox();')
+	->addInlineJavascript('jQuery.extend(jQuery.colorbox.settings, {width:"70%", height:"70%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"})') 
 	->addInlineJavascript('
 		jQuery.extend(jQuery.colorbox.settings, {
 			title:	function(){
@@ -51,7 +52,7 @@ echo
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">';
 	
 echo
-	'<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.0/jquery-ui-1.10.0.custom.css">',
+	'<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css">',
 	'<link type="text/css" rel="stylesheet" href="', WT_THEME_URL, 'style.css', '">';
 
 switch ($BROWSERTYPE) {

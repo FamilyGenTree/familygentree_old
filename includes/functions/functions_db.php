@@ -29,46 +29,6 @@ if (!defined('WT_WEBTREES')) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Count the number of records linked to a given record
-////////////////////////////////////////////////////////////////////////////////
-function count_linked_indi($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##individuals` WHERE i_file=l_file AND i_id=l_from AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array($ged_id, $link, $xref))
-		->fetchOne();
-}
-function count_linked_fam($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##families` WHERE f_file=l_file AND f_id=l_from AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array($ged_id, $link, $xref))
-		->fetchOne();
-}
-function count_linked_note($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##other` WHERE o_file=l_file AND o_id=l_from AND o_type=? AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array('NOTE', $ged_id, $link, $xref))
-		->fetchOne();
-}
-function count_linked_sour($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##sources` WHERE s_file=l_file AND s_id=l_from AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array($ged_id, $link, $xref))
-		->fetchOne();
-}
-function count_linked_repo($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##other` WHERE o_file=l_file AND o_id=l_from AND o_type=? AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array('REPO', $ged_id, $link, $xref))
-		->fetchOne();
-}
-function count_linked_obje($xref, $link, $ged_id) {
-	return
-		WT_DB::prepare("SELECT COUNT(*) FROM `##link`, `##media` WHERE m_file=l_file AND m_id=l_from AND l_file=? AND l_type=? AND l_to=?")
-		->execute(array($ged_id, $link, $xref))
-		->fetchOne();
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // Fetch records linked to a given record
 ////////////////////////////////////////////////////////////////////////////////
 function fetch_linked_indi($xref, $link, $ged_id) {
@@ -1252,8 +1212,8 @@ function get_calendar_events($jd1, $jd2, $facts='', $ged_id=WT_GED_ID) {
 	$where.=" AND d_file=".$ged_id;
 
 	// Now fetch these events
-	$ind_sql="SELECT d_gid, i_gedcom, 'INDI', d_type, d_day, d_month, d_year, d_fact, d_type FROM `##dates`, `##individuals` {$where} AND d_gid=i_id AND d_file=i_file ORDER BY d_julianday1";
-	$fam_sql="SELECT d_gid, f_gedcom, 'FAM',  d_type, d_day, d_month, d_year, d_fact, d_type FROM `##dates`, `##families`    {$where} AND d_gid=f_id AND d_file=f_file ORDER BY d_julianday1";
+	$ind_sql="SELECT d_gid, i_gedcom, 'INDI', d_type, d_day, d_month, d_year, d_fact, d_type FROM `##dates`, `##individuals` {$where} AND d_gid=i_id AND d_file=i_file GROUP BY d_julianday1 ORDER BY d_julianday1";
+	$fam_sql="SELECT d_gid, f_gedcom, 'FAM',  d_type, d_day, d_month, d_year, d_fact, d_type FROM `##dates`, `##families`    {$where} AND d_gid=f_id AND d_file=f_file GROUP BY d_julianday1 ORDER BY d_julianday1";
 	foreach (array($ind_sql, $fam_sql) as $sql) {
 		$rows=WT_DB::prepare($sql)->fetchAll(PDO::FETCH_NUM);
 		foreach ($rows as $row) {

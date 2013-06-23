@@ -220,9 +220,6 @@ function edit_field_contact($name, $selected='', $extra='') {
 		'mailto'    =>WT_I18N::translate('Mailto link'),
 		'none'      =>WT_I18N::translate('No contact'),
 	);
-	if (!WT_Site::preference('STORE_MESSAGES')) {
-		unset($CONTACT_METHODS['messaging'], $CONTACT_METHODS['messaging2']);
-	}
 	return select_edit_control($name, $CONTACT_METHODS, null, $selected, $extra);
 }
 function edit_field_contact_inline($name, $selected='', $controller=null) {
@@ -234,9 +231,6 @@ function edit_field_contact_inline($name, $selected='', $controller=null) {
 		'mailto'    =>WT_I18N::translate('Mailto link'),
 		'none'      =>WT_I18N::translate('No contact'),
 	);
-	if (!WT_Site::preference('STORE_MESSAGES')) {
-		unset($CONTACT_METHODS['messaging'], $CONTACT_METHODS['messaging2']);
-	}
 	return select_edit_control_inline($name, $CONTACT_METHODS, null, $selected, $controller);
 }
 
@@ -493,33 +487,32 @@ function check_gedcom($gedrec, $chan=true) {
 	return $newrec;
 }
 
-/**
-* remove a subrecord from a parent record by gedcom tag
-*
-* @param string $oldrecord the parent record to remove the subrecord from
-* @param string $tag the GEDCOM subtag to start deleting at
-* @param string $gid [optional] gid can be used to limit to @gid@
-* @param int $num [optional] num specifies which multiple of the tag to remove, set to -1 to remove all
-* @return string returns the oldrecord minus the subrecord(s)
-*/
-function remove_subrecord($oldrecord, $tag, $gid='', $num=0) {
+// Remove all links from $gedrec to $xref, and any sub-tags.
+function remove_links($gedrec, $xref) {
+	$gedrec = preg_replace('/\n1 '.WT_REGEX_TAG.' @'.$xref.'@(\n[2-9].*)*/', '', $gedrec);
+	$gedrec = preg_replace('/\n2 '.WT_REGEX_TAG.' @'.$xref.'@(\n[3-9].*)*/', '', $gedrec);
+	$gedrec = preg_replace('/\n3 '.WT_REGEX_TAG.' @'.$xref.'@(\n[4-9].*)*/', '', $gedrec);
+	$gedrec = preg_replace('/\n4 '.WT_REGEX_TAG.' @'.$xref.'@(\n[5-9].*)*/', '', $gedrec);
+	$gedrec = preg_replace('/\n5 '.WT_REGEX_TAG.' @'.$xref.'@(\n[6-9].*)*/', '', $gedrec);
+	return $gedrec;
+}
+
+// Remove a link to a media object from a GEDCOM record
+function remove_media_subrecord($oldrecord, $gid) {
 	$newrec = '';
 	$gedlines = explode("\n", $oldrecord);
 
-	$n = 0;
-	$matchstr = $tag;
-	if (!empty($gid)) $matchstr .= " @".$gid."@";
 	for ($i=0; $i<count($gedlines); $i++) {
-		if (preg_match("/".$matchstr."/", $gedlines[$i])>0) {
-			if ($num==-1 || $n==$num) {
-				$glevel = $gedlines[$i]{0};
+		if (preg_match('/^\d (?:OBJE|_WT_OBJE_SORT) @' . $gid . '@$/', $gedlines[$i])) {
+			$glevel = $gedlines[$i]{0};
+			$i++;
+			while ((isset($gedlines[$i]))&&(strlen($gedlines[$i])<4 || $gedlines[$i]{0}>$glevel)) {
 				$i++;
-				while ((isset($gedlines[$i]))&&(strlen($gedlines[$i])<4 || $gedlines[$i]{0}>$glevel)) $i++;
-				$i--;
 			}
-			else $n++;
+			$i--;
+		} else {
+			$newrec .= $gedlines[$i]."\n";
 		}
-		else $newrec .= $gedlines[$i]."\n";
 	}
 
 	return trim($newrec);
@@ -1342,12 +1335,17 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 				echo help_link($fact);
 			}
 			break;
-		case 'ABBR':
+		case 'ASSO':
+		case '_ASSO': // Some apps (including webtrees) use "2 _ASSO", since "2 ASSO" is not strictly valid GEDCOM
+			if ($level==1) {
+				echo help_link('ASSO_1');
+			} else {
+				echo help_link('ASSO_2');
+			}
+			break;
 		case 'ADDR':
 		case 'AGNC':
-		case 'ASSO':
 		case 'CAUS':
-		case 'CEME':
 		case 'DATE':
 		case 'EMAI':
 		case 'EMAIL':
@@ -1369,10 +1367,7 @@ function add_simple_tag($tag, $upperlevel='', $label='', $readOnly='', $noClose=
 		case 'TEMP':
 		case 'TEXT':
 		case 'TIME':
-		case 'TITL':
-		case 'TYPE':
 		case 'URL':
-		case '_ASSO':
 		case '_HEB':
 		case '_PRIM':
 			echo help_link($fact);
@@ -2175,7 +2170,7 @@ function linkMedia($mediaid, $linktoid, $level=1, $chan=true) {
 		replace_gedrec($linktoid, WT_GED_ID, $newrec, $chan);
 		return true;
 	} else {
-		echo "<br><center>", WT_I18N::translate('No such ID exists in this GEDCOM file.'), "</center>";
+		// Record not found?  Maybe deleted since we started this action?
 		return false;
 	}
 }

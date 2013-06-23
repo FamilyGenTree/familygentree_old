@@ -30,11 +30,14 @@ if (!defined('WT_WEBTREES')) {
 
 global $subColor;
 
+
 // This theme uses the jQuery “colorbox” plugin to display images
 $this
 	->addExternalJavascript(WT_JQUERY_COLORBOX_URL)
 	->addExternalJavascript(WT_JQUERY_WHEELZOOM_URL)
 	->addInlineJavascript('activate_colorbox();')
+	->addInlineJavascript('jQuery.extend(jQuery.colorbox.settings, {width:"70%", height:"70%", transition:"none", slideshowStart:"'. WT_I18N::translate('Play').'", slideshowStop:"'. WT_I18N::translate('Stop').'"})') 
+
 	->addInlineJavascript('
 		jQuery.extend(jQuery.colorbox.settings, {
 			title:	function(){
@@ -51,7 +54,7 @@ echo
 	'<title>', htmlspecialchars($title), '</title>',
 	header_links($META_DESCRIPTION, $META_ROBOTS, $META_GENERATOR, $LINK_CANONICAL),
 	'<link rel="icon" href="', WT_THEME_URL, 'favicon.png" type="image/png">',
-	'<link rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.0/jquery-ui-1.10.0.custom.css" type="text/css">',
+	'<link rel="stylesheet" href="', WT_THEME_URL, 'jquery-ui-1.10.3/jquery-ui-1.10.3.custom.css" type="text/css">',
 	'<link rel="stylesheet" href="', WT_THEME_URL, 'css/colors.css" type="text/css">',
 	'<link rel="stylesheet" href="', WT_THEME_URL,  'css/',  $subColor,  '.css" type="text/css" media="all">';
 
@@ -82,12 +85,10 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 	echo
 	// Top row left
 	'<div id="header">',
-	'<div id="spacer"></div>',
 	'<span class="title" dir="auto">', WT_TREE_TITLE, '</span>';
 
 	// Top row right 
 	echo 
-	'<div class="optionsMenu" >',
 	'<ul class="makeMenu">';
 
 	if (WT_USER_ID) {
@@ -127,7 +128,7 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 			'</form>',
 		'</li>',
 	'</ul>',
-	'</div>';
+'</div>';
 
 	// Second Row menu and palette selection
 	// Menu
@@ -146,7 +147,7 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 
 	// Print the menu bar
 	echo
-		'<div id="topMenu">',
+
 		'<ul id="main-menu">'; 
 		foreach ($menu_items as $menu) {
 			if ($menu) {
@@ -155,15 +156,15 @@ if  ($view!='simple') { // Use "simple" headers for popup windows
 		}
 	unset($menu_items, $menu);
 	echo
-		'</ul>',
-		'</div>', // <div id="topMenu">
-		'</div>'; // <div id="header">
+		'</ul>'; 
 }
 // Remove list from home when only 1 gedcom 
 $this->addInlineJavaScript(
 	'if (jQuery("#menu-tree ul li").length == 2) jQuery("#menu-tree ul li:last-child").remove();'
 );
+
 echo
 	$javascript,
 	WT_FlashMessages::getHtmlMessages(), // Feedback from asynchronous actions
 	'<div id="content">';
+

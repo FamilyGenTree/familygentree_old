@@ -291,10 +291,10 @@ class WT_Event {
 		$tag=$this->getTag();
 		$file=$tag.'.png';
 		if (file_exists($dir.$file)) {
-			return '<img src="'.WT_STATIC_URL.$dir.$file.'" title="'.WT_Gedcom_Tag::getLabel($tag).'" align="middle">';
+			return '<img src="'.WT_STATIC_URL.$dir.$file.'" title="'.WT_Gedcom_Tag::getLabel($tag).'">';
 		} elseif (file_exists($dir.'NULL.png')) {
 			// Spacer image - for alignment - until we move to a sprite.
-			return '<img src="'.WT_STATIC_URL.$dir.'NULL.png" align="middle">';
+			return '<img src="'.WT_STATIC_URL.$dir.'NULL.png">';
 		} else {
 			return '';
 		}
@@ -375,8 +375,8 @@ class WT_Event {
 				"WILL",
 				"_HOL",
 				"_????_",
-				"DEAT", "CAUS",
-				"_FNRL", "BURI", "CREM", "_INTE", "CEME",
+				"DEAT",
+				"_FNRL", "BURI", "CREM", "_INTE",
 				"_YART",
 				"_NLIV",
 				"PROB",
