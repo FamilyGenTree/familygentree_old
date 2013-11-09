@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -45,7 +43,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$filter  =get_block_setting($block_id, 'filter',   'all');
 		$controls=get_block_setting($block_id, 'controls', true);
-		$start   =get_block_setting($block_id, 'start',    false) || safe_GET_bool('start');
+		$start   =get_block_setting($block_id, 'start',    false) || WT_Filter::getBool('start');
 		$block   =get_block_setting($block_id, 'block',    true);
 
 		// We can apply the filters using SQL
@@ -94,13 +92,13 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 		while ($all_media) {
 			$n=array_rand($all_media);
 			$media=WT_Media::getInstance($all_media[$n]);
-			if ($media->canDisplayDetails() && !$media->isExternal()) {
+			if ($media->canShow() && !$media->isExternal()) {
 				// Check if it is linked to a suitable individual
-				foreach ($media->fetchLinkedIndividuals() as $indi) {
+				foreach ($media->linkedIndividuals('OBJE') as $indi) {
 					if (
 						$filter=='all' ||
-						$filter=='indi'  && strpos($indi->getGedcomRecord(), "\n1 OBJE @" . $media->getXref() . '@') !==false ||
-						$filter=='event' && strpos($indi->getGedcomRecord(), "\n2 OBJE @" . $media->getXref() . '@') !==false
+						$filter=='indi'  && strpos($indi->getGedcom(), "\n1 OBJE @" . $media->getXref() . '@') !==false ||
+						$filter=='event' && strpos($indi->getGedcom(), "\n2 OBJE @" . $media->getXref() . '@') !==false
 					) {
 						// Found one :-)
 						$random_media=$media;
@@ -119,7 +117,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 			$title='';
 		}
 		$title.=$this->getTitle();
-		
+
 		if ($random_media) {
 			$content = "<div id=\"random_picture_container$block_id\">";
 			if ($controls) {
@@ -177,17 +175,17 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 				$content .= '</td><td class="details2">';
 			}
 			$content .= '<a href="'.$random_media->getHtmlUrl().'"><b>'. $random_media->getFullName() .'</b></a><br>';
-			foreach ($random_media->fetchLinkedIndividuals() as $individual) {
-				$content .= '<a href="' . $individual->getHtmlUrl() . '">' . WT_I18N::translate('View Person') . ' — ' . $individual->getFullname().'</a><br>';
+			foreach ($random_media->linkedIndividuals('OBJE') as $individual) {
+				$content .= '<a href="' . $individual->getHtmlUrl() . '">' . WT_I18N::translate('View person') . ' — ' . $individual->getFullname().'</a><br>';
 			}
-			foreach ($random_media->fetchLinkedFamilies() as $family) {
-				$content .= '<a href="' . $family->getHtmlUrl() . '">' . WT_I18N::translate('View Family') . ' — ' . $family->getFullname().'</a><br>';
+			foreach ($random_media->linkedFamilies('OBJE') as $family) {
+				$content .= '<a href="' . $family->getHtmlUrl() . '">' . WT_I18N::translate('View family') . ' — ' . $family->getFullname().'</a><br>';
 			}
-			foreach ($random_media->fetchLinkedSources() as $source) {
-				$content .= '<a href="' . $source->getHtmlUrl() . '">' . WT_I18N::translate('View Source') . ' — ' . $source->getFullname().'</a><br>';
+			foreach ($random_media->linkedSources('OBJE') as $source) {
+				$content .= '<a href="' . $source->getHtmlUrl() . '">' . WT_I18N::translate('View source') . ' — ' . $source->getFullname().'</a><br>';
 			}
 			$content .= '<br><div class="indent">';
-			$content .= print_fact_notes($random_media->getGedcomRecord(), "1", false, true);
+			$content .= print_fact_notes($random_media->getGedcom(), "1", false, true);
 			$content .= '</div>';
 			$content .= '</td></tr></table>';
 			$content .= '</div>'; // random_picture_content
@@ -259,7 +257,7 @@ class random_media_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$filter=get_block_setting($block_id, 'filter', 'all');
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Show only persons, events, or all?');
+		echo WT_I18N::translate('Show only individuals, events, or all?');
 		echo '</td><td class="optionbox">';
 		echo select_edit_control('filter', array('indi'=>WT_I18N::translate('Individuals'), 'event'=>WT_I18N::translate('Facts and events'), 'all'=>WT_I18N::translate('All')), null, $filter, '');
 		echo '</td></tr>';

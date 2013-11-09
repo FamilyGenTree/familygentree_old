@@ -5,7 +5,7 @@
 // Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
-// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+// Copyright (C) 2002 to 2009 PGV Development Team.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 define('WT_SCRIPT_NAME', 'edituser.php');
 require './includes/session.php';
@@ -41,17 +39,17 @@ foreach (get_theme_names() as $themename=>$themedir) {
 }
 
 // Extract form variables
-$form_action        =safe_POST('form_action'   );
-$form_username      =safe_POST('form_username',       WT_REGEX_USERNAME);
-$form_realname      =safe_POST('form_realname' );
-$form_pass1         =safe_POST('form_pass1',          WT_REGEX_PASSWORD);
-$form_pass2         =safe_POST('form_pass2',          WT_REGEX_PASSWORD);
-$form_email         =safe_POST('form_email',          WT_REGEX_EMAIL,                         'email@example.com');
-$form_rootid        =safe_POST('form_rootid',         WT_REGEX_XREF,                           WT_USER_ROOT_ID   );
-$form_theme         =safe_POST('form_theme',          $ALL_THEME_DIRS);
-$form_language      =safe_POST('form_language',       array_keys(WT_I18N::installed_languages()), WT_LOCALE          );
-$form_contact_method=safe_POST('form_contact_method');
-$form_visible_online=safe_POST_bool('form_visible_online');
+$form_action         = WT_Filter::post('form_action');
+$form_username       = WT_Filter::post('form_username');
+$form_realname       = WT_Filter::post('form_realname' );
+$form_pass1          = WT_Filter::post('form_pass1', WT_REGEX_PASSWORD);
+$form_pass2          = WT_Filter::post('form_pass2', WT_REGEX_PASSWORD);
+$form_email          = WT_Filter::postEmail('form_email');
+$form_rootid         = WT_Filter::post('form_rootid', WT_REGEX_XREF);
+$form_theme          = WT_Filter::post('form_theme', implode('|', $ALL_THEME_DIRS));
+$form_language       = WT_Filter::post('form_language', implode('|', array_keys(WT_I18N::installed_languages())), WT_LOCALE);
+$form_contact_method = WT_Filter::post('form_contact_method');
+$form_visible_online = WT_Filter::postBool('form_visible_online');
 
 // Respond to form action
 if ($form_action=='update' && WT_Filter::checkCsrf()) {
@@ -128,7 +126,7 @@ function paste_id(value) {
 // show the form to edit a user account details
 echo '<div id="edituser-page">
 	<h2>', WT_I18N::translate('My account'), '</h2>
-	<form name="editform" method="post" action="" onsubmit="return checkform(this);">
+	<form name="editform" method="post" action="?" onsubmit="return checkform(this);">
 	<input type="hidden" name="form_action" value="update">
 	', WT_Filter::getCsrf(), '
 	<div id="edituser-table">
@@ -136,18 +134,18 @@ echo '<div id="edituser-page">
 		<div class="value"><input type="text" name="form_username" value="', WT_USER_NAME, '" autofocus></div>
 		<div class="label">', WT_I18N::translate('Real name'), help_link('real_name'), '</div>
 		<div class="value"><input type="text" name="form_realname" value="', getUserFullName(WT_USER_ID), '"></div>';
-		$person=WT_Person::getInstance(WT_USER_GEDCOM_ID);
+		$person=WT_Individual::getInstance(WT_USER_GEDCOM_ID);
 		if ($person) {
 			echo '<div class="label">', WT_I18N::translate('Individual record'), help_link('edituser_gedcomid'), '</div>
 				<div class="value">', $person->format_list('span'), '</div>';
 		}
-		$person=WT_Person::getInstance(WT_USER_ROOT_ID);
+		$person=WT_Individual::getInstance(WT_USER_ROOT_ID);
 		echo '<div class="label">', WT_I18N::translate('Default individual'), help_link('default_individual'), '</div>
 			<div class="value"><input type="text" name="form_rootid" id="rootid" value="', WT_USER_ROOT_ID, '">';
 				echo print_findindi_link('rootid'), '<br>';
 				if ($person) {
 					echo $person->format_list('span');
-				}		
+				}
 			echo '</div>
 		<div class="label">', WT_I18N::translate('Password'), help_link('password'), '</div>
 		<div class="value"><input type="password" name="form_pass1"> ', WT_I18N::translate('Leave password blank if you want to keep the current password.'), '</div>
@@ -160,7 +158,7 @@ echo '<div id="edituser-page">
 		<div class="label">', WT_I18N::translate('Theme'), help_link('THEME'), '</div>
 		<div class="value">
 			<select name="form_theme">
-			<option value="">', htmlspecialchars(/* I18N: default option in list of themes */ WT_I18N::translate('<default theme>')), '</option>';
+			<option value="">', WT_Filter::escapeHtml(/* I18N: default option in list of themes */ WT_I18N::translate('<default theme>')), '</option>';
 			foreach (get_theme_names() as $themename=>$themedir) {
 				echo '<option value="', $themedir, '"';
 				if ($themedir==get_user_setting(WT_USER_ID, 'theme')) {

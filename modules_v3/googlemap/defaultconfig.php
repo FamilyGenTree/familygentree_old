@@ -2,10 +2,10 @@
 // Configuration file required by GoogleMap module
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
-// Copyright (C) 2002 to 2009  PGV Development Team. All rights reserved.
+// Copyright (C) 2002 to 2009 PGV Development Team. All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
  header('HTTP/1.0 403 Forbidden');
@@ -30,7 +28,7 @@ if (!defined('WT_WEBTREES')) {
 
 // Create GM tables, if not already present
 try {
-	WT_DB::updateSchema(WT_ROOT.WT_MODULES_DIR.'/googlemap/db_schema/', 'GM_SCHEMA_VERSION', 5);
+	WT_DB::updateSchema(WT_ROOT.WT_MODULES_DIR.'/googlemap/db_schema/', 'GM_SCHEMA_VERSION', 4);
 } catch (PDOException $ex) {
 	// The schema update scripts should never fail.  If they do, there is no clean recovery.
 	die($ex);
@@ -61,6 +59,9 @@ global $GOOGLEMAP_PRECISION_4;
 $GOOGLEMAP_PRECISION_4 = get_module_setting('googlemap', 'GM_PRECISION_4', '4');  // House level
 global $GOOGLEMAP_PRECISION_5;
 $GOOGLEMAP_PRECISION_5 = get_module_setting('googlemap', 'GM_PRECISION_5', '9');  // Max prcision level
+
+global $GM_MAX_NOF_LEVELS;
+$GM_MAX_NOF_LEVELS     = get_module_setting('googlemap', 'GM_MAX_NOF_LEVELS',    '4'); // Max nr of levels to use in Googlemap
 
 global $GOOGLEMAP_COORD;
 $GOOGLEMAP_COORD       = get_module_setting('googlemap', 'GM_COORD',             '0'); // Enable or disable Display Map Co-ordinates

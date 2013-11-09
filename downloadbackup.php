@@ -20,13 +20,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 define('WT_SCRIPT_NAME', 'downloadbackup.php');
 require './includes/session.php';
 
-$fname=safe_GET('fname');
+$fname = WT_Filter::get('fname');
 
 if (!WT_USER_GEDCOM_ADMIN || !preg_match('/\.zip$/', $fname)) {
 	$controller=new WT_Controller_Page();

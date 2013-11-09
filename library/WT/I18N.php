@@ -24,8 +24,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -48,7 +46,7 @@ class WT_I18N {
 		$cache_options=array('automatic_serialization'=>true);
 
 		if (ini_get('apc.enabled')) {
-			WT_I18N::$cache=Zend_Cache::factory('Core', 'Apc', $cache_options, array());
+			self::$cache=Zend_Cache::factory('Core', 'Apc', $cache_options, array());
 		} else {
 			if (!is_dir(WT_DATA_DIR.'cache')) {
 				// We may not have permission - especially during setup, before we instruct
@@ -56,20 +54,20 @@ class WT_I18N {
 				@mkdir(WT_DATA_DIR.'cache');
 			}
 			if (is_dir(WT_DATA_DIR.DIRECTORY_SEPARATOR.'cache')) {
-				WT_I18N::$cache=Zend_Cache::factory('Core', 'File', $cache_options, array('cache_dir'=>WT_DATA_DIR.'cache'));
+				self::$cache=Zend_Cache::factory('Core', 'File', $cache_options, array('cache_dir'=>WT_DATA_DIR.'cache'));
 			} else {
 				// No cache available :-(
-				WT_I18N::$cache=Zend_Cache::factory('Core', 'Zend_Cache_Backend_BlackHole', $cache_options, array(), false, true);
+				self::$cache=Zend_Cache::factory('Core', 'Zend_Cache_Backend_BlackHole', $cache_options, array(), false, true);
 			}
 		}
 
 		// If we created a cache, use it.
-		if (WT_I18N::$cache) {
-			Zend_Locale::setCache(WT_I18N::$cache);
-			Zend_Translate::setCache(WT_I18N::$cache);
+		if (self::$cache) {
+			Zend_Locale::setCache(self::$cache);
+			Zend_Translate::setCache(self::$cache);
 		}
 
-		$installed_languages=WT_I18N::installed_languages();
+		$installed_languages=self::installed_languages();
 		if (is_null($locale) || !array_key_exists($locale, $installed_languages)) {
 			// Automatic locale selection.
 			if (isset($_GET['lang']) && array_key_exists($_GET['lang'], $installed_languages)) {
@@ -97,10 +95,10 @@ class WT_I18N {
 				$prefs2=array();
 				foreach ($prefs as $pref) {
 					list($l, $q)=explode(';q=', $pref.';q=1.0');
-					$l=preg_replace(
-						array('/-/', '/_[a-z][a-z]$/e'),
-						array ('_', 'strtoupper("$0")'),
-						$l
+					$l=preg_replace_callback(
+						'/_[a-z][a-z]$/',
+						function($x) { return strtoupper($x[0]); },
+						str_replace('-', '_', $l)
 					); // en-gb => en_GB
 					if (array_key_exists($l, $prefs2)) {
 						$prefs2[$l]=max((float)$q, $prefs2[$l]);
@@ -149,31 +147,31 @@ class WT_I18N {
 
 		// Extract language settings from the translation file
 		global $DATE_FORMAT; // I18N: This is the format string for full dates.  See http://php.net/date for codes
-		$DATE_FORMAT=WT_I18N::noop('%j %F %Y');
+		$DATE_FORMAT=self::noop('%j %F %Y');
 		global $TIME_FORMAT; // I18N: This a the format string for the time-of-day.  See http://php.net/date for codes
-		$TIME_FORMAT=WT_I18N::noop('%g:%i:%s %a');
+		$TIME_FORMAT=self::noop('%H:%i:%s');
 		global $ALPHABET_upper; // Alphabetic sorting sequence (upper-case letters), used by webtrees to sort strings
-		$ALPHABET_upper=WT_I18N::noop('ALPHABET_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+		$ALPHABET_upper=self::noop('ALPHABET_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 		list(, $ALPHABET_upper)=explode('=', $ALPHABET_upper);
 		global $ALPHABET_lower; // Alphabetic sorting sequence (lower-case letters), used by webtrees to sort strings
-		$ALPHABET_lower=WT_I18N::noop('ALPHABET_lower=abcdefghijklmnopqrstuvwxyz');
+		$ALPHABET_lower=self::noop('ALPHABET_lower=abcdefghijklmnopqrstuvwxyz');
 		list(, $ALPHABET_lower)=explode('=', $ALPHABET_lower);
 		global $WEEK_START; // I18N: This is the first day of the week on calendars. 0=Sunday, 1=Monday...
-		$WEEK_START=WT_I18N::noop('WEEK_START=0');
+		$WEEK_START=self::noop('WEEK_START=0');
 		list(, $WEEK_START)=explode('=', $WEEK_START);
 
 		global $TEXT_DIRECTION;
 		$localeData=Zend_Locale_Data::getList($locale, 'layout');
 		$TEXT_DIRECTION=$localeData['characters']=='right-to-left' ? 'rtl' : 'ltr';
 
-		WT_I18N::$locale=$locale;
-		WT_I18N::$dir=$TEXT_DIRECTION;
+		self::$locale=$locale;
+		self::$dir=$TEXT_DIRECTION;
 
 		// I18N: This punctuation is used to separate lists of items.
-		WT_I18N::$list_separator=WT_I18N::translate(', ');
+		self::$list_separator=WT_I18N::translate(', ');
 
 		// I18N: This is the name of the MySQL collation that applies to your language.  A list is available at http://dev.mysql.com/doc/refman/5.0/en/charset-unicode-sets.html
-		WT_I18N::$collation=WT_I18N::translate('utf8_unicode_ci');
+		self::$collation=WT_I18N::translate('utf8_unicode_ci');
 
 		return $locale;
 	}
@@ -183,7 +181,7 @@ class WT_I18N {
 		$mo_files=glob(WT_ROOT.'language'.DIRECTORY_SEPARATOR.'*.mo');
 		$cache_key=md5(serialize($mo_files));
 
-		if (!($installed_languages=WT_I18N::$cache->load($cache_key))) {
+		if (!($installed_languages=self::$cache->load($cache_key))) {
 			$installed_languages=array();
 			foreach ($mo_files as $mo_file) {
 				if (preg_match('/^(([a-z][a-z][a-z]?)(_[A-Z][A-Z])?)\.mo$/', basename($mo_file), $match)) {
@@ -217,16 +215,16 @@ class WT_I18N {
 					list(,$value)=explode('|', $value);
 				}
 			}
-			WT_I18N::$cache->save($installed_languages, $cache_key);
+			self::$cache->save($installed_languages, $cache_key);
 		}
 		return $installed_languages;
 	}
 
-	// Generate i18n markup for the <html> tag, e.g lang="ar" dir="RTL"
+	// Generate i18n markup for the <html> tag, e.g. lang="ar" dir="rtl"
 	static public function html_markup() {
-		$localeData=Zend_Locale_Data::getList(WT_I18N::$locale, 'layout');
+		$localeData=Zend_Locale_Data::getList(self::$locale, 'layout');
 		$dir=$localeData['characters']=='right-to-left' ? 'rtl' : 'ltr';
-		list($lang)=explode('_', WT_I18N::$locale);
+		list($lang)=explode('_', self::$locale);
 		return 'lang="'.$lang.'" dir="'.$dir.'"';
 	}
 
@@ -237,7 +235,7 @@ class WT_I18N {
 	static public function number($n, $precision=0) {
 		// Add "punctuation" and convert digits
 		$n=Zend_Locale_Format::toNumber($n, array('locale'=>WT_LOCALE, 'precision'=>$precision));
-		$n=WT_I18N::digits($n);
+		$n=self::digits($n);
 		return $n;
 	}
 	// Convert the digits 0-9 into the local script
@@ -257,7 +255,7 @@ class WT_I18N {
 	static public function percentage($n, $precision=0) {
 		return
 			/* I18N: This is a percentage, such as “32.5%”. “%s” is the number, “%%” is the percent symbol.  Some languages require a (non-breaking) space between the two, or a different symbol. */
-			WT_I18N::translate('%s%%', WT_I18N::number($n*100.0, $precision));
+			WT_I18N::translate('%s%%', self::number($n*100.0, $precision));
 	}
 
 	// echo WT_I18N::translate('Hello World!');
@@ -298,9 +296,9 @@ class WT_I18N {
 		return Zend_Registry::get('Zend_Translate')->_($string);
 	}
 
-	// echo WT_I18N::plural('There is an error', 'There are errors', $num_errors);
-	// echo WT_I18N::plural('There is one error', 'There are %s errors', $num_errors);
-	// echo WT_I18N::plural('There is %1$d %2$s cat', 'There are %1$d %2$s cats', $num, $num, $colour);
+	// echo self::plural('There is an error', 'There are errors', $num_errors);
+	// echo self::plural('There is one error', 'There are %s errors', $num_errors);
+	// echo self::plural('There is %1$d %2$s cat', 'There are %1$d %2$s cats', $num, $num, $colour);
 	static public function plural(/* var_args */) {
 		$args=func_get_args();
 		if (WT_DEBUG_LANG) {
@@ -323,34 +321,34 @@ class WT_I18N {
 	static public function gedcom_age($string) {
 		switch ($string) {
 		case 'STILLBORN':
-			// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (stillborn)
+			// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (stillborn)
 			return WT_I18N::translate('(stillborn)');
 		case 'INFANT':
-			// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (in infancy)
+			// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (in infancy)
 			return WT_I18N::translate('(in infancy)');
 		case 'CHILD':
-			// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (in childhood)
+			// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (in childhood)
 			return WT_I18N::translate('(in childhood)');
 		}
 		$age=array();
 		if (preg_match('/(\d+)y/', $string, $match)) {
-			// I18N: Part of an age string. e.g 5 years, 4 months and 3 days
+			// I18N: Part of an age string. e.g. 5 years, 4 months and 3 days
 			$years=$match[1];
-			$age[]=WT_I18N::plural('%s year', '%s years', $years, WT_I18N::number($years));
+			$age[]=self::plural('%s year', '%s years', $years, self::number($years));
 		} else {
 			$years=-1;
 		}
 		if (preg_match('/(\d+)m/', $string, $match)) {
-			// I18N: Part of an age string. e.g 5 years, 4 months and 3 days
-			$age[]=WT_I18N::plural('%s month', '%s months', $match[1], WT_I18N::number($match[1]));
+			// I18N: Part of an age string. e.g. 5 years, 4 months and 3 days
+			$age[]=self::plural('%s month', '%s months', $match[1], self::number($match[1]));
 		}
 		if (preg_match('/(\d+)w/', $string, $match)) {
-			// I18N: Part of an age string. e.g 7 weeks and 3 days
-			$age[]=WT_I18N::plural('%s week', '%s weeks', $match[1], WT_I18N::number($match[1]));
+			// I18N: Part of an age string. e.g. 7 weeks and 3 days
+			$age[]=self::plural('%s week', '%s weeks', $match[1], self::number($match[1]));
 		}
 		if (preg_match('/(\d+)d/', $string, $match)) {
-			// I18N: Part of an age string. e.g 5 years, 4 months and 3 days
-			$age[]=WT_I18N::plural('%s day', '%s days', $match[1], WT_I18N::number($match[1]));
+			// I18N: Part of an age string. e.g. 5 years, 4 months and 3 days
+			$age[]=self::plural('%s day', '%s days', $match[1], self::number($match[1]));
 		}
 		// If an age is just a number of years, only show the number
 		if (count($age)==1 && $years>=0) {
@@ -358,13 +356,13 @@ class WT_I18N {
 		}
 		if ($age) {
 			if (!substr_compare($string, '<', 0, 1)) {
-				// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (aged less than 21 years)
+				// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (aged less than 21 years)
 				return WT_I18N::translate('(aged less than %s)', $age);
 			} elseif (!substr_compare($string, '>', 0, 1)) {
-				// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (aged more than 21 years)
+				// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (aged more than 21 years)
 				return WT_I18N::translate('(aged more than %s)', $age);
 			} else {
-				// I18N: Description of an individual’s age at an event.  e.g Died 14 Jan 1900 (aged 43 years)
+				// I18N: Description of an individual’s age at an event.  e.g. Died 14 Jan 1900 (aged 43 years)
 				return WT_I18N::translate('(aged %s)', $age);
 			}
 		} else {
@@ -387,21 +385,21 @@ class WT_I18N {
 		// We must AVOID combining phrases to make sentences.
 		if ($seconds>$year) {
 			$years=(int)($seconds/$year);
-			return WT_I18N::plural('%s year ago', '%s years ago', $years, WT_I18N::number($years));
+			return self::plural('%s year ago', '%s years ago', $years, self::number($years));
 		} elseif ($seconds>$month) {
 			$months=(int)($seconds/$month);
-			return WT_I18N::plural('%s month ago', '%s months ago', $months, WT_I18N::number($months));
+			return self::plural('%s month ago', '%s months ago', $months, self::number($months));
 		} elseif ($seconds>$day) {
 			$days=(int)($seconds/$day);
-			return WT_I18N::plural('%s day ago', '%s days ago', $days, WT_I18N::number($days));
+			return self::plural('%s day ago', '%s days ago', $days, self::number($days));
 		} elseif ($seconds>$hour) {
 			$hours=(int)($seconds/$hour);
-			return WT_I18N::plural('%s hour ago', '%s hours ago', $hours, WT_I18N::number($hours));
+			return self::plural('%s hour ago', '%s hours ago', $hours, self::number($hours));
 		} elseif ($seconds>$minute) {
 			$minutes=(int)($seconds/$minute);
-			return WT_I18N::plural('%s minute ago', '%s minutes ago', $minutes, WT_I18N::number($minutes));
+			return self::plural('%s minute ago', '%s minutes ago', $minutes, self::number($minutes));
 		} else {
-			return WT_I18N::plural('%s second ago', '%s seconds ago', $seconds, WT_I18N::number($seconds));
+			return self::plural('%s second ago', '%s seconds ago', $seconds, self::number($seconds));
 		}
 	}
 
@@ -415,7 +413,7 @@ class WT_I18N {
 		foreach ($lengths as $length) {
 			$length_menu.=
 				'<option value="'.$length.'">'.
-				($length==-1 ? /* I18N: listbox option, e.g. “10,25,50,100,all” */ WT_I18N::translate('All') : WT_I18N::number($length)).
+				($length==-1 ? /* I18N: listbox option, e.g. “10,25,50,100,all” */ WT_I18N::translate('All') : self::number($length)).
 				'</option>';
 		}
 		$length_menu='<select>'.$length_menu.'</select>';
@@ -474,9 +472,9 @@ class WT_I18N {
 			' "sInfoFiltered":   "'./* I18N: %s is a placeholder for a number */ WT_I18N::translate('(filtered from %s total entries)', '_MAX_').'",'.
 			' "sInfoPostfix":    "",'.
 			' "sInfoThousands":  "'.$symbols['group'].'",'.
-			' "sLengthMenu":     "'.addslashes($length_menu).'",'.
-			' "sLoadingRecords": "'.WT_I18N::translate('Loading...').'",'.
-			' "sProcessing":     "'.WT_I18N::translate('Loading...').'",'.
+			' "sLengthMenu":     "'.WT_Filter::escapeJs($length_menu).'",'.
+			' "sLoadingRecords": "'.WT_I18N::translate('Loading…').'",'.
+			' "sProcessing":     "'.WT_I18N::translate('Loading…').'",'.
 			' "sSearch":         "'.WT_I18N::translate('Filter').'",'.
 			' "sUrl":            "",'.
 			' "sZeroRecords":    "'.WT_I18N::translate('No records to display').'"'.

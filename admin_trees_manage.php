@@ -17,8 +17,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 define('WT_SCRIPT_NAME', 'admin_trees_manage.php');
 require './includes/session.php';
@@ -102,7 +100,7 @@ case 'replace_upload':
 			}
 		}
 	}
-	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'?keep_media'.$gedcom_id.'='.safe_POST_bool('keep_media'.$gedcom_id));
+	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'?keep_media'.$gedcom_id.'='.WT_Filter::postBool('keep_media'.$gedcom_id));
 	exit;
 case 'replace_import':
 	$gedcom_id = WT_Filter::postInteger('gedcom_id');
@@ -111,26 +109,26 @@ case 'replace_import':
 		$ged_name = basename(WT_Filter::post('ged_name'));
 		import_gedcom_file($gedcom_id, WT_DATA_DIR.$ged_name, $ged_name);
 	}
-	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'?keep_media'.$gedcom_id.'='.safe_POST_bool('keep_media'.$gedcom_id));
+	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'?keep_media'.$gedcom_id.'='.WT_Filter::postBool('keep_media'.$gedcom_id));
 	exit;
 }
 
 $controller->pageHeader();
 
 // Process GET actions
-switch (safe_GET('action')) {
+switch (WT_Filter::get('action')) {
 case 'uploadform':
 case 'importform':
-	$gedcom_id=safe_GET('gedcom_id');
+	$gedcom_id=WT_Filter::getInteger('gedcom_id');
 	$gedcom_name=get_gedcom_from_id($gedcom_id);
 	// Check it exists
 	if (!$gedcom_name) {
 		break;
 	}
 	echo '<p>', WT_I18N::translate('This will delete all the genealogical data from <b>%s</b> and replace it with data from another GEDCOM.', $gedcom_name), '</p>';
-	// the javascript in the next line strips any path associated with the file before comparing it to the current GEDCOM name (both Chrome and IE8 include c:\fakepath\ in the filename).  
+	// the javascript in the next line strips any path associated with the file before comparing it to the current GEDCOM name (both Chrome and IE8 include c:\fakepath\ in the filename).
 	$previous_gedcom_filename=get_gedcom_setting($gedcom_id, 'gedcom_filename');
-	echo '<form name="replaceform" method="post" enctype="multipart/form-data" action="', WT_SCRIPT_NAME, '" onsubmit="var newfile = document.replaceform.ged_name.value; newfile = newfile.substr(newfile.lastIndexOf(\'\\\\\')+1); if (newfile!=\'', htmlspecialchars($previous_gedcom_filename), '\' && \'\' != \'', htmlspecialchars($previous_gedcom_filename), '\') return confirm(\'', htmlspecialchars(WT_I18N::translate('You have selected a GEDCOM with a different name.  Is this correct?')), '\'); else return true;">';
+	echo '<form name="replaceform" method="post" enctype="multipart/form-data" action="', WT_SCRIPT_NAME, '" onsubmit="var newfile = document.replaceform.ged_name.value; newfile = newfile.substr(newfile.lastIndexOf(\'\\\\\')+1); if (newfile!=\'', WT_Filter::escapeHtml($previous_gedcom_filename), '\' && \'\' != \'', WT_Filter::escapeHtml($previous_gedcom_filename), '\') return confirm(\'', WT_Filter::escapeHtml(WT_I18N::translate('You have selected a GEDCOM with a different name.  Is this correct?')), '\'); else return true;">';
 	echo '<input type="hidden" name="gedcom_id" value="', $gedcom_id, '">';
 	echo WT_Filter::getCsrf();
 	if (WT_Filter::get('action')=='uploadform') {
@@ -151,14 +149,13 @@ case 'importform':
 			}
 		}
 		if ($files) {
-			sort($files);
 			echo WT_DATA_DIR, '<select name="ged_name">';
 			foreach ($files as $file) {
-				echo '<option value="', htmlspecialchars($file), '"';
+				echo '<option value="', WT_Filter::escapeHtml($file), '"';
 				if ($file==$previous_gedcom_filename) {
 					echo ' selected="selected"';
 				}
-				echo'>', htmlspecialchars($file), '</option>';
+				echo'>', WT_Filter::escapeHtml($file), '</option>';
 			}
 			echo '</select>';
 		} else {
@@ -203,7 +200,7 @@ foreach (WT_Tree::GetAll() as $tree) {
 				echo '<div id="import', $tree->tree_id, '"></div>';
 			}
 			$controller->addInlineJavascript(
-				'jQuery("#import'.$tree->tree_id.'").load("import.php?gedcom_id='.$tree->tree_id.'&keep_media'.$tree->tree_id.'='.safe_GET('keep_media'.$tree->tree_id).'");'
+				'jQuery("#import'.$tree->tree_id.'").load("import.php?gedcom_id='.$tree->tree_id.'&keep_media'.$tree->tree_id.'='.WT_Filter::get('keep_media'.$tree->tree_id).'");'
 			);
 			echo '<table border="0" width="100%" id="actions', $tree->tree_id, '" style="display:none">';
 		} else {
@@ -275,5 +272,4 @@ if (WT_USER_IS_ADMIN) {
 				help_link('PGV_WIZARD'),
 				'</div>';
 		}
-}	
-
+}

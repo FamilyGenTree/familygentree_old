@@ -23,8 +23,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-//$Id$
 
 define('WT_SCRIPT_NAME', 'admin_trees_check.php');
 require './includes/session.php';
@@ -42,7 +40,7 @@ echo select_edit_control('ged', WT_Tree::getNameList(), null, WT_GEDCOM);
 echo '<input type="submit" value="', $controller->getPageTitle(), '">';
 echo '</form>';
 
-if (!safe_GET('go')) {
+if (!WT_Filter::get('go')) {
 	exit;
 }
 

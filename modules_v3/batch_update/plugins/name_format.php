@@ -2,7 +2,7 @@
 // Batch Update plugin for phpGedView - fix spacing in names, particularly that before/after the surname slashes
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2011 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2008 Greg Roach.  All rights reserved.
@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -34,20 +32,20 @@ class name_format_bu_plugin extends base_plugin {
 	}
 
 	static function getDescription() {
-		return WT_I18N::translate('Correct NAME records of the form \'John/DOE/\' or \'John /DOE\', as produced by older genealogy programs.');
+		return WT_I18N::translate('Correct NAME records of the form “John/DOE/” or “John /DOE”, as produced by older genealogy programs.');
 	}
 
 	static function doesRecordNeedUpdate($xref, $gedrec) {
 		return
-			preg_match('/^(?:1 NAME|2 (?:FONE|ROMN|_MARNM|_AKA|_HEB)) [^\/\n]*\/[^\/\n]*$/m', $gedrec) ||
-			preg_match('/^(?:1 NAME|2 (?:FONE|ROMN|_MARNM|_AKA|_HEB)) [^\/\n]*[^\/ ]\//m', $gedrec);
+			preg_match('/^(?:1 NAME|2 _MARNM|2 _AKA) [^\/\n]*\/[^\/\n]*$/m', $gedrec) ||
+			preg_match('/^(?:1 NAME|2 _MARNM|2 _AKA) [^\/\n]*[^\/ ]\//m', $gedrec);
 	}
 
 	static function updateRecord($xref, $gedrec) {
 		return preg_replace(
 			array(
-				'/^((?:1 NAME|2 (?:FONE|ROMN|_MARNM|_AKA|_HEB)) [^\/\n]*\/[^\/\n]*)$/m',
-				'/^((?:1 NAME|2 (?:FONE|ROMN|_MARNM|_AKA|_HEB)) [^\/\n]*[^\/ ])(\/)/m'
+				'/^((?:1 NAME|2 _MARNM|2 _AKA) [^\/\n]*\/[^\/\n]*)$/m',
+				'/^((?:1 NAME|2 _MARNM|2 _AKA) [^\/\n]*[^\/ ])(\/)/m'
 			),
 			array(
 				'$1/',

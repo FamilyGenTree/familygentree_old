@@ -8,7 +8,7 @@
 // Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
-// Copyright (C) 2002 to 2009  PGV Development Team.  All rights reserved.
+// Copyright (C) 2002 to 2009 PGV Development Team.  All rights reserved.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,8 +23,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 define('WT_SCRIPT_NAME', 'statisticsplot.php');
 require './includes/session.php';
@@ -658,7 +656,7 @@ function myplot($mytitle, $n, $xdata, $xtitle, $ydata, $ytitle, $legend) {
 	// in PHP 5.3.0 we can use
 	//$title = strstr($mytitle, '|', true);
 	$title = substr($mytitle, 0, strpos($mytitle, '|'));
-	echo '<img src="', $imgurl, '" width="950" height="300" alt="', htmlspecialchars($title), '" title="', htmlspecialchars($title), '">';
+	echo '<img src="', $imgurl, '" width="950" height="300" alt="', WT_Filter::escapeHtml($title), '" title="', WT_Filter::escapeHtml($title), '">';
 }
 
 function calc_axis($xas_grenzen) {
@@ -824,7 +822,7 @@ function set_params($current, $indfam, $xg, $zg, $titstr, $xt, $yt, $gx, $gz, $m
 }
 
 //-- ========= start of main program =========
-$action = safe_REQUEST($_REQUEST, 'action', WT_REGEX_XREF);
+$action = WT_Filter::post('action');
 
 if ($action=='update') {
 	$x_as = $_POST['x-as'];

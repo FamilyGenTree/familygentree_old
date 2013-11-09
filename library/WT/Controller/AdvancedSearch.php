@@ -2,7 +2,7 @@
 // Controller for the advanced search page
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2009 PGV Development Team. All rights reserved.
@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -38,7 +36,7 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 		parent::__construct();
 
 		$this->setPageTitle(WT_I18N::translate('Advanced search'));
-		
+
 		if (empty($_REQUEST['action'])) {
 			$this->action="advanced";
 		}
@@ -202,7 +200,7 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 		}
 
 		// Dynamic SQL query, plus bind variables
-		$sql="SELECT DISTINCT 'INDI' AS type, ind.i_id AS xref, ind.i_file AS ged_id, ind.i_gedcom AS gedrec FROM `##individuals` ind";
+		$sql="SELECT DISTINCT ind.i_id AS xref, ind.i_file AS gedcom_id, ind.i_gedcom AS gedcom FROM `##individuals` ind";
 		$bind=array();
 
 		// Join the following tables
@@ -508,13 +506,13 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 				$bind[]=$value;
 			}
 		}
-		$rows=WT_DB::prepare($sql)->execute($bind)->fetchAll(PDO::FETCH_ASSOC);
+		$rows=WT_DB::prepare($sql)->execute($bind)->fetchAll();
 		foreach ($rows as $row) {
-			$person=WT_Person::getInstance($row);
+			$person=WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 			// Check for XXXX:PLAC fields, which were only partially matched by SQL
 			foreach ($this->fields as $n=>$field) {
 				if ($this->values[$n] && preg_match('/^('.WT_REGEX_TAG.'):PLAC$/', $field, $match)) {
-					if (!preg_match('/\n1 '.$match[1].'(\n[2-9].*)*\n2 PLAC .*'.preg_quote($this->values[$n], '/').'/i', $person->getGedcomRecord())) {
+					if (!preg_match('/\n1 '.$match[1].'(\n[2-9].*)*\n2 PLAC .*'.preg_quote($this->values[$n], '/').'/i', $person->getGedcom())) {
 						continue 2;
 				 }
 				}

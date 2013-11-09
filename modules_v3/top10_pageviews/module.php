@@ -2,7 +2,7 @@
 // Classes and libraries for module system
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2010 John Finlay
@@ -20,8 +20,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
@@ -80,7 +78,7 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 		}
 		foreach ($top10 as $id=>$count) {
 			$record=WT_GedcomRecord::getInstance($id);
-			if ($record && $record->canDisplayDetails()) {
+			if ($record && $record->canShow()) {
 				$content .= '<tr valign="top">';
 				if ($count_placement=='before') {
 					$content .= '<td dir="ltr" align="right">['.$count.']</td>';

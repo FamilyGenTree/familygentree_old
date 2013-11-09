@@ -2,7 +2,7 @@
 // Send a message to a user in the system
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 webtrees development team.
 //
 // Derived from PhpGedView
 // Copyright (C) 2002 to 2007  John Finlay and Others
@@ -20,23 +20,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 define('WT_SCRIPT_NAME', 'message.php');
 require './includes/session.php';
 
-// Variables are initialised from $_GET (so we can set initial values in URLs),
+// Some variables are initialised from $_GET (so we can set initial values in URLs),
 // but are submitted in $_POST so we can have long body text.
 
-$subject   =safe_REQUEST($_REQUEST, 'subject',    WT_REGEX_UNSAFE); // Messages may legitimately contain "<", etc.
-$body      =safe_REQUEST($_REQUEST, 'body',       WT_REGEX_UNSAFE);
-$from_name =safe_REQUEST($_REQUEST, 'from_name',  WT_REGEX_UNSAFE);
-$from_email=safe_REQUEST($_REQUEST, 'from_email', WT_REGEX_EMAIL);
-$url       =safe_REQUEST($_REQUEST, 'url',        WT_REGEX_URL);
-$method    =safe_REQUEST($_REQUEST, 'method', array('messaging', 'messaging2', 'messaging3', 'mailto', 'none'), 'messaging2');
-$to        =safe_REQUEST($_REQUEST, 'to');
-$action    =safe_REQUEST($_REQUEST, 'action', array('compose', 'send'), 'compose');
+$subject    = WT_Filter::post('subject', null, WT_Filter::get('subject'));
+$body       = WT_Filter::post('body');
+$from_name  = WT_Filter::post('from_name');
+$from_email = WT_Filter::post('from_email');
+$action     = WT_Filter::post('action', 'compose|send', 'compose');
+$to         = WT_Filter::post('to', null, WT_Filter::get('to'));
+$method     = WT_Filter::post('method', 'messaging|messaging2|messaging3|mailto|none', WT_Filter::get('method', 'messaging|messaging2|messaging3|mailto|none', 'messaging2'));
+$url        = WT_Filter::postUrl('url', WT_Filter::getUrl('url'));
 
 $controller=new WT_Controller_Simple();
 $controller->setPageTitle(WT_I18N::translate('webtrees Message'));
@@ -113,11 +111,11 @@ case 'compose':
 			return true;
 		}
 	');
-	echo '<span class="subheaders">', WT_I18N::translate('Send Message'), '</span>';
+	echo '<span class="subheaders">', WT_I18N::translate('Send message'), '</span>';
 	echo $errors;
 
 	if (!WT_USER_ID) {
-		echo '<br><br>', WT_I18N::translate('<b>Please Note:</b> Private information of living individuals will only be given to family relatives and close friends.  You will be asked to verify your relationship before you will receive any private data.  Sometimes information of dead persons may also be private.  If this is the case, it is because there is not enough information known about the person to determine whether they are alive or not and we probably do not have more information on this person.<br /><br />Before asking a question, please verify that you are inquiring about the correct person by checking dates, places, and close relatives.  If you are submitting changes to the genealogical data, please include the sources where you obtained the data.');
+		echo '<br><br>', WT_I18N::translate('<b>Please Note:</b> Private information of living individuals will only be given to family relatives and close friends.  You will be asked to verify your relationship before you will receive any private data.  Sometimes information of dead individuals may also be private.  If this is the case, it is because there is not enough information known about the individual to determine whether they are alive or not and we probably do not have more information on this individual.<br><br>Before asking a question, please verify that you are inquiring about the correct individual by checking dates, places, and close relatives.  If you are submitting changes to the genealogical data, please include the sources where you obtained the data.');
 	}
 	echo '<br><form name="messageform" method="post" action="message.php" onsubmit="t = new Date(); document.messageform.time.value=t.toUTCString(); return checkForm(this);">';
 	echo WT_Filter::getCsrf();
@@ -128,17 +126,17 @@ case 'compose':
 	}
 	if (!WT_USER_ID) {
 		echo '<tr><td valign="top" width="15%" align="right">', WT_I18N::translate('Your Name:'), '</td>';
-		echo '<td><input type="text" name="from_name" size="40" value="', htmlspecialchars($from_name), '"></td></tr><tr><td valign="top" align="right">', WT_I18N::translate('Email Address:'), '</td><td><input type="email" name="from_email" size="40" value="', htmlspecialchars($from_email), '"><br>', WT_I18N::translate('Please provide your email address so that we may contact you in response to this message.  If you do not provide your email address we will not be able to respond to your inquiry.  Your email address will not be used in any other way besides responding to this inquiry.'), '<br><br></td></tr>';
+		echo '<td><input type="text" name="from_name" size="40" value="', WT_Filter::escapeHtml($from_name), '"></td></tr><tr><td valign="top" align="right">', WT_I18N::translate('Email address:'), '</td><td><input type="email" name="from_email" size="40" value="', WT_Filter::escapeHtml($from_email), '"><br>', WT_I18N::translate('Please provide your email address so that we may contact you in response to this message.  If you do not provide your email address we will not be able to respond to your inquiry.  Your email address will not be used in any other way besides responding to this inquiry.'), '<br><br></td></tr>';
 	}
 	echo '<tr><td align="right">', WT_I18N::translate('Subject:'), '</td>';
 	echo '<td>';
 	echo '<input type="hidden" name="action" value="send">';
-	echo '<input type="hidden" name="to" value="', htmlspecialchars($to), '">';
+	echo '<input type="hidden" name="to" value="', WT_Filter::escapeHtml($to), '">';
 	echo '<input type="hidden" name="time" value="">';
 	echo '<input type="hidden" name="method" value="', $method, '">';
-	echo '<input type="hidden" name="url" value="', htmlspecialchars($url), '">';
-	echo '<input type="text" name="subject" size="50" value="', htmlspecialchars($subject), '"><br></td></tr>';
-	echo '<tr><td valign="top" align="right">', WT_I18N::translate('Body:'), '<br></td><td><textarea name="body" cols="50" rows="7">', htmlspecialchars($body), '</textarea><br></td></tr>';
+	echo '<input type="hidden" name="url" value="', WT_Filter::escapeHtml($url), '">';
+	echo '<input type="text" name="subject" size="50" value="', WT_Filter::escapeHtml($subject), '"><br></td></tr>';
+	echo '<tr><td valign="top" align="right">', WT_I18N::translate('Body:'), '<br></td><td><textarea name="body" cols="50" rows="7">', WT_Filter::escapeHtml($body), '</textarea><br></td></tr>';
 	echo '<tr><td></td><td><input type="submit" value="', WT_I18N::translate('Send'), '"></td></tr>';
 	echo '</table>';
 	echo '</form>';
@@ -164,7 +162,6 @@ case 'send':
 	if ($to == 'never_logged') {
 		$toarray = array();
 		foreach (get_all_users() as $user_id=>$user_name) {
-			// SEE Bug [ 1827547 ] Message to inactive users sent to newcomers
 			if (get_user_setting($user_id,'verified_by_admin') && get_user_setting($user_id, 'reg_timestamp') > get_user_setting($user_id, 'sessiontime')) {
 				$toarray[$user_id] = $user_name;
 			}
@@ -174,7 +171,6 @@ case 'send':
 		$toarray = array();
 		$sixmos = 60*60*24*30*6; //-- timestamp for six months
 		foreach (get_all_users() as $user_id=>$user_name) {
-			// SEE Bug [ 1827547 ] Message to inactive users sent to newcomers
 			if (get_user_setting($user_id,'sessiontime')>0 && (WT_TIMESTAMP - get_user_setting($user_id, 'sessiontime') > $sixmos)) {
 				$toarray[$user_id] = $user_name;
 			}
@@ -200,7 +196,7 @@ case 'send':
 		$message['url'] = $url;
 		if ($i>0) $message['no_from'] = true;
 		if (addMessage($message)) {
-			WT_FlashMessages::addMessage(WT_I18N::translate('Message successfully sent to %s', htmlspecialchars($to)));
+			WT_FlashMessages::addMessage(WT_I18N::translate('Message successfully sent to %s', WT_Filter::escapeHtml($to)));
 		} else {
 			WT_FlashMessages::addMessage(WT_I18N::translate('Message was not sent'));
 			AddToLog('Unable to send message.  FROM:'.$from.' TO:'.$to.' (failed to send)', 'error');

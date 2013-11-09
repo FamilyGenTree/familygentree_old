@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Id$
  */
 
 #tree-title {text-align:center; margin-bottom:100px;}
@@ -211,11 +209,11 @@ table#tvTreeBorder td, #tv_tree {
 	padding:2px;
 }
 #tv_tree div.tv_box img {
-	float:      left;
-	margin:     2px;
-	max-height: 50px;
-	max-width:  80px;
-	width:      auto;
+	max-width:50px;
+	_width:50px; /* hack for IE versions that do not understand max-width */
+	max-height:50px;
+	margin:2px;
+	float:left;
 }
 html[dir=rtl] #tv_tree div.tv_box img {
 	float:right;
