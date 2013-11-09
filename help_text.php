@@ -1165,7 +1165,7 @@ case 'edit_edit_raw':
 	$text=
 		WT_I18N::translate('This page allows you to bypass the usual forms, and edit the underlying data directly.  It is an advanced option, and you should not use it unless you understand the GEDCOM format.  If you make a mistake here, it can be difficult to fix.').
 		'<br/><br/>'.
-		/* I18N: %s is a URL */ WT_I18N::translate('You can download a copy of the GEDCOM specification from %s.', '<a href="http://wiki.webtrees.net/images/Ged551-5.pdf">http://wiki.webtrees.net/images/Ged551-5.pdf</a>');
+		/* I18N: %s is a URL */ WT_I18N::translate('You can download a copy of the GEDCOM specification from %s.', '<a href="http://wiki.webtrees.net/w/images-en/Ged551-5.pdf">http://wiki.webtrees.net/w/images-en/Ged551-5.pdf</a>');
 	break;
 
 case 'edit_merge':
@@ -1244,11 +1244,6 @@ case 'gedcom_news_flag':
 case 'gedcom_news_limit':
 	$title=WT_I18N::translate('Limit display by:');
 	$text=WT_I18N::translate('You can limit the number of News articles displayed, thereby reducing the height of the GEDCOM News block.<br /><br />This option determines whether any limits should be applied or whether the limit should be according to the age of the article or according to the number of articles.');
-	break;
-
-case 'gen_missing_thumbs':
-	$title=WT_I18N::translate('Create missing thumbnails');
-	$text=WT_I18N::translate('This option will generate thumbnails for all files in the current directory which don\'t already have a thumbnail.  This is much more convenient than clicking the <b>Create thumbnail</b> link for each such file.<br /><br />If you wish to retain control over which files should have corresponding thumbnails, you should not use this option.  Instead, click the appropriate <b>Create thumbnail</b> links.');
 	break;
 
 case 'google_chart_surname':

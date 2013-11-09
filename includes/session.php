@@ -31,8 +31,8 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.4.3');
-define('WT_VERSION_RELEASE', ''); // “svn”, “beta”, “rc1”, “”, etc.
+define('WT_VERSION',         '1.4.4');
+define('WT_VERSION_RELEASE', ''); // “dev”, “beta”, “rc1”, “”, etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 
 // External URLs
@@ -47,14 +47,14 @@ define('WT_STATIC_URL', ''); // For example, http://my.cdn.com/webtrees-static-1
 // Optionally, load major JS libraries from Google’s public CDN
 define ('WT_USE_GOOGLE_API', false);
 if (WT_USE_GOOGLE_API) {
-	define('WT_JQUERY_URL',        'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+	define('WT_JQUERY_URL',        'https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
 	define('WT_JQUERYUI_URL',      'https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js');
 } else {
-	define('WT_JQUERY_URL',        WT_STATIC_URL.'js/jquery-1.9.1.js');
+	define('WT_JQUERY_URL',        WT_STATIC_URL.'js/jquery-1.10.2.js');
 	define('WT_JQUERYUI_URL',      WT_STATIC_URL.'js/jquery-ui-1.10.3.js');
 }
 define('WT_JQUERY_COLORBOX_URL',   WT_STATIC_URL.'js/jquery.colorbox-1.4.15.js');
-define('WT_JQUERY_COOKIE_URL',     WT_STATIC_URL.'js/jquery.cookie-1.3.1.js');
+define('WT_JQUERY_COOKIE_URL',     WT_STATIC_URL.'js/jquery.cookie-1.4.0.js');
 define('WT_JQUERY_DATATABLES_URL', WT_STATIC_URL.'js/jquery.datatables-1.9.4.js');
 define('WT_JQUERY_JEDITABLE_URL',  WT_STATIC_URL.'js/jquery.jeditable-1.7.1.js');
 define('WT_JQUERY_WHEELZOOM_URL',  WT_STATIC_URL.'js/jquery.wheelzoom-1.1.2.js');

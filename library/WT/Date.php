@@ -75,7 +75,7 @@ class WT_Date {
 	// Convert an individual gedcom date string into a WT_Date_Calendar object
 	static function ParseDate($date) {
 		// Valid calendar escape specified? - use it
-		if (preg_match('/^(@#d(?:GREGORIAN|JULIAN|HEBREW|HIJRI|JALALI|FRENCH R|ROMAN|JALALI)+@) ?(.*)/', $date, $match)) {
+		if (preg_match('/^(@#D(?:GREGORIAN|JULIAN|HEBREW|HIJRI|JALALI|FRENCH R|ROMAN|JALALI)+@) ?(.*)/', $date, $match)) {
 			$cal=$match[1];
 			$date=$match[2];
 		} else {
@@ -102,7 +102,7 @@ class WT_Date {
 					$y=$match[1];
 				}
 				// Look for a month anywhere in the date
-				if (preg_match('/(jAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC|TSH|CSH|KSL|TVT|SHV|ADR|ADS|NSN|IYR|SVN|TMZ|AAV|ELL|VEND|BRUM|FRIM|NIVO|PLUV|VENT|GERM|FLOR|PRAI|MESS|THER|FRUC|COMP|MUHAR|SAFAR|RABI[AT]|JUMA[AT]|RAJAB|SHAAB|RAMAD|SHAWW|DHUAQ|DHUAH|FARVA|ORDIB|KHORD|TIR|MORDA|SHAHR|MEHR|ABAN|AZAR|DEY|BAHMA|ESFAN)/', $date, $match)) {
+				if (preg_match('/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC|TSH|CSH|KSL|TVT|SHV|ADR|ADS|NSN|IYR|SVN|TMZ|AAV|ELL|VEND|BRUM|FRIM|NIVO|PLUV|VENT|GERM|FLOR|PRAI|MESS|THER|FRUC|COMP|MUHAR|SAFAR|RABI[AT]|JUMA[AT]|RAJAB|SHAAB|RAMAD|SHAWW|DHUAQ|DHUAH|FARVA|ORDIB|KHORD|TIR|MORDA|SHAHR|MEHR|ABAN|AZAR|DEY|BAHMA|ESFAN)/', $date, $match)) {
 					$m=$match[1];
 					// Look for a day number anywhere in the date
 					if (preg_match('/\b(\d\d?)\b/', $date, $match))

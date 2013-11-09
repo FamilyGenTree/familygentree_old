@@ -38,6 +38,11 @@ function fail() {
 	exit;
 }
 
+// Do we have a valid CSRF token?
+if (!WT_Filter::checkCsrf()) {
+	fail();
+}
+
 // The data item to updated must identified with a single "id" element.
 // The id must be a valid CSS identifier, so it can be used in HTML.
 // We use "[A-Za-z0-9_]+" separated by "-".
@@ -106,9 +111,7 @@ case 'site_setting':
 		$id1 = 'WELCOME_TEXT_AUTH_MODE_' . WT_LOCALE;
 		break;
 	case 'LOGIN_URL':
-		if ($value=='') {
-			$value=null; // Empty string is invalid - delete the row
-		} elseif (!preg_match('/^https?:\/\//', $value)) {
+		if ($value && !preg_match('/^https?:\/\//', $value)) {
 			fail();
 		}
 		break;

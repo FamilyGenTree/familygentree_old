@@ -639,7 +639,7 @@ class WT_Person extends WT_GedcomRecord {
 				$tmp=$this->getEstimatedBirthDate();
 				if ($tmp->MinJD()) {
 					global $MAX_ALIVE_AGE;
-					$tmp2=$tmp->AddYears($MAX_ALIVE_AGE, 'bef');
+					$tmp2=$tmp->AddYears($MAX_ALIVE_AGE, 'BEF');
 					if ($tmp2->MaxJD()<WT_SERVER_JD) {
 						$this->_getEstimatedDeathDate=$tmp2;
 					} else {
@@ -1462,7 +1462,7 @@ class WT_Person extends WT_GedcomRecord {
 						} else {
 							$factrec.="\n2 $asso_tag @".$associate->getXref().'@';
 							// CHR/BAPM events are commonly used.  Generate the reverse relationship
-							if (preg_match('/^(?:BAPM|CHR)$/', $event->getTag()) && preg_match('/3 RELA god(?:parent|mother|father)/', $event->getGedcomRecord())) {
+							if (preg_match('/^(?:BAPM|CHR)$/', $event->getTag()) && preg_match('/2 _?ASSO @('.$person->getXref().')@\n3 RELA god(?:parent|mother|father)/', $event->getGedcomRecord())) {
 								switch ($associate->getSex()) {
 								case 'M':
 									$factrec.="\n3 RELA godson";

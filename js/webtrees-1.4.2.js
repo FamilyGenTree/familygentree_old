@@ -65,7 +65,7 @@ function modalDialog(url, title) {
 			width: 700,
 			closeText: "",
 			close: function(event, ui) { 
-				$(this).remove();
+				jQuery(this).remove();
 				jQuery('.ui-widget-overlay').remove();
 			}
 		});
@@ -85,7 +85,7 @@ function modalNotes(content, title) {
 			modal: true,
 			width: 500,
 			closeText: "",
-			close: function(event, ui) { $(this).remove(); }
+			close: function(event, ui) { jQuery(this).remove(); }
 		});
 	// Close the window when we click outside it.
 	jQuery(".ui-widget-overlay").on("click", function () {
@@ -514,6 +514,21 @@ function delete_fact(pid, linenum, mediaid, message) {
     });
   }
   return false;
+}
+
+// Delete a user - and reload the page
+function delete_user(message, user_id) {
+	if (confirm(message)) {
+		jQuery.post('action.php', {
+			action:   'delete-user',
+			user_id:   user_id,
+			csrf:      WT_CSRF_TOKEN
+		},
+		function(){
+			location.reload();
+		});
+	}
+	return false;
 }
 
 function reorder_children(famid) {

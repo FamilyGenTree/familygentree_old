@@ -2056,7 +2056,17 @@ case 'changefamily':
 	
 	$controller
 		->setPageTitle(WT_I18N::translate('Change Family Members'))
-		->pageHeader();
+		->pageHeader()
+		->addInlineJavascript('
+				function pastename(name) {
+					if (typeof(nameElement) != "undefined") {
+						nameElement.innerHTML = name;
+					}
+					if (typeof(remElement) != "undefined") {
+						remElement.style.display = "block";
+					}
+				}
+		');
 
 	echo '<div id="edit_interface-page">';
 	echo '<h4>', $controller->getPageTitle(), '</h4>';
@@ -2111,16 +2121,6 @@ case 'changefamily':
 		}
 	}
 	?>
-	<script>
-		function pastename(name) {
-			if (nameElement) {
-				nameElement.innerHTML = name;
-			}
-			if (remElement) {
-				remElement.style.display = 'block';
-			}
-		}
-	</script>
 	<div id="changefam">
 	<p>
 		<?php echo WT_I18N::translate('Use this page to change or remove family members.<br /><br />For each member in the family, you can use the Change link to choose a different person to fill that role in the family.  You can also use the Remove link to remove that person from the family.<br /><br />When you have finished changing the family members, click the Save button to save the changes.'); ?>
@@ -2156,7 +2156,7 @@ case 'changefamily':
 					<a href="#" id="wiferem" style="display: <?php echo is_null($mother) ? 'none':'block'; ?>;" onclick="document.changefamform.WIFE.value=''; document.getElementById('WIFEName').innerHTML=''; this.style.display='none'; return false;"><?php echo WT_I18N::translate('Remove'); ?></a>
 				</td>
 				<td class="optionbox">
-					<a href="#" onclick="return findIndi(document.changefamform.WIFEdocument.getElementById('WIFEName'));"><?php echo WT_I18N::translate('Change'); ?></a>
+					<a href="#" onclick="return findIndi(document.changefamform.WIFE, document.getElementById('WIFEName'));"><?php echo WT_I18N::translate('Change'); ?></a>
 				</td>
 			</tr>
 			<?php $i=0; foreach ($children as $child) { ?>

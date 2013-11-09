@@ -43,6 +43,9 @@ $PRIVACY_CONSTANTS = array(
 
 switch (safe_POST('action')) {
 case 'delete':
+	if (!WT_Filter::checkCsrf()) {
+		break;
+	}
 	WT_DB::prepare(
 		"DELETE FROM `##default_resn` WHERE default_resn_id=?"
 	)->execute(array(safe_POST('default_resn_id')));
@@ -50,8 +53,11 @@ case 'delete':
 	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'#privacy');
 	exit;
 case 'add':
-	if ((safe_POST('xref') || safe_POST('tag_type')) && safe_POST('resn')) {
-		if (safe_POST('xref')=='') {
+	if (!WT_Filter::checkCsrf()) {
+		break;
+	}
+	if ((WT_Filter::post('xref') || WT_Filter::post('tag_type')) && WT_Filter::post('resn')) {
+		if (WT_Filter::post('xref')=='') {
 			WT_DB::prepare(
 				"DELETE FROM `##default_resn` WHERE gedcom_id=? AND tag_type=? AND xref IS NULL"
 			)->execute(array(WT_GED_ID, safe_POST('tag_type')));
@@ -69,10 +75,12 @@ case 'add':
 	header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.'#privacy');
 	exit;
 case 'update':
-	set_gedcom_setting(WT_GED_ID, 'ABBREVIATE_CHART_LABELS',      safe_POST_bool('NEW_ABBREVIATE_CHART_LABELS'));
-	set_gedcom_setting(WT_GED_ID, 'ADVANCED_NAME_FACTS',          safe_POST('NEW_ADVANCED_NAME_FACTS'));
-	set_gedcom_setting(WT_GED_ID, 'ADVANCED_PLAC_FACTS',          safe_POST('NEW_ADVANCED_PLAC_FACTS'));
-	set_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN',         safe_POST_bool('NEW_ALLOW_THEME_DROPDOWN'));
+	if (!WT_Filter::checkCsrf()) {
+		break;
+	}
+	set_gedcom_setting(WT_GED_ID, 'ADVANCED_NAME_FACTS',          WT_Filter::post('NEW_ADVANCED_NAME_FACTS'));
+	set_gedcom_setting(WT_GED_ID, 'ADVANCED_PLAC_FACTS',          WT_Filter::post('NEW_ADVANCED_PLAC_FACTS'));
+	set_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN',         WT_Filter::postBool('NEW_ALLOW_THEME_DROPDOWN'));
 	// For backwards compatibility with webtrees 1.x we store the two calendar formats in one variable
 	// e.g. "gregorian_and_jewish"
 	set_gedcom_setting(WT_GED_ID, 'CALENDAR_FORMAT',              implode('_and_', array_unique(array(
@@ -201,6 +209,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 
 ?>
 <form enctype="multipart/form-data" method="post" id="configform" name="configform" action="<?php echo WT_SCRIPT_NAME; ?>">
+	<?php echo WT_Filter::getCsrf(); ?>
 	<input type="hidden" name="action" value="update">
 	<input type="hidden" name="ged" value="<?php echo htmlspecialchars(WT_GEDCOM); ?>">
 
@@ -439,7 +448,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Theme dropdown selector for theme changes'), help_link('ALLOW_THEME_DROPDOWN'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_ALLOW_THEME_DROPDOWN', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN')); ?>
+						<?php echo radio_buttons('NEW_ALLOW_THEME_DROPDOWN', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'ALLOW_THEME_DROPDOWN')); ?>
 					</td>
 				</tr>
 				<tr>
@@ -480,7 +489,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Privacy options'), help_link('HIDE_LIVE_PEOPLE'); ?>
 					</td>
 					<td>
-						<?php  echo radio_buttons('NEW_HIDE_LIVE_PEOPLE', array(false=>WT_I18N::translate('disable'),true=>WT_I18N::translate('enable')), $HIDE_LIVE_PEOPLE, ''); ?>
+						<?php  echo radio_buttons('NEW_HIDE_LIVE_PEOPLE', array(false=>WT_I18N::translate('disable'), true=>WT_I18N::translate('enable')), $HIDE_LIVE_PEOPLE, ''); ?>
 					</td>
 				</tr>
 				<tr>
@@ -778,7 +787,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Estimated dates for birth and death'), help_link('SHOW_EST_LIST_DATES'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_EST_LIST_DATES', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'SHOW_EST_LIST_DATES')); ?>
+						<?php echo radio_buttons('NEW_SHOW_EST_LIST_DATES', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'SHOW_EST_LIST_DATES')); ?>
 					</td>
 				</tr>
 				<tr>
@@ -786,7 +795,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('The date and time of the last update'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_LAST_CHANGE', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_LAST_CHANGE); ?>
+						<?php echo radio_buttons('NEW_SHOW_LAST_CHANGE', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_LAST_CHANGE); ?>
 					</td>
 				</tr>
 				<tr>
@@ -953,7 +962,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Gender icon on charts'), help_link('PEDIGREE_SHOW_GENDER'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_PEDIGREE_SHOW_GENDER', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $PEDIGREE_SHOW_GENDER); ?>
+						<?php echo radio_buttons('NEW_PEDIGREE_SHOW_GENDER', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $PEDIGREE_SHOW_GENDER); ?>
 					</td>
 				</tr>
 				<tr>
@@ -961,7 +970,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Age of parents next to child\'s birthdate'), help_link('SHOW_PARENTS_AGE'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_PARENTS_AGE', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_PARENTS_AGE); ?>
+						<?php echo radio_buttons('NEW_SHOW_PARENTS_AGE', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_PARENTS_AGE); ?>
 					</td>
 				</tr>
 				<tr>
@@ -969,7 +978,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('LDS ordinance codes in chart boxes'), help_link('SHOW_LDS_AT_GLANCE'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_LDS_AT_GLANCE', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_LDS_AT_GLANCE); ?>
+						<?php echo radio_buttons('NEW_SHOW_LDS_AT_GLANCE', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_LDS_AT_GLANCE); ?>
 					</td>
 				</tr>
 				<tr>
@@ -990,7 +999,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Fact icons'), help_link('SHOW_FACT_ICONS'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_FACT_ICONS', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_FACT_ICONS); ?>
+						<?php echo radio_buttons('NEW_SHOW_FACT_ICONS', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_FACT_ICONS); ?>
 					</td>
 				</tr>
 				<tr>
@@ -1022,7 +1031,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Date differences'), help_link('SHOW_AGE_DIFF'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_AGE_DIFF', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_AGE_DIFF); ?>
+						<?php echo radio_buttons('NEW_SHOW_AGE_DIFF', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_AGE_DIFF); ?>
 					</td>
 				</tr>
 				<tr>
@@ -1043,7 +1052,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('GEDCOM errors'), help_link('HIDE_GEDCOM_ERRORS'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_HIDE_GEDCOM_ERRORS', array(false=>WT_I18N::translate('show'),true=>WT_I18N::translate('hide')), $HIDE_GEDCOM_ERRORS); /* Note: name of object is reverse of description */ ?>
+						<?php echo radio_buttons('NEW_HIDE_GEDCOM_ERRORS', array(true=>WT_I18N::translate('hide'), false=>WT_I18N::translate('show')), $HIDE_GEDCOM_ERRORS); /* Note: name of object is reverse of description */ ?>
 					</td>
 				</tr>
 				<tr>
@@ -1051,7 +1060,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Hit counters'), help_link('SHOW_COUNTER'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_COUNTER', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), $SHOW_COUNTER); ?>
+						<?php echo radio_buttons('NEW_SHOW_COUNTER', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), $SHOW_COUNTER); ?>
 					</td>
 				</tr>
 				<tr>
@@ -1059,7 +1068,7 @@ if (count(WT_Tree::getAll())==1) { //Removed because it doesn't work here for mu
 						<?php echo WT_I18N::translate('Execution statistics'), help_link('SHOW_STATS'); ?>
 					</td>
 					<td>
-						<?php echo radio_buttons('NEW_SHOW_STATS', array(false=>WT_I18N::translate('hide'),true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'SHOW_STATS')); ?>
+						<?php echo radio_buttons('NEW_SHOW_STATS', array(false=>WT_I18N::translate('hide'), true=>WT_I18N::translate('show')), get_gedcom_setting(WT_GED_ID, 'SHOW_STATS')); ?>
 					</td>
 				</tr>
 			</table>

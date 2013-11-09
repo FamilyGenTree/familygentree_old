@@ -46,7 +46,9 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 
 	// Implement WT_Module_Sidebar
 	public function hasSidebarContent() {
-		return true;
+		global $SEARCH_SPIDER;
+
+		return !$SEARCH_SPIDER;
 	}
 
 	// Implement WT_Module_Sidebar
@@ -67,7 +69,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			echo '</a>';
 			echo '</td></tr>';
 			if (isset($people['husb'])) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['husb'])));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['husb'], true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['husb']) . $parentlinks);
 				$menu->addSubMenu($submenu);
@@ -80,7 +82,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			}
 
 			if (isset($people['wife'])) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'])));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'], true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['wife']) . $parentlinks);
 				$menu->addSubMenu($submenu);
@@ -96,7 +98,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 				if ($controller->record->equals($child)) {
 					$menu = new WT_Menu('<i class="icon-selected"></i>');
 				} else {
-					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child)));
+					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child, true, 3)));
 				}
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($child) . $spouselinks);
@@ -136,7 +138,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			}
 
 			if (isset($people['wife']) ) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'])));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'], true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['wife']) . $parentlinks);
 				$menu->addSubMenu($submenu);
@@ -148,7 +150,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 				echo '</td></tr>';
 			}
 			foreach ($people['children'] as $child) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child)));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child, true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($child) . $spouselinks);
 				$menu->addSubMenu($submenu);
@@ -174,7 +176,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 				if ($controller->record->equals($people['husb'])) {
 					$menu = new WT_Menu('<i class="icon-selected"></i>');
 				} else {
-					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['husb'])));
+					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['husb'], true, 3)));
 				}
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['husb']) . $parentlinks);
@@ -191,7 +193,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 				if ($controller->record->equals($people['wife'])) {
 					$menu = new WT_Menu('<i class="icon-selected"></i>');
 				} else {
-					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'])));
+					$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'], true, 3)));
 				}
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['wife']) . $parentlinks);
@@ -205,7 +207,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			}
 
 			foreach ($people['children'] as $child) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child)));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child, true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($child) . $spouselinks);
 				$menu->addSubmenu($submenu);
@@ -241,7 +243,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 			}
 
 			if (isset($people['wife']) ) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'])));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $people['wife'], true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($people['wife']) . $parentlinks);
 				$menu->addSubMenu($submenu);
@@ -253,7 +255,7 @@ class family_nav_WT_Module extends WT_Module implements WT_Module_Sidebar {
 				echo '</td></tr>';
 			}
 			foreach ($people['children'] as $child) {
-				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child)));
+				$menu = new WT_Menu(get_relationship_name(get_relationship($controller->record, $child, true, 3)));
 				$menu->addClass('', 'submenu flyout2');
 				$submenu = new WT_Menu($this->print_pedigree_person_nav($child) . $spouselinks);
 				$menu->addSubMenu($submenu);

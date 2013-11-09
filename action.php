@@ -79,7 +79,7 @@ case 'copy-fact':
 		);
 	// The clipboard only holds 10 facts
 	while (count($WT_SESSION->clipboard)>10) {
-		array_pop($WT_SESSION->clipboard);
+		array_shift($WT_SESSION->clipboard);
 	}
 	WT_FlashMessages::addMessage(WT_I18N::translate('Record copied to clipboard'));
 	break;
@@ -123,6 +123,15 @@ case 'delete-source':
 	} else {
 		header('HTTP/1.0 406 Not Acceptable');
 	}	
+	break;
+
+case 'delete-user':
+	$user_id = WT_Filter::post('user_id');
+
+	if (WT_USER_IS_ADMIN && WT_USER_ID != $user_id && WT_Filter::checkCsrf()) {
+		AddToLog('deleted user ->' . get_user_name($user_id) . '<-', 'auth');
+		delete_user($user_id);
+	}
 	break;
 
 case 'reject-changes':
