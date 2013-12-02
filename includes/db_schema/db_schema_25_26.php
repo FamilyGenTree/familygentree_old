@@ -1,7 +1,6 @@
 <?php
-// Update the GM module database schema from version 4 to version 5
-//
-// Delete some old/unused configuration settings
+// Update the database schema from version 24-25
+// - delete unused settings and update indexes
 //
 // The script should assume that it can be interrupted at
 // any point, and be able to continue by re-running the script.
@@ -11,7 +10,7 @@
 // seconds, for systems with low timeout values.
 //
 // webtrees: Web based Family History software
-// Copyright (C) 2012 webtrees development team.
+// Copyright (C) 2013 Greg Roach
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,17 +25,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-//
-// $Id$
 
 if (!defined('WT_WEBTREES')) {
 	header('HTTP/1.0 403 Forbidden');
 	exit;
 }
 
+// Site settings that are no longer used.
 self::exec(
-	"DELETE FROM `##module_setting` WHERE module_name='googlemap' AND setting_name IN (
-	'GM_API_KEY', 'GM_DEFAULT_TOP_VALUE', 'GM_DISP_COUNT', 'GM_MAX_NOF_LEVELS', 'GM_PH_CONTROLS', 'GM_PH_WHEEL', 'GM_PRE_POST_MODE_1', 'GM_PRE_POST_MODE_2', 'GM_PRE_POST_MODE_3', 'GM_PRE_POST_MODE_4', 'GM_PRE_POST_MODE_5', 'GM_PRE_POST_MODE_6', 'GM_PRE_POST_MODE_7', 'GM_PRE_POST_MODE_8', 'GM_PRE_POST_MODE_9')"
+	"DELETE FROM `##site_setting` WHERE setting_name IN ('WELCOME_TEXT_CUST_HEAD')"
+);
+
+// Modern versions of Internet Explorer use a different
+self::exec(
+	"INSERT IGNORE INTO `##site_access_rule` (user_agent_pattern, rule, comment) VALUES".
+	" ('Mozilla/% (Windows%; Trident%; rv:%) like Gecko', 'allow', 'Modern Internet Explorer')"
 );
 
 // Update the version to indicate success

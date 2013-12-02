@@ -31,7 +31,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.4.4');
+define('WT_VERSION',         '1.4.5');
 define('WT_VERSION_RELEASE', ''); // “dev”, “beta”, “rc1”, “”, etc.
 define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
 
@@ -74,7 +74,7 @@ define('WT_DEBUG_LANG', false);
 define('WT_ERROR_LEVEL', 2); // 0=none, 1=minimal, 2=full
 
 // Required version of database tables/columns/indexes/etc.
-define('WT_SCHEMA_VERSION', 25);
+define('WT_SCHEMA_VERSION', 26);
 
 // Regular expressions for validating user input, etc.
 define('WT_MINIMUM_PASSWORD_LENGTH', 6);
@@ -291,10 +291,10 @@ if (stristr($_SERVER['HTTP_USER_AGENT'], 'Opera')) {
 	$BROWSERTYPE = 'opera';
 } elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'KHTML')) {
 	$BROWSERTYPE = 'chrome';
+} elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE') || stristr($_SERVER['HTTP_USER_AGENT'], 'Trident')) {
+	$BROWSERTYPE = 'msie';
 } elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'Gecko')) {
 	$BROWSERTYPE = 'mozilla';
-} elseif (stristr($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-	$BROWSERTYPE = 'msie';
 } else {
 	$BROWSERTYPE = 'other';
 }

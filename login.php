@@ -100,6 +100,22 @@ default:
 				$url='index.php';
 			}
 
+			// We're logging in as an administrator
+			if (userIsAdmin($user_id)) {
+				// Check for updates
+				$latest_version_txt=fetch_latest_version();
+				if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
+					list($latest_version, $earliest_version, $download_url)=explode('|', $latest_version_txt);
+					if (version_compare(WT_VERSION, $latest_version)<0) {
+						// An upgrade is available.  Let the admin know, by redirecting to the upgrade wizard
+						$url = 'admin_site_upgrade.php';
+					}
+				} else {
+					// Cannot determine the latest version
+				}
+				
+			}
+
 			// Redirect to the target URL
 			header('Location: '.WT_SERVER_NAME.WT_SCRIPT_PATH.$url);
 			// Explicitly write the session data before we exit,
@@ -305,7 +321,6 @@ case 'register':
 			$mail1_body.=
 				"\r\n".
 				"=--------------------------------------=\r\nIP ADDRESS: ".$WT_REQUEST->getClientIp()."\r\n".
-				"DNS LOOKUP: ".gethostbyaddr($WT_REQUEST->getClientIp())."\r\n".
 				"LANGUAGE: ".WT_LOCALE."\r\n";
 
 			$mail1_subject=/* I18N: %s is a server name/URL */ WT_I18N::translate('New registration at %s', WT_SERVER_NAME . WT_SCRIPT_PATH . ' ' . strip_tags(WT_TREE_TITLE));
@@ -493,7 +508,6 @@ case 'verify_hash':
 		"\r\n\r\n".
 		"=--------------------------------------=\r\n".
 		"IP ADDRESS: ".$WT_REQUEST->getClientIp()."\r\n".
-		"DNS LOOKUP: ".gethostbyaddr($WT_REQUEST->getClientIp())."\r\n".
 		"LANGUAGE: ".WT_LOCALE."\r\n";
 
 	$mail1_to=$WEBTREES_EMAIL;

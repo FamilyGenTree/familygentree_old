@@ -99,7 +99,7 @@ case 'delete-source':
 			$gedrec = find_gedcom_record($xref, $record->getGedId(), true);
 			$gedrec = remove_links($gedrec, $record->getXref());
 			// If we have removed a link from a family to an individual, and it has only one member
-			if (preg_match('/^0 @'.WT_REGEX_XREF.'@ FAM/', $gedrec) && preg_match_all('/\n1 (HUSB|WIFE|CHIL) @(' . WT_REGEX_XREF . ')@/', $gedrec, $match)<2) {
+			if (preg_match('/^0 @'.WT_REGEX_XREF.'@ FAM/', $gedcom) && preg_match_all('/\n1 (HUSB|WIFE|CHIL) @(' . WT_REGEX_XREF . ')@/', $gedcom, $match)==1) {
 				// Delete the family
 				$family = WT_GedcomRecord::getInstance($xref);
 				WT_FlashMessages::addMessage(/* I18N: %s is the name of a family group, e.g. “Husband name + Wife name” */ WT_I18N::translate('The family “%s” has been deleted, as it only has one member.', $family->getFullName()));
@@ -126,11 +126,25 @@ case 'delete-source':
 	break;
 
 case 'delete-user':
-	$user_id = WT_Filter::post('user_id');
+	$user_id = WT_Filter::postInteger('user_id');
 
 	if (WT_USER_IS_ADMIN && WT_USER_ID != $user_id && WT_Filter::checkCsrf()) {
 		AddToLog('deleted user ->' . get_user_name($user_id) . '<-', 'auth');
 		delete_user($user_id);
+	}
+	break;
+
+case 'masquerade':
+	$user_id   = WT_Filter::postInteger('user_id');
+	$all_users = get_all_users('ASC', 'username');
+
+	if (WT_USER_IS_ADMIN && WT_USER_ID != $user_id && array_key_exists($user_id, $all_users)) {
+		AddToLog('masquerade as user ->' . get_user_name($user_id) . '<-', 'auth');
+		$WT_SESSION->wt_user = $user_id;
+		Zend_Session::regenerateId();
+		Zend_Session::writeClose();
+	} else {
+		header('HTTP/1.0 406 Not Acceptable');
 	}
 	break;
 

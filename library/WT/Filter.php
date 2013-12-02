@@ -123,7 +123,7 @@ class WT_Filter {
 	}
 
 	private static function _inputCallback($x) {
-		return mb_check_encoding($x, 'UTF-8') ? $x : false;
+		return !function_exists('mb_check_encoding') || mb_check_encoding($x, 'UTF-8') ? $x : false;
 	}
 
 	private static function _inputArray($source, $variable, $regexp=null, $default=null) {
@@ -160,7 +160,7 @@ class WT_Filter {
 	}
 
 	private static function _inputArrayCallback($x) {
-		return mb_check_encoding($x, 'UTF-8') ? $x : false;
+		return !function_exists('mb_check_encoding') || mb_check_encoding($x, 'UTF-8') ? $x : false;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ class WT_Filter {
 	}
 
 	public static function getBool($variable) {
-		return filter_input(INPUT_GET, $variable, FILTER_VALIDATE_BOOLEAN);
+		return (bool)filter_input(INPUT_GET, $variable, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	public static function getInteger($variable, $min=0, $max=PHP_INT_MAX, $default=0) {
@@ -202,7 +202,7 @@ class WT_Filter {
 	}
 
 	public static function postBool($variable) {
-		return filter_input(INPUT_POST, $variable, FILTER_VALIDATE_BOOLEAN);
+		return (bool)filter_input(INPUT_POST, $variable, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	public static function postInteger($variable, $min=0, $max=PHP_INT_MAX, $default=0) {
