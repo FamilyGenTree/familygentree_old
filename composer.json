@@ -1,49 +1,53 @@
 {
-	"name": "fisharebest/webtrees",
-	"description": "webtrees online genealogy",
-	"keywords": ["webtrees", "genealogy"],
-	"license": "GPL-3.0+",
-	"autoload": {
-		"files": [
-			"includes/functions/functions.php",
-			"includes/functions/functions_charts.php",
-			"includes/functions/functions_date.php",
-			"includes/functions/functions_db.php",
-			"includes/functions/functions_edit.php",
-			"includes/functions/functions_export.php",
-			"includes/functions/functions_import.php",
-			"includes/functions/functions_mediadb.php",
-			"includes/functions/functions_print.php",
-			"includes/functions/functions_print_facts.php",
-			"includes/functions/functions_print_lists.php",
-			"includes/functions/functions_rtl.php"
-			],
-		"psr-4": {
-			"Fisharebest\\Webtrees\\": ["app/", "modules_v3/"]
-		}
-	},
-	"require": {
-		"bombayworks/zendframework1": "1.*",
-		"ezyang/htmlpurifier": "4.6.*",
-		"fisharebest/ext-calendar": "1.3.*",
-		"ircmaxell/password-compat": "1.0.*",
-		"michelf/php-markdown": "1.4.*",
-		"patchwork/utf8": "1.2.*",
-	  	"pclzip/pclzip": "dev-master",
-		"tecnick.com/tcpdf": "6.2.*",
-		"rhumsaa/uuid": "2.8.*"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "4.4.*",
-		"phpunit/dbunit": ">=1.2",
-		"phpunit/phpunit-selenium": ">=1.2"
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"composer dump-autoload --optimize"
-		],
-		"post-update-cmd": [
-			"composer dump-autoload --optimize"
-		]
-	}
+  "name": "familygenealogytree/familygenealogytree",
+  "description": "Genealogy Management Software written in PHP",
+  "keywords": [
+    "webtrees",
+    "genealogy",
+    "familytrees"
+  ],
+  "license": "GPL-3.0+",
+  "autoload": {
+    "files": [
+      "includes/functions/functions.php",
+      "includes/functions/functions_charts.php",
+      "includes/functions/functions_date.php",
+      "includes/functions/functions_db.php",
+      "includes/functions/functions_edit.php",
+      "includes/functions/functions_export.php",
+      "includes/functions/functions_import.php",
+      "includes/functions/functions_mediadb.php",
+      "includes/functions/functions_print.php",
+      "includes/functions/functions_print_facts.php",
+      "includes/functions/functions_print_lists.php",
+      "includes/functions/functions_rtl.php"
+    ],
+    "psr-4": {
+      "Fisharebest\\Webtrees\\": ["app/", "modules_v3/"]
+    }
+  },
+  "require": {
+    "bombayworks/zendframework1": "1.*",
+    "ezyang/htmlpurifier": "4.6.*",
+    "fisharebest/ext-calendar": "1.3.*",
+    "ircmaxell/password-compat": "1.0.*",
+    "michelf/php-markdown": "1.4.*",
+    "patchwork/utf8": "1.2.*",
+    "pclzip/pclzip": "dev-master",
+    "tecnick.com/tcpdf": "6.2.*",
+    "rhumsaa/uuid": "2.8.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.4.*",
+    "phpunit/dbunit": ">=1.2",
+    "phpunit/phpunit-selenium": ">=1.2"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "composer dump-autoload --optimize"
+    ],
+    "post-update-cmd": [
+      "composer dump-autoload --optimize"
+    ]
+  }
 }
