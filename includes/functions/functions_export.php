@@ -1,26 +1,20 @@
 <?php
-// Functions for exporting data
-//
-// webtrees: Web based Family History software
-// Copyright (C) 2014 webtrees development team.
-//
-// Derived from PhpGedView
-// Copyright (C) 2002 to 2009 PGV Development Team.
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-use WT\Auth;
+namespace Fisharebest\Webtrees;
+
+/**
+ * webtrees: online genealogy
+ * Copyright (C) 2015 webtrees development team
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Tidy up a gedcom record on export, for compatibility/portability.
@@ -30,36 +24,36 @@ use WT\Auth;
  * @return string
  */
 function reformat_record_export($rec) {
-	global $WORD_WRAPPED_NOTES;
+	global $WT_TREE;
 
-	$newrec='';
+	$newrec = '';
 	foreach (preg_split('/[\r\n]+/', $rec, -1, PREG_SPLIT_NO_EMPTY) as $line) {
 		// Split long lines
 		// The total length of a GEDCOM line, including level number, cross-reference number,
 		// tag, value, delimiters, and terminator, must not exceed 255 (wide) characters.
 		if (mb_strlen($line) > WT_GEDCOM_LINE_LENGTH) {
-			list($level, $tag)=explode(' ', $line, 3);
+			list($level, $tag) = explode(' ', $line, 3);
 			if ($tag != 'CONT' && $tag != 'CONC') {
 				$level++;
 			}
 			do {
 				// Split after $pos chars
-				$pos=WT_GEDCOM_LINE_LENGTH;
-				if ($WORD_WRAPPED_NOTES) {
+				$pos = WT_GEDCOM_LINE_LENGTH;
+				if ($WT_TREE->getPreference('WORD_WRAPPED_NOTES')) {
 					// Split on a space, and remove it (for compatibility with some desktop apps)
-					while ($pos && mb_substr($line, $pos-1, 1)!=' ') {
+					while ($pos && mb_substr($line, $pos - 1, 1) != ' ') {
 						--$pos;
 					}
 					if ($pos == strpos($line, ' ', 3) + 1) {
 						// No spaces in the data! Can’t split it :-(
 						break;
 					} else {
-						$newrec .= mb_substr($line, 0, $pos - 1).WT_EOL;
-						$line=$level.' CONC ' . mb_substr($line, $pos);
+						$newrec .= mb_substr($line, 0, $pos - 1) . WT_EOL;
+						$line = $level . ' CONC ' . mb_substr($line, $pos);
 					}
 				} else {
 					// Split on a non-space (standard gedcom behaviour)
-					while ($pos && mb_substr($line, $pos-1, 1) == ' ') {
+					while ($pos && mb_substr($line, $pos - 1, 1) == ' ') {
 						--$pos;
 					}
 					if ($pos == strpos($line, ' ', 3)) {
@@ -101,7 +95,7 @@ function gedcom_header($gedfile) {
 	$SUBM = "\n1 SUBM @SUBM@\n0 @SUBM@ SUBM\n1 NAME " . Auth::user()->getUserName(); // The SUBM record is mandatory
 
 	// Preserve some values from the original header
-	$record = WT_GedcomRecord::getInstance('HEAD');
+	$record = GedcomRecord::getInstance('HEAD');
 	if ($fact = $record->getFirstFact('PLAC')) {
 		$PLAC = "\n1 PLAC\n2 FORM " . $fact->getAttribute('FORM');
 	}
@@ -115,19 +109,19 @@ function gedcom_header($gedfile) {
 		$COPR = $fact->getValue();
 	}
 	// Link to actual SUBM/SUBN records, if they exist
-	$subn=
-		WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+	$subn =
+		Database::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
 		->execute(array('SUBN', $ged_id))
 		->fetchOne();
 	if ($subn) {
-		$SUBN="\n1 SUBN @{$subn}@";
+		$SUBN = "\n1 SUBN @{$subn}@";
 	}
-	$subm=
-		WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+	$subm =
+		Database::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
 		->execute(array('SUBM', $ged_id))
 		->fetchOne();
 	if ($subm) {
-		$SUBM="\n1 SUBM @{$subm}@";
+		$SUBM = "\n1 SUBM @{$subm}@";
 	}
 
 	return $HEAD . $SOUR . $DEST . $DATE . $GEDC . $CHAR . $FILE . $COPR . $LANG . $PLAC . $SUBN . $SUBM . "\n";
@@ -143,19 +137,20 @@ function gedcom_header($gedfile) {
  */
 function convert_media_path($rec, $path) {
 	if ($path && preg_match('/\n1 FILE (.+)/', $rec, $match)) {
-		$old_file_name=$match[1];
-		if (!preg_match('~^(https?|ftp):~', $old_file_name)) { // Don’t modify external links
+		$old_file_name = $match[1];
+		// Don’t modify external links
+		if (!preg_match('~^(https?|ftp):~', $old_file_name)) {
 			// Adding a windows path?  Convert the slashes.
-			if (strpos($path, '\\')!==false) {
-				$new_file_name=preg_replace('~/+~', '\\', $old_file_name);
+			if (strpos($path, '\\') !== false) {
+				$new_file_name = preg_replace('~/+~', '\\', $old_file_name);
 			} else {
-				$new_file_name=$old_file_name;
+				$new_file_name = $old_file_name;
 			}
 			// Path not present - add it.
-			if (strpos($new_file_name, $path)===false) {
-				$new_file_name=$path . $new_file_name;
+			if (strpos($new_file_name, $path) === false) {
+				$new_file_name = $path . $new_file_name;
 			}
-			$rec=str_replace("\n1 FILE ".$old_file_name, "\n1 FILE ".$new_file_name, $rec);
+			$rec = str_replace("\n1 FILE " . $old_file_name, "\n1 FILE " . $new_file_name, $rec);
 		}
 	}
 
@@ -182,7 +177,7 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 	$GEDCOM = $gedcom;
 	$ged_id = get_id_from_gedcom($gedcom);
 
-	switch($exportOptions['privatize']) {
+	switch ($exportOptions['privatize']) {
 	case 'gedadmin':
 		$access_level = WT_PRIV_NONE;
 		break;
@@ -211,12 +206,12 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 	// Generate the OBJE/SOUR/REPO/NOTE records first, as their privacy calcualations involve
 	// database queries, and we wish to avoid large gaps between queries due to MySQL connection timeouts.
 	$tmp_gedcom = '';
-	$rows = WT_DB::prepare(
-		"SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom".
+	$rows = Database::prepare(
+		"SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom" .
 		" FROM `##media` WHERE m_file=? ORDER BY m_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Media::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$rec = Media::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
 		$rec = convert_media_path($rec, $exportOptions['path']);
 		if ($exportOptions['toANSI'] == 'yes') {
 			$rec = utf8_decode($rec);
@@ -224,32 +219,32 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		$tmp_gedcom .= reformat_record_export($rec);
 	}
 
-	$rows = WT_DB::prepare(
-		"SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom".
+	$rows = Database::prepare(
+		"SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom" .
 		" FROM `##sources` WHERE s_file=? ORDER BY s_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$rec = Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
 		if ($exportOptions['toANSI'] == 'yes') {
 			$rec = utf8_decode($rec);
 		}
 		$tmp_gedcom .= reformat_record_export($rec);
 	}
 
-	$rows = WT_DB::prepare(
-		"SELECT o_type AS type, o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom".
+	$rows = Database::prepare(
+		"SELECT o_type AS type, o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
 		" FROM `##other` WHERE o_file=? AND o_type!='HEAD' AND o_type!='TRLR' ORDER BY o_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
 		switch ($row->type) {
 		case 'NOTE':
-			$record = WT_Note::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			$record = Note::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 			break;
 		case 'REPO':
-			$record = WT_Repository::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			$record = Repository::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 			break;
 		default:
-			$record = WT_GedcomRecord::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			$record = GedcomRecord::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 			break;
 		}
 
@@ -260,13 +255,13 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		$tmp_gedcom .= reformat_record_export($rec);
 	}
 
-	$rows = WT_DB::prepare(
-		"SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom".
+	$rows = Database::prepare(
+		"SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
 		" FROM `##individuals` WHERE i_file=? ORDER BY i_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
-		if ($exportOptions['toANSI'] ==  'yes') {
+		$rec = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		if ($exportOptions['toANSI'] == 'yes') {
 			$rec = utf8_decode($rec);
 		}
 		$buffer .= reformat_record_export($rec);
@@ -276,12 +271,12 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		}
 	}
 
-	$rows = WT_DB::prepare(
-		"SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom".
+	$rows = Database::prepare(
+		"SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
 		" FROM `##families` WHERE f_file=? ORDER BY f_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$rec = Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
 		if ($exportOptions['toANSI'] == 'yes') {
 			$rec = utf8_decode($rec);
 		}

@@ -1,51 +1,47 @@
 <?php
-// webtrees: Web based Family History software
-// Copyright (C) 2014 webtrees development team.
-//
-// Derived from PhpGedView
-// Copyright (C) 2010 John Finlay
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+namespace Fisharebest\Webtrees;
 
-use WT\Auth;
+/**
+ * webtrees: online genealogy
+ * Copyright (C) 2015 webtrees development team
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Class top10_pageviews_WT_Module
  */
-class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
+class top10_pageviews_WT_Module extends Module implements ModuleBlockInterface {
 	/** {@inheritdoc} */
 	public function getTitle() {
-		return /* I18N: Name of a module */ WT_I18N::translate('Most viewed pages');
+		return /* I18N: Name of a module */ I18N::translate('Most viewed pages');
 	}
 
 	/** {@inheritdoc} */
 	public function getDescription() {
-		return /* I18N: Description of the “Most visited pages” module */ WT_I18N::translate('A list of the pages that have been viewed the most number of times.');
+		return /* I18N: Description of the “Most visited pages” module */ I18N::translate('A list of the pages that have been viewed the most number of times.');
 	}
 
 	/** {@inheritdoc} */
-	public function getBlock($block_id, $template=true, $cfg=null) {
+	public function getBlock($block_id, $template = true, $cfg = null) {
 		global $ctype;
 
-		$count_placement=get_block_setting($block_id, 'count_placement', 'before');
-		$num=(int)get_block_setting($block_id, 'num', 10);
-		$block=get_block_setting($block_id, 'block', false);
+		$num             = get_block_setting($block_id, 'num', '10');
+		$count_placement = get_block_setting($block_id, 'count_placement', 'before');
+		$block           = get_block_setting($block_id, 'block', '0');
+
 		if ($cfg) {
 			foreach (array('count_placement', 'num', 'block') as $name) {
 				if (array_key_exists($name, $cfg)) {
-					$$name=$cfg[$name];
+					$$name = $cfg[$name];
 				}
 			}
 		}
@@ -53,7 +49,7 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 		$id    = $this->getName() . $block_id;
 		$class = $this->getName() . '_block';
 		if ($ctype === 'gedcom' && WT_USER_GEDCOM_ADMIN || $ctype === 'user' && Auth::check()) {
-			$title = '<i class="icon-admin" title="'.WT_I18N::translate('Configure').'" onclick="modalDialog(\'block_edit.php?block_id='.$block_id.'\', \''.$this->getTitle().'\');"></i>';
+			$title = '<i class="icon-admin" title="' . I18N::translate('Configure') . '" onclick="modalDialog(\'block_edit.php?block_id=' . $block_id . '\', \'' . $this->getTitle() . '\');"></i>';
 		} else {
 			$title = '';
 		}
@@ -61,14 +57,14 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 
 		$content = "";
 		// load the lines from the file
-		$top10=WT_DB::prepare(
-			"SELECT page_parameter, page_count".
-			" FROM `##hit_counter`".
-			" WHERE gedcom_id = :tree_id AND page_name IN ('individual.php','family.php','source.php','repo.php','note.php','mediaviewer.php')".
+		$top10 = Database::prepare(
+			"SELECT page_parameter, page_count" .
+			" FROM `##hit_counter`" .
+			" WHERE gedcom_id = :tree_id AND page_name IN ('individual.php','family.php','source.php','repo.php','note.php','mediaviewer.php')" .
 			" ORDER BY page_count DESC LIMIT :limit"
 		)->execute(array(
 			'tree_id' => WT_GED_ID,
-			'limit'   => $num,
+			'limit'   => (int) $num,
 		))->FetchAssoc();
 
 
@@ -78,15 +74,15 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 			$content .= "<table>";
 		}
 		foreach ($top10 as $id=>$count) {
-			$record=WT_GedcomRecord::getInstance($id);
+			$record = GedcomRecord::getInstance($id);
 			if ($record && $record->canShow()) {
 				$content .= '<tr valign="top">';
-				if ($count_placement=='before') {
-					$content .= '<td dir="ltr" align="right">['.$count.']</td>';
+				if ($count_placement == 'before') {
+					$content .= '<td dir="ltr" align="right">[' . $count . ']</td>';
 				}
-				$content .= '<td class="name2" ><a href="'.$record->getHtmlUrl().'">'.$record->getFullName().'</a></td>';
-				if ($count_placement=='after') {
-					$content .= '<td dir="ltr" align="right">['.$count.']</td>';
+				$content .= '<td class="name2" ><a href="' . $record->getHtmlUrl() . '">' . $record->getFullName() . '</a></td>';
+				if ($count_placement == 'after') {
+					$content .= '<td dir="ltr" align="right">[' . $count . ']</td>';
 				}
 				$content .= '</tr>';
 			}
@@ -95,10 +91,9 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 
 		if ($template) {
 			if ($block) {
-				require WT_THEME_DIR.'templates/block_small_temp.php';
-			} else {
-				require WT_THEME_DIR.'templates/block_main_temp.php';
+				$class .= ' small_inner_block';
 			}
+			return Theme::theme()->formatBlock($id, $title, $class, $content);
 		} else {
 			return $content;
 		}
@@ -121,31 +116,30 @@ class top10_pageviews_WT_Module extends WT_Module implements WT_Module_Block {
 
 	/** {@inheritdoc} */
 	public function configureBlock($block_id) {
-		if (WT_Filter::postBool('save') && WT_Filter::checkCsrf()) {
-			set_block_setting($block_id, 'num',             WT_Filter::postInteger('num', 1, 10000, 10));
-			set_block_setting($block_id, 'count_placement', WT_Filter::post('count_placement', 'before|after', 'before'));
-			set_block_setting($block_id, 'block',           WT_Filter::postBool('block'));
-			exit;
+		if (Filter::postBool('save') && Filter::checkCsrf()) {
+			set_block_setting($block_id, 'num', Filter::postInteger('num', 1, 10000, 10));
+			set_block_setting($block_id, 'count_placement', Filter::post('count_placement', 'before|after', 'before'));
+			set_block_setting($block_id, 'block', Filter::postBool('block'));
 		}
-		require_once WT_ROOT.'includes/functions/functions_edit.php';
 
-		$num=get_block_setting($block_id, 'num', 10);
+		$num             = get_block_setting($block_id, 'num', '10');
+		$count_placement = get_block_setting($block_id, 'count_placement', 'before');
+		$block           = get_block_setting($block_id, 'block', '0');
+
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo WT_I18N::translate('Number of items to show');
+		echo I18N::translate('Number of items to show');
 		echo '</td><td class="optionbox">';
 		echo '<input type="text" name="num" size="2" value="', $num, '">';
 		echo '</td></tr>';
 
-		$count_placement=get_block_setting($block_id, 'count_placement', 'left');
 		echo "<tr><td class=\"descriptionbox wrap width33\">";
-		echo WT_I18N::translate('Place counts before or after name?');
+		echo I18N::translate('Place counts before or after name?');
 		echo "</td><td class=\"optionbox\">";
-		echo select_edit_control('count_placement', array('before'=>WT_I18N::translate('before'), 'after'=>WT_I18N::translate('after')), null, $count_placement, '');
+		echo select_edit_control('count_placement', array('before'=> I18N::translate('before'), 'after'=> I18N::translate('after')), null, $count_placement, '');
 		echo '</td></tr>';
 
-		$block=get_block_setting($block_id, 'block', false);
 		echo '<tr><td class="descriptionbox wrap width33">';
-		echo /* I18N: label for a yes/no option */ WT_I18N::translate('Add a scrollbar when block contents grow');
+		echo /* I18N: label for a yes/no option */ I18N::translate('Add a scrollbar when block contents grow');
 		echo '</td><td class="optionbox">';
 		echo edit_field_yes_no('block', $block);
 		echo '</td></tr>';

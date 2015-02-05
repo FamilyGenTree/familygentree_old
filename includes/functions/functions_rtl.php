@@ -1,26 +1,22 @@
 <?php
+namespace Fisharebest\Webtrees;
+
+/**
+ * webtrees: online genealogy
+ * Copyright (C) 2015 webtrees development team
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 // RTL Functions for use in the PDF/HTML reports
-//
-// webtrees: Web based Family History software
-// Copyright (C) 2014 webtrees development team.
-//
-// Derived from PhpGedView
-// Copyright (C) 2002 to 2009 PGV Development Team.
-//
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-//
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 $SpecialChar = array(' ', '.', ',', '"', '\'', '/', '\\', '|', ':', ';', '+', '&', '#', '@', '-', '=', '*', '%', '!', '?', '$', '<', '>', "\n");
 $SpecialPar  = array('(', ')', '[', ']', '{', '}');
@@ -111,7 +107,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 			$currentLen += $endPos;
 			$element = substr($workingText, 0, $currentLen);
 			$temp    = strtolower(substr($element, 0, 3));
-			if (strlen($element) < 7 && $temp == '<br') { // assume we have '<br>' or a variant thereof
+			if (strlen($element) < 7 && $temp == '<br') {
 				if ($numberState) {
 					$numberState = false;
 					if ($currentState == 'RTL') {
@@ -209,7 +205,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 			// Determine the directionality of the current UTF-8 character
 			$newState = $currentState;
 			while (true) {
-				if (WT_I18N::scriptDirection(WT_I18N::textScript($currentLetter)) === 'rtl') {
+				if (I18N::scriptDirection(I18N::textScript($currentLetter)) === 'rtl') {
 					if ($currentState == '') {
 						$newState = 'RTL';
 						break;
@@ -226,7 +222,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 						$nextLen       = $nextCharArray['length'];
 						$tempText      = substr($tempText, $nextLen);
 
-						if (WT_I18N::scriptDirection(WT_I18N::textScript($nextLetter)) === 'rtl') {
+						if (I18N::scriptDirection(I18N::textScript($nextLetter)) === 'rtl') {
 							$newState = 'RTL';
 							break 2;
 						}
@@ -364,7 +360,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 			break;
 		}
 		$textSpan = stripLRMRLM(substr($result, $lenStart + 3, $spanEnd - $lenStart - 3));
-		$langSpan = WT_I18N::textScript($textSpan);
+		$langSpan = I18N::textScript($textSpan);
 		if ($langSpan == 'Hebr' || $langSpan == 'Arab') {
 			break;
 		}
@@ -1108,7 +1104,8 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 function utf8_wordwrap($string, $width = 75, $sep = "\n", $cut = false) {
 	$out = '';
 	while ($string) {
-		if (mb_strlen($string) <= $width) { //Do not wrap any text that is less than the output area.
+		if (mb_strlen($string) <= $width) {
+			// Do not wrap any text that is less than the output area.
 			$out .= $string;
 			$string = '';
 		} else {
@@ -1120,14 +1117,14 @@ function utf8_wordwrap($string, $width = 75, $sep = "\n", $cut = false) {
 				$sub = mb_substr($string, 0, $width);
 			}
 			$spacepos = strrpos($sub, ' ');
-			if ($spacepos == false) {
+			if ($spacepos === false) {
 				// No space on line?
 				if ($cut) {
 					$out .= $sub . $sep;
 					$string = mb_substr($string, mb_strlen($sub));
 				} else {
 					$spacepos = strpos($string, ' ');
-					if ($spacepos == false) {
+					if ($spacepos === false) {
 						$out .= $string;
 						$string = '';
 					} else {
