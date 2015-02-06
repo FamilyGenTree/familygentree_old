@@ -1,6 +1,9 @@
 # Family Genealogy Tree
 Genealogy Management Software for self-hosted family trees written in PHP
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/FamilyGenealogyTree/familygenealogytree/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/FamilyGenealogyTree/familygenealogytree/?branch=master)
+[![Build Status](https://travis-ci.org/FamilyGenealogyTree/familygenealogytree.svg?branch=master)](https://travis-ci.org/FamilyGenealogyTree/familygenealogytree)
+
 ## WORK IN PROGRESS - NOT WORKING AT THE MOMENT
 
 
