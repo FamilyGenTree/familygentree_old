@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_media.php');
@@ -517,8 +518,7 @@ function mediaObjectInfo(Media $media) {
 	if (array_key_exists('GEDFact_assistant', Module::getActiveModules())) {
 		$html .= '<a onclick="return ilinkitem(\'' . $xref . '\', \'manage\', \'' . $gedcom . '\')" href="#">' . I18N::Translate('Manage links') . '</a>';
 	} else {
-		global $TEXT_DIRECTION;
-		$classSuffix = $TEXT_DIRECTION == 'rtl' ? '_rtl' : '';
+		$classSuffix = Globals::i()->TEXT_DIRECTION == 'rtl' ? '_rtl' : '';
 
 		$menu = new Menu(I18N::translate('Manage links'));
 		$menu->addClass('', 'submenu');

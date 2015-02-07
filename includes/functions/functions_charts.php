@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * print a table cell with sosa number
@@ -263,7 +264,7 @@ function print_family_parents(Family $family, $sosa = 0, $label = '', $parid = '
  * @param string    $label   indi label (descendancy booklet)
  */
 function print_family_children(Family $family, $childid = '', $sosa = 0, $label = '') {
-	global $bheight, $pbheight, $show_cousins, $TEXT_DIRECTION;
+	global $bheight, $pbheight, $show_cousins;
 
 	$children = $family->getChildren();
 	$numchil = count($children);
@@ -327,7 +328,7 @@ function print_family_children(Family $family, $childid = '', $sosa = 0, $label 
 					if ($f > 0) {
 						echo '</tr><tr><td></td>';
 						echo '<td valign="top"';
-						if ($TEXT_DIRECTION == 'rtl') {
+						if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 							echo ' align="left">';
 						} else {
 							echo ' align="right">';
@@ -431,18 +432,16 @@ function print_sosa_family($famid, $childid, $sosa, $label = '', $parid = '', $g
  * @param integer $dir   arrow direction 0=left 1=right 2=up 3=down (default=2)
  */
 function print_url_arrow($url, $label, $dir = 2) {
-	global $TEXT_DIRECTION;
-
 	if ($url == "") {
 		return;
 	}
 
 	// arrow direction
 	$adir = $dir;
-	if ($TEXT_DIRECTION == "rtl" && $dir == 0) {
+	if (Globals::i()->TEXT_DIRECTION == "rtl" && $dir == 0) {
 		$adir = 1;
 	}
-	if ($TEXT_DIRECTION == "rtl" && $dir == 1) {
+	if (Globals::i()->TEXT_DIRECTION == "rtl" && $dir == 1) {
 		$adir = 0;
 	}
 
@@ -482,7 +481,7 @@ function get_sosa_name($sosa) {
  * @param string $famid family ID
  */
 function print_cousins($famid) {
-	global $show_full, $bheight, $bwidth, $TEXT_DIRECTION;
+	global $show_full, $bheight, $bwidth;
 
 	$family = Family::getInstance($famid);
 	$fchildren = $family->getChildren();
@@ -511,7 +510,7 @@ function print_cousins($famid) {
 			} else {
 				echo '<td><img width="10px" height="3px"';
 			}
-			if ($TEXT_DIRECTION == 'ltr') {
+			if (Globals::i()->TEXT_DIRECTION == 'ltr') {
 				echo ' style="padding-right: 2px;"';
 			} else {
 				echo ' style="padding-left: 2px;"';

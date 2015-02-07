@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use PDOException;
 use Rhumsaa\Uuid\Uuid;
@@ -2035,8 +2036,6 @@ class Stats {
 	 * @return string
 	 */
 	private function topTenOldestQuery($type = 'list', $sex = 'BOTH', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if ($sex == 'F') {
 			$sex_search = " AND i_sex='F' ";
 		} elseif ($sex == 'M') {
@@ -2100,7 +2099,7 @@ class Stats {
 		} else {
 			$top10 = implode(' ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -2117,8 +2116,6 @@ class Stats {
 	 * @return string
 	 */
 	private function topTenOldestAliveQuery($type = 'list', $sex = 'BOTH', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (!WT_USER_CAN_ACCESS) {
 			return I18N::translate('This information is private and cannot be shown.');
 		}
@@ -2176,7 +2173,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -2824,8 +2821,6 @@ class Stats {
 	 * @return string
 	 */
 	private function ageOfMarriageQuery($type = 'list', $age_dir = 'ASC', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0])) {
 			$total = (int) $params[0];
 		} else {
@@ -2941,7 +2936,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -2958,8 +2953,6 @@ class Stats {
 	 * @return string
 	 */
 	private function ageBetweenSpousesQuery($type = 'list', $age_dir = 'DESC', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0])) {
 			$total = (int) $params[0];
 		} else {
@@ -3018,7 +3011,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -3952,8 +3945,6 @@ class Stats {
 	 * @return string
 	 */
 	private function topTenFamilyQuery($type = 'list', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0])) {
 			$total = (int) $params[0];
 		} else {
@@ -3993,7 +3984,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -4009,8 +4000,6 @@ class Stats {
 	 * @return string
 	 */
 	private function ageBetweenSiblingsQuery($type = 'list', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0])) {
 			$total = (int) $params[0];
 		} else {
@@ -4116,7 +4105,7 @@ class Stats {
 		if ($type == 'list') {
 			$top10 = implode('', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -4558,8 +4547,6 @@ class Stats {
 	 * @return string
 	 */
 	public function noChildrenFamiliesList($params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0]) && $params[0] != '') {
 			$type = strtolower($params[0]);
 		} else {
@@ -4588,7 +4575,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {
@@ -4700,8 +4687,6 @@ class Stats {
 	 * @return string
 	 */
 	private function topTenGrandFamilyQuery($type = 'list', $params = array()) {
-		global $TEXT_DIRECTION;
-
 		if (isset($params[0])) {
 			$total = (int) $params[0];
 		} else {
@@ -4748,7 +4733,7 @@ class Stats {
 		} else {
 			$top10 = implode(';&nbsp; ', $top10);
 		}
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			$top10 = str_replace(array('[', ']', '(', ')', '+'), array('&rlm;[', '&rlm;]', '&rlm;(', '&rlm;)', '&rlm;+'), $top10);
 		}
 		if ($type == 'list') {

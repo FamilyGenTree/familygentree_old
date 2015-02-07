@@ -291,11 +291,10 @@ class I18N {
 		global $WEEK_START; // I18N: This is the first day of the week on calendars. 0=Sunday, 1=Monday...
 		list(, $WEEK_START) = explode('=', self::noop('WEEK_START=0'));
 
-		global $TEXT_DIRECTION;
-		$TEXT_DIRECTION = self::scriptDirection(self::languageScript($locale));
+		Globals::i()->TEXT_DIRECTION = self::scriptDirection(self::languageScript($locale));
 
 		self::$locale = $locale;
-		self::$dir    = $TEXT_DIRECTION;
+		self::$dir    = Globals::i()->TEXT_DIRECTION;
 
 		// I18N: This punctuation is used to separate lists of items.
 		self::$list_separator = self::translate(', ');

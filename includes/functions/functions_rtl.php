@@ -18,6 +18,8 @@ namespace Fisharebest\Webtrees;
 
 // RTL Functions for use in the PDF/HTML reports
 
+use Fgt\Globals;
+
 $SpecialChar = array(' ', '.', ',', '"', '\'', '/', '\\', '|', ':', ';', '+', '&', '#', '@', '-', '=', '*', '%', '!', '?', '$', '<', '>', "\n");
 $SpecialPar  = array('(', ')', '[', ']', '{', '}');
 $SpecialNum  = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
@@ -53,7 +55,6 @@ function stripLRMRLM($inputText) {
  * @return string The string with all texts encapsulated as required
  */
 function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
-	global $TEXT_DIRECTION;
 	global $openPar, $closePar, $punctuation;
 	global $numbers, $numberPrefix, $numberPunctuation;
 	global $previousState, $currentState, $waitingText;
@@ -81,7 +82,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 	$lenEnd   = strlen($endLTR); // RTL version MUST have same length
 
 	$previousState    = '';
-	$currentState     = strtoupper($TEXT_DIRECTION);
+	$currentState     = strtoupper(Globals::i()->TEXT_DIRECTION);
 	$numberState      = false; // Set when we're inside a numeric string
 	$result           = '';
 	$waitingText      = '';
@@ -338,7 +339,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 
 	// Get rid of any waiting text
 	if ($waitingText != '') {
-		if ($TEXT_DIRECTION == 'rtl' && $currentState == 'LTR') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl' && $currentState == 'LTR') {
 			$result .= $startRTL;
 			$result .= $waitingText;
 			$result .= $endRTL;
@@ -369,7 +370,7 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
 	}
 
 	// On RTL pages, put trailing "." in RTL numeric strings into its own RTL span
-	if ($TEXT_DIRECTION == 'rtl') {
+	if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 		$result = str_replace(WT_UTF8_PDF . '.' . $endRTL, WT_UTF8_PDF . $endRTL . $startRTL . '.' . $endRTL, $result);
 	}
 
@@ -480,11 +481,9 @@ function spanLTRRTL($inputText, $direction = 'BOTH', $class = '') {
  * @return string
  */
 function starredName($textSpan, $direction) {
-	global $TEXT_DIRECTION;
-
 	// To avoid a TCPDF bug that mixes up the word order, insert those <u> and </u> tags
 	// only when page and span directions are identical.
-	if ($direction == strtoupper($TEXT_DIRECTION)) {
+	if ($direction == strtoupper(Globals::i()->TEXT_DIRECTION)) {
 		while (true) {
 			$starPos = strpos($textSpan, '*');
 			if ($starPos === false) {
@@ -589,7 +588,7 @@ function beginCurrentSpan(&$result) {
  * @param boolean $theEnd
  */
 function finishCurrentSpan(&$result, $theEnd = false) {
-	global $previousState, $currentState, $posSpanStart, $TEXT_DIRECTION, $waitingText;
+	global $previousState, $currentState, $posSpanStart, $waitingText;
 	global $startLTR, $endLTR, $startRTL, $endRTL;
 	global $numbers, $punctuation;
 
@@ -679,7 +678,7 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 
 	if ($currentState == 'LTR') {
 		// Move trailing numeric strings to the following RTL text.  Include any blanks preceding or following the numeric text too.
-		if ($TEXT_DIRECTION == 'rtl' && $previousState == 'RTL' && !$theEnd) {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl' && $previousState == 'RTL' && !$theEnd) {
 			$trailingString = '';
 			$savedSpan      = $textSpan;
 			while ($textSpan != '') {
@@ -771,7 +770,7 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 		$trailingID          = '';
 		$trailingSeparator   = '';
 		$leadingSeparator    = '';
-		while ($TEXT_DIRECTION == 'rtl') {
+		while (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			if (strpos($result, $startRTL) !== false) {
 				// Remove trailing blanks for inclusion in a separate LTR span
 				while ($textSpan != '') {
@@ -946,7 +945,7 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 		}
 
 		// Move trailing numeric strings to the following LTR text.  Include any blanks preceding or following the numeric text too.
-		if (!$theEnd && $TEXT_DIRECTION != 'rtl') {
+		if (!$theEnd && Globals::i()->TEXT_DIRECTION != 'rtl') {
 			$trailingString = '';
 			$savedSpan      = $textSpan;
 			while ($textSpan != '') {
@@ -1001,7 +1000,7 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 			$waitingText = ' - ' . $waitingText;
 		}
 
-		while ($TEXT_DIRECTION == 'rtl') {
+		while (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			// Look for " - " preceding <RTLbr> and relocate it to the front of the string
 			$posDashString = strpos($textSpan, ' - <RTLbr>');
 			if ($posDashString === false) {
@@ -1064,10 +1063,10 @@ function finishCurrentSpan(&$result, $theEnd = false) {
 
 		if ($countLeadingSpaces != 0) {
 			$newLength = strlen($textSpan) + $countLeadingSpaces;
-			$textSpan  = str_pad($textSpan, $newLength, ' ', ($TEXT_DIRECTION == 'rtl' ? STR_PAD_LEFT : STR_PAD_RIGHT));
+			$textSpan  = str_pad($textSpan, $newLength, ' ', (Globals::i()->TEXT_DIRECTION == 'rtl' ? STR_PAD_LEFT : STR_PAD_RIGHT));
 		}
 		if ($countTrailingSpaces != 0) {
-			if ($TEXT_DIRECTION == 'ltr') {
+			if (Globals::i()->TEXT_DIRECTION == 'ltr') {
 				if ($trailingBreaks == '') {
 					// Move trailing RTL spaces to front of following LTR span
 					$newLength   = strlen($waitingText) + $countTrailingSpaces;

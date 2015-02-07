@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class TreeView
@@ -219,8 +220,6 @@ class TreeView {
 	 * to translate properly the modern french meaning of "conjoint"
 	 */
 	private function drawPerson(Individual $person, $gen, $state, Family $pfamily = null, $order = null, $isRoot = false) {
-		global $TEXT_DIRECTION;
-
 		if ($gen < 0) {
 			return '';
 		}
@@ -247,7 +246,7 @@ class TreeView {
 
 		/* draw the person. Do NOT add person or family id as an id, since a same person could appear more than once in the tree !!! */
 		// Fixing the width for td to the box initial width when the person is the root person fix a rare bug that happen when a person without child and without known parents is the root person : an unwanted white rectangle appear at the right of the person’s boxes, otherwise.
-		$html .= '<td' . ($isRoot ? ' style="width:1px"' : '') . '><div class="tv_box' . ($isRoot ? ' rootPerson' : '') . '" dir="' . $TEXT_DIRECTION . '" style="text-align: ' . ($TEXT_DIRECTION == "rtl" ? "right" : "left") . '; direction: ' . $TEXT_DIRECTION . '" abbr="' . $person->getXref() . '" onclick="' . $this->name . 'Handler.expandBox(this, event);">';
+		$html .= '<td' . ($isRoot ? ' style="width:1px"' : '') . '><div class="tv_box' . ($isRoot ? ' rootPerson' : '') . '" dir="' . Globals::i()->TEXT_DIRECTION . '" style="text-align: ' . (Globals::i()->TEXT_DIRECTION == "rtl" ? "right" : "left") . '; direction: ' . Globals::i()->TEXT_DIRECTION . '" abbr="' . $person->getXref() . '" onclick="' . $this->name . 'Handler.expandBox(this, event);">';
 		$html .= $this->drawPersonName($person);
 		$fop = array(); // $fop is fathers of partners
 		if (!is_null($partner)) {

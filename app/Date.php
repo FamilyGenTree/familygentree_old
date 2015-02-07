@@ -210,8 +210,6 @@ class Date {
 	 * @return string
 	 */
 	function display($url = false, $date_format = null, $convert_calendars = true) {
-		global $TEXT_DIRECTION;
-
 		$CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');
 		$DATE_FORMAT     = Globals::i()->WT_TREE->getPreference('DATE_FORMAT');
 
@@ -260,19 +258,19 @@ class Date {
 				if ($d1 != $d1tmp && $d1tmp != '') {
 					if ($url) {
 						if ($CALENDAR_FORMAT != "none") {
-							$conv1 .= ' <span dir="' . $TEXT_DIRECTION . '">(<a href="' . $d1conv->calendarUrl($date_format) . '">' . $d1tmp . '</a>)</span>';
+							$conv1 .= ' <span dir="' . Globals::i()->TEXT_DIRECTION . '">(<a href="' . $d1conv->calendarUrl($date_format) . '">' . $d1tmp . '</a>)</span>';
 						} else {
-							$conv1 .= ' <span dir="' . $TEXT_DIRECTION . '"><br><a href="' . $d1conv->calendarUrl($date_format) . '">' . $d1tmp . '</a></span>';
+							$conv1 .= ' <span dir="' . Globals::i()->TEXT_DIRECTION . '"><br><a href="' . $d1conv->calendarUrl($date_format) . '">' . $d1tmp . '</a></span>';
 						}
 					} else {
-						$conv1 .= ' <span dir="' . $TEXT_DIRECTION . '">(' . $d1tmp . ')</span>';
+						$conv1 .= ' <span dir="' . Globals::i()->TEXT_DIRECTION . '">(' . $d1tmp . ')</span>';
 					}
 				}
 				if (!is_null($this->date2) && $d2 != $d2tmp && $d1tmp != '') {
 					if ($url) {
-						$conv2 .= ' <span dir="' . $TEXT_DIRECTION . '">(<a href="' . $d2conv->calendarUrl($date_format) . '">' . $d2tmp . '</a>)</span>';
+						$conv2 .= ' <span dir="' . Globals::i()->TEXT_DIRECTION . '">(<a href="' . $d2conv->calendarUrl($date_format) . '">' . $d2tmp . '</a>)</span>';
 					} else {
-						$conv2 .= ' <span dir="' . $TEXT_DIRECTION . '">(' . $d2tmp . ')</span>';
+						$conv2 .= ' <span dir="' . Globals::i()->TEXT_DIRECTION . '">(' . $d2tmp . ')</span>';
 					}
 				}
 			}

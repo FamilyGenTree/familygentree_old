@@ -682,10 +682,8 @@ class ReportHtml extends ReportBase {
 	 * @param boolean $useclass
 	 */
 	function write($text, $color = "", $useclass = true) {
-		global $TEXT_DIRECTION;
-
 		$style = $this->getStyle($this->getCurrentStyle());
-		$htmlcode = "<span dir=\"$TEXT_DIRECTION\"";
+		$htmlcode = "<span dir=\"Globals::i()->TEXT_DIRECTION\"";
 		if ($useclass) {
 			$htmlcode .= " class=\"" . $style["name"] . "\"";
 		}

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class CompactController - Controller for the compact chart
@@ -104,12 +105,10 @@ class CompactController extends ChartController {
 	 * @return string
 	 */
 	public function sosaArrow($n, $arrow_dir) {
-		global $TEXT_DIRECTION;
-
 		$indi = $this->treeid[$n];
 
 		$arrow_dir = substr($arrow_dir, 0, 1);
-		if ($TEXT_DIRECTION == 'rtl') {
+		if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 			if ($arrow_dir == 'l') {
 				$arrow_dir = 'r';
 			} elseif ($arrow_dir == 'r') {

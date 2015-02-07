@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class Menu - System for generating menus.
@@ -218,7 +219,7 @@ class Menu {
 	 * @return string
 	 */
 	public function getMenu() {
-		global $menucount, $TEXT_DIRECTION;
+		global $menucount;
 
 		if (!isset($menucount)) {
 			$menucount = 0;
@@ -246,7 +247,7 @@ class Menu {
 
 		if ($c > 0) {
 			$submenuid = "menu{$id}_subs";
-			if ($TEXT_DIRECTION == 'ltr') {
+			if (Globals::i()->TEXT_DIRECTION == 'ltr') {
 				$output .= '<div style="text-align: left;">';
 			} else {
 				$output .= '<div style="text-align: right;">';

@@ -33,7 +33,7 @@ class top10_givnnames_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function getBlock($block_id, $template = true, $cfg = null) {
-		global $TEXT_DIRECTION, $ctype;
+		global $ctype;
 
 		$num       = get_block_setting($block_id, 'num', '10');
 		$infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
@@ -68,7 +68,7 @@ class top10_givnnames_WT_Module extends Module implements ModuleBlockInterface {
 		//Select List or Table
 		switch ($infoStyle) {
 		case "list": // Output style 1:  Simple list style.  Better suited to left side of page.
-			if ($TEXT_DIRECTION == 'ltr') {
+			if (Globals::i()->TEXT_DIRECTION == 'ltr') {
 				$padding = 'padding-left: 15px';
 			} else {
 				$padding = 'padding-right: 15px';

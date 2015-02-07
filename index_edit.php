@@ -23,9 +23,8 @@ use Zend_Session;
  * Defined in session.php
  *
  * @global string       $SEARCH_SPIDER
- * @global string       $TEXT_DIRECTION
  */
-global $SEARCH_SPIDER, $TEXT_DIRECTION;
+global $SEARCH_SPIDER;
 
 define('WT_SCRIPT_NAME', 'index_edit.php');
 require './includes/session.php';
@@ -101,7 +100,7 @@ if ($can_reset && Filter::post('default') === '1') {
 // Define all the icons we're going to use
 $IconUarrow = 'icon-uarrow';
 $IconDarrow = 'icon-darrow';
-if ($TEXT_DIRECTION === 'ltr') {
+if (Globals::i()->TEXT_DIRECTION === 'ltr') {
 	$IconRarrow  = 'icon-rarrow';
 	$IconLarrow  = 'icon-larrow';
 	$IconRDarrow = 'icon-rdarrow';

@@ -30,7 +30,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
 // session.php
-global $WT_REQUEST, $GEDCOM, $SEARCH_SPIDER, $TEXT_DIRECTION;
+global $WT_REQUEST, $GEDCOM, $SEARCH_SPIDER;
 // most pages
 global $controller;
 

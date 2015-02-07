@@ -19,10 +19,9 @@ namespace Fisharebest\Webtrees;
 /**
  * Defined in session.php
  *
- * @global string  $TEXT_DIRECTION
  * @global integer $basexoffset
  */
-global $TEXT_DIRECTION, $basexoffset;
+global $basexoffset;
 
 use Fgt\Globals;
 
@@ -97,7 +96,7 @@ if ($controller->error_message) {
 	return;
 }
 
-$posn = $TEXT_DIRECTION == 'rtl' ? 'right' : 'left';
+$posn = Globals::i()->TEXT_DIRECTION == 'rtl' ? 'right' : 'left';
 
 echo '<div id="pedigree_chart" class="layout', $talloffset, '">';
 //-- echo the boxes
@@ -165,7 +164,7 @@ for ($i = ($controller->treesize - 1); $i >= 0; $i--) {
 		if ($i > (int) ($controller->treesize / 2) + (int) ($controller->treesize / 4)) {
 			$did++;
 		}
-		if ($TEXT_DIRECTION == "rtl") {
+		if (Globals::i()->TEXT_DIRECTION == "rtl") {
 			$arrow = 'icon-larrow';
 		} else {
 			$arrow = 'icon-rarrow';
@@ -189,7 +188,7 @@ $famids = $controller->root->getSpouseFamilies();
 $cfamids = $controller->root->getChildFamilies();
 
 if (count($famids) > 0) {
-	if ($TEXT_DIRECTION == 'rtl') {
+	if (Globals::i()->TEXT_DIRECTION == 'rtl') {
 		$arrow = 'icon-rarrow';
 	} else {
 		$arrow = 'icon-larrow';
@@ -267,7 +266,7 @@ $controller->addInlineJavascript('
 
 	// Draw joining lines in <canvas>
 	// Set variables
-	var textdirection = "' . $TEXT_DIRECTION . '",
+	var textdirection = "' . Globals::i()->TEXT_DIRECTION . '",
 		talloffset = ' . $talloffset . ',
 		canvaswidth = ' . ($canvaswidth) . ',
 		offset_x = 20,
