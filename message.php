@@ -211,8 +211,6 @@ case 'send':
  * @return bool
  */
 function addMessage($message) {
-	global $WT_REQUEST;
-
 	$success = true;
 
 	$sender    = User::findByIdentifier($message['from']);
@@ -293,7 +291,7 @@ function addMessage($message) {
 		Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
 			->execute(array(
 				$message['from'],
-				$WT_REQUEST->getClientIp(),
+				Globals::i()->WT_REQUEST->getClientIp(),
 				$recipient->getUserId(),
 				$message['subject'],
 				str_replace('<br>', '', $message['body']) // Remove the <br> that we added for the external email.  TODO: create different messages

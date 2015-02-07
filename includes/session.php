@@ -30,7 +30,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
 // session.php
-global $WT_REQUEST, $GEDCOM, $SEARCH_SPIDER;
+global $GEDCOM, $SEARCH_SPIDER;
 // most pages
 global $controller;
 
@@ -251,7 +251,7 @@ if (file_exists(WT_ROOT . 'data/config.ini.php')) {
 	exit;
 }
 
-$WT_REQUEST = new Zend_Controller_Request_Http;
+Globals::i()->WT_REQUEST = new Zend_Controller_Request_Http;
 
 // Connect to the database
 try {
@@ -295,7 +295,7 @@ $rule = Database::prepare(
 	" WHERE IFNULL(INET_ATON(?), 0) BETWEEN ip_address_start AND ip_address_end" .
 	" AND ? LIKE user_agent_pattern" .
 	" ORDER BY ip_address_end LIMIT 1"
-)->execute(array($WT_REQUEST->getClientIp(), Filter::server('HTTP_USER_AGENT')))->fetchOne();
+)->execute(array(Globals::i()->WT_REQUEST->getClientIp(), Filter::server('HTTP_USER_AGENT')))->fetchOne();
 
 switch ($rule) {
 case 'allow':
@@ -308,13 +308,13 @@ case 'robot':
 case 'unknown':
 	// Search engines don’t send cookies, and so create a new session with every visit.
 	// Make sure they always use the same one
-	Zend_Session::setId('search-engine-' . str_replace('.', '-', $WT_REQUEST->getClientIp()));
+	Zend_Session::setId('search-engine-' . str_replace('.', '-', Globals::i()->WT_REQUEST->getClientIp()));
 	$SEARCH_SPIDER = true;
 	break;
 case '':
 	Database::prepare(
 		"INSERT INTO `##site_access_rule` (ip_address_start, ip_address_end, user_agent_pattern, comment) VALUES (IFNULL(INET_ATON(?), 0), IFNULL(INET_ATON(?), 4294967295), ?, '')"
-	)->execute(array($WT_REQUEST->getClientIp(), $WT_REQUEST->getClientIp(), Filter::server('HTTP_USER_AGENT', null, '')));
+	)->execute(array(Globals::i()->WT_REQUEST->getClientIp(), Globals::i()->WT_REQUEST->getClientIp(), Filter::server('HTTP_USER_AGENT', null, '')));
 	$SEARCH_SPIDER = true;
 	break;
 }
@@ -334,7 +334,7 @@ session_set_save_handler(
 		return Database::prepare("SELECT session_data FROM `##session` WHERE session_id=?")->execute(array($id))->fetchOne();
 	},
 	// write
-	function($id, $data) use ($WT_REQUEST) {
+	function($id, $data) {
 		// Only update the session table once per minute, unless the session data has actually changed.
 		Database::prepare(
 			"INSERT INTO `##session` (session_id, user_id, ip_address, session_data, session_time)" .
@@ -344,7 +344,7 @@ session_set_save_handler(
 			" ip_address   = VALUES(ip_address)," .
 			" session_data = VALUES(session_data)," .
 			" session_time = CURRENT_TIMESTAMP - SECOND(CURRENT_TIMESTAMP)"
-		)->execute(array($id, (int) Auth::id(), $WT_REQUEST->getClientIp(), $data));
+		)->execute(array($id, (int) Auth::id(), Globals::i()->WT_REQUEST->getClientIp(), $data));
 
 		return true;
 	},

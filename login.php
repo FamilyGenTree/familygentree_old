@@ -21,13 +21,6 @@ use Rhumsaa\Uuid\Uuid;
 use Zend_Controller_Request_Http;
 use Zend_Session;
 
-/**
- * Defined in session.php
- *
- * @global Zend_Controller_Request_Http $WT_REQUEST
- */
-global $WT_REQUEST;
-
 define('WT_SCRIPT_NAME', 'login.php');
 require './includes/session.php';
 
@@ -327,7 +320,7 @@ case 'register':
 			}
 			$mail1_body .= Mail::auditFooter();
 
-			$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New registration at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->Globals::i()->WT_TREE->title());
+			$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New registration at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->title());
 			I18N::init(WT_LOCALE);
 
 			echo '<div id="login-register-page">';
@@ -382,7 +375,7 @@ case 'register':
 			$mail1_method = $webmaster->getPreference('contact_method');
 			if ($mail1_method != 'messaging3' && $mail1_method != 'mailto' && $mail1_method != 'none') {
 				Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
-					->execute(array($user->getEmail(), $WT_REQUEST->getClientIp(), $webmaster->getUserId(), $mail1_subject, Filter::unescapeHtml($mail1_body)));
+					->execute(array($user->getEmail(), Globals::i()->WT_REQUEST->getClientIp(), $webmaster->getUserId(), $mail1_subject, Filter::unescapeHtml($mail1_body)));
 			}
 
 			echo '<div class="confirm"><p>', I18N::translate('Hello %s…<br>Thank you for your registration.', $user->getRealName()), '</p><p>';
@@ -610,7 +603,7 @@ case 'verify_hash':
 			$mail1_method = $webmaster->getPreference('CONTACT_METHOD');
 			if ($mail1_method != 'messaging3' && $mail1_method != 'mailto' && $mail1_method != 'none') {
 				Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
-					->execute(array($user_name, $WT_REQUEST->getClientIp(), $webmaster->getUserId(), $mail1_subject, Filter::unescapeHtml($mail1_body)));
+					->execute(array($user_name, Globals::i()->WT_REQUEST->getClientIp(), $webmaster->getUserId(), $mail1_subject, Filter::unescapeHtml($mail1_body)));
 			}
 
 			$user

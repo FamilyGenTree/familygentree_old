@@ -16,16 +16,10 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use Zend_Controller_Request_Http;
 use Zend_Session;
-
-/**
- * Defined in session.php
- *
- * @global Zend_Controller_Request_Http $WT_REQUEST
- */
-global $WT_REQUEST;
 
 define('WT_SCRIPT_NAME', 'admin_site_access.php');
 require './includes/session.php';
@@ -55,7 +49,7 @@ case 'save':
 		$rule                = Filter::post('rule', 'allow|deny|robot');
 		$comment             = Filter::post('comment');
 		$user_agent_string   = Filter::server('HTTP_USER_AGENT');
-		$ip_address          = $WT_REQUEST->getClientIp();
+		$ip_address          = Globals::i()->WT_REQUEST->getClientIp();
 
 		if ($ip_address_start !== null && $ip_address_end !== null && $user_agent_pattern !== null && $rule !== null) {
 			// This doesn't work with named placeholders.  The :user_agent_string parameter is not recognised...

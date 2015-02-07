@@ -14,9 +14,10 @@ use Fisharebest\Webtrees\Tree;
 /**
  * Class Globals
  *
- * @property \Zend_Session WT_SESSION
- * @property Tree          WT_TREE
- * @property string|mixed  TEXT_DIRECTION
+ * @property \Zend_Session                 WT_SESSION
+ * @property Tree                          WT_TREE
+ * @property string|mixed                  TEXT_DIRECTION
+ * @property \Zend_Controller_Request_Http WT_REQUEST
  *
  * @package Fgt
  *
@@ -28,9 +29,12 @@ class Globals
     /**
      * @var array
      */
-    protected static $ALLOWED_VARS = array('WT_SESSION'     => 1,
-                                           'WT_TREE'        => 1,
-                                           'TEXT_DIRECTION' => 1);
+    protected static $ALLOWED_VARS = array(
+        'WT_SESSION'     => 1,
+        'WT_TREE'        => 1,
+        'TEXT_DIRECTION' => 1,
+        'WT_REQUEST'     => 1
+    );
     protected static $instance;
     protected        $varContainer = array();
 

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Mail;
 use Zend_Mail_Transport_File;
 use Zend_Mail_Transport_Sendmail;
@@ -33,12 +34,10 @@ class Mail {
 	 * @return string
 	 */
 	public static function auditFooter() {
-		global $WT_REQUEST;
-
 		return
 			self::EOL .
 			'---------------------------------------' . self::EOL .
-			'IP ADDRESS: ' . $WT_REQUEST->getClientIp() . self::EOL .
+			'IP ADDRESS: ' . Globals::i()->WT_REQUEST->getClientIp() . self::EOL .
 			'LANGUAGE: ' . WT_LOCALE . self::EOL;
 	}
 
