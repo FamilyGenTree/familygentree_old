@@ -19,6 +19,7 @@ use Fisharebest\Webtrees\Tree;
  * @property string|mixed                  TEXT_DIRECTION
  * @property \Zend_Controller_Request_Http WT_REQUEST
  * @property string                        SEARCH_SPIDER
+ * @property string                        GEDCOM
  *
  * @package Fgt
  *
@@ -35,7 +36,8 @@ class Globals
         'WT_TREE'        => 1,
         'TEXT_DIRECTION' => 1,
         'WT_REQUEST'     => 1,
-        'SEARCH_SPIDER'  => 1
+        'SEARCH_SPIDER'  => 1,
+        'GEDCOM'         => 1
     );
     protected static $instance;
     protected        $varContainer = array();

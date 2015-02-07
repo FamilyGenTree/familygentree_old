@@ -29,8 +29,6 @@ if (!defined('WT_SCRIPT_NAME')) {
 }
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
-// session.php
-global $GEDCOM;
 // most pages
 global $controller;
 
@@ -398,20 +396,20 @@ define('WT_USER_NAME', Auth::id() ? Auth::user()->getUserName() : '');
 // Set the active GEDCOM
 if (isset($_REQUEST['ged'])) {
 	// .... from the URL or form action
-	$GEDCOM = $_REQUEST['ged'];
+	Globals::i()->GEDCOM = $_REQUEST['ged'];
 } elseif (Globals::i()->WT_SESSION->GEDCOM) {
 	// .... the most recently used one
-	$GEDCOM = Globals::i()->WT_SESSION->GEDCOM;
+	Globals::i()->GEDCOM = Globals::i()->WT_SESSION->GEDCOM;
 } else {
 	// Try the site default
-	$GEDCOM = Site::getPreference('DEFAULT_GEDCOM');
+	Globals::i()->GEDCOM = Site::getPreference('DEFAULT_GEDCOM');
 }
 
 // Choose the selected tree (if it exists), or any valid tree otherwise
 Globals::i()->WT_TREE = null;
 foreach (Tree::getAll() as $tree) {
 	Globals::i()->WT_TREE = $tree;
-	if (Globals::i()->WT_TREE->getName() == $GEDCOM && (Globals::i()->WT_TREE->getPreference('imported') || Auth::isAdmin())) {
+	if (Globals::i()->WT_TREE->getName() == Globals::i()->GEDCOM && (Globals::i()->WT_TREE->getPreference('imported') || Auth::isAdmin())) {
 		break;
 	}
 }
@@ -450,7 +448,7 @@ if (Globals::i()->WT_TREE) {
 	define('WT_USER_PATH_LENGTH', 0);
 	define('WT_USER_ACCESS_LEVEL', WT_PRIV_PUBLIC);
 }
-$GEDCOM = WT_GEDCOM;
+Globals::i()->GEDCOM = WT_GEDCOM;
 
 // With no parameters, init() looks to the environment to choose a language
 define('WT_LOCALE', I18N::init());

@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global string $GEDCOM
- */
-global $GEDCOM;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'inverselink.php');
 require './includes/session.php';
@@ -61,7 +56,7 @@ if ($linkto == 'manage' && array_key_exists('GEDFact_assistant', Module::getActi
 			echo '<input type="hidden" name="linktoid" value="', $linktoid, '">';
 		}
 		echo '<input type="hidden" name="linkto" value="', $linkto, '">';
-		echo '<input type="hidden" name="ged" value="', $GEDCOM, '">';
+		echo '<input type="hidden" name="ged" value="', Globals::i()->GEDCOM, '">';
 		echo '<table class="facts_table">';
 		echo '<tr><td class="topbottombar" colspan="2">';
 		echo I18N::translate('Link to an existing media object');

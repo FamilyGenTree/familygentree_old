@@ -62,7 +62,7 @@ if ($action == 'choose' && $paramok) {
 		echo '<input type="hidden" name="linktoid" value="', $linktoid, '">';
 	}
 	echo '<input type="hidden" name="linkto" value="', $linkto, '">';
-	echo '<input type="hidden" name="ged" value="', $GEDCOM, '">';
+	echo '<input type="hidden" name="ged" value="', Globals::i()->GEDCOM, '">';
 	echo '<table class="facts_table center">';
 	echo '<tr><td class="topbottombar" colspan="2">';
 	echo I18N::translate('Link to an existing media object');

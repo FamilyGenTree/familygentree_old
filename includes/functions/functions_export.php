@@ -169,11 +169,9 @@ function convert_media_path($rec, $path) {
  *
  */
 function export_gedcom($gedcom, $gedout, $exportOptions) {
-	global $GEDCOM;
-
 	// Temporarily switch to the specified GEDCOM
-	$oldGEDCOM = $GEDCOM;
-	$GEDCOM = $gedcom;
+	$oldGEDCOM = Globals::i()->GEDCOM;
+	Globals::i()->GEDCOM = $gedcom;
 	$ged_id = get_id_from_gedcom($gedcom);
 
 	switch ($exportOptions['privatize']) {
@@ -290,5 +288,5 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 	fwrite($gedout, $tmp_gedcom);
 	fwrite($gedout, '0 TRLR' . WT_EOL);
 
-	$GEDCOM = $oldGEDCOM;
+	Globals::i()->GEDCOM = $oldGEDCOM;
 }
