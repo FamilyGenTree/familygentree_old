@@ -30,7 +30,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
 // session.php
-global $GEDCOM, $SEARCH_SPIDER;
+global $GEDCOM;
 // most pages
 global $controller;
 
@@ -299,7 +299,7 @@ $rule = Database::prepare(
 
 switch ($rule) {
 case 'allow':
-	$SEARCH_SPIDER = false;
+	Globals::i()->SEARCH_SPIDER = false;
 	break;
 case 'deny':
 	http_response_code(403);
@@ -309,13 +309,13 @@ case 'unknown':
 	// Search engines don’t send cookies, and so create a new session with every visit.
 	// Make sure they always use the same one
 	Zend_Session::setId('search-engine-' . str_replace('.', '-', Globals::i()->WT_REQUEST->getClientIp()));
-	$SEARCH_SPIDER = true;
+	Globals::i()->SEARCH_SPIDER = true;
 	break;
 case '':
 	Database::prepare(
 		"INSERT INTO `##site_access_rule` (ip_address_start, ip_address_end, user_agent_pattern, comment) VALUES (IFNULL(INET_ATON(?), 0), IFNULL(INET_ATON(?), 4294967295), ?, '')"
 	)->execute(array(Globals::i()->WT_REQUEST->getClientIp(), Globals::i()->WT_REQUEST->getClientIp(), Filter::server('HTTP_USER_AGENT', null, '')));
-	$SEARCH_SPIDER = true;
+	Globals::i()->SEARCH_SPIDER = true;
 	break;
 }
 
@@ -382,7 +382,7 @@ Zend_Session::start($cfg);
 // and problems with servers that have enabled “register_globals”.
 Globals::i()->WT_SESSION = new Zend_Session_Namespace('WEBTREES');
 
-if (!$SEARCH_SPIDER && !Globals::i()->WT_SESSION->initiated) {
+if (!Globals::i()->SEARCH_SPIDER && !Globals::i()->WT_SESSION->initiated) {
 	// A new session, so prevent session fixation attacks by choosing a new PHPSESSID.
 	Zend_Session::regenerateId();
 	Globals::i()->WT_SESSION->initiated = true;
@@ -511,7 +511,7 @@ if (WT_TIMESTAMP - Globals::i()->WT_SESSION->activity_time > 300) {
 // Set the theme
 if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
 	// Administration scripts begin with “admin” and use a special administration theme
-	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, Globals::i()->WT_TREE);
+	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
 } else {
 	if (Site::getPreference('ALLOW_USER_THEMES')) {
 		// Requested change of theme?
@@ -544,7 +544,7 @@ if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' 
 	}
 	foreach (Theme::installedThemes() as $theme) {
 		if ($theme->themeId() === $theme_id) {
-			Theme::theme($theme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, Globals::i()->WT_TREE);
+			Theme::theme($theme)->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
 		}
 	}
 
@@ -553,14 +553,14 @@ if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' 
 }
 
 // Page hit counter - load after theme, as we need theme formatting
-if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !$SEARCH_SPIDER) {
+if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
 	require WT_ROOT . 'includes/hitcount.php';
 } else {
 	$hitCount = '';
 }
 
 // Search engines are only allowed to see certain pages.
-if ($SEARCH_SPIDER && !in_array(WT_SCRIPT_NAME, array(
+if (Globals::i()->SEARCH_SPIDER && !in_array(WT_SCRIPT_NAME, array(
 	'index.php', 'indilist.php', 'module.php', 'mediafirewall.php',
 	'individual.php', 'family.php', 'mediaviewer.php', 'note.php', 'repo.php', 'source.php',
 ))) {

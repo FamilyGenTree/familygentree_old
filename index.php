@@ -16,13 +16,6 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global string $SEARCH_SPIDER
- */
-global $SEARCH_SPIDER;
-
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'index.php');
@@ -104,7 +97,7 @@ if ($blocks['main']) {
 	foreach ($blocks['main'] as $block_id => $module_name) {
 		$class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
 		$module     = new $class_name;
-		if ($SEARCH_SPIDER || !$module->loadAjax()) {
+		if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
 			// Load the block directly
 			echo $module->getBlock($block_id);
 		} else {
@@ -126,7 +119,7 @@ if ($blocks['side']) {
 	foreach ($blocks['side'] as $block_id => $module_name) {
 		$class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
 		$module     = new $class_name;
-		if ($SEARCH_SPIDER || !$module->loadAjax()) {
+		if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
 			// Load the block directly
 			echo $module->getBlock($block_id);
 		} else {

@@ -562,8 +562,6 @@ function print_fact_sources($factrec, $level) {
  * @param integer $level
  */
 function print_media_links($factrec, $level) {
-	global $SEARCH_SPIDER;
-
 	$nlevel = $level + 1;
 	if (preg_match_all("/$level OBJE @(.*)@/", $factrec, $omatch, PREG_SET_ORDER) == 0) {
 		return;
@@ -581,7 +579,7 @@ function print_media_links($factrec, $level) {
 				echo $media->displayImage();
 				echo '</div>'; // close div "media-display-image"
 				echo '<div class="media-display-title">';
-				if ($SEARCH_SPIDER) {
+				if (Globals::i()->SEARCH_SPIDER) {
 					echo $media->getFullName();
 				} else {
 					echo '<a href="mediaviewer.php?mid=', $media->getXref(), '&amp;ged=', WT_GEDURL, '">', $media->getFullName(), '</a>';
@@ -604,7 +602,7 @@ function print_media_links($factrec, $level) {
 						echo $spouse->getFullName();
 						echo '</a>';
 					}
-					if (empty($SEARCH_SPIDER)) {
+					if (empty(Globals::i()->SEARCH_SPIDER)) {
 						$ct = preg_match("/WT_FAMILY_ID: (.*)/", $factrec, $match);
 						if ($ct > 0) {
 							$famid = trim($match[1]);
@@ -1083,7 +1081,7 @@ function print_main_media(Fact $fact, $level) {
 			if ($media) {
 				echo '<span class="field">';
 				echo $media->displayImage();
-				if (empty($SEARCH_SPIDER)) {
+				if (empty(Globals::i()->SEARCH_SPIDER)) {
 					echo '<a href="' . $media->getHtmlUrl() . '">';
 				}
 				echo '<em>';
@@ -1094,7 +1092,7 @@ function print_main_media(Fact $fact, $level) {
 					echo $name['full'];
 				}
 				echo '</em>';
-				if (empty($SEARCH_SPIDER)) {
+				if (empty(Globals::i()->SEARCH_SPIDER)) {
 					echo '</a>';
 				}
 				echo '</span>';

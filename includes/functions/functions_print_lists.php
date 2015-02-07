@@ -29,7 +29,7 @@ use Zend_Tag_Cloud;
  * @return string
  */
 function format_indi_table($datalist, $option = '') {
-	global $SEARCH_SPIDER, $controller;
+	global $controller;
 
 	$table_id = 'table-indi-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 	$SHOW_EST_LIST_DATES = Globals::i()->WT_TREE->getPreference('SHOW_EST_LIST_DATES');
@@ -346,7 +346,7 @@ function format_indi_table($datalist, $option = '') {
 				if ($num) {
 					$html .= '<br>';
 				}
-				$html .= $birth_date->Display(!$SEARCH_SPIDER);
+				$html .= $birth_date->Display(!Globals::i()->SEARCH_SPIDER);
 			}
 			if ($birth_dates[0]->gregorianYear() >= 1550 && $birth_dates[0]->gregorianYear() < 2030 && !isset($unique_indis[$person->getXref()])) {
 				$birt_by_decade[(int) ($birth_dates[0]->gregorianYear() / 10) * 10] .= $person->getSex();
@@ -354,7 +354,7 @@ function format_indi_table($datalist, $option = '') {
 		} else {
 			$birth_date = $person->getEstimatedBirthDate();
 			if ($SHOW_EST_LIST_DATES) {
-				$html .= $birth_date->display(!$SEARCH_SPIDER);
+				$html .= $birth_date->display(!Globals::i()->SEARCH_SPIDER);
 			} else {
 				$html .= '&nbsp;';
 			}
@@ -372,7 +372,7 @@ function format_indi_table($datalist, $option = '') {
 			if ($n) {
 				$html .= '<br>';
 			}
-			if ($SEARCH_SPIDER) {
+			if (Globals::i()->SEARCH_SPIDER) {
 				$html .= $tmp->getShortName();
 			} else {
 				$html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
@@ -390,7 +390,7 @@ function format_indi_table($datalist, $option = '') {
 				if ($num) {
 					$html .= '<br>';
 				}
-				$html .= $death_date->Display(!$SEARCH_SPIDER);
+				$html .= $death_date->Display(!Globals::i()->SEARCH_SPIDER);
 			}
 			if ($death_dates[0]->gregorianYear() >= 1550 && $death_dates[0]->gregorianYear() < 2030 && !isset($unique_indis[$person->getXref()])) {
 				$deat_by_decade[(int) ($death_dates[0]->gregorianYear() / 10) * 10] .= $person->getSex();
@@ -400,7 +400,7 @@ function format_indi_table($datalist, $option = '') {
 			// Estimated death dates are a fixed number of years after the birth date.
 			// Don't show estimates in the future.
 			if ($SHOW_EST_LIST_DATES && $death_date->MinJD() < WT_CLIENT_JD) {
-				$html .= $death_date->display(!$SEARCH_SPIDER);
+				$html .= $death_date->display(!Globals::i()->SEARCH_SPIDER);
 			} elseif ($person->isDead()) {
 				$html .= I18N::translate('yes');
 			} else {
@@ -427,7 +427,7 @@ function format_indi_table($datalist, $option = '') {
 			if ($n) {
 				$html .= '<br>';
 			}
-			if ($SEARCH_SPIDER) {
+			if (Globals::i()->SEARCH_SPIDER) {
 				$html .= $tmp->getShortName();
 			} else {
 				$html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
@@ -518,7 +518,7 @@ function format_indi_table($datalist, $option = '') {
  * @return string
  */
 function format_fam_table($datalist) {
-	global $SEARCH_SPIDER, $controller;
+	global $controller;
 
 	$table_id = 'table-fam-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 
@@ -890,7 +890,7 @@ function format_fam_table($datalist) {
 				if ($n) {
 					$html .= '<br>';
 				}
-				$html .= '<div>' . $marriage_date->Display(!$SEARCH_SPIDER) . '</div>';
+				$html .= '<div>' . $marriage_date->Display(!Globals::i()->SEARCH_SPIDER) . '</div>';
 			}
 			if ($marriage_dates[0]->gregorianYear() >= 1550 && $marriage_dates[0]->gregorianYear() < 2030) {
 				$marr_by_decade[(int) ($marriage_dates[0]->gregorianYear() / 10) * 10] .= $husb->getSex() . $wife->getSex();
@@ -920,7 +920,7 @@ function format_fam_table($datalist) {
 			if ($n) {
 				$html .= '<br>';
 			}
-			if ($SEARCH_SPIDER) {
+			if (Globals::i()->SEARCH_SPIDER) {
 				$html .= $tmp->getShortName();
 			} else {
 				$html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
@@ -1980,7 +1980,7 @@ function print_events_table($startjd, $endjd, $events = 'BIRT MARR DEAT', $only_
 		}
 		$html .= '</td>';
 		$html .= '<td>' . $record->getSortName() . '</td>';
-		$html .= '<td>' . $fact->getDate()->Display(empty($SEARCH_SPIDER)) . '</td>';
+		$html .= '<td>' . $fact->getDate()->Display(empty(Globals::i()->SEARCH_SPIDER)) . '</td>';
 		$html .= '<td>' . $n . '</td>';
 		$html .= '<td>' . I18N::number($fact->anniv) . '</td>';
 		$html .= '<td>' . $fact->anniv . '</td>';

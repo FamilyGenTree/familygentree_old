@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class family_nav_WT_Module
@@ -42,9 +43,7 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface {
 
 	/** {@inheritdoc} */
 	public function hasSidebarContent() {
-		global $SEARCH_SPIDER;
-
-		return !$SEARCH_SPIDER;
+		return !Globals::i()->SEARCH_SPIDER;
 	}
 
 	/** {@inheritdoc} */
@@ -187,13 +186,11 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface {
 	 * @return string
 	 */
 	private function getParents(Individual $person) {
-		global $SEARCH_SPIDER;
-
 		$father = null;
 		$mother = null;
 		$html = sprintf(self::TTL, I18N::translate('Parents'));
 		$family = $person->getPrimaryChildFamily();
-		if (!$SEARCH_SPIDER && $person->canShowName() && $family !== null) {
+		if (!Globals::i()->SEARCH_SPIDER && $person->canShowName() && $family !== null) {
 			$father = $family->getHusband();
 			$mother = $family->getWife();
 			$html .= $this->getHTML($father) .
@@ -228,10 +225,8 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface {
 	 * @return string
 	 */
 	private function getFamily(Individual $person) {
-		global $SEARCH_SPIDER;
-
 		$html = '';
-		if ($person->canShowName() && !$SEARCH_SPIDER) {
+		if ($person->canShowName() && !Globals::i()->SEARCH_SPIDER) {
 			foreach ($person->getSpouseFamilies() as $family) {
 				$spouse = $family->getSpouse($person);
 				$html .= $this->getHTML($spouse, true);

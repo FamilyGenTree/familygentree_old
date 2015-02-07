@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 /**
@@ -63,9 +64,7 @@ class descendancy_WT_Module extends Module implements ModuleSidebarInterface {
 
 	/** {@inheritdoc} */
 	public function hasSidebarContent() {
-		global $SEARCH_SPIDER;
-
-		return !$SEARCH_SPIDER;
+		return !Globals::i()->SEARCH_SPIDER;
 	}
 
 	/** {@inheritdoc} */

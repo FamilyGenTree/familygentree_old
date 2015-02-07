@@ -19,13 +19,6 @@ namespace Fisharebest\Webtrees;
 use Fgt\Globals;
 use Zend_Session;
 
-/**
- * Defined in session.php
- *
- * @global string       $SEARCH_SPIDER
- */
-global $SEARCH_SPIDER;
-
 define('WT_SCRIPT_NAME', 'index_edit.php');
 require './includes/session.php';
 
@@ -55,7 +48,7 @@ if ($user_id) {
 
 if ($user_id < 0 || $gedcom_id < 0 || Auth::isAdmin() && $user_id != Auth::id()) {
 	// We're doing this from an admin page.  Use the admin theme, and return there afterwards.
-	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, Globals::i()->WT_TREE);
+	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
 	$return_to = 'admin_trees_manage.php?ged=';
 } else {
 	$return_to = 'index.php';

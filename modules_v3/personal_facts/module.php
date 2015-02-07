@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class personal_facts_WT_Module
@@ -154,9 +155,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface {
 
 	/** {@inheritdoc} */
 	public function canLoadAjax() {
-		global $SEARCH_SPIDER;
-
-		return !$SEARCH_SPIDER; // Search engines cannot use AJAX
+		return !Globals::i()->SEARCH_SPIDER; // Search engines cannot use AJAX
 	}
 
 	/** {@inheritdoc} */

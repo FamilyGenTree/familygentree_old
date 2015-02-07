@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class faq_WT_Module
@@ -430,9 +431,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
 
 	/** {@inheritdoc} */
 	public function getMenu() {
-		global $SEARCH_SPIDER;
-
-		if ($SEARCH_SPIDER) {
+		if (Globals::i()->SEARCH_SPIDER) {
 			return null;
 		}
 
