@@ -16,14 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global string $UNKNOWN_NN
- * @global string $UNKNOWN_PN
- */
-global $UNKNOWN_NN, $UNKNOWN_PN;
-
+use Fgt\Constants;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'indilist.php');
@@ -80,7 +73,7 @@ if ($show_all === 'yes') {
 	$alpha    = WT_Query_Name::initialLetter($surname); // so we can highlight the initial letter
 	$show_all = 'no';
 	if ($surname === '@N.N.') {
-		$legend = $UNKNOWN_NN;
+		$legend = Constants::UNKNOWN_NN();
 	} else {
 		$legend = Filter::escapeHtml($surname);
 	}
@@ -89,7 +82,7 @@ if ($show_all === 'yes') {
 	case '':
 		break;
 	case '@':
-		$legend .= ', ' . $UNKNOWN_PN;
+		$legend .= ', ' . Constants::UNKNOWN_PN();
 		$url .= '&amp;falpha=' . rawurlencode($falpha) . '&amp;ged=' . WT_GEDURL;
 		break;
 	default:
@@ -100,7 +93,7 @@ if ($show_all === 'yes') {
 	$show = 'indi'; // SURN list makes no sense here
 } elseif ($alpha === '@') {
 	$show_all = 'no';
-	$legend   = $UNKNOWN_NN;
+	$legend   = Constants::UNKNOWN_NN();
 	$url      = WT_SCRIPT_NAME . '?alpha=' . rawurlencode($alpha) . '&amp;ged=' . WT_GEDURL;
 	$show     = 'indi'; // SURN list makes no sense here
 } elseif ($alpha === ',') {
@@ -132,7 +125,7 @@ $list = array();
 foreach (WT_Query_Name::surnameAlpha($show_marnm === 'yes', false, WT_GED_ID) as $letter => $count) {
 	switch ($letter) {
 	case '@':
-		$html = $UNKNOWN_NN;
+		$html = Constants::UNKNOWN_NN();
 		break;
 	case ',':
 		$html = I18N::translate('None');
@@ -222,7 +215,7 @@ if ($show === 'indi' || $show === 'surn') {
 				foreach ($givn_initials as $givn_initial => $count) {
 					switch ($givn_initial) {
 					case '@':
-						$html = $UNKNOWN_PN;
+						$html = Constants::UNKNOWN_PN();
 						break;
 					default:
 						$html = Filter::escapeHtml($givn_initial);

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Constants;
 use Fgt\Globals;
 use Zend_Session;
 
@@ -153,7 +154,7 @@ case 'INDI': // Individuals, whose name contains the search terms
 	foreach ($rows as $row) {
 		$person = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 		if ($person->canShowName()) {
-			$data[] = array('value' => $row->xref, 'label' => str_replace(array('@N.N.', '@P.N.'), array($UNKNOWN_NN, $UNKNOWN_PN), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
+			$data[] = array('value' => $row->xref, 'label' => str_replace(array('@N.N.', '@P.N.'), array(Constants::UNKNOWN_NN(), Constants::UNKNOWN_PN()), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
 		}
 	}
 	echo json_encode($data);
@@ -386,7 +387,7 @@ case 'IFSRO':
 	foreach ($rows as $row) {
 		$person = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 		if ($person->canShowName()) {
-			$data[] = array('value' => $person->getXref(), 'label' => str_replace(array('@N.N.', '@P.N.'), array($UNKNOWN_NN, $UNKNOWN_PN), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
+			$data[] = array('value' => $person->getXref(), 'label' => str_replace(array('@N.N.', '@P.N.'), array(Constants::UNKNOWN_NN(), Constants::UNKNOWN_PN()), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
 		}
 	}
 	// Fetch all data, regardless of privacy
@@ -451,7 +452,7 @@ case 'IFS':
 	foreach ($rows as $row) {
 		$person = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
 		if ($person->canShowName()) {
-			$data[] = array('value' => $person->getXref(), 'label' => str_replace(array('@N.N.', '@P.N.'), array($UNKNOWN_NN, $UNKNOWN_PN), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
+			$data[] = array('value' => $person->getXref(), 'label' => str_replace(array('@N.N.', '@P.N.'), array(Constants::UNKNOWN_NN(), Constants::UNKNOWN_PN()), $row->n_full) . ', <i>' . $person->getLifeSpan() . '</i>');
 		}
 	}
 	// Fetch all data, regardless of privacy

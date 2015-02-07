@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Constants;
 
 /**
  * Class Family - Class file for a Family
@@ -313,8 +314,6 @@ class Family extends GedcomRecord {
 
 	/** {@inheritdoc} */
 	public function getAllNames() {
-		global $UNKNOWN_NN, $UNKNOWN_PN;
-
 		if (is_null($this->_getAllNames)) {
 			// Check the script used by each name, so we can match cyrillic with cyrillic, greek with greek, etc.
 			if ($this->husb) {
@@ -324,7 +323,7 @@ class Family extends GedcomRecord {
 					0 => array(
 						'type' => 'BIRT',
 						'sort' => '@N.N.',
-						'full' => $UNKNOWN_PN, ' ', $UNKNOWN_NN,
+						'full' => Constants::UNKNOWN_PN(), ' ', Constants::UNKNOWN_NN(),
 					),
 				);
 			}
@@ -338,7 +337,7 @@ class Family extends GedcomRecord {
 					0 => array(
 						'type' => 'BIRT',
 						'sort' => '@N.N.',
-						'full' => $UNKNOWN_PN, ' ', $UNKNOWN_NN,
+						'full' => Constants::UNKNOWN_PN(), ' ', Constants::UNKNOWN_NN(),
 					),
 				);
 			}

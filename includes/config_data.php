@@ -19,12 +19,6 @@ namespace Fisharebest\Webtrees;
 // Application configuration data.  Data here has no GUI to edit it,
 // although most of it can be altered to customise local installations.
 
-// Unknown surname
-$UNKNOWN_NN = I18N::translate_c('Unknown surname', '…');
-
-// Unknown given name
-$UNKNOWN_PN = I18N::translate_c('Unknown given name', '…');
-
 // NPFX tags - name prefixes
 $NPFX_accept = array(
 	'Adm',

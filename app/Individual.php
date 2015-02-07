@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Constants;
 use Fisharebest\ExtCalendar\GregorianCalendar;
 
 /**
@@ -1081,8 +1082,6 @@ class Individual extends GedcomRecord {
 	 * @param string $gedcom
 	 */
 	protected function addName($type, $full, $gedcom) {
-		global $UNKNOWN_NN, $UNKNOWN_PN;
-
 		////////////////////////////////////////////////////////////////////////////
 		// Extract the structured name parts - use for "sortable" names and indexes
 		////////////////////////////////////////////////////////////////////////////
@@ -1214,10 +1213,10 @@ class Individual extends GedcomRecord {
 
 		// Insert placeholders for any missing/unknown names
 		if (strpos($full, '@N.N.') !== false) {
-			$full = str_replace('@N.N.', $UNKNOWN_NN, $full);
+			$full = str_replace('@N.N.', Constants::UNKNOWN_NN(), $full);
 		}
 		if (strpos($full, '@P.N.') !== false) {
-			$full = str_replace('@P.N.', $UNKNOWN_PN, $full);
+			$full = str_replace('@P.N.', Constants::UNKNOWN_PN(), $full);
 		}
 		$full = '<span class="NAME" dir="auto" translate="no">' . preg_replace('/\/([^\/]*)\//', '<span class="SURN">$1</span>', Filter::escapeHtml($full)) . '</span>';
 
@@ -1273,7 +1272,7 @@ class Individual extends GedcomRecord {
 	 * @return string
 	 */
 	public function getShortName() {
-		global $bwidth, $UNKNOWN_NN, $UNKNOWN_PN;
+		global $bwidth;
 
 		// Estimate number of characters that can fit in box. Calulates to 28 characters in webtrees theme, or 34 if no thumbnail used.
 		if ($this->tree->getPreference('SHOW_HIGHLIGHT_IMAGES')) {
@@ -1304,7 +1303,7 @@ class Individual extends GedcomRecord {
 			}
 			$shortname = str_replace(
 				array('@P.N.', '@N.N.'),
-				array($UNKNOWN_PN, $UNKNOWN_NN),
+				array(Constants::UNKNOWN_PN(), Constants::UNKNOWN_NN()),
 				$givn . ' ' . $surn
 			);
 
