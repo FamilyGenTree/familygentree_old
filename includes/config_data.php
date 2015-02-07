@@ -389,6 +389,3 @@ $level2_tags = array(
 		//'BURI',
 	),
 );
-
-// Name fields
-$STANDARD_NAME_FACTS = array('NAME', 'NPFX', 'GIVN', 'SPFX', 'SURN', 'NSFX');

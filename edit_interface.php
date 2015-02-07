@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Constants;
 use Fgt\Globals;
 use Zend_Session;
 
@@ -2334,7 +2335,7 @@ function keep_chan(GedcomRecord $record = null) {
  * @param string        $gender
  */
 function print_indi_form($nextaction, Individual $person = null, Family $family = null, Fact $name_fact = null, $famtag = 'CHIL', $gender = 'U') {
-	global $NPFX_accept, $bdm, $STANDARD_NAME_FACTS, $controller;
+	global $NPFX_accept, $bdm, $controller;
 
 	$SURNAME_TRADITION = Globals::i()->WT_TREE->getPreference('SURNAME_TRADITION');
 
@@ -2352,7 +2353,7 @@ function print_indi_form($nextaction, Individual $person = null, Family $family 
 		$name_type    = $name_fact->getAttribute('TYPE');
 		$namerec = $name_fact->getGedcom();
 		// Populate the standard NAME field and subfields
-		foreach ($STANDARD_NAME_FACTS as $tag) {
+		foreach (Constants::$STANDARD_NAME_FACTS as $tag) {
 			if ($tag == 'NAME') {
 				$name_fields[$tag] = $name_fact->getValue();
 			} else {
@@ -2364,7 +2365,7 @@ function print_indi_form($nextaction, Individual $person = null, Family $family 
 		$name_type    = null;
 		$namerec      = null;
 		// Populate the standard NAME field and subfields
-		foreach ($STANDARD_NAME_FACTS as $tag) {
+		foreach (Constants::$STANDARD_NAME_FACTS as $tag) {
 			$name_fields[$tag] = '';
 		}
 	}

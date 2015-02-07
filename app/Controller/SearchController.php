@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Constants;
 use Fgt\Globals;
 use Zend_Session;
 
@@ -380,8 +381,6 @@ class SearchController extends PageController {
 	 *  Preforms a search and replace
 	 */
 	private function searchAndReplace() {
-		global $STANDARD_NAME_FACTS;
-
 		$this->search_trees = array(WT_GED_ID => Globals::i()->WT_TREE);
 		$this->srindi = 'yes';
 		$this->srfams = 'yes';
@@ -399,7 +398,7 @@ class SearchController extends PageController {
 		// Include edit functions.
 
 		$adv_name_tags = preg_split("/[\s,;: ]+/", Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'));
-		$name_tags     = array_unique(array_merge($STANDARD_NAME_FACTS, $adv_name_tags));
+		$name_tags     = array_unique(array_merge(Constants::$STANDARD_NAME_FACTS, $adv_name_tags));
 		$name_tags[]   = '_MARNM';
 		foreach ($this->myindilist as $id => $record) {
 			$oldRecord = $record->getGedcom();
