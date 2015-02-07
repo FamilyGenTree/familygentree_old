@@ -16,15 +16,9 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use Zend_Session;
-
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'admin_users.php');
 require './includes/session.php';
@@ -92,7 +86,7 @@ case 'save':
 			if ($approved && !$user->getPreference('verified_by_admin') && $user->getPreference('sessiontime') == 0) {
 				I18N::init($user->getPreference('language'));
 				Mail::systemMessage(
-					$WT_TREE,
+					Globals::i()->WT_TREE,
 					$user,
 					I18N::translate('Approval of account at %s', WT_BASE_URL),
 					I18N::translate('The administrator at the webtrees site %s has approved your application for an account.  You may now login by accessing the following link: %s', WT_BASE_URL, WT_BASE_URL)

@@ -20,10 +20,11 @@ namespace Fisharebest\Webtrees;
  * Defined in session.php
  *
  * @global string  $TEXT_DIRECTION
- * @global Tree    $WT_TREE
  * @global integer $bwidth
  */
-global $TEXT_DIRECTION, $WT_TREE, $bwidth;
+global $TEXT_DIRECTION, $bwidth;
+
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'relationship.php');
 require './includes/session.php';
@@ -32,7 +33,7 @@ $controller = new PageController;
 
 $pid1         = Filter::get('pid1', WT_REGEX_XREF);
 $pid2         = Filter::get('pid2', WT_REGEX_XREF);
-$show_full    = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+$show_full    = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
 $path_to_find = Filter::getInteger('path_to_find');
 $followspouse = Filter::getBool('followspouse');
 $asc          = Filter::getBool('asc');

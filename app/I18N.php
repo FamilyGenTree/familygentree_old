@@ -185,8 +185,6 @@ class I18N {
 	 * @return string $string
 	 */
 	public static function init($locale = null) {
-		global $WT_TREE;
-
 		// The translation libraries only work with a cache.
 		$cache_options = array(
 			'automatic_serialization' => true,
@@ -220,9 +218,9 @@ class I18N {
 				} else {
 					$prefs = explode(',', str_replace(' ', '', $_SERVER['HTTP_ACCEPT_LANGUAGE']));
 				}
-				if ($WT_TREE) {
+				if (Globals::i()->WT_TREE) {
 					// Add the tree’s default language as a low-priority
-					$locale  = $WT_TREE->getPreference('LANGUAGE');
+					$locale  = Globals::i()->WT_TREE->getPreference('LANGUAGE');
 					$prefs[] = $locale . ';q=0.2';
 				}
 				$prefs2 = array();

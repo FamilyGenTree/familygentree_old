@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'edituser.php');
 require './includes/session.php';
@@ -80,7 +75,7 @@ if ($form_action && Filter::checkCsrf()) {
 				Auth::user()->setPreference('theme', $form_theme);
 			}
 
-			$WT_TREE->setUserPreference(Auth::user(), 'rootid', $form_rootid);
+			Globals::i()->WT_TREE->setUserPreference(Auth::user(), 'rootid', $form_rootid);
 		}
 		break;
 

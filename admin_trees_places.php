@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_trees_places.php');
 require './includes/session.php';
@@ -79,7 +74,7 @@ if ($search && $replace) {
 $controller = new PageController;
 $controller
 	->restrictAccess(Auth::isManager())
-	->setPageTitle(I18N::translate('Update all the place names in a family tree') . ' — ' . $WT_TREE->getTitleHtml())
+	->setPageTitle(I18N::translate('Update all the place names in a family tree') . ' — ' . Globals::i()->WT_TREE->getTitleHtml())
 	->pageHeader();
 ?>
 

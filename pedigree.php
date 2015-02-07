@@ -20,16 +20,17 @@ namespace Fisharebest\Webtrees;
  * Defined in session.php
  *
  * @global string  $TEXT_DIRECTION
- * @global Tree    $WT_TREE
  * @global integer $basexoffset
  */
-global $TEXT_DIRECTION, $WT_TREE, $basexoffset;
+global $TEXT_DIRECTION, $basexoffset;
+
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'pedigree.php');
 require './includes/session.php';
 
-$MAX_PEDIGREE_GENERATIONS = $WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
-$PEDIGREE_GENERATIONS     = $WT_TREE->getPreference('PEDIGREE_GENERATIONS');
+$MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
+$PEDIGREE_GENERATIONS     = Globals::i()->WT_TREE->getPreference('PEDIGREE_GENERATIONS');
 
 define("ARROW_WRAPPER", "<div class='ancestorarrow' style='%s:%spx; top:%spx;'>");
 define("MENU_WRAPPER", "<div id='childarrow' style='%s:%spx; top:%spx'><div><a href='#' class='menuselect %s'></a><div id='childbox'>");

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 /**
@@ -86,8 +87,6 @@ class SearchController extends PageController {
 	 * Startup activity
 	 */
 	function __construct() {
-		global $WT_TREE;
-
 		parent::__construct();
 
 		// $action comes from GET (menus) or POST (form submission)
@@ -137,7 +136,7 @@ class SearchController extends PageController {
 				}
 			}
 		} else {
-			$this->search_trees[WT_GED_ID] = $WT_TREE;
+			$this->search_trees[WT_GED_ID] = Globals::i()->WT_TREE;
 		}
 
 		// vars use for soundex search
@@ -381,9 +380,9 @@ class SearchController extends PageController {
 	 *  Preforms a search and replace
 	 */
 	private function searchAndReplace() {
-		global $STANDARD_NAME_FACTS, $WT_TREE;
+		global $STANDARD_NAME_FACTS;
 
-		$this->search_trees = array(WT_GED_ID => $WT_TREE);
+		$this->search_trees = array(WT_GED_ID => Globals::i()->WT_TREE);
 		$this->srindi = 'yes';
 		$this->srfams = 'yes';
 		$this->srsour = 'yes';
@@ -399,7 +398,7 @@ class SearchController extends PageController {
 		Log::addEditLog("Search And Replace old:" . $oldquery . " new:" . $this->replace);
 		// Include edit functions.
 
-		$adv_name_tags = preg_split("/[\s,;: ]+/", $WT_TREE->getPreference('ADVANCED_NAME_FACTS'));
+		$adv_name_tags = preg_split("/[\s,;: ]+/", Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'));
 		$name_tags     = array_unique(array_merge($STANDARD_NAME_FACTS, $adv_name_tags));
 		$name_tags[]   = '_MARNM';
 		foreach ($this->myindilist as $id => $record) {

@@ -16,6 +16,7 @@
  */
 
 namespace Fisharebest\Webtrees;
+use Fgt\Globals;
 
 /**
  * Class Log - record webtrees events in the database
@@ -38,10 +39,10 @@ class Log {
 	 * @param Tree|null $tree
 	 */
 	private static function addLog($message, $log_type, Tree $tree = null) {
-		global $WT_REQUEST, $WT_TREE;
+		global $WT_REQUEST;
 
 		if (!$tree) {
-			$tree = $WT_TREE;
+			$tree = Globals::i()->WT_TREE;
 		}
 
 		Database::prepare(

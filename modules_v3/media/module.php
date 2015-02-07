@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class media_WT_Module
@@ -49,7 +50,7 @@ class media_WT_Module extends Module implements ModuleTabInterface {
 
 	/** {@inheritdoc} */
 	public function getTabContent() {
-		global $WT_TREE, $controller;
+		global $controller;
 
 		ob_start();
 		echo '<table class="facts_table">';
@@ -66,7 +67,7 @@ class media_WT_Module extends Module implements ModuleTabInterface {
 			echo '<tr><td id="no_tab4" colspan="2" class="facts_value">', I18N::translate('There are no media objects for this individual.'), '</td></tr>';
 		}
 		// New media link
-		if ($controller->record->canEdit() && $WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
+		if ($controller->record->canEdit() && Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
 			?>
 			<tr>
 				<td class="facts_label">

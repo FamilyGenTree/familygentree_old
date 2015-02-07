@@ -16,14 +16,8 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
-
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'autocomplete.php');
 require './includes/session.php';
@@ -202,7 +196,7 @@ case 'PLAC': // Place names (with hierarchy), that include the search term
 	foreach (Place::findPlaces($term, WT_GED_ID) as $place) {
 		$data[] = $place->getGedcomName();
 	}
-	if (!$data && $WT_TREE->getPreference('GEONAMES_ACCOUNT')) {
+	if (!$data && Globals::i()->WT_TREE->getPreference('GEONAMES_ACCOUNT')) {
 		// No place found?  Use an external gazetteer
 		$url =
 			"http://api.geonames.org/searchJSON" .
@@ -210,7 +204,7 @@ case 'PLAC': // Place names (with hierarchy), that include the search term
 			"&lang=" . WT_LOCALE .
 			"&fcode=CMTY&fcode=ADM4&fcode=PPL&fcode=PPLA&fcode=PPLC" .
 			"&style=full" .
-			"&username=" . $WT_TREE->getPreference('GEONAMES_ACCOUNT');
+			"&username=" . Globals::i()->WT_TREE->getPreference('GEONAMES_ACCOUNT');
 		// try to use curl when file_get_contents not allowed
 		if (ini_get('allow_url_fopen')) {
 			$json = file_get_contents($url);

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class top10_surnames_WT_Module
@@ -32,10 +33,10 @@ class top10_surnames_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function getBlock($block_id, $template = true, $cfg = null) {
-		global $WT_TREE, $ctype;
+		global $ctype;
 
-		$COMMON_NAMES_REMOVE    = $WT_TREE->getPreference('COMMON_NAMES_REMOVE');
-		$COMMON_NAMES_THRESHOLD = $WT_TREE->getPreference('COMMON_NAMES_THRESHOLD');
+		$COMMON_NAMES_REMOVE    = Globals::i()->WT_TREE->getPreference('COMMON_NAMES_REMOVE');
+		$COMMON_NAMES_THRESHOLD = Globals::i()->WT_TREE->getPreference('COMMON_NAMES_THRESHOLD');
 
 		$num       = get_block_setting($block_id, 'num', '10');
 		$infoStyle = get_block_setting($block_id, 'infoStyle', 'table');

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class BatchUpdateMarriedNamesPlugin Batch Update plugin: add missing 2 _MARNM records
@@ -62,9 +63,7 @@ class BatchUpdateMarriedNamesPlugin extends BatchUpdateBasePlugin {
 	 * @return string
 	 */
 	public function updateRecord($xref, $gedrec) {
-		global $WT_TREE;
-
-		$SURNAME_TRADITION = $WT_TREE->getPreference('SURNAME_TRADITION');
+		$SURNAME_TRADITION = Globals::i()->WT_TREE->getPreference('SURNAME_TRADITION');
 
 		preg_match('/^1 NAME (.*)/m', $gedrec, $match);
 		$wife_name = $match[1];

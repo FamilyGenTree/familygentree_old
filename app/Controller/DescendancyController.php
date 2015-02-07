@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
 /**
@@ -49,14 +50,14 @@ class DescendancyController extends ChartController {
 	 * Create the descendancy controller
 	 */
 	function __construct() {
-		global $bwidth, $bheight, $pbwidth, $pbheight, $WT_TREE, $show_full;
+		global $bwidth, $bheight, $pbwidth, $pbheight, $show_full;
 
 		parent::__construct();
 
 		// Extract parameters from form
-		$this->show_full   = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+		$this->show_full   = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
 		$this->chart_style = Filter::getInteger('chart_style', 0, 3, 0);
-		$this->generations = Filter::getInteger('generations', 2, $WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), $WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
+		$this->generations = Filter::getInteger('generations', 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), Globals::i()->WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
 		$this->box_width   = Filter::getInteger('box_width', 50, 300, 100);
 
 		// This is passed as a global.  A parameter would be better...

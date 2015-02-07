@@ -16,18 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'calendar.php');
 require './includes/session.php';
 
-$WEEK_START      = $WT_TREE::getPreference('WEEK_START');
-$CALENDAR_FORMAT = $WT_TREE::getPreference('CALENDAR_FORMAT');
+$WEEK_START      = Globals::i()->WT_TREE->getPreference('WEEK_START');
+$CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');
 
 $controller = new PageController;
 $controller->setPageTitle(I18N::translate('Anniversary calendar'));
@@ -212,7 +207,7 @@ if ($filterof === 'all') {
 	echo 'selected';
 }
 echo '>', I18N::translate('All individuals'), '</option>';
-if (!$WT_TREE->getPreference('HIDE_LIVE_PEOPLE') || Auth::check()) {
+if (!Globals::i()->WT_TREE->getPreference('HIDE_LIVE_PEOPLE') || Auth::check()) {
 	echo '<option value="living" ';
 	if ($filterof === 'living') {
 		echo 'selected';

@@ -20,9 +20,10 @@ namespace Fisharebest\Webtrees;
  * Defined in session.php
  *
  * @global string $SEARCH_SPIDER
- * @global Tree   $WT_TREE
  */
-global $SEARCH_SPIDER, $WT_TREE;
+global $SEARCH_SPIDER;
+
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'index.php');
 require './includes/session.php';
@@ -147,7 +148,7 @@ if ($ctype === 'user') {
 	echo '<a href="index_edit.php?gedcom_id=' . WT_GED_ID . '">', I18N::translate('Change the blocks on this page'), '</a>';
 }
 
-if ($WT_TREE->getPreference('SHOW_COUNTER')) {
+if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
 	echo '<span>' . I18N::translate('Hit count:') . ' ' . $hitCount . '</span>';
 }
 

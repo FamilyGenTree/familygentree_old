@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class AncestryController - Controller for the ancestry chart
@@ -36,16 +37,16 @@ class AncestryController extends ChartController {
 	 */
 	function __construct() {
 		global $bwidth, $bheight, $pbwidth, $pbheight, $show_full;
-		global $PEDIGREE_GENERATIONS, $WT_TREE, $OLD_PGENS, $box_width, $Dbwidth, $Dbheight;
+		global $PEDIGREE_GENERATIONS, $OLD_PGENS, $box_width, $Dbwidth, $Dbheight;
 
 		parent::__construct();
 
 		// Extract form parameters
-		$this->show_full      = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+		$this->show_full      = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
 		$this->show_cousins   = Filter::getInteger('show_cousins', 0, 1);
 		$this->chart_style    = Filter::getInteger('chart_style', 0, 3);
 		$box_width            = Filter::getInteger('box_width', 50, 300, 100);
-		$PEDIGREE_GENERATIONS = Filter::getInteger('PEDIGREE_GENERATIONS', 2, $WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS'), $WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
+		$PEDIGREE_GENERATIONS = Filter::getInteger('PEDIGREE_GENERATIONS', 2, Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS'), Globals::i()->WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
 
 		// This is passed as a global.  A parameter would be better...
 		$show_full = $this->show_full;

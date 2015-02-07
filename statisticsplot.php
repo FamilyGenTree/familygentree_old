@@ -19,19 +19,12 @@ namespace Fisharebest\Webtrees;
 use Fgt\Globals;
 use Zend_Session;
 
-/**
- * Defined in session.php
- *
- * @global Tree         $WT_TREE
- */
-global $WT_TREE;
-
 define('WT_SCRIPT_NAME', 'statisticsplot.php');
 require './includes/session.php';
 
 $controller = new AjaxController;
 
-$stats = new Stats($WT_TREE);
+$stats = new Stats(Globals::i()->WT_TREE);
 
 /**
  * Month of birth
@@ -891,14 +884,14 @@ if ($action === 'update') {
 	$chart_type  = $_POST['chart_type'];
 	$surname     = $_POST['SURN'];
 
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_ages']          = $xgl;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_ages_marriage'] = $xglm;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_months']        = $xgm;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_numbers']       = $xga;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['z_axis_boundary_periods']       = $zgp;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['chart_shows']                   = $chart_shows;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['chart_type']                    = $chart_type;
-	Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['SURN']                          = $surname;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_ages']          = $xgl;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_ages_marriage'] = $xglm;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_months']        = $xgm;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_numbers']       = $xga;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['z_axis_boundary_periods']       = $zgp;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['chart_shows']                   = $chart_shows;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['chart_type']                    = $chart_type;
+	Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['SURN']                          = $surname;
 
 	// Save the input variables
 	$savedInput                          = array();
@@ -913,11 +906,11 @@ if ($action === 'update') {
 	$savedInput['chart_shows']           = $chart_shows;
 	$savedInput['chart_type']            = $chart_type;
 	$savedInput['SURN']                  = $surname;
-	Globals::i()->WT_SESSION->statisticsplot[$WT_TREE->getTreeId()] = $savedInput;
+	Globals::i()->WT_SESSION->statisticsplot[Globals::i()->WT_TREE->getTreeId()] = $savedInput;
 	unset($savedInput);
 } else {
 	// Recover the saved input variables
-	$savedInput  = Globals::i()->WT_SESSION->statisticsplot[$WT_TREE->getTreeId()];
+	$savedInput  = Globals::i()->WT_SESSION->statisticsplot[Globals::i()->WT_TREE->getTreeId()];
 	$x_axis      = $savedInput['x_axis'];
 	$y_axis      = $savedInput['y_axis'];
 	$z_axis      = $savedInput['z_axis'];

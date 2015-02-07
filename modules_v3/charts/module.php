@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class charts_WT_Module
@@ -32,9 +33,9 @@ class charts_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function getBlock($block_id, $template = true, $cfg = null) {
-		global $WT_TREE, $ctype, $show_full, $controller;
+		global $ctype, $show_full, $controller;
 
-		$PEDIGREE_ROOT_ID = $WT_TREE->getPreference('PEDIGREE_ROOT_ID');
+		$PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 
 		$details = get_block_setting($block_id, 'details', '0');
 		$type    = get_block_setting($block_id, 'type', 'pedigree');
@@ -157,9 +158,9 @@ class charts_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function configureBlock($block_id) {
-		global $WT_TREE, $controller;
+		global $controller;
 
-		$PEDIGREE_ROOT_ID = $WT_TREE->getPreference('PEDIGREE_ROOT_ID');
+		$PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 
 		if (Filter::postBool('save') && Filter::checkCsrf()) {
 			set_block_setting($block_id, 'details', Filter::postBool('details'));

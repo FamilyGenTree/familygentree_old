@@ -59,8 +59,6 @@ function print_pedigree_person(Individual $person = null, $style = 1) {
  * @return string
  */
 function print_note_record($text, $nlevel, $nrec, $textOnly = false) {
-	global $WT_TREE;
-
 	$text .= get_cont($nlevel, $nrec);
 
 	// Check if shared note (we have already checked that it exists)
@@ -71,12 +69,12 @@ function print_note_record($text, $nlevel, $nrec, $textOnly = false) {
 		if (array_key_exists('GEDFact_assistant', Module::getActiveModules())) {
 			$html = GEDFact_assistant_WT_Module::formatCensusNote($note);
 		} else {
-			$html = Filter::formatText($note->getNote(), $WT_TREE);
+			$html = Filter::formatText($note->getNote(), Globals::i()->WT_TREE);
 		}
 	} else {
 		$note  = null;
 		$label = 'NOTE';
-		$html  = Filter::formatText($text, $WT_TREE);
+		$html  = Filter::formatText($text, Globals::i()->WT_TREE);
 	}
 
 	if ($textOnly) {
@@ -86,7 +84,7 @@ function print_note_record($text, $nlevel, $nrec, $textOnly = false) {
 	if (strpos($text, "\n") === false) {
 		// A one-line note? strip the block-level tags, so it displays inline
 		return WT_Gedcom_Tag::getLabelValue($label, strip_tags($html, '<a><strong><em>'));
-	} elseif ($WT_TREE->getPreference('EXPAND_NOTES')) {
+	} elseif (Globals::i()->WT_TREE->getPreference('EXPAND_NOTES')) {
 		// A multi-line note, and we're expanding notes by default
 		return WT_Gedcom_Tag::getLabelValue($label, $html);
 	} else {
@@ -96,7 +94,7 @@ function print_note_record($text, $nlevel, $nrec, $textOnly = false) {
 		if ($note) {
 			$first_line = '<a href="' . $note->getHtmlUrl() . '">' . $note->getFullName() . '</a>';
 		} else {
-			switch ($WT_TREE->getPreference('FORMAT_TEXT')) {
+			switch (Globals::i()->WT_TREE->getPreference('FORMAT_TEXT')) {
 			case 'markdown':
 				$text = Filter::markdown($text);
 				$text = html_entity_decode(strip_tags($text, '<a><strong><em>'), ENT_QUOTES, 'UTF-8');
@@ -597,8 +595,6 @@ function CheckFactUnique($uniquefacts, $recfacts, $type) {
  * @param string $type      the type of record INDI, FAM, SOUR etc
  */
 function print_add_new_fact($id, $usedfacts, $type) {
-	global $WT_TREE;
-
 	// -- Add from clipboard
 	if (Globals::i()->WT_SESSION->clipboard) {
 		$newRow = true;
@@ -633,29 +629,29 @@ function print_add_new_fact($id, $usedfacts, $type) {
 	// -- Add from pick list
 	switch ($type) {
 	case "INDI":
-		$addfacts   = preg_split("/[, ;:]+/", $WT_TREE->getPreference('INDI_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
-		$uniquefacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('INDI_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
-		$quickfacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('INDI_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
+		$addfacts   = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('INDI_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
+		$uniquefacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('INDI_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
+		$quickfacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('INDI_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
 		break;
 	case "FAM":
-		$addfacts   = preg_split("/[, ;:]+/", $WT_TREE->getPreference('FAM_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
-		$uniquefacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('FAM_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
-		$quickfacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('FAM_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
+		$addfacts   = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('FAM_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
+		$uniquefacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('FAM_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
+		$quickfacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('FAM_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
 		break;
 	case "SOUR":
-		$addfacts   = preg_split("/[, ;:]+/", $WT_TREE->getPreference('SOUR_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
-		$uniquefacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('SOUR_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
-		$quickfacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('SOUR_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
+		$addfacts   = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('SOUR_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
+		$uniquefacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('SOUR_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
+		$quickfacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('SOUR_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
 		break;
 	case "NOTE":
-		$addfacts   = preg_split("/[, ;:]+/", $WT_TREE->getPreference('NOTE_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
-		$uniquefacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('NOTE_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
-		$quickfacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('NOTE_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
+		$addfacts   = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('NOTE_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
+		$uniquefacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('NOTE_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
+		$quickfacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('NOTE_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
 		break;
 	case "REPO":
-		$addfacts   = preg_split("/[, ;:]+/", $WT_TREE->getPreference('REPO_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
-		$uniquefacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('REPO_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
-		$quickfacts = preg_split("/[, ;:]+/", $WT_TREE->getPreference('REPO_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
+		$addfacts   = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('REPO_FACTS_ADD'), -1, PREG_SPLIT_NO_EMPTY);
+		$uniquefacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('REPO_FACTS_UNIQUE'), -1, PREG_SPLIT_NO_EMPTY);
+		$quickfacts = preg_split("/[, ;:]+/", Globals::i()->WT_TREE->getPreference('REPO_FACTS_QUICK'), -1, PREG_SPLIT_NO_EMPTY);
 		break;
 	default:
 		return;

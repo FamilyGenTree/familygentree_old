@@ -113,12 +113,12 @@ class Filter {
 	 * Format block-level text such as notes or transcripts, etc.
 	 *
 	 * @param string  $text
-	 * @param Tree $WT_TREE
+	 * @param Tree $wt_tree
 	 *
 	 * @return string
 	 */
-	public static function formatText($text, Tree $WT_TREE) {
-		switch ($WT_TREE->getPreference('FORMAT_TEXT')) {
+	public static function formatText($text, $wt_tree) {
+		switch ($wt_tree->getPreference('FORMAT_TEXT')) {
 		case 'markdown':
 			return '<div class="markdown" dir="auto">' . self::markdown($text) . '</div>';
 		default:

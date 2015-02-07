@@ -16,14 +16,8 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
-
-/**
- * Defined in session.php
- *
- * @global Tree         $WT_TREE
- */
-global $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'statistics.php');
 require './includes/session.php';
@@ -81,7 +75,7 @@ if (!$ajax) {
 		->pageHeader()
 		->addInlineJavascript('autocomplete();')
 		->addInlineJavascript('jQuery("#loading-indicator").removeClass("loading-image");');
-	$stats = new Stats($WT_TREE);
+	$stats = new Stats(Globals::i()->WT_TREE);
 	if ($tab == 0) {
 		echo '<fieldset>
 		<legend>', I18N::translate('Total individuals: %s', $stats->totalIndividuals()), '</legend>
@@ -506,21 +500,21 @@ if (!$ajax) {
 		if (!isset($plotnp)) {
 			$plotnp = 201;
 		}
-		if (isset(Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()])) {
-			$x_axis_boundary_ages    = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_ages'];
-			$x_axis_boundary_months  = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_months'];
-			$x_axis_boundary_numbers = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
-			$x_axis_boundary_periods = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['z_axis_boundary_periods'];
+		if (isset(Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()])) {
+			$x_axis_boundary_ages    = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_ages'];
+			$x_axis_boundary_months  = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_months'];
+			$x_axis_boundary_numbers = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
+			$x_axis_boundary_periods = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['z_axis_boundary_periods'];
 		} else {
 			$x_axis_boundary_ages    = '1,5,10,20,30,40,50,60,70,80,90,100';
 			$x_axis_boundary_months  = '-24,-12,0,8,12,18,24,48';
 			$x_axis_boundary_numbers = '1,2,3,4,5,6,7,8,9,10';
 			$x_axis_boundary_periods = '1700,1750,1800,1850,1900,1950,2000';
 		}
-		if (isset(Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()])) {
-			$chart_shows = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_shows'];
-			$chart_type  = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_type'];
-			$surname     = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['surname'];
+		if (isset(Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()])) {
+			$chart_shows = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_shows'];
+			$chart_type  = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_type'];
+			$surname     = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['surname'];
 		} else {
 			$chart_shows = 'world';
 			$chart_type  = 'indi_distribution_chart';

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class GEDFact_assistant_WT_Module
@@ -211,8 +212,6 @@ class GEDFact_assistant_WT_Module extends Module {
 	 * @return string
 	 */
 	public static function formatCensusNote(Note $note) {
-		global $WT_TREE;
-
 		$headers = array(
 			'AgM'        => 'Age at first marriage',
 			'Age'        => 'Age at last birthday',
@@ -300,7 +299,7 @@ class GEDFact_assistant_WT_Module extends Module {
 				'<p>' . $postamble . '</p>';
 		} else {
 			// Not a census-assistant shared note - apply default formatting
-			return Filter::formatText($note->getNote(), $WT_TREE);
+			return Filter::formatText($note->getNote(), Globals::i()->WT_TREE);
 		}
 	}
 

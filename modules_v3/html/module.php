@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class html_WT_Module
@@ -32,7 +33,7 @@ class html_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function getBlock($block_id, $template = true, $cfg = null) {
-		global $ctype, $WT_TREE;
+		global $ctype;
 
 		$title          = get_block_setting($block_id, 'title');
 		$html           = get_block_setting($block_id, 'html');
@@ -50,14 +51,14 @@ class html_WT_Module extends Module implements ModuleBlockInterface {
 		 */
 		switch ($gedcom) {
 		case '__current__':
-			$stats = new Stats($WT_TREE);
+			$stats = new Stats(Globals::i()->WT_TREE);
 			break;
 		case '__default__':
 			$tree_id = Tree::getIdFromName(Site::getPreference('DEFAULT_GEDCOM'));
 			if ($tree_id) {
 				$stats = new Stats(Tree::get($tree_id));
 			} else {
-				$stats = new Stats($WT_TREE);
+				$stats = new Stats(Globals::i()->WT_TREE);
 			}
 			break;
 		default:
@@ -65,7 +66,7 @@ class html_WT_Module extends Module implements ModuleBlockInterface {
 			if ($tree_id) {
 				$stats = new Stats(Tree::get($tree_id));
 			} else {
-				$stats = new Stats($WT_TREE);
+				$stats = new Stats(Globals::i()->WT_TREE);
 			}
 			break;
 		}

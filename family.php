@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree   $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'family.php');
 require './includes/session.php';
@@ -67,7 +62,7 @@ if ($controller->record && $controller->record->canShow()) {
 				'</p>';
 		}
 	}
-} elseif ($controller->record && $WT_TREE->getPreference('SHOW_PRIVATE_RELATIONSHIPS')) {
+} elseif ($controller->record && Globals::i()->WT_TREE->getPreference('SHOW_PRIVATE_RELATIONSHIPS')) {
 	$controller->pageHeader();
 	// Continue - to display the children/parents/grandparents.
 	// We'll check for showing the details again later

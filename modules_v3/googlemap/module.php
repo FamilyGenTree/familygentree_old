@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use PDOException;
 use Zend_Session;
@@ -509,14 +510,12 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 	 * ...
 	 */
 	private function flags() {
-		global $WT_TREE;
-
 		$controller = new SimpleController;
 		$controller
 			->setPageTitle(I18N::translate('Select flag'))
 			->pageHeader();
 
-		$stats           = new Stats($WT_TREE);
+		$stats           = new Stats(Globals::i()->WT_TREE);
 		$countries       = $stats->getAllCountries();
 		$action          = Filter::post('action');
 		$countrySelected = Filter::get('countrySelected', null, 'Countries');
@@ -724,9 +723,9 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 	 * ...
 	 */
 	private function pedigreeMap() {
-		global $controller, $WT_TREE;
+		global $controller;
 
-		$MAX_PEDIGREE_GENERATIONS = $WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
+		$MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 
 		// Default is show for both of these.
 		$hideflags = Filter::getBool('hideflags');
@@ -2784,9 +2783,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 	 * @param string[] $parent
 	 */
 	private function printHowManyPeople($level, $parent) {
-		global $WT_TREE;
-
-		$stats = new Stats($WT_TREE);
+		$stats = new Stats(Globals::i()->WT_TREE);
 
 		$place_count_indi = 0;
 		$place_count_fam  = 0;
@@ -4124,8 +4121,6 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 	 * ...
 	 */
 	private function adminPlaces() {
-		global $WT_TREE;
-
 		$action       = Filter::get('action');
 		$parent       = Filter::get('parent');
 		$inactive     = Filter::getBool('inactive');
@@ -4357,7 +4352,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
 		if ($action === 'ImportFile2') {
 			$country_names = array();
-			$stats = new Stats($WT_TREE);
+			$stats = new Stats(Globals::i()->WT_TREE);
 			foreach ($stats->iso3166() as $key=>$value) {
 				$country_names[$key] = I18N::translate($key);
 			}

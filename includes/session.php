@@ -30,7 +30,7 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
 // session.php
-global $WT_REQUEST, $WT_TREE, $GEDCOM, $SEARCH_SPIDER, $TEXT_DIRECTION;
+global $WT_REQUEST, $GEDCOM, $SEARCH_SPIDER, $TEXT_DIRECTION;
 // most pages
 global $controller;
 
@@ -408,27 +408,27 @@ if (isset($_REQUEST['ged'])) {
 }
 
 // Choose the selected tree (if it exists), or any valid tree otherwise
-$WT_TREE = null;
+Globals::i()->WT_TREE = null;
 foreach (Tree::getAll() as $tree) {
-	$WT_TREE = $tree;
-	if ($WT_TREE->getName() == $GEDCOM && ($WT_TREE->getPreference('imported') || Auth::isAdmin())) {
+	Globals::i()->WT_TREE = $tree;
+	if (Globals::i()->WT_TREE->getName() == $GEDCOM && (Globals::i()->WT_TREE->getPreference('imported') || Auth::isAdmin())) {
 		break;
 	}
 }
 
 // These attributes of the currently-selected tree are used frequently
-if ($WT_TREE) {
-	define('WT_GEDCOM', $WT_TREE->getName());
-	define('WT_GED_ID', $WT_TREE->getTreeId());
-	define('WT_GEDURL', $WT_TREE->getNameUrl());
-	define('WT_TREE_TITLE', $WT_TREE->getTitleHtml());
-	define('WT_USER_GEDCOM_ADMIN', Auth::isManager($WT_TREE));
-	define('WT_USER_CAN_ACCEPT', Auth::isModerator($WT_TREE));
-	define('WT_USER_CAN_EDIT', Auth::isEditor($WT_TREE));
-	define('WT_USER_CAN_ACCESS', Auth::isMember($WT_TREE));
-	define('WT_USER_GEDCOM_ID', $WT_TREE->getUserPreference(Auth::user(), 'gedcomid'));
-	define('WT_USER_ROOT_ID', $WT_TREE->getUserPreference(Auth::user(), 'rootid') ? $WT_TREE->getUserPreference(Auth::user(), 'rootid') : WT_USER_GEDCOM_ID);
-	define('WT_USER_PATH_LENGTH', $WT_TREE->getUserPreference(Auth::user(), 'RELATIONSHIP_PATH_LENGTH'));
+if (Globals::i()->WT_TREE) {
+	define('WT_GEDCOM', Globals::i()->WT_TREE->getName());
+	define('WT_GED_ID', Globals::i()->WT_TREE->getTreeId());
+	define('WT_GEDURL', Globals::i()->WT_TREE->getNameUrl());
+	define('WT_TREE_TITLE', Globals::i()->WT_TREE->getTitleHtml());
+	define('WT_USER_GEDCOM_ADMIN', Auth::isManager(Globals::i()->WT_TREE));
+	define('WT_USER_CAN_ACCEPT', Auth::isModerator(Globals::i()->WT_TREE));
+	define('WT_USER_CAN_EDIT', Auth::isEditor(Globals::i()->WT_TREE));
+	define('WT_USER_CAN_ACCESS', Auth::isMember(Globals::i()->WT_TREE));
+	define('WT_USER_GEDCOM_ID', Globals::i()->WT_TREE->getUserPreference(Auth::user(), 'gedcomid'));
+	define('WT_USER_ROOT_ID', Globals::i()->WT_TREE->getUserPreference(Auth::user(), 'rootid') ? Globals::i()->WT_TREE->getUserPreference(Auth::user(), 'rootid') : WT_USER_GEDCOM_ID);
+	define('WT_USER_PATH_LENGTH', Globals::i()->WT_TREE->getUserPreference(Auth::user(), 'RELATIONSHIP_PATH_LENGTH'));
 	if (WT_USER_GEDCOM_ADMIN) {
 		define('WT_USER_ACCESS_LEVEL', WT_PRIV_NONE);
 	} elseif (WT_USER_CAN_ACCESS) {
@@ -491,7 +491,7 @@ if (Site::getPreference('LOGIN_URL')) {
 
 // If there is no current tree and we need one, then redirect somewhere
 if (WT_SCRIPT_NAME != 'admin_trees_manage.php' && WT_SCRIPT_NAME != 'admin_pgv_to_wt.php' && WT_SCRIPT_NAME != 'login.php' && WT_SCRIPT_NAME != 'logout.php' && WT_SCRIPT_NAME != 'import.php' && WT_SCRIPT_NAME != 'help_text.php' && WT_SCRIPT_NAME != 'message.php') {
-	if (!$WT_TREE || !$WT_TREE->getPreference('imported')) {
+	if (!Globals::i()->WT_TREE || !Globals::i()->WT_TREE->getPreference('imported')) {
 		if (Auth::isAdmin()) {
 			header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php');
 		} else {
@@ -511,7 +511,7 @@ if (WT_TIMESTAMP - Globals::i()->WT_SESSION->activity_time > 300) {
 // Set the theme
 if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
 	// Administration scripts begin with “admin” and use a special administration theme
-	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, $WT_TREE);
+	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, Globals::i()->WT_TREE);
 } else {
 	if (Site::getPreference('ALLOW_USER_THEMES')) {
 		// Requested change of theme?
@@ -533,7 +533,7 @@ if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' 
 		// 3) webtrees
 		// 4) first one found
 		if (WT_GED_ID) {
-			$theme_id = $WT_TREE->getPreference('THEME_DIR');
+			$theme_id = Globals::i()->WT_TREE->getPreference('THEME_DIR');
 		}
 		if (!array_key_exists($theme_id, Theme::themeNames())) {
 			$theme_id = Site::getPreference('THEME_DIR');
@@ -544,7 +544,7 @@ if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' 
 	}
 	foreach (Theme::installedThemes() as $theme) {
 		if ($theme->themeId() === $theme_id) {
-			Theme::theme($theme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, $WT_TREE);
+			Theme::theme($theme)->init(Globals::i()->WT_SESSION, $SEARCH_SPIDER, Globals::i()->WT_TREE);
 		}
 	}
 
@@ -553,7 +553,7 @@ if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' 
 }
 
 // Page hit counter - load after theme, as we need theme formatting
-if ($WT_TREE && $WT_TREE->getPreference('SHOW_COUNTER') && !$SEARCH_SPIDER) {
+if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !$SEARCH_SPIDER) {
 	require WT_ROOT . 'includes/hitcount.php';
 } else {
 	$hitCount = '';

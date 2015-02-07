@@ -25,9 +25,8 @@ use Zend_Session;
  * Defined in session.php
  *
  * @global Zend_Controller_Request_Http $WT_REQUEST
- * @global Tree                         $WT_TREE
  */
-global $WT_REQUEST, $WT_TREE;
+global $WT_REQUEST;
 
 define('WT_SCRIPT_NAME', 'login.php');
 require './includes/session.php';
@@ -194,7 +193,7 @@ default:
 		';
 		// Emails are sent from a TREE, not from a SITE.  Therefore if there is no
 		// tree available (initial setup or all trees private), then we can't send email.
-		if ($WT_TREE) {
+		if (Globals::i()->WT_TREE) {
 			echo '
 			<div>
 				<a href="#" id="passwd_click">', I18N::translate('Request new password'), '</a>
@@ -244,7 +243,7 @@ case 'requestpw':
 		Log::addAuthenticationLog('Password request was sent to user: ' . $user->getUserName());
 
 		Mail::systemMessage(
-			$WT_TREE,
+			Globals::i()->WT_TREE,
 			$user,
 			I18N::translate('Lost password request'),
 			I18N::translate('Hello %s…', Filter::escapeHtml($user->getRealName())) . Mail::EOL . Mail::EOL .
@@ -309,13 +308,13 @@ case 'register':
 				->setPreference('sessiontime', '0');
 
 			// Generate an email in the admin’s language
-			$webmaster = User::find($WT_TREE->getPreference('WEBMASTER_USER_ID'));
+			$webmaster = User::find(Globals::i()->WT_TREE->getPreference('WEBMASTER_USER_ID'));
 			I18N::init($webmaster->getPreference('language'));
 
 			$mail1_body =
 				I18N::translate('Hello administrator…') . Mail::EOL . Mail::EOL .
 				/* I18N: %s is a server name/URL */
-				I18N::translate('A prospective user has registered with webtrees at %s.', WT_BASE_URL . ' ' . $WT_TREE->getTitleHtml()) . Mail::EOL . Mail::EOL .
+				I18N::translate('A prospective user has registered with webtrees at %s.', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitleHtml()) . Mail::EOL . Mail::EOL .
 				I18N::translate('Username') . ' ' . Filter::escapeHtml($user->getUserName()) . Mail::EOL .
 				I18N::translate('Real name') . ' ' . Filter::escapeHtml($user->getRealName()) . Mail::EOL .
 				I18N::translate('Email address:') . ' ' . Filter::escapeHtml($user->getEmail()) . Mail::EOL .
@@ -328,7 +327,7 @@ case 'register':
 			}
 			$mail1_body .= Mail::auditFooter();
 
-			$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New registration at %s', WT_BASE_URL . ' ' . $WT_TREE->$WT_TREE->title());
+			$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New registration at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->Globals::i()->WT_TREE->title());
 			I18N::init(WT_LOCALE);
 
 			echo '<div id="login-register-page">';
@@ -337,7 +336,7 @@ case 'register':
 			$mail2_body =
 				I18N::translate('Hello %s…', $user->getRealName()) . Mail::EOL . Mail::EOL .
 				/* I18N: %1$s is the site URL and %2$s is an email address */
-				I18N::translate('You (or someone claiming to be you) has requested an account at %1$s using the email address %2$s.', WT_BASE_URL . ' ' . $WT_TREE->getTitleHtml(), $user->getEmail()) . '  ' .
+				I18N::translate('You (or someone claiming to be you) has requested an account at %1$s using the email address %2$s.', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitleHtml(), $user->getEmail()) . '  ' .
 				I18N::translate('Information about the request is shown under the link below.') . Mail::EOL .
 				I18N::translate('Please click on the following link and fill in the requested data to confirm your request and email address.') . Mail::EOL . Mail::EOL .
 				'<a href="' . WT_LOGIN_URL . "?user_name=" . Filter::escapeUrl($user->getUserName()) . "&amp;user_hashcode=" . $user->getPreference('reg_hashcode') . '&amp;action=userverify">' .
@@ -349,12 +348,12 @@ case 'register':
 				I18N::translate('If you didn’t request an account, you can just delete this message.') . Mail::EOL;
 			$mail2_subject = /* I18N: %s is a server name/URL */ I18N::translate('Your registration at %s', WT_BASE_URL);
 			$mail2_to      = $user->getEmail();
-			$mail2_from    = $WT_TREE->getPreference('WEBTREES_EMAIL');
+			$mail2_from    = Globals::i()->WT_TREE->getPreference('WEBTREES_EMAIL');
 
 			// Send user message by email only
 			Mail::send(
 				// “From:” header
-				$WT_TREE,
+				Globals::i()->WT_TREE,
 				// “To:” header
 				$mail2_to,
 				$mail2_to,
@@ -369,7 +368,7 @@ case 'register':
 			// Send admin message by email and/or internal messaging
 			Mail::send(
 				// “From:” header
-				$WT_TREE,
+				Globals::i()->WT_TREE,
 				// “To:” header
 				$webmaster->getEmail(),
 				$webmaster->getRealName(),
@@ -557,7 +556,7 @@ case 'verify_hash':
 	}
 
 	// switch language to webmaster settings
-	$webmaster = User::find($WT_TREE->getPreference('WEBMASTER_USER_ID'));
+	$webmaster = User::find(Globals::i()->WT_TREE->getPreference('WEBMASTER_USER_ID'));
 	I18N::init($webmaster->getPreference('language'));
 
 	$user = User::findByIdentifier($user_name);
@@ -581,7 +580,7 @@ case 'verify_hash':
 		'</a>' .
 		Mail::auditFooter();
 
-	$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New user at %s', WT_BASE_URL . ' ' . $WT_TREE->getTitle());
+	$mail1_subject = /* I18N: %s is a server name/URL */ I18N::translate('New user at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitle());
 
 	// Change to the new user’s language
 	I18N::init($user->getPreference('language'));
@@ -597,13 +596,13 @@ case 'verify_hash':
 		if ($user->checkPassword($user_password) && $user->getPreference('reg_hashcode') == $user_hashcode) {
 			Mail::send(
 			// “From:” header
-				$WT_TREE,
+				Globals::i()->WT_TREE,
 				// “To:” header
 				$webmaster->getEmail(),
 				$webmaster->getRealName(),
 				// “Reply-To:” header
-				$WT_TREE->getPreference('WEBTREES_EMAIL'),
-				$WT_TREE->getPreference('WEBTREES_EMAIL'),
+				Globals::i()->WT_TREE->getPreference('WEBTREES_EMAIL'),
+				Globals::i()->WT_TREE->getPreference('WEBTREES_EMAIL'),
 				// Message body
 				$mail1_subject,
 				$mail1_body

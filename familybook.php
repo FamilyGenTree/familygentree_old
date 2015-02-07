@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree   $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'familybook.php');
 require './includes/session.php';
@@ -64,7 +59,7 @@ $controller
 				<td class="optionbox">
 					<select name="generations">
 						<?php
-						for ($i = 2; $i <= $WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'); $i++) {
+						for ($i = 2; $i <= Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'); $i++) {
 							echo '<option value="' . $i . '" ';
 							if ($i == $controller->generations) {
 								echo 'selected';

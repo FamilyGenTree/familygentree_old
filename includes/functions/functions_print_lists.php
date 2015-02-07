@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 use Zend_Tag_Cloud;
 
@@ -28,10 +29,10 @@ use Zend_Tag_Cloud;
  * @return string
  */
 function format_indi_table($datalist, $option = '') {
-	global $SEARCH_SPIDER, $controller, $WT_TREE;
+	global $SEARCH_SPIDER, $controller;
 
 	$table_id = 'table-indi-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
-	$SHOW_EST_LIST_DATES = $WT_TREE->getPreference('SHOW_EST_LIST_DATES');
+	$SHOW_EST_LIST_DATES = Globals::i()->WT_TREE->getPreference('SHOW_EST_LIST_DATES');
 
 	$controller
 		->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)
@@ -66,7 +67,7 @@ function format_indi_table($datalist, $option = '') {
 					/* 15 age       */ { dataSort: 16, class: "center" },
 					/* 16 AGE       */ { type: "num", visible: false },
 					/* 17 deat plac */ { type: "unicode" },
-					/* 18 CHAN      */ { dataSort: 19, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
+					/* 18 CHAN      */ { dataSort: 19, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
 					/* 19 CHAN_sort */ { visible: false },
 					/* 20 SEX       */ { visible: false },
 					/* 21 BIRT      */ { visible: false },
@@ -109,10 +110,10 @@ function format_indi_table($datalist, $option = '') {
 			jQuery(".loading-image").css("display", "none");
 		');
 
-	$stats = new Stats($WT_TREE);
+	$stats = new Stats(Globals::i()->WT_TREE);
 
 	// Bad data can cause "longest life" to be huge, blowing memory limits
-	$max_age = min($WT_TREE->getPreference('MAX_ALIVE_AGE'), $stats->LongestLifeAge()) + 1;
+	$max_age = min(Globals::i()->WT_TREE->getPreference('MAX_ALIVE_AGE'), $stats->LongestLifeAge()) + 1;
 
 	// Inititialise chart data
 	$deat_by_age = array();
@@ -435,13 +436,13 @@ function format_indi_table($datalist, $option = '') {
 		}
 		$html .= '</td>';
 		//-- Last change
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $person->lastChangeTimestamp() . '</td>';
 		} else {
 			$html .= '<td></td>';
 		}
 		//-- Last change hidden sort column
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $person->lastChangeTimestamp(true) . '</td>';
 		} else {
 			$html .= '<td></td>';
@@ -517,7 +518,7 @@ function format_indi_table($datalist, $option = '') {
  * @return string
  */
 function format_fam_table($datalist) {
-	global $WT_TREE, $SEARCH_SPIDER, $controller;
+	global $SEARCH_SPIDER, $controller;
 
 	$table_id = 'table-fam-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 
@@ -552,7 +553,7 @@ function format_fam_table($datalist) {
 					/* 15 marr plac */ {type: "unicode"},
 					/* 16 children  */ {dataSort: 17, class: "center"},
 					/* 17 NCHI      */ {type: "num", visible: false},
-					/* 18 CHAN      */ {dataSort: 19, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . '},
+					/* 18 CHAN      */ {dataSort: 19, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . '},
 					/* 19 CHAN_sort */ {visible: false},
 					/* 20 MARR      */ {visible: false},
 					/* 21 DEAT      */ {visible: false},
@@ -594,7 +595,7 @@ function format_fam_table($datalist) {
 			jQuery(".loading-image").css("display", "none");
 	');
 
-	$stats = new Stats($WT_TREE);
+	$stats = new Stats(Globals::i()->WT_TREE);
 	$max_age = max($stats->oldestMarriageMaleAge(), $stats->oldestMarriageFemaleAge()) + 1;
 
 	//-- init chart data
@@ -744,8 +745,8 @@ function format_fam_table($datalist) {
 						<th>' . WT_Gedcom_Tag::getLabel('PLAC') . '</th>
 						<th><i class="icon-children" title="' . I18N::translate('Children') . '"></i></th>
 					<th>NCHI</th>
-					<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>
-					<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>
+					<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>
+					<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>
 					<th>MARR</th>
 					<th>DEAT</th>
 					<th>TREE</th>
@@ -931,13 +932,13 @@ function format_fam_table($datalist) {
 		$nchi = $family->getNumberOfChildren();
 		$html .= '<td>' . I18N::number($nchi) . '</td><td>' . $nchi . '</td>';
 		//-- Last change
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $family->LastChangeTimestamp() . '</td>';
 		} else {
 			$html .= '<td></td>';
 		}
 		//-- Last change hidden sort column
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $family->LastChangeTimestamp(true) . '</td>';
 		} else {
 			$html .= '<td></td>';
@@ -1030,7 +1031,7 @@ function format_fam_table($datalist) {
  * @return string
  */
 function format_sour_table($datalist) {
-	global $WT_TREE, $controller;
+	global $controller;
 	$html = '';
 	$table_id = 'table-sour-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 	$controller
@@ -1056,7 +1057,7 @@ function format_sour_table($datalist) {
 					/*  8 #OBJE     */ { type: "num", visible: false },
 					/*  9 #note     */ { dataSort: 10, class: "center" },
 					/* 10 #NOTE     */ { type: "num", visible: false },
-					/* 11 CHAN      */ { dataSort: 12, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
+					/* 11 CHAN      */ { dataSort: 12, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
 					/* 12 CHAN_sort */ { visible: false },
 					/* 13 DELETE    */ { visible: ' . (WT_USER_GEDCOM_ADMIN ? 'true' : 'false') . ', sortable: false }
 				],
@@ -1083,8 +1084,8 @@ function format_sour_table($datalist) {
 	$html .= '<th>#OBJE</th>';
 	$html .= '<th>' . I18N::translate('Shared notes') . '</th>';
 	$html .= '<th>#NOTE</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
 	$html .= '<th></th>'; //delete
 	$html .= '</tr></thead>';
 	//-- table body
@@ -1138,13 +1139,13 @@ function format_sour_table($datalist) {
 		$num = count($source->linkedNotes('SOUR'));
 		$html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
 		//-- Last change
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $source->LastChangeTimestamp() . '</td>';
 		} else {
 			$html .= '<td></td>';
 		}
 		//-- Last change hidden sort column
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $source->LastChangeTimestamp(true) . '</td>';
 		} else {
 			$html .= '<td></td>';
@@ -1170,7 +1171,7 @@ function format_sour_table($datalist) {
  * @return string
  */
 function format_note_table($datalist) {
-	global $WT_TREE, $controller;
+	global $controller;
 
 	$html = '';
 	$table_id = 'table-note-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1195,7 +1196,7 @@ function format_note_table($datalist) {
 					/*  6 #OBJE     */ { type: "num", visible: false },
 					/*  7 #sour     */ { dataSort: 8, class: "center" },
 					/*  8 #SOUR     */ { type: "num", visible: false },
-					/*  9 CHAN      */ { dataSort: 10, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
+					/*  9 CHAN      */ { dataSort: 10, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
 					/* 10 CHAN_sort */ { visible: false },
 					/* 11 DELETE    */ { visible: ' . (WT_USER_GEDCOM_ADMIN ? 'true' : 'false') . ', sortable: false }
 				],
@@ -1220,8 +1221,8 @@ function format_note_table($datalist) {
 	$html .= '<th>#OBJE</th>';
 	$html .= '<th>' . I18N::translate('Sources') . '</th>';
 	$html .= '<th>#SOUR</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
 	$html .= '<th></th>'; //delete
 	$html .= '</tr></thead>';
 	//-- table body
@@ -1253,13 +1254,13 @@ function format_note_table($datalist) {
 		$num = count($note->linkedSources('NOTE'));
 		$html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
 		//-- Last change
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $note->LastChangeTimestamp() . '</td>';
 		} else {
 			$html .= '<td></td>';
 		}
 		//-- Last change hidden sort column
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $note->LastChangeTimestamp(true) . '</td>';
 		} else {
 			$html .= '<td></td>';
@@ -1285,7 +1286,7 @@ function format_note_table($datalist) {
  * @return string
  */
 function format_repo_table($repositories) {
-	global $WT_TREE, $controller;
+	global $controller;
 
 	$html = '';
 	$table_id = 'table-repo-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1304,7 +1305,7 @@ function format_repo_table($repositories) {
 					/* 0 name      */ { type: "unicode" },
 					/* 1 #sour     */ { dataSort: 2, class: "center" },
 					/* 2 #SOUR     */ { type: "num", visible: false },
-					/* 3 CHAN      */ { dataSort: 4, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
+					/* 3 CHAN      */ { dataSort: 4, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
 					/* 4 CHAN_sort */ { visible: false },
 					/* 5 DELETE    */ { visible: ' . (WT_USER_GEDCOM_ADMIN ? 'true' : 'false') . ', sortable: false }
 				],
@@ -1323,8 +1324,8 @@ function format_repo_table($repositories) {
 	$html .= '<th>' . I18N::translate('Repository name') . '</th>';
 	$html .= '<th>' . I18N::translate('Sources') . '</th>';
 	$html .= '<th>#SOUR</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
 	$html .= '<th></th>'; //delete
 	$html .= '</tr></thead>';
 	//-- table body
@@ -1359,13 +1360,13 @@ function format_repo_table($repositories) {
 		$num = count($repository->linkedSources('REPO'));
 		$html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
 		//-- Last change
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $repository->LastChangeTimestamp() . '</td>';
 		} else {
 			$html .= '<td></td>';
 		}
 		//-- Last change hidden sort column
-		if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 			$html .= '<td>' . $repository->LastChangeTimestamp(true) . '</td>';
 		} else {
 			$html .= '<td></td>';
@@ -1391,7 +1392,7 @@ function format_repo_table($repositories) {
  * @return string
  */
 function format_media_table($media_objects) {
-	global $WT_TREE, $controller;
+	global $controller;
 
 	$html = '';
 	$table_id = 'table-obje-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1415,7 +1416,7 @@ function format_media_table($media_objects) {
 					/* 5 #FAM      */ { type: "num", visible: false },
 					/* 6 #sour     */ { dataSort: 7, class: "center" },
 					/* 7 #SOUR     */ { type: "num", visible: false },
-					/* 8 CHAN      */ { dataSort: 9, visible: ' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
+					/* 8 CHAN      */ { dataSort: 9, visible: ' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? 'true' : 'false') . ' },
 					/* 9 CHAN_sort */ { visible: false },
 				],
 				displayLength: 20,
@@ -1438,8 +1439,8 @@ function format_media_table($media_objects) {
 	$html .= '<th>#FAM</th>';
 	$html .= '<th>' . I18N::translate('Sources') . '</th>';
 	$html .= '<th>#SOUR</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
-	$html .= '<th' . ($WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>' . WT_Gedcom_Tag::getLabel('CHAN') . '</th>';
+	$html .= '<th' . (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE') ? '' : '') . '>CHAN</th>';
 	$html .= '</tr></thead>';
 	//-- table body
 	$html .= '<tbody>';
@@ -1476,13 +1477,13 @@ function format_media_table($media_objects) {
 			$num = count($media_object->linkedSources('OBJE'));
 			$html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
 			//-- Last change
-			if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+			if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 				$html .= '<td>' . $media_object->LastChangeTimestamp() . '</td>';
 			} else {
 				$html .= '<td></td>';
 			}
 			//-- Last change hidden sort column
-			if ($WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
+			if (Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE')) {
 				$html .= '<td>' . $media_object->LastChangeTimestamp(true) . '</td>';
 			} else {
 				$html .= '<td></td>';
@@ -1644,15 +1645,13 @@ function format_surname_tagcloud($surnames, $script, $totals) {
  * @return string
  */
 function format_surname_list($surnames, $style, $totals, $script) {
-	global $WT_TREE;
-
 	$html = array();
 	foreach ($surnames as $surn => $surns) {
 		// Each surname links back to the indilist
 		if ($surn) {
-			$url = $script . '?surname=' . urlencode($surn) . '&amp;ged=' . $WT_TREE->getNameUrl();
+			$url = $script . '?surname=' . urlencode($surn) . '&amp;ged=' . Globals::i()->WT_TREE->getNameUrl();
 		} else {
-			$url = $script . '?alpha=,&amp;ged=' . $WT_TREE->getNameUrl();
+			$url = $script . '?alpha=,&amp;ged=' . Globals::i()->WT_TREE->getNameUrl();
 		}
 		// If all the surnames are just case variants, then merge them into one
 		// Comment out this block if you want SMITH listed separately from Smith

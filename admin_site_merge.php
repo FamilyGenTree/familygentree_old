@@ -16,12 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_site_merge.php');
 require './includes/session.php';
@@ -29,7 +24,7 @@ require './includes/session.php';
 $controller = new PageController;
 $controller
 	->restrictAccess(Auth::isManager())
-	->setPageTitle(I18N::translate('Merge records') . ' — ' . $WT_TREE->getTitleHtml())
+	->setPageTitle(I18N::translate('Merge records') . ' — ' . Globals::i()->WT_TREE->getTitleHtml())
 	->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
 	->addInlineJavascript('autocomplete();');
 

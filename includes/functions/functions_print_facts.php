@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
 /**
@@ -31,8 +32,6 @@ use Rhumsaa\Uuid\Uuid;
  * @param GedcomRecord $record
  */
 function print_fact(Fact $fact, GedcomRecord $record) {
-	global $WT_TREE;
-
 	static $n_chil = 0, $n_gchi = 0;
 
 	$parent = $fact->getParent();
@@ -60,7 +59,7 @@ function print_fact(Fact $fact, GedcomRecord $record) {
 		return;
 	default:
 		// Hide unrecognized/custom tags?
-		if ($WT_TREE->getPreference('HIDE_GEDCOM_ERRORS') && !WT_Gedcom_Tag::isTag($fact->getTag())) {
+		if (Globals::i()->WT_TREE->getPreference('HIDE_GEDCOM_ERRORS') && !WT_Gedcom_Tag::isTag($fact->getTag())) {
 			return;
 		}
 		break;
@@ -141,7 +140,7 @@ function print_fact(Fact $fact, GedcomRecord $record) {
 	echo '<tr class="', $styleadd, '">';
 	echo '<td class="descriptionbox width20">';
 
-	if ($WT_TREE->getPreference('SHOW_FACT_ICONS')) {
+	if (Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS')) {
 		echo Theme::theme()->icon($fact), ' ';
 	}
 
@@ -432,7 +431,7 @@ function print_fact(Fact $fact, GedcomRecord $record) {
 			echo WT_Gedcom_Tag::getLabelValue($fact->getTag() . ':' . $match[1], $link);
 			break;
 		default:
-			if (!$WT_TREE->getPreference('HIDE_GEDCOM_ERRORS') || WT_Gedcom_Tag::isTag($match[1])) {
+			if (!Globals::i()->WT_TREE->getPreference('HIDE_GEDCOM_ERRORS') || WT_Gedcom_Tag::isTag($match[1])) {
 				if (preg_match('/^@(' . WT_REGEX_XREF . ')@$/', $match[2], $xmatch)) {
 					// Links
 					$linked_record = GedcomRecord::getInstance($xmatch[1]);
@@ -484,8 +483,6 @@ function print_repository_record($xref) {
  * @return string HTML text
  */
 function print_fact_sources($factrec, $level) {
-	global $WT_TREE;
-
 	$data = '';
 	$nlevel = $level + 1;
 
@@ -514,7 +511,7 @@ function print_fact_sources($factrec, $level) {
 				$data .= '<div class="fact_SOUR">';
 				$data .= '<span class="label">';
 				$elementID = Uuid::uuid4();
-				if ($WT_TREE->getPreference('EXPAND_SOURCES')) {
+				if (Globals::i()->WT_TREE->getPreference('EXPAND_SOURCES')) {
 					$plusminus = 'icon-minus';
 				} else {
 					$plusminus = 'icon-plus';
@@ -527,7 +524,7 @@ function print_fact_sources($factrec, $level) {
 				$data .= '</span></div>';
 
 				$data .= "<div id=\"$elementID\"";
-				if ($WT_TREE->getPreference('EXPAND_SOURCES')) {
+				if (Globals::i()->WT_TREE->getPreference('EXPAND_SOURCES')) {
 					$data .= ' style="display:block"';
 				}
 				$data .= ' class="source_citations">';
@@ -565,7 +562,7 @@ function print_fact_sources($factrec, $level) {
  * @param integer $level
  */
 function print_media_links($factrec, $level) {
-	global $SEARCH_SPIDER, $WT_TREE;
+	global $SEARCH_SPIDER;
 
 	$nlevel = $level + 1;
 	if (preg_match_all("/$level OBJE @(.*)@/", $factrec, $omatch, PREG_SET_ORDER) == 0) {
@@ -626,7 +623,7 @@ function print_media_links($factrec, $level) {
 				echo '</div>'; //close div "media-display-title"
 				echo '</div>'; //close div "media-display"
 			}
-		} elseif (!$WT_TREE->getPreference('HIDE_GEDCOM_ERRORS')) {
+		} elseif (!Globals::i()->WT_TREE->getPreference('HIDE_GEDCOM_ERRORS')) {
 			echo '<p class="ui-state-error">', $media_id, '</p>';
 		}
 		$objectNum++;
@@ -640,8 +637,6 @@ function print_media_links($factrec, $level) {
  * @param integer $level
  */
 function print_main_sources(Fact $fact, $level) {
-	global $WT_TREE;
-
 	$factrec = $fact->getGedcom();
 	$fact_id = $fact->getFactId();
 	$parent  = $fact->getParent();
@@ -698,7 +693,7 @@ function print_main_sources(Fact $fact, $level) {
 			} else
 			if ($can_edit) {
 				echo "<a onclick=\"return edit_record('$pid', '$fact_id');\" href=\"#\" title=\"", I18N::translate('Edit'), '">';
-					if ($WT_TREE->getPreference('SHOW_FACT_ICONS')) {
+					if (Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS')) {
 						if ($level == 1) {
 							echo '<i class="icon-source"></i> ';
 						}
@@ -789,7 +784,6 @@ function print_main_sources(Fact $fact, $level) {
  * @return string
  */
 function printSourceStructure($textSOUR) {
-	global $WT_TREE;
 	$html = '';
 
 	if ($textSOUR['PAGE']) {
@@ -809,7 +803,7 @@ function printSourceStructure($textSOUR) {
 			$html .= WT_Gedcom_Tag::getLabelValue('DATA:DATE', $date->display());
 		}
 		foreach ($textSOUR['TEXT'] as $text) {
-			$html .= WT_Gedcom_Tag::getLabelValue('TEXT', Filter::formatText($text, $WT_TREE));
+			$html .= WT_Gedcom_Tag::getLabelValue('TEXT', Filter::formatText($text, Globals::i()->WT_TREE));
 		}
 	}
 
@@ -882,8 +876,6 @@ function getSourceStructure($srec) {
  * @param integer $level
  */
 function print_main_notes(Fact $fact, $level) {
-	global $WT_TREE;
-
 	$factrec = $fact->getGedcom();
 	$fact_id = $fact->getFactId();
 	$parent  = $fact->getParent();
@@ -920,7 +912,7 @@ function print_main_notes(Fact $fact, $level) {
 		if ($can_edit) {
 			echo '<a onclick="return edit_record(\'', $pid, '\', \'', $fact_id, '\');" href="#" title="', I18N::translate('Edit'), '">';
 			if ($level < 2) {
-				if ($WT_TREE->getPreference('SHOW_FACT_ICONS')) {
+				if (Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS')) {
 					echo '<i class="icon-note"></i> ';
 				}
 				if ($note) {
@@ -940,7 +932,7 @@ function print_main_notes(Fact $fact, $level) {
 			}
 		} else {
 			if ($level < 2) {
-				if ($WT_TREE->getPreference('SHOW_FACT_ICONS')) {
+				if (Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS')) {
 					echo '<i class="icon-note"></i> ';
 				}
 				if ($note) {
@@ -978,13 +970,13 @@ function print_main_notes(Fact $fact, $level) {
 				// If Census assistant installed, allow it to format the note
 				$text = GEDFact_assistant_WT_Module::formatCensusNote($note);
 			} else {
-				$text = Filter::formatText($note->getNote(), $WT_TREE);
+				$text = Filter::formatText($note->getNote(), Globals::i()->WT_TREE);
 			}
 		} else {
 			// Inline notes
 			$nrec = get_sub_record($level, "$level NOTE", $factrec, $j + 1);
 			$text = $match[$j][1] . get_cont($level + 1, $nrec);
-			$text = Filter::formatText($text, $WT_TREE);
+			$text = Filter::formatText($text, Globals::i()->WT_TREE);
 		}
 
 		echo '<td class="optionbox', $styleadd, ' wrap">';

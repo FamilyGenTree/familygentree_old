@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class FanchartController Controller for the fan chart
@@ -33,11 +34,9 @@ class FanchartController extends ChartController {
 	 * Create the controller
 	 */
 	public function __construct() {
-		global $WT_TREE;
-
 		parent::__construct();
 
-		$default_generations = $WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS');
+		$default_generations = Globals::i()->WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS');
 
 		// Extract the request parameters
 		$this->fan_style   = Filter::getInteger('fan_style', 2, 4, 3);

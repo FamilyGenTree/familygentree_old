@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class PedigreeController - Controller for the pedigree chart
@@ -41,7 +42,6 @@ class PedigreeController extends ChartController {
 	 * Create a pedigree controller
 	 */
 	public function __construct() {
-		global $WT_TREE;
 		global $bwidth, $bheight, $baseyoffset, $basexoffset, $byspacing, $bxspacing, $show_full, $talloffset;
 
 		parent::__construct();
@@ -51,10 +51,10 @@ class PedigreeController extends ChartController {
 		$this->shadowoffsetX = Theme::theme()->parameter('shadow-offset-x');
 		$this->shadowoffsetY = Theme::theme()->parameter('shadow-offset-y');
 
-		$this->show_full            = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
-		$this->talloffset           = Filter::getInteger('talloffset', 0, 3, $WT_TREE->getPreference('PEDIGREE_LAYOUT'));
+		$this->show_full            = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+		$this->talloffset           = Filter::getInteger('talloffset', 0, 3, Globals::i()->WT_TREE->getPreference('PEDIGREE_LAYOUT'));
 		$this->box_width            = Filter::getInteger('box_width', 50, 300, 100);
-		$this->PEDIGREE_GENERATIONS = Filter::getInteger('PEDIGREE_GENERATIONS', 2, $WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS'), $WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
+		$this->PEDIGREE_GENERATIONS = Filter::getInteger('PEDIGREE_GENERATIONS', 2, Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS'), Globals::i()->WT_TREE->getPreference('DEFAULT_PEDIGREE_GENERATIONS'));
 
 		// With more than 8 generations, we run out of pixels on the <canvas>
 		if ($this->PEDIGREE_GENERATIONS > 8) {

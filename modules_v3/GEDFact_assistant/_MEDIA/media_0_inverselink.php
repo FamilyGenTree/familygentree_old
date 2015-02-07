@@ -16,6 +16,9 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
+use Webtrees\GedcomRecord;
+
 $more_links  = Filter::get('more_links');
 $exist_links = Filter::get('exist_links');
 $gid         = Filter::get('gid', WT_REGEX_XREF);
@@ -561,7 +564,7 @@ function shiftlinks() {
 		if (Auth::isAdmin()) {
 			echo "<tr><td class=\"descriptionbox wrap width25\">";
 			echo WT_Gedcom_Tag::getLabel('CHAN'), "</td><td class=\"optionbox wrap\">";
-			if ($WT_TREE->getPreference('NO_UPDATE_CHAN')) {
+			if (Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN')) {
 				echo "<input type=\"checkbox\" checked name=\"preserve_last_changed\">";
 			} else {
 				echo "<input type=\"checkbox\" name=\"preserve_last_changed\">";

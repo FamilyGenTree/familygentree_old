@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Check with the webtrees.net server for the latest version of webtrees.
@@ -2240,7 +2241,7 @@ function get_relationship_name_from_path($path, Individual $person1 = null, Indi
  * it searches the themes folder and reads the name from the theme_name variable
  * in the theme.php file.
  *
- * @throws Exception
+ * @throws \Exception
  *
  * @return string[] An array of theme names and their corresponding folder
  */
@@ -2318,8 +2319,6 @@ function get_query_url($overwrite = null, $separator = '&') {
  * @return string
  */
 function get_new_xref($type = 'INDI', $ged_id = WT_GED_ID) {
-	global $WT_TREE;
-
 	/** @var string[] Which tree preference is used for which record type */
 	static $type_to_preference = array(
 		'INDI' => 'GEDCOM_ID_PREFIX',
@@ -2331,7 +2330,7 @@ function get_new_xref($type = 'INDI', $ged_id = WT_GED_ID) {
 	);
 
 	if (array_key_exists($type, $type_to_preference)) {
-		$prefix = $WT_TREE->getPreference($type_to_preference[$type]);
+		$prefix = Globals::i()->WT_TREE->getPreference($type_to_preference[$type]);
 	} else {
 		// Use the first non-underscore character
 		$prefix = substr(trim($type, '_'), 0, 1);

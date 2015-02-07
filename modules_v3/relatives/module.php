@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class relatives_WT_Module
@@ -275,7 +276,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface {
 
 	/** {@inheritdoc} */
 	public function getTabContent() {
-		global $WT_TREE, $show_full, $controller;
+		global $show_full, $controller;
 
 		if (isset($show_full)) {
 			$saved_show_full = $show_full;
@@ -286,7 +287,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface {
 		ob_start();
 		?>
 		<table class="facts_table"><tr><td class="descriptionbox rela">
-		<input id="checkbox_elder" type="checkbox" onclick="jQuery('div.elderdate').toggle();" <?php echo $WT_TREE->getPreference('SHOW_AGE_DIFF') ? 'checked' : ''; ?>>
+		<input id="checkbox_elder" type="checkbox" onclick="jQuery('div.elderdate').toggle();" <?php echo Globals::i()->WT_TREE->getPreference('SHOW_AGE_DIFF') ? 'checked' : ''; ?>>
 		<label for="checkbox_elder"><?php echo I18N::translate('Show date differences'); ?></label>
 		</td></tr></table>
 		<?php
@@ -325,7 +326,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface {
 			$this->printFamily($family, 'FAMS', $family->getFullName());
 		}
 
-		if (!$WT_TREE->getPreference('SHOW_AGE_DIFF')) {
+		if (!Globals::i()->WT_TREE->getPreference('SHOW_AGE_DIFF')) {
 			echo '<script>jQuery("DIV.elderdate").toggle();</script>';
 		}
 

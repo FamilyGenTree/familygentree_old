@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class Place - Gedcom Place functionality.
@@ -151,16 +152,14 @@ class Place {
 	 * @return string
 	 */
 	public function getShortName() {
-		global $WT_TREE;
-
-		$SHOW_PEDIGREE_PLACES = $WT_TREE->getPreference('SHOW_PEDIGREE_PLACES');
+		$SHOW_PEDIGREE_PLACES = Globals::i()->WT_TREE->getPreference('SHOW_PEDIGREE_PLACES');
 
 		if ($SHOW_PEDIGREE_PLACES >= count($this->gedcom_place)) {
 			// A short place name - no need to abbreviate
 			return $this->getFullName();
 		} else {
 			// Abbreviate the place name, for lists
-			if ($WT_TREE->getPreference('SHOW_PEDIGREE_PLACES_SUFFIX')) {
+			if (Globals::i()->WT_TREE->getPreference('SHOW_PEDIGREE_PLACES_SUFFIX')) {
 				// The *last* $SHOW_PEDIGREE_PLACES components
 				$short_name = implode(self::GEDCOM_SEPARATOR, array_slice($this->gedcom_place, -$SHOW_PEDIGREE_PLACES));
 			} else {

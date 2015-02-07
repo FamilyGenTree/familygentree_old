@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class FamilyController - Controller for the family page
@@ -163,7 +164,7 @@ class FamilyController extends GedcomRecordController {
 	 * Print the facts
 	 */
 	public function printFamilyFacts() {
-		global $linkToID, $WT_TREE;
+		global $linkToID;
 
 		$linkToID = $this->record->getXref(); // -- Tell addmedia.php what to link to
 
@@ -194,7 +195,7 @@ class FamilyController extends GedcomRecordController {
 			echo help_link('add_shared_note');
 			echo '</td></tr>';
 
-			if ($WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
+			if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
 				echo '<tr><td class="descriptionbox">';
 				echo I18N::translate('Media object');
 				echo '</td><td class="optionbox">';

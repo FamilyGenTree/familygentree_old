@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class HourglassController - Controller for the hourglass chart
@@ -49,15 +50,15 @@ class HourglassController extends ChartController {
 	 * @param boolean $loadJS
 	 */
 	function __construct($rootid = '', $show_full = 1, $loadJS = true) {
-		global $bheight, $bwidth, $WT_TREE, $TEXT_DIRECTION, $show_full;
+		global $bheight, $bwidth, $TEXT_DIRECTION, $show_full;
 
 		parent::__construct();
 
 		// Extract parameters from from
 		$this->pid         = Filter::get('rootid', WT_REGEX_XREF);
-		$this->show_full   = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+		$this->show_full   = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
 		$this->show_spouse = Filter::getInteger('show_spouse', 0, 1, 0);
-		$this->generations = Filter::getInteger('generations', 2, $WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), 3);
+		$this->generations = Filter::getInteger('generations', 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), 3);
 		$this->box_width   = Filter::getInteger('box_width', 50, 300, 100);
 
 		$this->canLoadJS = $loadJS;

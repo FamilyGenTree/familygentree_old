@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class AdvancedSearchController - Controller for the advanced search page
@@ -74,8 +75,6 @@ class AdvancedSearchController extends SearchController {
 	 * @return string[]
 	 */
 	function getOtherFields() {
-		global $WT_TREE;
-
 		$ofields = array(
 			'ADDR', 'ADDR:CITY', 'ADDR:STAE', 'ADDR:CTRY', 'ADDR:POST',
 			'ADOP:DATE', 'ADOP:PLAC',
@@ -118,7 +117,7 @@ class AdvancedSearchController extends SearchController {
 			'_MILI',
 		);
 		// Allow (some of) the user-specified fields to be selected
-		preg_match_all('/(' . WT_REGEX_TAG . ')/', $WT_TREE->getPreference('INDI_FACTS_ADD'), $facts);
+		preg_match_all('/(' . WT_REGEX_TAG . ')/', Globals::i()->WT_TREE->getPreference('INDI_FACTS_ADD'), $facts);
 		foreach ($facts[1] as $fact) {
 			if (
 				$fact!='BIRT' &&

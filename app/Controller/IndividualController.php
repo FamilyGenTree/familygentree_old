@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 /**
@@ -31,12 +32,10 @@ class IndividualController extends GedcomRecordController {
 	 * Startup activity
 	 */
 	function __construct() {
-		global $WT_TREE;
-
 		$xref         = Filter::get('pid', WT_REGEX_XREF);
 		$this->record = Individual::getInstance($xref);
 
-		if (!$this->record && $WT_TREE->getPreference('USE_RIN')) {
+		if (!$this->record && Globals::i()->WT_TREE->getPreference('USE_RIN')) {
 			$rin          = find_rin_id($xref);
 			$this->record = Individual::getInstance($rin);
 		}
@@ -123,8 +122,6 @@ class IndividualController extends GedcomRecordController {
 	 * @param Fact $event the event object
 	 */
 	public function printNameRecord(Fact $event) {
-		global $WT_TREE;
-
 		$factrec = $event->getGedcom();
 
 		// Create a dummy record, so we can extract the formatted NAME value from the event.
@@ -154,7 +151,7 @@ class IndividualController extends GedcomRecordController {
 		echo '<dd class="field">', $dummy->getFullName();
 		if ($this->name_count == 1) {
 			if (Auth::isAdmin()) {
-				$user = User::findByGenealogyRecord($WT_TREE, $this->record);
+				$user = User::findByGenealogyRecord(Globals::i()->WT_TREE, $this->record);
 				if ($user) {
 					echo '<span> - <a class="warning" href="admin_users.php?filter=' . Filter::escapeHtml($user->getUserName()) . '">' . Filter::escapeHtml($user->getUserName()) . '</a></span>';
 				}

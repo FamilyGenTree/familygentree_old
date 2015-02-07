@@ -36,6 +36,7 @@ namespace Fisharebest\Webtrees;
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+use Fgt\Globals;
 use Fisharebest\ExtCalendar\GregorianCalendar;
 
 /**
@@ -209,10 +210,10 @@ class Date {
 	 * @return string
 	 */
 	function display($url = false, $date_format = null, $convert_calendars = true) {
-		global $TEXT_DIRECTION, $WT_TREE;
+		global $TEXT_DIRECTION;
 
-		$CALENDAR_FORMAT = $WT_TREE->getPreference('CALENDAR_FORMAT');
-		$DATE_FORMAT     = $WT_TREE->getPreference('DATE_FORMAT');
+		$CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');
+		$DATE_FORMAT     = Globals::i()->WT_TREE->getPreference('DATE_FORMAT');
 
 		if ($date_format === null) {
 			$date_format = $DATE_FORMAT;

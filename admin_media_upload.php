@@ -16,18 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_media_upload.php');
 require './includes/session.php';
 
-$MEDIA_DIRECTORY = $WT_TREE->getPreference('MEDIA_DIRECTORY');
+$MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');
 
 $controller = new PageController;
 $controller

@@ -211,7 +211,7 @@ case 'send':
  * @return bool
  */
 function addMessage($message) {
-	global $WT_TREE, $WT_REQUEST;
+	global $WT_REQUEST;
 
 	$success = true;
 
@@ -252,13 +252,13 @@ function addMessage($message) {
 
 		$success = $success && Mail::send(
 			// “From:” header
-				$WT_TREE,
+				Globals::i()->WT_TREE,
 				// “To:” header
 				$sender_email,
 				$sender_real_name,
 				// “Reply-To:” header
 				Site::getPreference('SMTP_FROM_NAME'),
-				$WT_TREE->getPreference('title'),
+				Globals::i()->WT_TREE->getPreference('title'),
 				// Message body
 				I18N::translate('webtrees message') . ' - ' . $message['subject'],
 				$copy_email
@@ -315,7 +315,7 @@ function addMessage($message) {
 
 		$success = $success && Mail::send(
 			// “From:” header
-				$WT_TREE,
+				Globals::i()->WT_TREE,
 				// “To:” header
 				$recipient->getEmail(),
 				$recipient->getRealName(),

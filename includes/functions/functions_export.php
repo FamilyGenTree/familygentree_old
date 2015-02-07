@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Tidy up a gedcom record on export, for compatibility/portability.
@@ -24,8 +25,6 @@ namespace Fisharebest\Webtrees;
  * @return string
  */
 function reformat_record_export($rec) {
-	global $WT_TREE;
-
 	$newrec = '';
 	foreach (preg_split('/[\r\n]+/', $rec, -1, PREG_SPLIT_NO_EMPTY) as $line) {
 		// Split long lines
@@ -39,7 +38,7 @@ function reformat_record_export($rec) {
 			do {
 				// Split after $pos chars
 				$pos = WT_GEDCOM_LINE_LENGTH;
-				if ($WT_TREE->getPreference('WORD_WRAPPED_NOTES')) {
+				if (Globals::i()->WT_TREE->getPreference('WORD_WRAPPED_NOTES')) {
 					// Split on a space, and remove it (for compatibility with some desktop apps)
 					while ($pos && mb_substr($line, $pos - 1, 1) != ' ') {
 						--$pos;

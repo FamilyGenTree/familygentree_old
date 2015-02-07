@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Fetch all records linked to a record - when deleting an object, we must
@@ -46,14 +47,12 @@ function fetch_all_links($xref, $gedcom_id) {
  * @return boolean
  */
 function exists_pending_change(User $user = null, Tree $tree = null) {
-	global $WT_TREE;
-
 	if ($user === null) {
 		$user = Auth::user();
 	}
 
 	if ($tree === null) {
-		$tree = $WT_TREE;
+		$tree = Globals::i()->WT_TREE;
 	}
 
 	if ($user === null || $tree === null) {
@@ -726,10 +725,8 @@ function find_rin_id($rin) {
  * @return mixed[][]
  */
 function get_common_surnames($min) {
-	global $WT_TREE;
-
-	$COMMON_NAMES_ADD    = $WT_TREE->getPreference('COMMON_NAMES_ADD');
-	$COMMON_NAMES_REMOVE = $WT_TREE->getPreference('COMMON_NAMES_REMOVE');
+	$COMMON_NAMES_ADD    = Globals::i()->WT_TREE->getPreference('COMMON_NAMES_ADD');
+	$COMMON_NAMES_REMOVE = Globals::i()->WT_TREE->getPreference('COMMON_NAMES_REMOVE');
 
 	$topsurns = get_top_surnames(WT_GED_ID, $min, 0);
 	foreach (explode(',', $COMMON_NAMES_ADD) as $surname) {
@@ -1153,7 +1150,7 @@ function get_block_setting($block_id, $setting_name, $default_value = null) {
  * @param string      $setting_name
  * @param string|null $setting_value
  *
- * @throws Exception
+ * @throws \Exception
  */
 function set_block_setting($block_id, $setting_name, $setting_value) {
 	if ($setting_value === null) {

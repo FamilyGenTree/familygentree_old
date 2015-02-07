@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 /**
@@ -215,8 +216,6 @@ class PageController extends BaseController {
 	 * @return Individual
 	 */
 	public function getSignificantIndividual() {
-		global $WT_TREE;
-
 		static $individual; // Only query the DB once.
 
 		if (!$individual && WT_USER_ROOT_ID) {
@@ -226,7 +225,7 @@ class PageController extends BaseController {
 			$individual = Individual::getInstance(WT_USER_GEDCOM_ID);
 		}
 		if (!$individual) {
-			$individual = Individual::getInstance($WT_TREE->getPreference('PEDIGREE_ROOT_ID'));
+			$individual = Individual::getInstance(Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID'));
 		}
 		if (!$individual) {
 			$individual = Individual::getInstance(

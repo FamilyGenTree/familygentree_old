@@ -16,14 +16,8 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
-
-/**
- * Defined in session.php
- *
- * @global Tree $WT_TREE
- */
-global $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'mediafirewall.php');
 require './includes/session.php';
@@ -306,9 +300,9 @@ $usewatermark = false;
 // if this image supports watermarks and the watermark module is intalled...
 if ($type) {
 	// if this is not a thumbnail, or WATERMARK_THUMB is true
-	if (($which === 'main') || $WT_TREE->getPreference('WATERMARK_THUMB')) {
+	if (($which === 'main') || Globals::i()->WT_TREE->getPreference('WATERMARK_THUMB')) {
 		// if the user’s priv’s justify it...
-		if (WT_USER_ACCESS_LEVEL > $WT_TREE->getPreference('SHOW_NO_WATERMARK')) {
+		if (WT_USER_ACCESS_LEVEL > Globals::i()->WT_TREE->getPreference('SHOW_NO_WATERMARK')) {
 			// add a watermark
 			$usewatermark = true;
 		}
@@ -328,9 +322,9 @@ $generatewatermark = false;
 
 if ($usewatermark) {
 	if ($which === 'thumb') {
-		$watermarkfile = WT_DATA_DIR . $WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/thumb/' . $media->getFilename();
+		$watermarkfile = WT_DATA_DIR . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/thumb/' . $media->getFilename();
 	} else {
-		$watermarkfile = WT_DATA_DIR . $WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/' . $media->getFilename();
+		$watermarkfile = WT_DATA_DIR . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/' . $media->getFilename();
 	}
 
 	if (!file_exists($watermarkfile)) {
@@ -392,7 +386,7 @@ if ($generatewatermark) {
 		$im = applyWatermark($im);
 
 		// save the image, if preferences allow
-		if ($which === 'thumb' && $WT_TREE->getPreference('SAVE_WATERMARK_THUMB') || $which === 'main' && $WT_TREE->getPreference('SAVE_WATERMARK_IMAGE')) {
+		if ($which === 'thumb' && Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_THUMB') || $which === 'main' && Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_IMAGE')) {
 			// make sure the folder exists
 			File::mkdir(dirname($watermarkfile));
 			// save the image

@@ -61,8 +61,6 @@ class ClippingsCart {
 	 * Create the clippings controller
 	 */
 	public function __construct() {
-		global $WT_TREE;
-
 		// Our cart is an array of items in the session
 		if (!is_array(Globals::i()->WT_SESSION->cart)) {
 			Globals::i()->WT_SESSION->cart = array();
@@ -241,7 +239,7 @@ class ClippingsCart {
 						break;
 					default:
 						$ft = preg_match_all("/\n\d FILE (.+)/", $savedRecord, $match, PREG_SET_ORDER);
-						$MEDIA_DIRECTORY = $WT_TREE->getPreference('MEDIA_DIRECTORY');
+						$MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');
 						for ($k = 0; $k < $ft; $k++) {
 							// Skip external files and non-existant files
 							if (file_exists(WT_DATA_DIR . $MEDIA_DIRECTORY . $match[$k][1])) {
@@ -264,7 +262,7 @@ class ClippingsCart {
 				$this->media_list = array();
 			}
 			$filetext .= "0 @WEBTREES@ SOUR\n1 TITL " . WT_BASE_URL . "\n";
-			if ($user_id = $WT_TREE->getPreference('CONTACT_EMAIL')) {
+			if ($user_id = Globals::i()->WT_TREE->getPreference('CONTACT_EMAIL')) {
 				$user = User::find($user_id);
 				$filetext .= "1 AUTH " . $user->getRealName() . "\n";
 			}

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class gedcom_stats_WT_Module
@@ -32,7 +33,7 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface {
 
 	/** {@inheritdoc} */
 	public function getBlock($block_id, $template = true, $cfg = null) {
-		global $WT_TREE, $ctype;
+		global $ctype;
 
 		$show_last_update     = get_block_setting($block_id, 'show_last_update', '1');
 		$show_common_surnames = get_block_setting($block_id, 'show_common_surnames', '1');
@@ -74,7 +75,7 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface {
 		}
 		$title .= $this->getTitle();
 
-		$stats = new Stats($WT_TREE);
+		$stats = new Stats(Globals::i()->WT_TREE);
 
 		$content = '<b>' . WT_TREE_TITLE . '</b><br>';
 
@@ -183,7 +184,7 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface {
 		}
 		// NOTE: Print the most common surnames
 		if ($show_common_surnames) {
-			$surnames = get_common_surnames($WT_TREE->getPreference('COMMON_NAMES_THRESHOLD'));
+			$surnames = get_common_surnames(Globals::i()->WT_TREE->getPreference('COMMON_NAMES_THRESHOLD'));
 			if (count($surnames) > 0) {
 				$content .= '<p><b>' . I18N::translate('Most common surnames') . '</b></p>';
 				$content .= '<div class="common_surnames">';

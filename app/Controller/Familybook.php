@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class FamilybookController - Controller for the familybook chart
@@ -45,15 +46,13 @@ class FamilybookController extends ChartController {
 	 * Create a family-book controller
 	 */
 	public function __construct() {
-		global $WT_TREE;
-
 		parent::__construct();
 
 		// Extract the request parameters
-		$this->show_full   = Filter::getInteger('show_full', 0, 1, $WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
+		$this->show_full   = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
 		$this->show_spouse = Filter::getInteger('show_spouse', 0, 1);
 		$this->descent     = Filter::getInteger('descent', 0, 9, 5);
-		$this->generations = Filter::getInteger('generations', 2, $WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), 2);
+		$this->generations = Filter::getInteger('generations', 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS'), 2);
 		$this->box_width   = Filter::getInteger('box_width', 50, 300, 100);
 
 		// Box sizes are set globally in the theme.  Modify them here.

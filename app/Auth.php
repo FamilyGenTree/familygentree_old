@@ -56,10 +56,8 @@ class Auth {
 	 * @return boolean
 	 */
 	public static function isManager(Tree $tree = null, User $user = null) {
-		global $WT_TREE;
-
 		if ($tree === null) {
-			$tree = $WT_TREE;
+			$tree = Globals::i()->WT_TREE;
 		}
 
 		if ($user === null) {
@@ -78,10 +76,8 @@ class Auth {
 	 * @return boolean
 	 */
 	public static function isModerator(Tree $tree = null, User $user = null) {
-		global $WT_TREE;
-
 		if ($tree === null) {
-			$tree = $WT_TREE;
+			$tree = Globals::i()->WT_TREE;
 		}
 
 		if ($user === null) {
@@ -101,10 +97,8 @@ class Auth {
 	 * @return boolean
 	 */
 	public static function isEditor(Tree $tree = null, User $user = null) {
-		global $WT_TREE;
-
 		if ($tree === null) {
-			$tree = $WT_TREE;
+			$tree = Globals::i()->WT_TREE;
 		}
 
 		if ($user === null) {
@@ -123,10 +117,8 @@ class Auth {
 	 * @return boolean
 	 */
 	public static function isMember(Tree $tree = null, User $user = null) {
-		global $WT_TREE;
-
 		if ($tree === null) {
-			$tree = $WT_TREE;
+			$tree = Globals::i()->WT_TREE;
 		}
 
 		if ($user === null) {

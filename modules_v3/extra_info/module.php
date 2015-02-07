@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class extra_info_WT_Module
@@ -43,7 +44,7 @@ class extra_info_WT_Module extends Module implements ModuleSidebarInterface {
 
 	/** {@inheritdoc} */
 	public function getSidebarContent() {
-		global $WT_TREE, $controller;
+		global $controller;
 
 		$indifacts = array();
 		// The individual’s own facts
@@ -61,7 +62,7 @@ class extra_info_WT_Module extends Module implements ModuleSidebarInterface {
 				print_fact($fact, $controller->record);
 			}
 		}
-		if ($WT_TREE->getPreference('SHOW_COUNTER')) {
+		if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
 			$hitCount = 0;
 			require WT_ROOT . 'includes/hitcount.php';
 			echo '<div id="hitcounter">', I18N::translate('Hit count:'), ' ', $hitCount, '</div>';

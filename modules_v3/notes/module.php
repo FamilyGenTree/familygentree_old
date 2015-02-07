@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class notes_WT_Module
@@ -49,14 +50,14 @@ class notes_WT_Module extends Module implements ModuleTabInterface {
 
 	/** {@inheritdoc} */
 	public function getTabContent() {
-		global $WT_TREE, $controller;
+		global $controller;
 
 		ob_start();
 		echo '<table class="facts_table">';
 		?>
 		<tr>
 			<td colspan="2" class="descriptionbox rela">
-				<input id="checkbox_note2" type="checkbox" <?php echo $WT_TREE->getPreference('SHOW_LEVEL2_NOTES') ? 'checked' : ''; ?> onclick="jQuery('tr.row_note2').toggle();">
+				<input id="checkbox_note2" type="checkbox" <?php echo Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES') ? 'checked' : ''; ?> onclick="jQuery('tr.row_note2').toggle();">
 				<label for="checkbox_note2"><?php echo I18N::translate('Show all notes'); ?></label>
 				<?php echo help_link('show_fact_sources'); ?>
 			</td>
@@ -105,7 +106,7 @@ class notes_WT_Module extends Module implements ModuleTabInterface {
 		?>
 		</table>
 		<?php
-		if (!$WT_TREE->getPreference('SHOW_LEVEL2_NOTES')) {
+		if (!Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES')) {
 			echo '<script>jQuery("tr.row_note2").toggle();</script>';
 		}
 

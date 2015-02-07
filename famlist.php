@@ -22,9 +22,10 @@ namespace Fisharebest\Webtrees;
  * @global string $SEARCH_SPIDER
  * @global string $UNKNOWN_NN
  * @global string $UNKNOWN_PN
- * @global Tree   $WT_TREE
  */
-global $SEARCH_SPIDER, $UNKNOWN_NN, $UNKNOWN_PN, $WT_TREE;
+global $SEARCH_SPIDER, $UNKNOWN_NN, $UNKNOWN_PN;
+
+use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'famlist.php');
 require './includes/session.php';
@@ -188,7 +189,7 @@ if ($show === 'indi' || $show === 'surn') {
 	$surns = WT_Query_Name::surnames($surname, $alpha, $show_marnm === 'yes', true, WT_GED_ID);
 	if ($show === 'surn') {
 		// Show the surname list
-		switch ($WT_TREE->getPreference('SURNAME_LIST_STYLE')) {
+		switch (Globals::i()->WT_TREE->getPreference('SURNAME_LIST_STYLE')) {
 		case 'style1';
 			echo format_surname_list($surns, 3, true, WT_SCRIPT_NAME);
 			break;
@@ -209,7 +210,7 @@ if ($show === 'indi' || $show === 'surn') {
 			}
 		}
 		// Don't sublists short lists.
-		if ($count < $WT_TREE->getPreference('SUBLIST_TRIGGER_I')) {
+		if ($count < Globals::i()->WT_TREE->getPreference('SUBLIST_TRIGGER_I')) {
 			$falpha              = '';
 			$show_all_firstnames = 'no';
 		} else {

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * Class lightbox_WT_Module
@@ -50,14 +51,14 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface {
 
 	/** {@inheritdoc} */
 	public function getTabContent() {
-		global $WT_TREE, $controller;
+		global $controller;
 
 		$html = '<div id="' . $this->getName() . '_content">';
 		//Show Lightbox-Album header Links
 		if (WT_USER_CAN_EDIT) {
 			$html .= '<table class="facts_table"><tr><td class="descriptionbox rela">';
 			// Add a new media object
-			if ($WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
+			if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
 				$html .= '<span><a href="#" onclick="window.open(\'addmedia.php?action=showmediaform&linktoid=' . $controller->record->getXref() . '\', \'_blank\', \'resizable=1,scrollbars=1,top=50,height=780,width=600\');return false;">';
 				$html .= '<img src="' . Theme::theme()->assetUrl() . 'images/image_add.png" id="head_icon" class="icon" title="' . I18N::translate('Add a new media object') . '" alt="' . I18N::translate('Add a new media object') . '">';
 				$html .= I18N::translate('Add a new media object');

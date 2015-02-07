@@ -9,11 +9,13 @@ namespace Fgt;
 
 
 use \Exception;
+use Fisharebest\Webtrees\Tree;
 
 /**
  * Class Globals
  *
  * @property \Zend_Session WT_SESSION
+ * @property Tree WT_TREE
  *
  * @package Fgt
  *
@@ -25,7 +27,7 @@ class Globals
     /**
      * @var array
      */
-    protected static $ALLOWED_VARS = array('WT_SESSION' => 1);
+    protected static $ALLOWED_VARS = array('WT_SESSION' => 1, 'WT_TREE' => 1);
     protected static $instance;
     protected        $varContainer = array();
 
