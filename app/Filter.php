@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 use Michelf\MarkdownExtra;
@@ -436,16 +437,15 @@ class Filter {
 	 * @return string
 	 */
 	public static function getCsrfToken() {
-		global $WT_SESSION;
 
-		if ($WT_SESSION->CSRF_TOKEN === null) {
+		if (Globals::i()->WT_SESSION->CSRF_TOKEN === null) {
 			$charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcedfghijklmnopqrstuvwxyz0123456789';
 			for ($n = 0; $n < 32; ++$n) {
-				$WT_SESSION->CSRF_TOKEN .= substr($charset, mt_rand(0, 61), 1);
+				Globals::i()->WT_SESSION->CSRF_TOKEN .= substr($charset, mt_rand(0, 61), 1);
 			}
 		}
 
-		return $WT_SESSION->CSRF_TOKEN;
+		return Globals::i()->WT_SESSION->CSRF_TOKEN;
 	}
 
 	/**

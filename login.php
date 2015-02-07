@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 use Zend_Controller_Request_Http;
 use Zend_Session;
@@ -24,10 +25,9 @@ use Zend_Session;
  * Defined in session.php
  *
  * @global Zend_Controller_Request_Http $WT_REQUEST
- * @global Zend_Session                 $WT_SESSION
  * @global Tree                         $WT_TREE
  */
-global $WT_REQUEST, $WT_SESSION, $WT_TREE;
+global $WT_REQUEST, $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'login.php');
 require './includes/session.php';
@@ -98,10 +98,10 @@ case 'login':
 		Auth::login($user);
 		Log::addAuthenticationLog('Login: ' . Auth::user()->getUserName() . '/' . Auth::user()->getRealName());
 
-		$WT_SESSION->timediff      = $timediff;
-		$WT_SESSION->locale        = Auth::user()->getPreference('language');
-		$WT_SESSION->theme_id      = Auth::user()->getPreference('theme');
-		$WT_SESSION->activity_time = WT_TIMESTAMP;
+		Globals::i()->WT_SESSION->timediff      = $timediff;
+		Globals::i()->WT_SESSION->locale        = Auth::user()->getPreference('language');
+		Globals::i()->WT_SESSION->theme_id      = Auth::user()->getPreference('theme');
+		Globals::i()->WT_SESSION->activity_time = WT_TIMESTAMP;
 
 		Auth::user()->setPreference('sessiontime', WT_TIMESTAMP);
 
@@ -276,7 +276,7 @@ case 'register':
 	$controller->setPageTitle(I18N::translate('Request new user account'));
 
 	// The form parameters are mandatory, and the validation errors are shown in the client.
-	if ($WT_SESSION->good_to_send && $user_name && $user_password01 && $user_password01 == $user_password02 && $user_realname && $user_email && $user_comments) {
+	if (Globals::i()->WT_SESSION->good_to_send && $user_name && $user_password01 && $user_password01 == $user_password02 && $user_realname && $user_email && $user_comments) {
 
 		// These validation errors cannot be shown in the client.
 		if (User::findByIdentifier($user_name)) {
@@ -400,7 +400,7 @@ case 'register':
 		}
 	}
 
-	$WT_SESSION->good_to_send = true;
+	Globals::i()->WT_SESSION->good_to_send = true;
 	$controller
 		->pageHeader()
 		->addInlineJavascript('function regex_quote(str) {return str.replace(/[\\\\.?+*()[\](){}|]/g, "\\\\$&");}');

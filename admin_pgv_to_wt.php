@@ -16,15 +16,9 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use PDOException;
-
-/**
- * Defined in session.php
- *
- * @global Zend_Session $WT_SESSION
- */
-global $WT_SESSION;
 
 define('WT_SCRIPT_NAME', 'admin_pgv_to_wt.php');
 require './includes/session.php';
@@ -120,7 +114,7 @@ if ($PGV_PATH) {
 
 if ($PGV_PATH) {
 	// The account we are using is about to be deleted.
-	$WT_SESSION->wt_user = null;
+	Globals::i()->WT_SESSION->wt_user = null;
 }
 
 $controller->pageHeader();

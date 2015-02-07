@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Fisharebest\ExtCalendar\GregorianCalendar;
 
 /**
@@ -64,7 +65,6 @@ class LifespanController extends PageController {
 	 * Startup activity
 	 */
 	function __construct() {
-		global $WT_SESSION;
 
 		parent::__construct();
 		$this->setPageTitle(I18N::translate('Lifespans'));
@@ -105,8 +105,8 @@ class LifespanController extends PageController {
 			$this->place = $place;
 		} else {
 			// Modify an existing list of records
-			if (is_array($WT_SESSION->timeline_pids)) {
-				$this->pids = $WT_SESSION->timeline_pids;
+			if (is_array(Globals::i()->WT_SESSION->timeline_pids)) {
+				$this->pids = Globals::i()->WT_SESSION->timeline_pids;
 			} else {
 				$this->pids = array();
 			}
@@ -122,7 +122,7 @@ class LifespanController extends PageController {
 				$this->addFamily($this->getSignificantIndividual(), false);
 			}
 		}
-		$WT_SESSION->timeline_pids = $this->pids;
+		Globals::i()->WT_SESSION->timeline_pids = $this->pids;
 
 		$this->beginYear = $beginYear;
 		$this->endYear   = $endYear;
@@ -162,7 +162,7 @@ class LifespanController extends PageController {
 					}
 				}
 			}
-			$WT_SESSION->timeline_pids = null;
+			Globals::i()->WT_SESSION->timeline_pids = null;
 		}
 
 		// Sort the array in order of birth year

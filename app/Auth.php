@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use Zend_Session;
 
 /**
@@ -141,9 +142,8 @@ class Auth {
 	 * @return string|null
 	 */
 	public static function id() {
-		global $WT_SESSION;
 
-		return $WT_SESSION ? $WT_SESSION->wt_user : null;
+		return Globals::i()->WT_SESSION ? Globals::i()->WT_SESSION->wt_user : null;
 	}
 
 	/**
@@ -172,9 +172,8 @@ class Auth {
 	 * @param User $user
 	 */
 	public static function login(User $user) {
-		global $WT_SESSION;
 
-		$WT_SESSION->wt_user = $user->getUserId();
+		Globals::i()->WT_SESSION->wt_user = $user->getUserId();
 		Zend_Session::regenerateId();
 	}
 

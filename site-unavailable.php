@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Globals;
 use PDO;
 use PDOException;
 
@@ -35,8 +36,8 @@ define('WT_ROOT', '');
 define('WT_GED_ID', 0);
 define('WT_DATA_DIR', realpath('data') . DIRECTORY_SEPARATOR);
 
-$WT_SESSION         = new \stdClass;
-$WT_SESSION->locale = '';
+Globals::i()->WT_SESSION         = new \stdClass;
+Globals::i()->WT_SESSION->locale = '';
 
 define('WT_LOCALE', I18N::init());
 

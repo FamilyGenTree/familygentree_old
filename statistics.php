@@ -21,10 +21,9 @@ use Zend_Session;
 /**
  * Defined in session.php
  *
- * @global Zend_Session $WT_SESSION
  * @global Tree         $WT_TREE
  */
-global $WT_SESSION, $WT_TREE;
+global $WT_TREE;
 
 define('WT_SCRIPT_NAME', 'statistics.php');
 require './includes/session.php';
@@ -507,21 +506,21 @@ if (!$ajax) {
 		if (!isset($plotnp)) {
 			$plotnp = 201;
 		}
-		if (isset($WT_SESSION->statTicks[$WT_TREE->getTreeId()])) {
-			$x_axis_boundary_ages    = $WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_ages'];
-			$x_axis_boundary_months  = $WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_months'];
-			$x_axis_boundary_numbers = $WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
-			$x_axis_boundary_periods = $WT_SESSION->statTicks[$WT_TREE->getTreeId()]['z_axis_boundary_periods'];
+		if (isset(Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()])) {
+			$x_axis_boundary_ages    = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_ages'];
+			$x_axis_boundary_months  = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_months'];
+			$x_axis_boundary_numbers = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
+			$x_axis_boundary_periods = Globals::i()->WT_SESSION->statTicks[$WT_TREE->getTreeId()]['z_axis_boundary_periods'];
 		} else {
 			$x_axis_boundary_ages    = '1,5,10,20,30,40,50,60,70,80,90,100';
 			$x_axis_boundary_months  = '-24,-12,0,8,12,18,24,48';
 			$x_axis_boundary_numbers = '1,2,3,4,5,6,7,8,9,10';
 			$x_axis_boundary_periods = '1700,1750,1800,1850,1900,1950,2000';
 		}
-		if (isset($WT_SESSION->statTicks1[$WT_TREE->getTreeId()])) {
-			$chart_shows = $WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_shows'];
-			$chart_type  = $WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_type'];
-			$surname     = $WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['surname'];
+		if (isset(Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()])) {
+			$chart_shows = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_shows'];
+			$chart_type  = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['chart_type'];
+			$surname     = Globals::i()->WT_SESSION->statTicks1[$WT_TREE->getTreeId()]['surname'];
 		} else {
 			$chart_shows = 'world';
 			$chart_type  = 'indi_distribution_chart';
