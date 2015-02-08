@@ -664,7 +664,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             <script>
                 function selectCountry() {
                     if (document.flags.COUNTRYSELECT.value == 'Countries') {
-                        window.location = "module.php?mod=googlemap&mod_action=flags";
+                        window.location = "module.php";
                     } else if (document.flags.STATESELECT.value != 'States') {
                         window.location = "module.php?mod=googlemap&mod_action=flags&countrySelected=" + document.flags.COUNTRYSELECT.value + "&stateSelected=" + document.flags.STATESELECT.value;
                     } else {

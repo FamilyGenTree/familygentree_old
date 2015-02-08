@@ -190,7 +190,7 @@ $people = count($controller->people);
                                 </td>
                                 <td>
                                     <input type="button" value="<?php echo I18N::translate('Clear chart'); ?>"
-                                           onclick="window.location='lifespan.php?clear=1';">
+                                           onclick="window.location='lifespan.php';">
                                 </td>
                             </tr>
                         </table>
