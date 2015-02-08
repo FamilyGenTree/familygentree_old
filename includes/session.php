@@ -17,7 +17,6 @@ namespace Fisharebest\Webtrees;
  */
 
 use Fgt\Application;
-use Fgt\Globals;
 
 // WT_SCRIPT_NAME is defined in each script that the user is permitted to load.
 if (!defined('WT_SCRIPT_NAME')) {

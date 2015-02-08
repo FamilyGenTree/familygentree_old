@@ -27,6 +27,9 @@ class BaseController
     const JS_PRIORITY_HIGH   = 0;
     const JS_PRIORITY_NORMAL = 1;
     const JS_PRIORITY_LOW    = 2;
+
+    public static $activeController;
+
     private $inline_javascript   = array(
         self::JS_PRIORITY_HIGH   => array(),
         self::JS_PRIORITY_NORMAL => array(),
@@ -41,6 +44,7 @@ class BaseController
      */
     public function __construct()
     {
+        static::$activeController = $this;
     }
 
     /**

@@ -10,6 +10,7 @@ namespace Fgt;
 
 use Fisharebest\Webtrees\AdministrationTheme;
 use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\BaseController;
 use Fisharebest\Webtrees\Database;
 use Fisharebest\Webtrees\Filter;
 use Fisharebest\Webtrees\FlashMessages;
@@ -54,7 +55,6 @@ class Application
     {
     }
 
-
     /**
      * @return Application
      */
@@ -65,6 +65,13 @@ class Application
         }
 
         return static::$instance;
+    }
+
+    /**
+     * @return BaseController
+     */
+    public function getActiveController() {
+        return BaseController::$activeController;
     }
 
     /**
