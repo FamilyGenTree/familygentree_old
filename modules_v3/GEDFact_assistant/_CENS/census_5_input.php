@@ -20,8 +20,8 @@ require WT_ROOT . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/js/census_5_input.js
 
 ?>
 <div class="cens_data">
-	<table id="tblSample" cellpadding=0>
-		<thead></thead>
-		<tbody></tbody>
-	</table>
+    <table id="tblSample" cellpadding=0>
+        <thead></thead>
+        <tbody></tbody>
+    </table>
 </div>

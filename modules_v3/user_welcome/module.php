@@ -19,54 +19,67 @@ namespace Fisharebest\Webtrees;
 /**
  * Class user_welcome_WT_Module
  */
-class user_welcome_WT_Module extends Module implements ModuleBlockInterface {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		return /* I18N: Name of a module */ I18N::translate('My page');
-	}
+class user_welcome_WT_Module extends Module implements ModuleBlockInterface
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        return /* I18N: Name of a module */
+            I18N::translate('My page');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		return /* I18N: Description of the “My page” module */ I18N::translate('A greeting message and useful links for a user.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        return /* I18N: Description of the “My page” module */
+            I18N::translate('A greeting message and useful links for a user.');
+    }
 
-	/** {@inheritdoc} */
-	public function getBlock($block_id, $template = true, $cfg = null) {
-		$id = $this->getName() . $block_id;
-		$class = $this->getName() . '_block';
-		$title = '<span dir="auto">' . /* I18N: A greeting; %s is the user’s name */ I18N::translate('Welcome %s', Auth::user()->getRealName()) . '</span>';
-		$content = '<table><tr>';
-		$content .= '<td><a href="edituser.php"><i class="icon-mypage"></i><br>' . I18N::translate('My account') . '</a></td>';
+    /** {@inheritdoc} */
+    public function getBlock($block_id, $template = true, $cfg = null)
+    {
+        $id      = $this->getName() . $block_id;
+        $class   = $this->getName() . '_block';
+        $title   = '<span dir="auto">' . /* I18N: A greeting; %s is the user’s name */
+                   I18N::translate('Welcome %s', Auth::user()
+                                                     ->getRealName()) . '</span>';
+        $content = '<table><tr>';
+        $content .= '<td><a href="edituser.php"><i class="icon-mypage"></i><br>' . I18N::translate('My account') . '</a></td>';
 
-		if (WT_USER_GEDCOM_ID) {
-			$content .= '<td><a href="pedigree.php?rootid=' . WT_USER_GEDCOM_ID . '&amp;ged=' . WT_GEDURL . '"><i class="icon-pedigree"></i><br>' . I18N::translate('My pedigree') . '</a></td>';
-			$content .= '<td><a href="individual.php?pid=' . WT_USER_GEDCOM_ID . '&amp;ged=' . WT_GEDURL . '"><i class="icon-indis"></i><br>' . I18N::translate('My individual record') . '</a></td>';
-		}
-		$content .= '</tr></table>';
+        if (WT_USER_GEDCOM_ID) {
+            $content .= '<td><a href="pedigree.php?rootid=' . WT_USER_GEDCOM_ID . '&amp;ged=' . WT_GEDURL . '"><i class="icon-pedigree"></i><br>' . I18N::translate('My pedigree') . '</a></td>';
+            $content .= '<td><a href="individual.php?pid=' . WT_USER_GEDCOM_ID . '&amp;ged=' . WT_GEDURL . '"><i class="icon-indis"></i><br>' . I18N::translate('My individual record') . '</a></td>';
+        }
+        $content .= '</tr></table>';
 
-		if ($template) {
-			return Theme::theme()->formatBlock($id, $title, $class, $content);
-		} else {
-			return $content;
-		}
-	}
+        if ($template) {
+            return Theme::theme()
+                        ->formatBlock($id, $title, $class, $content);
+        } else {
+            return $content;
+        }
+    }
 
-	/** {@inheritdoc} */
-	public function loadAjax() {
-		return false;
-	}
+    /** {@inheritdoc} */
+    public function loadAjax()
+    {
+        return false;
+    }
 
-	/** {@inheritdoc} */
-	public function isUserBlock() {
-		return true;
-	}
+    /** {@inheritdoc} */
+    public function isUserBlock()
+    {
+        return true;
+    }
 
-	/** {@inheritdoc} */
-	public function isGedcomBlock() {
-		return false;
-	}
+    /** {@inheritdoc} */
+    public function isGedcomBlock()
+    {
+        return false;
+    }
 
-	/** {@inheritdoc} */
-	public function configureBlock($block_id) {
-	}
+    /** {@inheritdoc} */
+    public function configureBlock($block_id)
+    {
+    }
 }

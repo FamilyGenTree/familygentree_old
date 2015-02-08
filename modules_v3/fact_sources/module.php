@@ -19,34 +19,41 @@ namespace Fisharebest\Webtrees;
 /**
  * Class fact_sources_WT_Module
  */
-class fact_sources_WT_Module extends Module implements ModuleReportInterface {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		// This text also appears in the .XML file - update both together
-		return /* I18N: Name of a module/report */ I18N::translate('Source');
-	}
+class fact_sources_WT_Module extends Module implements ModuleReportInterface
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        // This text also appears in the .XML file - update both together
+        return /* I18N: Name of a module/report */
+            I18N::translate('Source');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		// This text also appears in the .XML file - update both together
-		return /* I18N: Description of the “Source” module */ I18N::translate('A report of the information provided by a source.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        // This text also appears in the .XML file - update both together
+        return /* I18N: Description of the “Source” module */
+            I18N::translate('A report of the information provided by a source.');
+    }
 
-	/** {@inheritdoc} */
-	public function defaultAccessLevel() {
-		return WT_PRIV_USER;
-	}
+    /** {@inheritdoc} */
+    public function defaultAccessLevel()
+    {
+        return WT_PRIV_USER;
+    }
 
-	/** {@inheritdoc} */
-	public function getReportMenus() {
-		$menus = array();
-		$menu = new Menu(
-			$this->getTitle(),
-			'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml',
-			'menu-report-' . $this->getName()
-		);
-		$menus[] = $menu;
+    /** {@inheritdoc} */
+    public function getReportMenus()
+    {
+        $menus   = array();
+        $menu    = new Menu(
+            $this->getTitle(),
+            'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml',
+            'menu-report-' . $this->getName()
+        );
+        $menus[] = $menu;
 
-		return $menus;
-	}
+        return $menus;
+    }
 }

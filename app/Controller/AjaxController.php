@@ -21,41 +21,46 @@ use Zend_Session;
 /**
  * Class AjaxController - Base controller for all popup pages
  */
-class AjaxController extends BaseController {
+class AjaxController extends BaseController
+{
 
-	/**
-	 * @return $this
-	 */
-	public function pageHeader() {
-		// We have finished writing session data, so release the lock
-		Zend_Session::writeClose();
-		// Ajax responses are always UTF8
-		header('Content-Type: text/html; charset=UTF-8');
-		$this->page_header = true;
-		return $this;
-	}
+    /**
+     * @return $this
+     */
+    public function pageHeader()
+    {
+        // We have finished writing session data, so release the lock
+        Zend_Session::writeClose();
+        // Ajax responses are always UTF8
+        header('Content-Type: text/html; charset=UTF-8');
+        $this->page_header = true;
 
-	/**
-	 * @return string
-	 */
-	public function pageFooter() {
-		// Ajax responses may have Javascript
-		return $this->getJavascript();
-	}
+        return $this;
+    }
 
-	/**
-	 * Restrict access.
-	 *
-	 * @param boolean $condition
-	 *
-	 * @return $this
-	 */
-	public function restrictAccess($condition) {
-		if ($condition !== true) {
-			http_response_code(403);
-			exit;
-		}
+    /**
+     * @return string
+     */
+    public function pageFooter()
+    {
+        // Ajax responses may have Javascript
+        return $this->getJavascript();
+    }
 
-		return $this;
-	}
+    /**
+     * Restrict access.
+     *
+     * @param boolean $condition
+     *
+     * @return $this
+     */
+    public function restrictAccess($condition)
+    {
+        if ($condition !== true) {
+            http_response_code(403);
+            exit;
+        }
+
+        return $this;
+    }
 }

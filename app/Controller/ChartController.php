@@ -19,78 +19,82 @@ namespace Fisharebest\Webtrees;
 /**
  * Class ChartController - Base controller for all chart pages
  */
-class ChartController extends PageController {
-	/** @var Individual Who is chart about? */
-	public $root;
+class ChartController extends PageController
+{
+    /** @var Individual Who is chart about? */
+    public $root;
 
-	/** @var string An error message, in case we cannot construct the chart */
-	public $error_message;
+    /** @var string An error message, in case we cannot construct the chart */
+    public $error_message;
 
-	/**
-	 * Create the chart controller
-	 */
-	public function __construct() {
-		parent::__construct();
+    /**
+     * Create the chart controller
+     */
+    public function __construct()
+    {
+        parent::__construct();
 
-		$rootid = Filter::get('rootid', WT_REGEX_XREF);
-		$this->root = Individual::getInstance($rootid);
-		if (!$this->root) {
-			// Missing root individual?  Show the chart for someone.
-			$this->root = $this->getSignificantIndividual();
-		}
+        $rootid     = Filter::get('rootid', WT_REGEX_XREF);
+        $this->root = Individual::getInstance($rootid);
+        if (!$this->root) {
+            // Missing root individual?  Show the chart for someone.
+            $this->root = $this->getSignificantIndividual();
+        }
 
-		if (!$this->root || !$this->root->canShowName()) {
-			http_response_code(404);
-			$this->error_message = I18N::translate('This individual does not exist or you do not have permission to view it.');
-		}
-	}
+        if (!$this->root || !$this->root->canShowName()) {
+            http_response_code(404);
+            $this->error_message = I18N::translate('This individual does not exist or you do not have permission to view it.');
+        }
+    }
 
-	/**
-	 * Get significant information from this page, to allow other pages such as
-	 * charts and reports to initialise with the same records
-	 *
-	 * @return Individual
-	 */
-	public function getSignificantIndividual() {
-		if ($this->root) {
-			return $this->root;
-		} else {
-			return parent::getSignificantIndividual();
-		}
-	}
+    /**
+     * Get significant information from this page, to allow other pages such as
+     * charts and reports to initialise with the same records
+     *
+     * @return Individual
+     */
+    public function getSignificantIndividual()
+    {
+        if ($this->root) {
+            return $this->root;
+        } else {
+            return parent::getSignificantIndividual();
+        }
+    }
 
-	/**
-	 * Find the direct-line ancestors of an individual.  Array indexes are SOSA numbers.
-	 *
-	 * @param integer $generations
-	 *
-	 * @return Individual[]
-	 */
-	public function sosaAncestors($generations) {
-		$ancestors = array(
-			1 => $this->root
-		);
+    /**
+     * Find the direct-line ancestors of an individual.  Array indexes are SOSA numbers.
+     *
+     * @param integer $generations
+     *
+     * @return Individual[]
+     */
+    public function sosaAncestors($generations)
+    {
+        $ancestors = array(
+            1 => $this->root
+        );
 
-		// Subtract one generation, as this algorithm includes parents.
-		$max = pow(2, $generations - 1);
+        // Subtract one generation, as this algorithm includes parents.
+        $max = pow(2, $generations - 1);
 
-		for ($i = 1; $i < $max; $i++) {
-			$ancestors[$i * 2] = null;
-			$ancestors[$i * 2 + 1] = null;
-			$person = $ancestors[$i];
-			if ($person) {
-				$family = $person->getPrimaryChildFamily();
-				if ($family) {
-					if ($family->getHusband()) {
-						$ancestors[$i * 2] = $family->getHusband();
-					}
-					if ($family->getWife()) {
-						$ancestors[$i * 2 + 1] = $family->getWife();
-					}
-				}
-			}
-		}
+        for ($i = 1; $i < $max; $i++) {
+            $ancestors[$i * 2]     = null;
+            $ancestors[$i * 2 + 1] = null;
+            $person                = $ancestors[$i];
+            if ($person) {
+                $family = $person->getPrimaryChildFamily();
+                if ($family) {
+                    if ($family->getHusband()) {
+                        $ancestors[$i * 2] = $family->getHusband();
+                    }
+                    if ($family->getWife()) {
+                        $ancestors[$i * 2 + 1] = $family->getWife();
+                    }
+                }
+            }
+        }
 
-		return $ancestors;
-	}
+        return $ancestors;
+    }
 }

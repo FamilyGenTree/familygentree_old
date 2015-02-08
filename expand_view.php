@@ -26,54 +26,54 @@ Zend_Session::writeClose();
 header('Content-Type: text/html; charset=UTF-8');
 $person = Individual::getInstance(Filter::get('pid', WT_REGEX_XREF));
 if (!$person || !$person->canShow()) {
-	return I18N::translate('Private');
+    return I18N::translate('Private');
 }
 
 $facts = $person->getFacts();
 foreach ($person->getSpouseFamilies() as $family) {
-	foreach ($family->getFacts() as $fact) {
-		$facts[] = $fact;
-	}
+    foreach ($family->getFacts() as $fact) {
+        $facts[] = $fact;
+    }
 }
 sort_facts($facts);
 
 foreach ($facts as $event) {
-	switch ($event->getTag()) {
-	case 'SEX':
-	case 'FAMS':
-	case 'FAMC':
-	case 'NAME':
-	case 'TITL':
-	case 'NOTE':
-	case 'SOUR':
-	case 'SSN':
-	case 'OBJE':
-	case 'HUSB':
-	case 'WIFE':
-	case 'CHIL':
-	case 'ALIA':
-	case 'ADDR':
-	case 'PHON':
-	case 'SUBM':
-	case '_EMAIL':
-	case 'CHAN':
-	case 'URL':
-	case 'EMAIL':
-	case 'WWW':
-	case 'RESI':
-	case 'RESN':
-	case '_UID':
-	case '_TODO':
-	case '_WT_OBJE_SORT':
-		// Do not show these
-		break;
-	case 'ASSO':
-		// Associates
-		echo format_asso_rela_record($event);
-		break;
-	default:
-		// Simple version of print_fact()
-		echo $event->summary();
-		break;
-	}
+    switch ($event->getTag()) {
+        case 'SEX':
+        case 'FAMS':
+        case 'FAMC':
+        case 'NAME':
+        case 'TITL':
+        case 'NOTE':
+        case 'SOUR':
+        case 'SSN':
+        case 'OBJE':
+        case 'HUSB':
+        case 'WIFE':
+        case 'CHIL':
+        case 'ALIA':
+        case 'ADDR':
+        case 'PHON':
+        case 'SUBM':
+        case '_EMAIL':
+        case 'CHAN':
+        case 'URL':
+        case 'EMAIL':
+        case 'WWW':
+        case 'RESI':
+        case 'RESN':
+        case '_UID':
+        case '_TODO':
+        case '_WT_OBJE_SORT':
+            // Do not show these
+            break;
+        case 'ASSO':
+            // Associates
+            echo format_asso_rela_record($event);
+            break;
+        default:
+            // Simple version of print_fact()
+            echo $event->summary();
+            break;
+    }
 }

@@ -20,8 +20,10 @@ define('WT_SCRIPT_NAME', 'logout.php');
 require './includes/session.php';
 
 if (Auth::id()) {
-	Log::addAuthenticationLog('Logout: ' . Auth::user()->getUserName() . '/' . Auth::user()->getRealName());
-	Auth::logout();
+    Log::addAuthenticationLog('Logout: ' . Auth::user()
+                                               ->getUserName() . '/' . Auth::user()
+                                                                           ->getRealName());
+    Auth::logout();
 }
 
 header('Location: ' . WT_BASE_URL);

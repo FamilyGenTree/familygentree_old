@@ -23,23 +23,23 @@ use PDOException;
 // blocks of data smaller than the max_allowed_packet restriction.
 
 Database::exec(
-	"CREATE TABLE IF NOT EXISTS `##gedcom_chunk` (" .
-	" gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL," .
-	" gedcom_id       INTEGER                NOT NULL," .
-	" chunk_data      MEDIUMBLOB             NOT NULL," .
-	" imported        BOOLEAN                NOT NULL DEFAULT FALSE," .
-	" PRIMARY KEY     (gedcom_chunk_id)," .
-	"         KEY ix1 (gedcom_id, imported)," .
-	" FOREIGN KEY fk1 (gedcom_id) REFERENCES `##gedcom` (gedcom_id)" .
-	") COLLATE utf8_unicode_ci ENGINE=InnoDB"
+    "CREATE TABLE IF NOT EXISTS `##gedcom_chunk` (" .
+    " gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL," .
+    " gedcom_id       INTEGER                NOT NULL," .
+    " chunk_data      MEDIUMBLOB             NOT NULL," .
+    " imported        BOOLEAN                NOT NULL DEFAULT FALSE," .
+    " PRIMARY KEY     (gedcom_chunk_id)," .
+    "         KEY ix1 (gedcom_id, imported)," .
+    " FOREIGN KEY fk1 (gedcom_id) REFERENCES `##gedcom` (gedcom_id)" .
+    ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
 );
 
 try {
-	Database::exec(
-		"ALTER TABLE `##gedcom` DROP import_gedcom, DROP import_offset"
-	);
+    Database::exec(
+        "ALTER TABLE `##gedcom` DROP import_gedcom, DROP import_offset"
+    );
 } catch (PDOException $ex) {
-	// Perhaps we have already deleted these columns?
+    // Perhaps we have already deleted these columns?
 }
 
 // Update the version to indicate success

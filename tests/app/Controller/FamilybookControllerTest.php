@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class FamilybookController
  */
-class FamilybookControllerTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class FamilybookControllerTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\FamilybookController'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\FamilybookController'));
+    }
 }

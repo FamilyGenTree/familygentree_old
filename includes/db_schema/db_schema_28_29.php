@@ -20,7 +20,7 @@ namespace Fisharebest\Webtrees;
 // - earlier versions used the wrong month number for Adar in non-leap years
 
 Database::exec(
-	"UPDATE `##dates` SET d_mon = 7 WHERE d_mon = 6 && d_type = '@#DHEBREW@' AND MOD(7 * d_year + 1, 19) >= 7"
+    "UPDATE `##dates` SET d_mon = 7 WHERE d_mon = 6 && d_type = '@#DHEBREW@' AND MOD(7 * d_year + 1, 19) >= 7"
 );
 
 // Update the version to indicate success

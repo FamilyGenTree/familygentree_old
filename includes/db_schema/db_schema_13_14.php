@@ -22,9 +22,9 @@ use PDOException;
 
 // Remove the i_isdead column
 try {
-	Database::exec("ALTER TABLE `##individuals` DROP i_isdead");
+    Database::exec("ALTER TABLE `##individuals` DROP i_isdead");
 } catch (PDOException $ex) {
-	// Already done this?
+    // Already done this?
 }
 
 // Update the version to indicate success

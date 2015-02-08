@@ -19,18 +19,20 @@ namespace Fisharebest\Webtrees;
 /**
  * class ReportPdfPageheader
  */
-class ReportPdfPageheader extends ReportBasePageheader {
-	/**
-	 * PageHeader element renderer
-	 *
-	 * @param PDF $renderer
-	 *
-	 * @return void
-	 */
-	function render($renderer) {
-		$renderer->clearPageHeader();
-		foreach ($this->elements as $element) {
-			$renderer->addPageHeader($element);
-		}
-	}
+class ReportPdfPageheader extends ReportBasePageheader
+{
+    /**
+     * PageHeader element renderer
+     *
+     * @param PDF $renderer
+     *
+     * @return void
+     */
+    function render($renderer)
+    {
+        $renderer->clearPageHeader();
+        foreach ($this->elements as $element) {
+            $renderer->addPageHeader($element);
+        }
+    }
 }

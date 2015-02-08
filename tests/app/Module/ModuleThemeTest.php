@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class ModuleThemeInterface
  */
-class ModuleThemeTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class ModuleThemeTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(interface_exists(__NAMESPACE__ . '\ModuleThemeInterface'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(interface_exists(__NAMESPACE__ . '\ModuleThemeInterface'));
+    }
 }

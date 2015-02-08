@@ -19,34 +19,42 @@ namespace Fisharebest\Webtrees;
 /**
  * Class page_menu_WT_Module
  */
-class page_menu_WT_Module extends Module implements ModuleMenuInterface {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		return /* I18N: Name of a module/menu */ I18N::translate('Edit');
-	}
+class page_menu_WT_Module extends Module implements ModuleMenuInterface
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        return /* I18N: Name of a module/menu */
+            I18N::translate('Edit');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		return /* I18N: Description of the “Edit” module */ I18N::translate('An edit menu for individuals, families, sources, etc.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        return /* I18N: Description of the “Edit” module */
+            I18N::translate('An edit menu for individuals, families, sources, etc.');
+    }
 
-	/** {@inheritdoc} */
-	public function defaultMenuOrder() {
-		return 10;
-	}
+    /** {@inheritdoc} */
+    public function defaultMenuOrder()
+    {
+        return 10;
+    }
 
-	/** {@inheritdoc} */
-	public function getMenu() {
-		global $controller;
+    /** {@inheritdoc} */
+    public function getMenu()
+    {
+        global $controller;
 
-		$menu = null;
-		if (empty($controller)) {
-			return null;
-		}
+        $menu = null;
+        if (empty($controller)) {
+            return null;
+        }
 
-		if (WT_USER_CAN_EDIT && method_exists($controller, 'getEditMenu')) {
-			$menu = $controller->getEditMenu();
-		}
-		return $menu;
-	}
+        if (WT_USER_CAN_EDIT && method_exists($controller, 'getEditMenu')) {
+            $menu = $controller->getEditMenu();
+        }
+
+        return $menu;
+    }
 }

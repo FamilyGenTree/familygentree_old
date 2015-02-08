@@ -73,25 +73,29 @@ echo '</div>';
 
 //-- Search  and Add Family Members Area ==========================================
 echo '<div class="optionbox cens_search" style="overflow:-moz-scrollbars-horizontal;overflow-x:hidden;overflow-y:scroll;">';
-?><!--[if lte IE 7]><style>.cens_search{margin-top:-0.7em;}</style><![EndIf]--><?php
+?><!--[if lte IE 7]>
+<style>.cens_search {
+    margin-top: -0.7em;
+}</style><![EndIf]--><?php
 require WT_ROOT . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/census_3_search_add.php';
 echo '</div>';
 
 //-- Census Text Input Area =======================================================
 ?>
 <div class="optionbox cens_textinput">
-	<div class="cens_textinput_left">
-		<input type="button" value="<?php echo I18N::translate('Add/insert a blank row'); ?>" onclick="insertRowToTable('', '', '', '', '', '', '', '', 'Age', '', '', '', '', '', '');">
-	</div>
-	<div class="cens_textinput_right">
-		<?php echo I18N::translate('Add'); ?>
-		<input  type="radio" name="totallyrad" value="0" checked>
-	</div>
-	<?php
-	//-- Census Add Rows Area =========================================================
-	echo '<div class="cens_addrows">';
-	require WT_ROOT . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/census_5_input.php';
-	echo '</div>';
-	?>
+    <div class="cens_textinput_left">
+        <input type="button" value="<?php echo I18N::translate('Add/insert a blank row'); ?>"
+               onclick="insertRowToTable('', '', '', '', '', '', '', '', 'Age', '', '', '', '', '', '');">
+    </div>
+    <div class="cens_textinput_right">
+        <?php echo I18N::translate('Add'); ?>
+        <input type="radio" name="totallyrad" value="0" checked>
+    </div>
+    <?php
+    //-- Census Add Rows Area =========================================================
+    echo '<div class="cens_addrows">';
+    require WT_ROOT . WT_MODULES_DIR . 'GEDFact_assistant/_CENS/census_5_input.php';
+    echo '</div>';
+    ?>
 </div>
 <script>window.onLoad = initDynamicOptionLists();</script>

@@ -29,7 +29,7 @@ Zend_Session::writeClose();
 
 // -- print html header information
 if (Filter::get('type') == 'desc') {
-	$controller->printDescendency(Individual::getInstance($controller->pid), 1, false);
+    $controller->printDescendency(Individual::getInstance($controller->pid), 1, false);
 } else {
-	$controller->printPersonPedigree(Individual::getInstance($controller->pid), 0);
+    $controller->printPersonPedigree(Individual::getInstance($controller->pid), 0);
 }

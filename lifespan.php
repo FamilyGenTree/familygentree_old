@@ -21,10 +21,10 @@ require './includes/session.php';
 
 $controller = new LifespanController;
 $controller
-	->pageHeader()
-	->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
-	->addInlineJavascript('autocomplete();')
-	->addInlineJavascript('
+    ->pageHeader()
+    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addInlineJavascript('autocomplete();')
+    ->addInlineJavascript('
 	var timer;
 	var offSetNum = 20; // amount timeline moves with each mouse click
 	var speed;
@@ -124,104 +124,115 @@ $controller
 $people = count($controller->people);
 
 ?>
-<div id="lifespan-page">
-<h2><?php echo I18N::translate('Lifespans'), help_link('lifespan_chart'); ?></h2>
-	<table>
-		<tr>
-			<td>
-				<form name="people" action="?">
-					<input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
-					<table>
-						<tr>
-							<td class="person0">
-								<?php echo I18N::translate('Add another individual to the chart'); ?>
-								<br>
-								<input class="pedigree_form" data-autocomplete-type="INDI" type="text" size="5" id="newpid" name="newpid">
-								<?php print_findindi_link('newpid'); ?>
-								<br>
-								<div>
-									<?php echo I18N::translate('Include the individual’s immediate family?'); ?>
-									<input type="checkbox" checked value="yes" name="addFamily">
-								</div>
-								<div>
-									<input type="submit" value="<?php echo I18N::translate('Add'); ?>">
-								</div>
-							</td>
-						</tr>
-					</table>
-				</form>
-			</td>
-			<td>
-				<form name="buttons" action="lifespan.php" method="get">
-					<input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
-					<table>
-						<tr>
-							<td align="center"><?php echo I18N::translate('Speed'); ?></td>
-							<td align="center"><?php echo I18N::translate('Begin year'); ?></td>
-							<td align="center"><?php echo I18N::translate('End year'); ?></td>
-							<td align="center"><?php echo WT_Gedcom_Tag::getLabel('PLAC'); ?></td>
-						</tr>
-						<tr>
-							<td>
-								<select name="speedMenu" size="1">
-									<option value="4">1</option>
-									<option value="3">2</option>
-									<option value="2">3</option>
-									<option value="1">4</option>
-								</select>
-							</td>
-							<td>
-								<input type="text" name="beginYear" size="5" value="<?php echo $controller->beginYear == 0 ? '' : $controller->beginYear; ?>">
-							</td>
-							<td>
-								<input type="text" name="endYear" size="5" value="<?php echo $controller->endYear == 0 ? '' : $controller->endYear; ?>">
-							</td>
-							<td>
-								<input data-autocomplete-type="PLAC" type="text" name="place" size="15" value="<?php echo Filter::escapeHtml($controller->place); ?>">
-							</td>
-							<td>
-								<input type="submit" name="search" value="<?php echo I18N::translate('Search'); ?>">
-							</td>
-							<td>
-								<input type="button" value="<?php echo I18N::translate('Clear chart'); ?>" onclick="window.location='lifespan.php?clear=1';">
-							</td>
-						</tr>
-					</table>
-					<b><?php echo I18N::plural('%s individual', '%s individuals', $people, $people); ?></b>
-				</form>
-			</td>
-		</tr>
-	</table>
-	<div dir="ltr" id="lifespan_chart" class="lifespan_outer">
-		<div dir="ltr" id="topInner"  class="lifespan_timeline" onmousedown="pandiv(); return false;">';
-			<?php $controller->printTimeline($controller->timelineMinYear, $controller->timelineMaxYear); ?>
-		</div>
-		<div id="inner" class="lifespan_people" onmousedown="pandiv(); return false;">
-			<?php $maxY = $controller->fillTimeline($controller->people, $controller->YrowLoc); ?>
-		</div>
-		<!--  Floating div controls START -->
-		<div class="div-controls" dir="ltr">
-			<table dir="ltr" >
-				<tr>
-					<td></td>
-					<td align="center"><a href="#" onclick="return false;" onmousedown="startScroll('down')" onmouseup="stopScroll()" class="icon-lsuparrow"></a></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td><a href="#" onclick="return false;" onmousedown="startScroll('right')" onmouseup="stopScroll()" class="icon-lsltarrow"></a></td>
-					<td align="center"></td>
-					<td><a href="#" onclick="return false;" onmousedown="startScroll('left')" onmouseup="stopScroll()" class="icon-lsrtarrow"></a></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td align="center"><a href="#" onclick="return false;" onmousedown="startScroll('up')" onmouseup="stopScroll()" class="icon-lsdnarrow"></a></td>
-					<td></td>
-				</tr>
-			</table>
-		</div>
-		<!--  Floating div controls END-->
-	</div>
-</div>
+    <div id="lifespan-page">
+        <h2><?php echo I18N::translate('Lifespans'), help_link('lifespan_chart'); ?></h2>
+        <table>
+            <tr>
+                <td>
+                    <form name="people" action="?">
+                        <input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
+                        <table>
+                            <tr>
+                                <td class="person0">
+                                    <?php echo I18N::translate('Add another individual to the chart'); ?>
+                                    <br>
+                                    <input class="pedigree_form" data-autocomplete-type="INDI" type="text" size="5"
+                                           id="newpid" name="newpid">
+                                    <?php print_findindi_link('newpid'); ?>
+                                    <br>
+
+                                    <div>
+                                        <?php echo I18N::translate('Include the individual’s immediate family?'); ?>
+                                        <input type="checkbox" checked value="yes" name="addFamily">
+                                    </div>
+                                    <div>
+                                        <input type="submit" value="<?php echo I18N::translate('Add'); ?>">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+                <td>
+                    <form name="buttons" action="lifespan.php" method="get">
+                        <input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
+                        <table>
+                            <tr>
+                                <td align="center"><?php echo I18N::translate('Speed'); ?></td>
+                                <td align="center"><?php echo I18N::translate('Begin year'); ?></td>
+                                <td align="center"><?php echo I18N::translate('End year'); ?></td>
+                                <td align="center"><?php echo WT_Gedcom_Tag::getLabel('PLAC'); ?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="speedMenu" size="1">
+                                        <option value="4">1</option>
+                                        <option value="3">2</option>
+                                        <option value="2">3</option>
+                                        <option value="1">4</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="beginYear" size="5"
+                                           value="<?php echo $controller->beginYear == 0 ? ''
+                                               : $controller->beginYear; ?>">
+                                </td>
+                                <td>
+                                    <input type="text" name="endYear" size="5"
+                                           value="<?php echo $controller->endYear == 0 ? '' : $controller->endYear; ?>">
+                                </td>
+                                <td>
+                                    <input data-autocomplete-type="PLAC" type="text" name="place" size="15"
+                                           value="<?php echo Filter::escapeHtml($controller->place); ?>">
+                                </td>
+                                <td>
+                                    <input type="submit" name="search" value="<?php echo I18N::translate('Search'); ?>">
+                                </td>
+                                <td>
+                                    <input type="button" value="<?php echo I18N::translate('Clear chart'); ?>"
+                                           onclick="window.location='lifespan.php?clear=1';">
+                                </td>
+                            </tr>
+                        </table>
+                        <b><?php echo I18N::plural('%s individual', '%s individuals', $people, $people); ?></b>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <div dir="ltr" id="lifespan_chart" class="lifespan_outer">
+            <div dir="ltr" id="topInner" class="lifespan_timeline" onmousedown="pandiv(); return false;">';
+                <?php $controller->printTimeline($controller->timelineMinYear, $controller->timelineMaxYear); ?>
+            </div>
+            <div id="inner" class="lifespan_people" onmousedown="pandiv(); return false;">
+                <?php $maxY = $controller->fillTimeline($controller->people, $controller->YrowLoc); ?>
+            </div>
+            <!--  Floating div controls START -->
+            <div class="div-controls" dir="ltr">
+                <table dir="ltr">
+                    <tr>
+                        <td></td>
+                        <td align="center"><a href="#" onclick="return false;" onmousedown="startScroll('down')"
+                                              onmouseup="stopScroll()" class="icon-lsuparrow"></a></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" onclick="return false;" onmousedown="startScroll('right')"
+                               onmouseup="stopScroll()" class="icon-lsltarrow"></a></td>
+                        <td align="center"></td>
+                        <td><a href="#" onclick="return false;" onmousedown="startScroll('left')"
+                               onmouseup="stopScroll()" class="icon-lsrtarrow"></a></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td align="center"><a href="#" onclick="return false;" onmousedown="startScroll('up')"
+                                              onmouseup="stopScroll()" class="icon-lsdnarrow"></a></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <!--  Floating div controls END-->
+        </div>
+    </div>
 <?php
 // Sets the boundaries for how far the timeline can move in the up direction
 $controller->addInlineJavascript('var maxY = 80-' . $maxY . ';');

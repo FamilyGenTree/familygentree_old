@@ -27,18 +27,18 @@ use PDOException;
 // Create all of the tables needed for this module
 
 try {
-	Database::exec(
-		"ALTER TABLE `##placelocation` ADD (" .
-		" pl_media      VARCHAR(60)     NULL," .
-		" sv_long       FLOAT           NOT NULL DEFAULT 0," .
-		" sv_lati       FLOAT           NOT NULL DEFAULT 0," .
-		" sv_bearing    FLOAT           NOT NULL DEFAULT 0," .
-		" sv_elevation  FLOAT           NOT NULL DEFAULT 0," .
-		" sv_zoom       FLOAT           NOT NULL DEFAULT 1" .
-		")"
-	);
+    Database::exec(
+        "ALTER TABLE `##placelocation` ADD (" .
+        " pl_media      VARCHAR(60)     NULL," .
+        " sv_long       FLOAT           NOT NULL DEFAULT 0," .
+        " sv_lati       FLOAT           NOT NULL DEFAULT 0," .
+        " sv_bearing    FLOAT           NOT NULL DEFAULT 0," .
+        " sv_elevation  FLOAT           NOT NULL DEFAULT 0," .
+        " sv_zoom       FLOAT           NOT NULL DEFAULT 1" .
+        ")"
+    );
 } catch (PDOException $ex) {
-	// Already done this?
+    // Already done this?
 }
 
 // Update the version to indicate success

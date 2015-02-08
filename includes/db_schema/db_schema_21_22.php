@@ -33,32 +33,32 @@ Database::exec("DELETE FROM `##module_setting` WHERE module_name='lightbox'");
 // Very old versions of phpGedView allowed media paths beginning “./”
 // Remove these
 Database::exec(
-	"UPDATE `##media` m" .
-	" SET" .
-	"  m_filename = TRIM(LEADING './' FROM m_filename)," .
-	"  m_gedcom   = REPLACE(m_gedcom, '\n1 FILE ./', '\n1 FILE ')"
+    "UPDATE `##media` m" .
+    " SET" .
+    "  m_filename = TRIM(LEADING './' FROM m_filename)," .
+    "  m_gedcom   = REPLACE(m_gedcom, '\n1 FILE ./', '\n1 FILE ')"
 );
 Database::exec(
-	"UPDATE `##change` c" .
-	" SET new_gedcom = REPLACE(new_gedcom, '\n1 FILE ./', '\n1 FILE ')" .
-	" WHERE status = 'pending'"
+    "UPDATE `##change` c" .
+    " SET new_gedcom = REPLACE(new_gedcom, '\n1 FILE ./', '\n1 FILE ')" .
+    " WHERE status = 'pending'"
 );
 
 // Previous versions of webtrees included the MEDIA_DIRECTORY setting in the
 // FILE tag of the OBJE records.  Remove it…
 Database::exec(
-	"UPDATE `##media` m" .
-	" JOIN `##gedcom_setting` gs ON (m.m_file = gs.gedcom_id AND gs.setting_name = 'MEDIA_DIRECTORY')" .
-	" SET" .
-	"  m_filename = TRIM(LEADING gs.setting_value FROM m_filename)," .
-	"  m_gedcom   = REPLACE(m_gedcom, CONCAT('\n1 FILE ', gs.setting_value), '\n1 FILE ')"
+    "UPDATE `##media` m" .
+    " JOIN `##gedcom_setting` gs ON (m.m_file = gs.gedcom_id AND gs.setting_name = 'MEDIA_DIRECTORY')" .
+    " SET" .
+    "  m_filename = TRIM(LEADING gs.setting_value FROM m_filename)," .
+    "  m_gedcom   = REPLACE(m_gedcom, CONCAT('\n1 FILE ', gs.setting_value), '\n1 FILE ')"
 );
 // …don’t forget pending changes
 Database::exec(
-	"UPDATE `##change` c" .
-	" JOIN `##gedcom_setting` gs ON (c.gedcom_id = gs.gedcom_id AND gs.setting_name = 'MEDIA_DIRECTORY')" .
-	" SET new_gedcom = REPLACE(new_gedcom, CONCAT('\n1 FILE ', gs.setting_value), '\n1 FILE ')" .
-	" WHERE status = 'pending'"
+    "UPDATE `##change` c" .
+    " JOIN `##gedcom_setting` gs ON (c.gedcom_id = gs.gedcom_id AND gs.setting_name = 'MEDIA_DIRECTORY')" .
+    " SET new_gedcom = REPLACE(new_gedcom, CONCAT('\n1 FILE ', gs.setting_value), '\n1 FILE ')" .
+    " WHERE status = 'pending'"
 );
 
 // Update the version to indicate success

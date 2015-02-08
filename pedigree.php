@@ -38,62 +38,67 @@ define("BOX_WRAPPER", "<div class='shadow' style='%s:%spx; top:%spx; width:%spx;
 
 $controller = new PedigreeController;
 $controller
-	->pageHeader()
-	->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
-	->addInlineJavascript('autocomplete();');
+    ->pageHeader()
+    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addInlineJavascript('autocomplete();');
 
 ?>
-<div id="pedigree-page">
-	<h2><?php echo $controller->getPageTitle(); ?></h2>
+    <div id="pedigree-page">
+    <h2><?php echo $controller->getPageTitle(); ?></h2>
 
-	<form name="people" id="people" method="get" action="?">
-		<input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
-		<input type="hidden" name="show_full" value="<?php echo $controller->show_full; ?>">
-		<table class="list_table">
-			<tr>
-				<th class="descriptionbox wrap">
-					<?php echo I18N::translate('Individual'); ?>
-				</th>
-				<th class="descriptionbox wrap">
-					<?php echo I18N::translate('Generations'); ?>
-				</th>
-				<th class="descriptionbox wrap">
-					<?php echo I18N::translate('Layout'); ?>
-				</th>
-				<th class="descriptionbox wrap">
-					<?php echo I18N::translate('Show details'); ?>
-				</th>
-				<th rowspan="2" class="facts_label03">
-					<input type="submit" value="<?php echo I18N::translate('View'); ?>">
-				</th>
-			</tr>
-			<tr>
-				<td class="optionbox">
-					<input class="pedigree_form" data-autocomplete-type="INDI" type="text" id="rootid" name="rootid"
-					       size="3" value="<?php echo $controller->root->getXref(); ?>">
-					<?php echo print_findindi_link('rootid'); ?>
-				</td>
-				<td class="optionbox center">
-					<?php echo edit_field_integers('PEDIGREE_GENERATIONS', $controller->PEDIGREE_GENERATIONS, 3, $MAX_PEDIGREE_GENERATIONS); ?>
-				</td>
-				<td class="optionbox center">
-					<?php echo select_edit_control('talloffset', array(0 => I18N::translate('Portrait'), 1 => I18N::translate('Landscape'), 2 => I18N::translate('Oldest at top'), 3 => I18N::translate('Oldest at bottom')), null, $talloffset); ?>
-				</td>
-				<td class="optionbox center">
-					<input type="checkbox" value="<?php if ($controller->show_full) {
-						echo "1\" checked onclick=\"document.people.show_full.value='0';";
-					} else {
-						echo "0\" onclick=\"document.people.show_full.value='1';";
-					} ?>">
-				</td>
-			</tr>
-		</table>
-	</form>
+    <form name="people" id="people" method="get" action="?">
+        <input type="hidden" name="ged" value="<?php echo Filter::escapeHtml(WT_GEDCOM); ?>">
+        <input type="hidden" name="show_full" value="<?php echo $controller->show_full; ?>">
+        <table class="list_table">
+            <tr>
+                <th class="descriptionbox wrap">
+                    <?php echo I18N::translate('Individual'); ?>
+                </th>
+                <th class="descriptionbox wrap">
+                    <?php echo I18N::translate('Generations'); ?>
+                </th>
+                <th class="descriptionbox wrap">
+                    <?php echo I18N::translate('Layout'); ?>
+                </th>
+                <th class="descriptionbox wrap">
+                    <?php echo I18N::translate('Show details'); ?>
+                </th>
+                <th rowspan="2" class="facts_label03">
+                    <input type="submit" value="<?php echo I18N::translate('View'); ?>">
+                </th>
+            </tr>
+            <tr>
+                <td class="optionbox">
+                    <input class="pedigree_form" data-autocomplete-type="INDI" type="text" id="rootid" name="rootid"
+                           size="3" value="<?php echo $controller->root->getXref(); ?>">
+                    <?php echo print_findindi_link('rootid'); ?>
+                </td>
+                <td class="optionbox center">
+                    <?php echo edit_field_integers('PEDIGREE_GENERATIONS', $controller->PEDIGREE_GENERATIONS, 3, $MAX_PEDIGREE_GENERATIONS); ?>
+                </td>
+                <td class="optionbox center">
+                    <?php echo select_edit_control('talloffset', array(
+                        0 => I18N::translate('Portrait'),
+                        1 => I18N::translate('Landscape'),
+                        2 => I18N::translate('Oldest at top'),
+                        3 => I18N::translate('Oldest at bottom')
+                    ), null, $talloffset); ?>
+                </td>
+                <td class="optionbox center">
+                    <input type="checkbox" value="<?php if ($controller->show_full) {
+                        echo "1\" checked onclick=\"document.people.show_full.value='0';";
+                    } else {
+                        echo "0\" onclick=\"document.people.show_full.value='1';";
+                    } ?>">
+                </td>
+            </tr>
+        </table>
+    </form>
 <?php
 if ($controller->error_message) {
-	echo '<p class="ui-state-error">', $controller->error_message, '</p>';
-	
-	return;
+    echo '<p class="ui-state-error">', $controller->error_message, '</p>';
+
+    return;
 }
 
 $posn = Globals::i()->TEXT_DIRECTION == 'rtl' ? 'right' : 'left';
@@ -110,76 +115,76 @@ $lineDrawx   = array(); // -- used to position joining lines on <canvas>
 $lineDrawy   = array(); // -- used to position joining lines on <canvas>
 
 for ($i = ($controller->treesize - 1); $i >= 0; $i--) {
-	// set positions for joining lines
-	$lineDrawx[$i] = $xoffset;
-	$lineDrawy[$i] = $yoffset - 200; // 200 adjustment necessary to move canvas below menus and options. Matched to similar amount on canvas style.
-	// -- check to see if we have moved to the next generation
-	if ($i < (int) ($controller->treesize / (pow(2, $curgen)))) {
-		$curgen++;
-	}
-	$prevxoffset = $xoffset;
-	$prevyoffset = $yoffset;
-	if ($talloffset < 2) {
-		// Portrait 0 Landscape 1 top 2 bottom 3
-		$xoffset = $controller->offsetarray[$i]["x"];
-		$yoffset = $controller->offsetarray[$i]["y"];
-	} else {
-		$xoffset = $controller->offsetarray[$i]["y"];
-		$yoffset = $controller->offsetarray[$i]["x"];
-	}
-	// -- draw the box
-	if ($yoffset > $maxyoffset) {
-		$maxyoffset = $yoffset;
-	}
-	// Can we go back to an earlier generation?
-	$can_go_back = $curgen == 1 && $controller->ancestors[$i] && $controller->ancestors[$i]->getChildFamilies();
+    // set positions for joining lines
+    $lineDrawx[$i] = $xoffset;
+    $lineDrawy[$i] = $yoffset - 200; // 200 adjustment necessary to move canvas below menus and options. Matched to similar amount on canvas style.
+    // -- check to see if we have moved to the next generation
+    if ($i < (int)($controller->treesize / (pow(2, $curgen)))) {
+        $curgen++;
+    }
+    $prevxoffset = $xoffset;
+    $prevyoffset = $yoffset;
+    if ($talloffset < 2) {
+        // Portrait 0 Landscape 1 top 2 bottom 3
+        $xoffset = $controller->offsetarray[$i]["x"];
+        $yoffset = $controller->offsetarray[$i]["y"];
+    } else {
+        $xoffset = $controller->offsetarray[$i]["y"];
+        $yoffset = $controller->offsetarray[$i]["x"];
+    }
+    // -- draw the box
+    if ($yoffset > $maxyoffset) {
+        $maxyoffset = $yoffset;
+    }
+    // Can we go back to an earlier generation?
+    $can_go_back = $curgen == 1 && $controller->ancestors[$i] && $controller->ancestors[$i]->getChildFamilies();
 
-	if ($talloffset == 2) {
-		// oldest at top
-		if ($can_go_back) {
-			printf(ARROW_WRAPPER, $posn, $xoffset + $controller->pbwidth / 2, $yoffset - 22);
-			$did = 1;
-			if ($i > (int) ($controller->treesize / 2) + (int) ($controller->treesize / 4)) {
-				$did++;
-			}
-			printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'icon-uarrow noprint', '');
-			echo '</div>';
-		}
-	}
-	// beginning of box setup and display
-	//Correct box spacing for different layouts
+    if ($talloffset == 2) {
+        // oldest at top
+        if ($can_go_back) {
+            printf(ARROW_WRAPPER, $posn, $xoffset + $controller->pbwidth / 2, $yoffset - 22);
+            $did = 1;
+            if ($i > (int)($controller->treesize / 2) + (int)($controller->treesize / 4)) {
+                $did++;
+            }
+            printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'icon-uarrow noprint', '');
+            echo '</div>';
+        }
+    }
+    // beginning of box setup and display
+    //Correct box spacing for different layouts
 
-	if (($talloffset == 3) && ($curgen == 1)) {
-		$yoffset += 25;
-	}
-	if (($talloffset == 3) && ($curgen == 2)) {
-		$yoffset += 10;
-	}
+    if (($talloffset == 3) && ($curgen == 1)) {
+        $yoffset += 25;
+    }
+    if (($talloffset == 3) && ($curgen == 2)) {
+        $yoffset += 10;
+    }
 
-	printf(BOX_WRAPPER, $posn, $xoffset, $yoffset, $controller->pbwidth, $controller->pbheight);
+    printf(BOX_WRAPPER, $posn, $xoffset, $yoffset, $controller->pbwidth, $controller->pbheight);
 
-	print_pedigree_person($controller->ancestors[$i]);
-	if ($can_go_back) {
-		$did = 1;
-		if ($i > (int) ($controller->treesize / 2) + (int) ($controller->treesize / 4)) {
-			$did++;
-		}
-		if (Globals::i()->TEXT_DIRECTION == "rtl") {
-			$arrow = 'icon-larrow';
-		} else {
-			$arrow = 'icon-rarrow';
-		}
-		if ($talloffset == 3) {
-			printf(ARROW_WRAPPER, $posn, $controller->pbwidth / 2, $controller->pbheight + 5);
-			printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'icon-darrow noprint', '');
-			echo '</div>';
-		} elseif ($talloffset < 2) {
-			printf(ARROW_WRAPPER, $posn, $controller->pbwidth + 5, $controller->pbheight / 2 - 10);
-			printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, "$arrow noprint", '');
-			echo '</div>';
-		}
-	}
-	echo '</div>';
+    print_pedigree_person($controller->ancestors[$i]);
+    if ($can_go_back) {
+        $did = 1;
+        if ($i > (int)($controller->treesize / 2) + (int)($controller->treesize / 4)) {
+            $did++;
+        }
+        if (Globals::i()->TEXT_DIRECTION == "rtl") {
+            $arrow = 'icon-larrow';
+        } else {
+            $arrow = 'icon-rarrow';
+        }
+        if ($talloffset == 3) {
+            printf(ARROW_WRAPPER, $posn, $controller->pbwidth / 2, $controller->pbheight + 5);
+            printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'icon-darrow noprint', '');
+            echo '</div>';
+        } elseif ($talloffset < 2) {
+            printf(ARROW_WRAPPER, $posn, $controller->pbwidth + 5, $controller->pbheight / 2 - 10);
+            printf(MENU_ITEM, $controller->ancestors[$did]->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, "$arrow noprint", '');
+            echo '</div>';
+        }
+    }
+    echo '</div>';
 }
 // -- echo left arrow for decendants so that we can move down the tree
 $yoffset += ($controller->pbheight / 2) - 10;
@@ -188,73 +193,73 @@ $famids = $controller->root->getSpouseFamilies();
 $cfamids = $controller->root->getChildFamilies();
 
 if (count($famids) > 0) {
-	if (Globals::i()->TEXT_DIRECTION == 'rtl') {
-		$arrow = 'icon-rarrow';
-	} else {
-		$arrow = 'icon-larrow';
-	}
-	switch ($talloffset) {
-	case 0:
-		$offsetx = $PEDIGREE_GENERATIONS < 6 ? $offsetx = 60 * (5 - $PEDIGREE_GENERATIONS) : 0;
-		$offsety = $yoffset;
-		break;
-	case 1:
-		$offsetx = $PEDIGREE_GENERATIONS < 4 ? $basexoffset + 60 : $basexoffset;
-		$offsety = $yoffset;
-		break;
-	case 2:
-		$offsetx = $xoffset - 10 + $controller->pbwidth / 2;
-		$offsety = $yoffset + $controller->pbheight / 2 + 10;
-		$arrow = 'icon-darrow';
-		break;
-	case 3:
-		$offsetx = $xoffset - 10 + $controller->pbwidth / 2;
-		$offsety = $yoffset - $controller->pbheight / 2 - 10;
-		$arrow = 'icon-uarrow';
-		break;
-	}
-	printf(MENU_WRAPPER, $posn, $offsetx, $offsety, $arrow);
+    if (Globals::i()->TEXT_DIRECTION == 'rtl') {
+        $arrow = 'icon-rarrow';
+    } else {
+        $arrow = 'icon-larrow';
+    }
+    switch ($talloffset) {
+        case 0:
+            $offsetx = $PEDIGREE_GENERATIONS < 6 ? $offsetx = 60 * (5 - $PEDIGREE_GENERATIONS) : 0;
+            $offsety = $yoffset;
+            break;
+        case 1:
+            $offsetx = $PEDIGREE_GENERATIONS < 4 ? $basexoffset + 60 : $basexoffset;
+            $offsety = $yoffset;
+            break;
+        case 2:
+            $offsetx = $xoffset - 10 + $controller->pbwidth / 2;
+            $offsety = $yoffset + $controller->pbheight / 2 + 10;
+            $arrow   = 'icon-darrow';
+            break;
+        case 3:
+            $offsetx = $xoffset - 10 + $controller->pbwidth / 2;
+            $offsety = $yoffset - $controller->pbheight / 2 - 10;
+            $arrow   = 'icon-uarrow';
+            break;
+    }
+    printf(MENU_WRAPPER, $posn, $offsetx, $offsety, $arrow);
 
-	foreach ($famids as $family) {
-		echo '<span class="name1">', I18N::translate('Family'), '</span>';
-		$spouse = $family->getSpouse($controller->root);
-		if ($spouse) {
-			printf(MENU_ITEM, $spouse->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $spouse->getFullName());
-		}
-		$children = $family->getChildren();
-		foreach ($children as $child) {
-			printf(MENU_ITEM, $child->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $child->getFullName());
-		}
-	}
-	//-- echo the siblings
-	foreach ($cfamids as $family) {
-		if ($family != null) {
-			$siblings = array_filter($family->getChildren(), function(Individual $item) use ($controller) {
-				return $controller->rootid != $item->getXref();
-			});
-			$num      = count($siblings);
-			if ($num) {
-				echo "<span class='name1'>";
-				echo $num > 1 ? I18N::translate('Siblings') : I18N::translate('Sibling');
-				echo "</span>";
-				foreach ($siblings as $child) {
-					printf(MENU_ITEM, $child->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $child->getFullName());
-				}
-			}
-		}
-	}
-	echo
-		'</div>', // #childbox
-		'</div>',
-		'</div>'; // #childarrow
+    foreach ($famids as $family) {
+        echo '<span class="name1">', I18N::translate('Family'), '</span>';
+        $spouse = $family->getSpouse($controller->root);
+        if ($spouse) {
+            printf(MENU_ITEM, $spouse->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $spouse->getFullName());
+        }
+        $children = $family->getChildren();
+        foreach ($children as $child) {
+            printf(MENU_ITEM, $child->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $child->getFullName());
+        }
+    }
+    //-- echo the siblings
+    foreach ($cfamids as $family) {
+        if ($family != null) {
+            $siblings = array_filter($family->getChildren(), function (Individual $item) use ($controller) {
+                return $controller->rootid != $item->getXref();
+            });
+            $num      = count($siblings);
+            if ($num) {
+                echo "<span class='name1'>";
+                echo $num > 1 ? I18N::translate('Siblings') : I18N::translate('Sibling');
+                echo "</span>";
+                foreach ($siblings as $child) {
+                    printf(MENU_ITEM, $child->getXref(), $controller->show_full, $controller->PEDIGREE_GENERATIONS, $talloffset, 'name1', $child->getFullName());
+                }
+            }
+        }
+    }
+    echo
+    '</div>', // #childbox
+    '</div>',
+    '</div>'; // #childarrow
 }
 // calculate canvas width
 if ($talloffset < 2) {
-	$canvaswidth = $PEDIGREE_GENERATIONS * ($controller->pbwidth + 20);
+    $canvaswidth = $PEDIGREE_GENERATIONS * ($controller->pbwidth + 20);
 } else {
-	$canvaswidth = pow(2, $PEDIGREE_GENERATIONS - 1) * ($controller->pbwidth + 20);
+    $canvaswidth = pow(2, $PEDIGREE_GENERATIONS - 1) * ($controller->pbwidth + 20);
 }
-echo '<canvas id="pedigree_canvas" width="' . (int) ($canvaswidth) . '" height="' . (int) ($maxyoffset) . '"><p>No lines between boxes? Unfortunately your browser does not support the HTML5 canvas feature.</p></canvas>';
+echo '<canvas id="pedigree_canvas" width="' . (int)($canvaswidth) . '" height="' . (int)($maxyoffset) . '"><p>No lines between boxes? Unfortunately your browser does not support the HTML5 canvas feature.</p></canvas>';
 echo '</div>'; //close #pedigree_chart
 echo '</div>'; //close #pedigree-page
 

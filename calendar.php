@@ -38,70 +38,70 @@ $filterof = Filter::get('filterof', 'all|living|recent', 'all');
 $filtersx = Filter::get('filtersx', '[MF]');
 
 if ($cal . $day . $month . $year === '') {
-	// No date specified?  Use the most likely calendar
-	switch (WT_LOCALE) {
-	case 'fa':
-		$cal = '@#DJALALI@';
-		break;
-	case 'ar':
-		$cal = '@#DHIJRI@';
-		break;
-	case 'he':
-		$cal = '@#DHEBREW@';
-		break;
-	default:
-		$cal = '@#DGREGORIAN@';
-		break;
-	}
+    // No date specified?  Use the most likely calendar
+    switch (WT_LOCALE) {
+        case 'fa':
+            $cal = '@#DJALALI@';
+            break;
+        case 'ar':
+            $cal = '@#DHIJRI@';
+            break;
+        case 'he':
+            $cal = '@#DHEBREW@';
+            break;
+        default:
+            $cal = '@#DGREGORIAN@';
+            break;
+    }
 }
 
 // Create a CalendarDate from the parameters
 
 // We cannot display new-style/old-style years, so convert to new style
 if (preg_match('/^(\d\d)\d\d\/(\d\d)$/', $year, $match)) {
-	$year = $match[1] . $match[2];
+    $year = $match[1] . $match[2];
 }
 
 // advanced-year "year range"
 if (preg_match('/^(\d+)-(\d+)$/', $year, $match)) {
-	if (strlen($match[1]) > strlen($match[2])) {
-		$match[2] = substr($match[1], 0, strlen($match[1]) - strlen($match[2])) . $match[2];
-	}
-	$ged_date = new Date("FROM {$cal} {$match[1]} TO {$cal} {$match[2]}");
-	$view     = 'year';
+    if (strlen($match[1]) > strlen($match[2])) {
+        $match[2] = substr($match[1], 0, strlen($match[1]) - strlen($match[2])) . $match[2];
+    }
+    $ged_date = new Date("FROM {$cal} {$match[1]} TO {$cal} {$match[2]}");
+    $view     = 'year';
 } else {
-	// advanced-year "decade/century wildcard"
-	if (preg_match('/^(\d+)(\?+)$/', $year, $match)) {
-		$y1       = $match[1] . str_replace('?', '0', $match[2]);
-		$y2       = $match[1] . str_replace('?', '9', $match[2]);
-		$ged_date = new Date("FROM {$cal} {$y1} TO {$cal} {$y2}");
-		$view     = 'year';
-	} else {
-		if ($year < 0) {
-			$year = (-$year) . ' B.C.';
-		} // need BC to parse date
-		$ged_date = new Date("{$cal} {$day} {$month} {$year}");
-		$year     = $ged_date->date1->y; // need negative year for year entry field.
-	}
+    // advanced-year "decade/century wildcard"
+    if (preg_match('/^(\d+)(\?+)$/', $year, $match)) {
+        $y1       = $match[1] . str_replace('?', '0', $match[2]);
+        $y2       = $match[1] . str_replace('?', '9', $match[2]);
+        $ged_date = new Date("FROM {$cal} {$y1} TO {$cal} {$y2}");
+        $view     = 'year';
+    } else {
+        if ($year < 0) {
+            $year = (-$year) . ' B.C.';
+        } // need BC to parse date
+        $ged_date = new Date("{$cal} {$day} {$month} {$year}");
+        $year     = $ged_date->date1->y; // need negative year for year entry field.
+    }
 }
 $cal_date = &$ged_date->date1;
 
 // Fill in any missing bits with todays date
 $today = $cal_date->today();
 if ($cal_date->d === 0) {
-	$cal_date->d = $today->d;
+    $cal_date->d = $today->d;
 }
 if ($cal_date->m === 0) {
-	$cal_date->m = $today->m;
+    $cal_date->m = $today->m;
 }
 if ($cal_date->y === 0) {
-	$cal_date->y = $today->y;
+    $cal_date->y = $today->y;
 }
 
 $cal_date->setJdFromYmd();
 
 if ($year === 0) {
-	$year = $cal_date->y;
+    $year = $cal_date->y;
 }
 
 // Extract values from date
@@ -112,7 +112,7 @@ $today_month   = $today->format('%O');
 
 // Invalid dates?  Go to monthly view, where they'll be found.
 if ($cal_date->d > $days_in_month && $view === 'day') {
-	$view = 'month';
+    $view = 'month';
 }
 echo '<div id="calendar-page">';
 
@@ -133,15 +133,15 @@ echo '<tr><td class="facts_label" colspan="4"><h2>';
 $cal = rawurlencode($cal);
 
 switch ($view) {
-case 'day':
-	echo I18N::translate('On this day…') . '<br>' . $ged_date->display();
-	break;
-case 'month':
-	echo I18N::translate('In this month…') . '<br>' . $ged_date->display(false, '%F %Y');
-	break;
-case 'year':
-	echo I18N::translate('In this year…') . '<br>' . $ged_date->display(false, '%Y');
-	break;
+    case 'day':
+        echo I18N::translate('On this day…') . '<br>' . $ged_date->display();
+        break;
+    case 'month':
+        echo I18N::translate('In this month…') . '<br>' . $ged_date->display(false, '%F %Y');
+        break;
+    case 'year':
+        echo I18N::translate('In this year…') . '<br>' . $ged_date->display(false, '%Y');
+        break;
 }
 echo '</h2></td></tr>';
 
@@ -149,15 +149,15 @@ echo '</h2></td></tr>';
 echo '<tr><td class="descriptionbox vmiddle">';
 echo I18N::translate('Day'), '</td><td colspan="3" class="optionbox">';
 for ($d = 1; $d <= $days_in_month; $d++) {
-	// Format the day number using the calendar
-	$tmp   = new Date($cal_date->format("%@ {$d} %O %E"));
-	$d_fmt = $tmp->date1->format('%j');
-	if ($d === $cal_date->d) {
-		echo '<span class="error">', $d_fmt, '</span>';
-	} else {
-		echo '<a href="?cal=', $cal, '&amp;day=', $d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $d_fmt, '</a>';
-	}
-	echo ' | ';
+    // Format the day number using the calendar
+    $tmp   = new Date($cal_date->format("%@ {$d} %O %E"));
+    $d_fmt = $tmp->date1->format('%j');
+    if ($d === $cal_date->d) {
+        echo '<span class="error">', $d_fmt, '</span>';
+    } else {
+        echo '<a href="?cal=', $cal, '&amp;day=', $d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $d_fmt, '</a>';
+    }
+    echo ' | ';
 }
 $tmp = new Date($today->format('%@ %A %O %E')); // Need a Date object to get localisation
 echo '<a href="?cal=', $cal, '&amp;day=', $today->d, '&amp;month=', $today_month, '&amp;year=', $today->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '"><b>', $tmp->display(), '</b></a>';
@@ -167,30 +167,32 @@ echo '<tr><td class="descriptionbox">';
 echo I18N::translate('Month'), '</td>';
 echo '<td class="optionbox" colspan="3">';
 for ($n = 1, $months_in_year = $cal_date->monthsInYear(); $n <= $months_in_year; ++$n) {
-	$month_name = $cal_date->monthNameNominativeCase($n, $cal_date->isLeapYear());
-	$m          = array_search($n, $cal_date::$MONTH_ABBREV);
-	if ($n === 6 && $cal_date instanceof JewishDate && !$cal_date->isLeapYear()) {
-		// No month 6 in Jewish non-leap years.
-		continue;
-	}
-	if ($n === 7 && $cal_date instanceof JewishDate && !$cal_date->isLeapYear()) {
-		// Month 7 is ADR in Jewish non-leap years.
-		$m = 'ADR';
-	}
-	if ($n === $cal_date->m) {
-		$month_name = '<span class="error">' . $month_name . '</span>';
-	}
-	echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $m, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $month_name, '</a>';
-	echo ' | ';
+    $month_name = $cal_date->monthNameNominativeCase($n, $cal_date->isLeapYear());
+    $m          = array_search($n, $cal_date::$MONTH_ABBREV);
+    if ($n === 6 && $cal_date instanceof JewishDate && !$cal_date->isLeapYear()) {
+        // No month 6 in Jewish non-leap years.
+        continue;
+    }
+    if ($n === 7 && $cal_date instanceof JewishDate && !$cal_date->isLeapYear()) {
+        // Month 7 is ADR in Jewish non-leap years.
+        $m = 'ADR';
+    }
+    if ($n === $cal_date->m) {
+        $month_name = '<span class="error">' . $month_name . '</span>';
+    }
+    echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $m, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $month_name, '</a>';
+    echo ' | ';
 }
 echo '<a href="?cal=', $cal, '&amp;day=', min($cal_date->d, $today->daysInMonth()), '&amp;month=', $today_month, '&amp;year=', $today->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '"><b>' . $today->format('%F %Y') . '</b></a></td></tr>';
 // Year selector
 echo '<tr><td class="descriptionbox vmiddle">';
 echo I18N::translate('Year'), '</td>';
 echo '<td class="optionbox vmiddle">';
-echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y === 1 ? -1 : $cal_date->y - 1, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">-1</a>';
+echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y === 1 ? -1
+    : $cal_date->y - 1, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">-1</a>';
 echo ' <input type="text" name="year" value="', $year, '" size="4"> ';
-echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y === -1 ? 1 : $cal_date->y + 1, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">+1</a>';
+echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y === -1 ? 1
+    : $cal_date->y + 1, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">+1</a>';
 echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $today->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '"><b>' . $today->format('%Y') . '</b></a>';
 echo help_link('annivers_year_select');
 echo '</td> ';
@@ -204,19 +206,19 @@ echo '<td class="optionbox vmiddle">';
 echo '<select class="list_value" name="filterof" onchange="document.dateform.submit();">';
 echo '<option value="all" ';
 if ($filterof === 'all') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', I18N::translate('All individuals'), '</option>';
 if (!Globals::i()->WT_TREE->getPreference('HIDE_LIVE_PEOPLE') || Auth::check()) {
-	echo '<option value="living" ';
-	if ($filterof === 'living') {
-		echo 'selected';
-	}
-	echo '>', I18N::translate('Living individuals'), '</option>';
+    echo '<option value="living" ';
+    if ($filterof === 'living') {
+        echo 'selected';
+    }
+    echo '>', I18N::translate('Living individuals'), '</option>';
 }
 echo '<option value="recent" ';
 if ($filterof === 'recent') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', I18N::translate('Recent years (&lt; 100 yrs)'), '</option>';
 echo '</select>';
@@ -224,22 +226,22 @@ echo '</select>';
 echo '&nbsp;&nbsp;&nbsp;';
 
 if ($filtersx === '') {
-	echo '<i class="icon-sex_m_15x15" title="', I18N::translate('All individuals'), '"></i>';
-	echo '<i class="icon-sex_f_15x15" title="', I18N::translate('All individuals'), '"></i> | ';
+    echo '<i class="icon-sex_m_15x15" title="', I18N::translate('All individuals'), '"></i>';
+    echo '<i class="icon-sex_f_15x15" title="', I18N::translate('All individuals'), '"></i> | ';
 } else {
-	echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;view=', $view, '">';
-	echo '<i class="icon-sex_m_9x9" title="', I18N::translate('All individuals'), '"></i>';
-	echo '<i class="icon-sex_f_9x9" title="', I18N::translate('All individuals'), '"></i></a> | ';
+    echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;view=', $view, '">';
+    echo '<i class="icon-sex_m_9x9" title="', I18N::translate('All individuals'), '"></i>';
+    echo '<i class="icon-sex_f_9x9" title="', I18N::translate('All individuals'), '"></i></a> | ';
 }
 if ($filtersx === 'M') {
-	echo '<i class="icon-sex_m_15x15" title="', I18N::translate('Males'), '"></i> | ';
+    echo '<i class="icon-sex_m_15x15" title="', I18N::translate('Males'), '"></i> | ';
 } else {
-	echo '<a class="icon-sex_m_9x9" title="', I18N::translate('Males'), '" href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=M&amp;view=', $view, '"></a> | ';
+    echo '<a class="icon-sex_m_9x9" title="', I18N::translate('Males'), '" href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=M&amp;view=', $view, '"></a> | ';
 }
 if ($filtersx === 'F') {
-	echo '<i class="icon-sex_f_15x15" title="', I18N::translate('Females'), '"></i>';
+    echo '<i class="icon-sex_f_15x15" title="', I18N::translate('Females'), '"></i>';
 } else {
-	echo '<a class="icon-sex_f_9x9" title="', I18N::translate('Females'), '" href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=F&amp;view=', $view, '"></a>';
+    echo '<a class="icon-sex_f_9x9" title="', I18N::translate('Females'), '" href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=F&amp;view=', $view, '"></a>';
 }
 
 echo '&nbsp;&nbsp;&nbsp;';
@@ -248,77 +250,77 @@ echo '<input type="hidden" name="filterev" value="', $filterev, '">';
 echo '<select class="list_value" name="filterev" onchange="document.dateform.submit();">';
 echo '<option value="bdm"';
 if ($filterev === 'bdm') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', I18N::translate('Vital records'), '</option>';
 echo '<option value="all" ';
 if ($filterev === 'all') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', I18N::translate('All'), '</option>';
 echo '<option value="BIRT" ';
 if ($filterev === 'BIRT') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('BIRT'), '</option>';
 echo '<option value="CHR" ';
 if ($filterev === 'CHR') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('CHR'), '</option>';
 echo '<option value="CHRA" ';
 if ($filterev === 'CHRA') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('CHRA'), '</option>';
 echo '<option value="BAPM" ';
 if ($filterev === 'BAPM') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('BAPM'), '</option>';
 echo '<option value="_COML" ';
 if ($filterev === '_COML') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('_COML'), '</option>';
 echo '<option value="MARR" ';
 if ($filterev === 'MARR') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('MARR'), '</option>';
 echo '<option value="_SEPR" ';
 if ($filterev === '_SEPR') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('_SEPR'), '</option>';
 echo '<option value="DIV" ';
 if ($filterev === 'DIV') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('DIV'), '</option>';
 echo '<option value="DEAT" ';
 if ($filterev === 'DEAT') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('DEAT'), '</option>';
 echo '<option value="BURI" ';
 if ($filterev === 'BURI') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('BURI'), '</option>';
 echo '<option value="IMMI" ';
 if ($filterev === 'IMMI') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('IMMI'), '</option>';
 echo '<option value="EMIG" ';
 if ($filterev === 'EMIG') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', WT_Gedcom_Tag::getLabel('EMIG'), '</option>';
 echo '<option value="EVEN" ';
 if ($filterev === 'EVEN') {
-	echo 'selected';
+    echo 'selected';
 }
 echo '>', I18N::translate('Custom event'), '</option>';
 echo '</select>';
@@ -330,267 +332,269 @@ echo '<table class="width100">';
 // Day/Month/Year and calendar selector
 echo '<tr><td class="topbottombar width50">';
 if ($view === 'day') {
-	echo '<span class="error">', I18N::translate('View day'), '</span>';
+    echo '<span class="error">', I18N::translate('View day'), '</span>';
 } else {
-	echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=day">', I18N::translate('View day'), '</a>';
+    echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=day">', I18N::translate('View day'), '</a>';
 }
 if ($view === 'month') {
-	echo ' | <span class="error">', I18N::translate('View month'), '</span>';
+    echo ' | <span class="error">', I18N::translate('View month'), '</span>';
 } else {
-	echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=month">', I18N::translate('View month'), '</a>';
+    echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=month">', I18N::translate('View month'), '</a>';
 }
 if ($view === 'year') {
-	echo ' | <span class="error">', I18N::translate('View year'), '</span>';
+    echo ' | <span class="error">', I18N::translate('View year'), '</span>';
 } else {
-	echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=year">', I18N::translate('View year'), '</a>';
+    echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=year">', I18N::translate('View year'), '</a>';
 }
 echo '</td><td class="topbottombar width50">';
 $n = 0;
 foreach (array(
-	'gregorian' => GregorianDate::calendarName(),
-	'julian'    => JulianDate::calendarName(),
-	'jewish'    => JewishDate::calendarName(),
-	'french'    => FrenchDate::calendarName(),
-	'hijri'     => HijriDate::calendarName(),
-	'jalali'    => JalaliDate::calendarName(),
-) as $newcal => $cal_name) {
-	$tmp = $cal_date->convertToCalendar($newcal);
-	if ($tmp->inValidRange()) {
-		if ($n++) {
-			echo ' | ';
-		}
-		if (get_class($tmp) === get_class($cal_date)) {
-			echo '<span class="error">', $cal_name, '</span>';
-		} else {
-			$newcalesc = urlencode($tmp->format('%@'));
-			$tmpmonth  = $tmp->format('%O');
-			echo '<a href="?cal=', $newcalesc, '&amp;day=', $tmp->d, '&amp;month=', $tmpmonth, '&amp;year=', $tmp->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $cal_name, '</a>';
-		}
-	}
+             'gregorian' => GregorianDate::calendarName(),
+             'julian'    => JulianDate::calendarName(),
+             'jewish'    => JewishDate::calendarName(),
+             'french'    => FrenchDate::calendarName(),
+             'hijri'     => HijriDate::calendarName(),
+             'jalali'    => JalaliDate::calendarName(),
+         ) as $newcal => $cal_name) {
+    $tmp = $cal_date->convertToCalendar($newcal);
+    if ($tmp->inValidRange()) {
+        if ($n++) {
+            echo ' | ';
+        }
+        if (get_class($tmp) === get_class($cal_date)) {
+            echo '<span class="error">', $cal_name, '</span>';
+        } else {
+            $newcalesc = urlencode($tmp->format('%@'));
+            $tmpmonth  = $tmp->format('%O');
+            echo '<a href="?cal=', $newcalesc, '&amp;day=', $tmp->d, '&amp;month=', $tmpmonth, '&amp;year=', $tmp->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">', $cal_name, '</a>';
+        }
+    }
 }
 echo '</td></tr>';
 echo '</table>';
 
 // Convert event filter option to a list of gedcom event codes
 if ($filterev === 'all') {
-	$events = '';
+    $events = '';
 } else {
-	if ($filterev === 'bdm') {
-		$events = 'BIRT MARR DEAT';
-	} else {
-		$events = $filterev;
-	}
+    if ($filterev === 'bdm') {
+        $events = 'BIRT MARR DEAT';
+    } else {
+        $events = $filterev;
+    }
 }
 
 // Fetch data for day/month/year views
 switch ($view) {
-case 'day':
-	$found_facts = apply_filter(get_anniversary_events($cal_date->minJD, $events), $filterof, $filtersx);
-	break;
-case 'month':
-	$cal_date->d = 0;
-	$cal_date->setJdFromYmd();
-	// Make a separate list for each day.  Unspecified/invalid days go in day 0.
-	$found_facts = array();
-	for ($d = 0; $d <= $days_in_month; ++$d) {
-		$found_facts[$d] = array();
-	}
-	// Fetch events for each day
-	for ($jd = $cal_date->minJD; $jd <= $cal_date->maxJD; ++$jd) {
-		foreach (apply_filter(get_anniversary_events($jd, $events), $filterof, $filtersx) as $fact) {
-			$tmp = $fact->getDate()->minDate();
-			if ($tmp->d >= 1 && $tmp->d <= $tmp->daysInMonth()) {
-				// If the day is valid (for its own calendar), display it in the
-				// anniversary day (for the display calendar).
-				$found_facts[$jd - $cal_date->minJD + 1][] = $fact;
-			} else {
-				// Otherwise, display it in the "Day not set" box.
-				$found_facts[0][] = $fact;
-			}
-		}
-	}
-	break;
-case 'year':
-	$cal_date->m = 0;
-	$cal_date->setJdFromYmd();
-	$found_facts = apply_filter(get_calendar_events($ged_date->MinJD(), $ged_date->MaxJD(), $events), $filterof, $filtersx);
-	// Eliminate duplicates (e.g. BET JUL 1900 AND SEP 1900 will appear twice in 1900)
-	$found_facts = array_unique($found_facts);
-	break;
+    case 'day':
+        $found_facts = apply_filter(get_anniversary_events($cal_date->minJD, $events), $filterof, $filtersx);
+        break;
+    case 'month':
+        $cal_date->d = 0;
+        $cal_date->setJdFromYmd();
+        // Make a separate list for each day.  Unspecified/invalid days go in day 0.
+        $found_facts = array();
+        for ($d = 0; $d <= $days_in_month; ++$d) {
+            $found_facts[$d] = array();
+        }
+        // Fetch events for each day
+        for ($jd = $cal_date->minJD; $jd <= $cal_date->maxJD; ++$jd) {
+            foreach (apply_filter(get_anniversary_events($jd, $events), $filterof, $filtersx) as $fact) {
+                $tmp = $fact->getDate()
+                            ->minDate();
+                if ($tmp->d >= 1 && $tmp->d <= $tmp->daysInMonth()) {
+                    // If the day is valid (for its own calendar), display it in the
+                    // anniversary day (for the display calendar).
+                    $found_facts[$jd - $cal_date->minJD + 1][] = $fact;
+                } else {
+                    // Otherwise, display it in the "Day not set" box.
+                    $found_facts[0][] = $fact;
+                }
+            }
+        }
+        break;
+    case 'year':
+        $cal_date->m = 0;
+        $cal_date->setJdFromYmd();
+        $found_facts = apply_filter(get_calendar_events($ged_date->MinJD(), $ged_date->MaxJD(), $events), $filterof, $filtersx);
+        // Eliminate duplicates (e.g. BET JUL 1900 AND SEP 1900 will appear twice in 1900)
+        $found_facts = array_unique($found_facts);
+        break;
 }
 
 // Group the facts by family/individual
 switch ($view) {
-case 'year':
-case 'day':
-	$indis = array();
-	$fams  = array();
-	foreach ($found_facts as $fact) {
-		$record = $fact->getParent();
-		$xref   = $record->getXref();
-		if ($record instanceof Individual) {
-			if (empty($indis[$xref])) {
-				$indis[$xref] = calendar_fact_text($fact, true);
-			} else {
-				$indis[$xref] .= '<br>' . calendar_fact_text($fact, true);
-			}
-		} elseif ($record instanceof Family) {
-			if (empty($indis[$xref])) {
-				$fams[$xref] = calendar_fact_text($fact, true);
-			} else {
-				$fams[$xref] .= '<br>' . calendar_fact_text($fact, true);
-			}
-		}
-	}
-	break;
-case 'month':
-	$cal_facts = array();
-	foreach ($found_facts as $d => $facts) {
-		$cal_facts[$d] = array();
-		foreach ($facts as $fact) {
-			$xref = $fact->getParent()->getXref();
-			if (empty($cal_facts[$d][$xref])) {
-				$cal_facts[$d][$xref] = calendar_fact_text($fact, false);
-			} else {
-				$cal_facts[$d][$xref] .= '<br>' . calendar_fact_text($fact, false);
-			}
-		}
-	}
-	break;
+    case 'year':
+    case 'day':
+        $indis = array();
+        $fams  = array();
+        foreach ($found_facts as $fact) {
+            $record = $fact->getParent();
+            $xref   = $record->getXref();
+            if ($record instanceof Individual) {
+                if (empty($indis[$xref])) {
+                    $indis[$xref] = calendar_fact_text($fact, true);
+                } else {
+                    $indis[$xref] .= '<br>' . calendar_fact_text($fact, true);
+                }
+            } elseif ($record instanceof Family) {
+                if (empty($indis[$xref])) {
+                    $fams[$xref] = calendar_fact_text($fact, true);
+                } else {
+                    $fams[$xref] .= '<br>' . calendar_fact_text($fact, true);
+                }
+            }
+        }
+        break;
+    case 'month':
+        $cal_facts = array();
+        foreach ($found_facts as $d => $facts) {
+            $cal_facts[$d] = array();
+            foreach ($facts as $fact) {
+                $xref = $fact->getParent()
+                             ->getXref();
+                if (empty($cal_facts[$d][$xref])) {
+                    $cal_facts[$d][$xref] = calendar_fact_text($fact, false);
+                } else {
+                    $cal_facts[$d][$xref] .= '<br>' . calendar_fact_text($fact, false);
+                }
+            }
+        }
+        break;
 }
 
 switch ($view) {
-case 'year':
-case 'day':
-	echo '<table class="width100"><tr>';
-	// Table headings
-	echo '<td class="descriptionbox center width50"><i class="icon-indis"></i>', I18N::translate('Individuals'), '</td>';
-	echo '<td class="descriptionbox center width50"><i class="icon-cfamily"></i>', I18N::translate('Families'), '</td>';
-	echo '</tr><tr>';
-	// Table rows
-	$males   = 0;
-	$females = 0;
-	$numfams = 0;
-	echo '<td class="optionbox wrap">';
+    case 'year':
+    case 'day':
+        echo '<table class="width100"><tr>';
+        // Table headings
+        echo '<td class="descriptionbox center width50"><i class="icon-indis"></i>', I18N::translate('Individuals'), '</td>';
+        echo '<td class="descriptionbox center width50"><i class="icon-cfamily"></i>', I18N::translate('Families'), '</td>';
+        echo '</tr><tr>';
+        // Table rows
+        $males   = 0;
+        $females = 0;
+        $numfams = 0;
+        echo '<td class="optionbox wrap">';
 
-	// Avoid an empty unordered list
-	$content = calendar_list_text($indis, '<li>', '</li>', true);
-	if ($content) {
-		echo '<ul>', $content, '</ul>';
-	}
+        // Avoid an empty unordered list
+        $content = calendar_list_text($indis, '<li>', '</li>', true);
+        if ($content) {
+            echo '<ul>', $content, '</ul>';
+        }
 
-	echo '</td>';
-	echo '<td class="optionbox wrap">';
+        echo '</td>';
+        echo '<td class="optionbox wrap">';
 
-	// Avoid an empty unordered list
-	$content = calendar_list_text($fams, '<li>', '</li>', true);
-	if ($content) {
-		echo '<ul>', $content, '</ul>';
-	}
+        // Avoid an empty unordered list
+        $content = calendar_list_text($fams, '<li>', '</li>', true);
+        if ($content) {
+            echo '<ul>', $content, '</ul>';
+        }
 
-	echo '</td>';
-	echo '</tr><tr>';
-	// Table footers
-	echo '<td class="descriptionbox">', I18N::translate('Total individuals: %s', count($indis));
-	echo '<br>';
-	echo '<i class="icon-sex_m_15x15" title="', I18N::translate('Males'), '"></i> ', $males, '&nbsp;&nbsp;&nbsp;&nbsp;';
-	echo '<i class="icon-sex_f_15x15" title="', I18N::translate('Males'), '"></i> ', $females, '&nbsp;&nbsp;&nbsp;&nbsp;';
-	if (count($indis) !== $males + $females) {
-		echo '<i class="icon-sex_u_15x15" title="', I18N::translate('All individuals'), '"></i> ', count($indis) - $males - $females;
-	}
-	echo '</td>';
-	echo '<td class="descriptionbox">', I18N::translate('Total families: %s', count($fams)), '</td>';
-	echo '</tr></table>';
+        echo '</td>';
+        echo '</tr><tr>';
+        // Table footers
+        echo '<td class="descriptionbox">', I18N::translate('Total individuals: %s', count($indis));
+        echo '<br>';
+        echo '<i class="icon-sex_m_15x15" title="', I18N::translate('Males'), '"></i> ', $males, '&nbsp;&nbsp;&nbsp;&nbsp;';
+        echo '<i class="icon-sex_f_15x15" title="', I18N::translate('Males'), '"></i> ', $females, '&nbsp;&nbsp;&nbsp;&nbsp;';
+        if (count($indis) !== $males + $females) {
+            echo '<i class="icon-sex_u_15x15" title="', I18N::translate('All individuals'), '"></i> ', count($indis) - $males - $females;
+        }
+        echo '</td>';
+        echo '<td class="descriptionbox">', I18N::translate('Total families: %s', count($fams)), '</td>';
+        echo '</tr></table>';
 
-	break;
-case 'month':
-	// We use JD%7 = 0/Mon...6/Sun.  Config files use 0/Sun...6/Sat.  Add 6 to convert.
-	$week_start = ($WEEK_START + 6) % $days_in_week;
-	// The french  calendar has a 10-day week, but our config only lets us choose
-	// mon-sun as a start day.  Force french calendars to start on primidi
-	if ($days_in_week === 10) {
-		$week_start = 0;
-	}
-	echo '<table class="list_table width100"><tr>';
-	for ($week_day = 0; $week_day < $days_in_week; ++$week_day) {
-		$day_name = $cal_date->dayNames(($week_day + $week_start) % $days_in_week);
-		echo '<td class="descriptionbox" width="' . (100 / $days_in_week) . '%">', $day_name, '</td>';
-	}
-	echo '</tr>';
-	// Print days 1-n of the month...
-	// ...but extend to cover "empty" days before/after the month to make whole weeks.
-	// e.g. instead of 1 -> 30 (=30 days), we might have -1 -> 33 (=35 days)
-	$start_d = 1 - ($cal_date->minJD - $week_start) % $days_in_week;
-	$end_d   = $days_in_month + ($days_in_week - ($cal_date->maxJD - $week_start + 1) % $days_in_week) % $days_in_week;
-	// Make sure that there is an empty box for any leap/missing days
-	if ($start_d === 1 && $end_d === $days_in_month && count($found_facts[0]) > 0) {
-		$end_d += $days_in_week;
-	}
-	for ($d = $start_d; $d <= $end_d; ++$d) {
-		if (($d + $cal_date->minJD - $week_start) % $days_in_week === 1) {
-			echo '<tr>';
-		}
-		echo '<td class="optionbox wrap">';
-		if ($d < 1 || $d > $days_in_month) {
-			if (count($cal_facts[0]) > 0) {
-				echo '<span class="cal_day">', I18N::translate('Day not set'), '</span><br style="clear: both;">';
-				echo '<div class="details1" style="height: 150px; overflow: auto;">';
-				echo calendar_list_text($cal_facts[0], '', '', false);
-				echo '</div>';
-				$cal_facts[0] = array();
-			} else {
-				echo '&nbsp;';
-			}
-		} else {
-			// Format the day number using the calendar
-			$tmp   = new Date($cal_date->format("%@ {$d} %O %E"));
-			$d_fmt = $tmp->date1->format('%j');
-			if ($d === $today->d && $cal_date->m === $today->m) {
-				echo '<span class="cal_day current_day">', $d_fmt, '</span>';
-			} else {
-				echo '<span class="cal_day">', $d_fmt, '</span>';
-			}
-			// Show a converted date
-			foreach (explode('_and_', $CALENDAR_FORMAT) as $convcal) {
-				switch ($convcal) {
-				case 'french':
-					$alt_date = new FrenchDate($cal_date->minJD + $d - 1);
-					break;
-				case 'gregorian':
-					$alt_date = new GregorianDate($cal_date->minJD + $d - 1);
-					break;
-				case 'jewish':
-					$alt_date = new JewishDate($cal_date->minJD + $d - 1);
-					break;
-				case 'julian':
-					$alt_date = new JulianDate($cal_date->minJD + $d - 1);
-					break;
-				case 'hijri':
-					$alt_date = new HijriDate($cal_date->minJD + $d - 1);
-					break;
-				case 'jalali':
-					$alt_date = new JalaliDate($cal_date->minJD + $d - 1);
-					break;
-				default:
-					break 2;
-				}
-				if (get_class($alt_date) !== get_class($cal_date)) {
-					echo '<span class="rtl_cal_day">' . $alt_date->format("%j %M") . '</span>';
-					// Just show the first conversion
-					break;
-				}
-			}
-			echo '<br style="clear: both;"><div class="details1" style="height: 150px; overflow: auto;">';
-			echo calendar_list_text($cal_facts[$d], '', '', false);
-			echo '</div>';
-		}
-		echo '</td>';
-		if (($d + $cal_date->minJD - $week_start) % $days_in_week === 0) {
-			echo '</tr>';
-		}
-	}
-	echo '</table>';
-	break;
+        break;
+    case 'month':
+        // We use JD%7 = 0/Mon...6/Sun.  Config files use 0/Sun...6/Sat.  Add 6 to convert.
+        $week_start = ($WEEK_START + 6) % $days_in_week;
+        // The french  calendar has a 10-day week, but our config only lets us choose
+        // mon-sun as a start day.  Force french calendars to start on primidi
+        if ($days_in_week === 10) {
+            $week_start = 0;
+        }
+        echo '<table class="list_table width100"><tr>';
+        for ($week_day = 0; $week_day < $days_in_week; ++$week_day) {
+            $day_name = $cal_date->dayNames(($week_day + $week_start) % $days_in_week);
+            echo '<td class="descriptionbox" width="' . (100 / $days_in_week) . '%">', $day_name, '</td>';
+        }
+        echo '</tr>';
+        // Print days 1-n of the month...
+        // ...but extend to cover "empty" days before/after the month to make whole weeks.
+        // e.g. instead of 1 -> 30 (=30 days), we might have -1 -> 33 (=35 days)
+        $start_d = 1 - ($cal_date->minJD - $week_start) % $days_in_week;
+        $end_d   = $days_in_month + ($days_in_week - ($cal_date->maxJD - $week_start + 1) % $days_in_week) % $days_in_week;
+        // Make sure that there is an empty box for any leap/missing days
+        if ($start_d === 1 && $end_d === $days_in_month && count($found_facts[0]) > 0) {
+            $end_d += $days_in_week;
+        }
+        for ($d = $start_d; $d <= $end_d; ++$d) {
+            if (($d + $cal_date->minJD - $week_start) % $days_in_week === 1) {
+                echo '<tr>';
+            }
+            echo '<td class="optionbox wrap">';
+            if ($d < 1 || $d > $days_in_month) {
+                if (count($cal_facts[0]) > 0) {
+                    echo '<span class="cal_day">', I18N::translate('Day not set'), '</span><br style="clear: both;">';
+                    echo '<div class="details1" style="height: 150px; overflow: auto;">';
+                    echo calendar_list_text($cal_facts[0], '', '', false);
+                    echo '</div>';
+                    $cal_facts[0] = array();
+                } else {
+                    echo '&nbsp;';
+                }
+            } else {
+                // Format the day number using the calendar
+                $tmp   = new Date($cal_date->format("%@ {$d} %O %E"));
+                $d_fmt = $tmp->date1->format('%j');
+                if ($d === $today->d && $cal_date->m === $today->m) {
+                    echo '<span class="cal_day current_day">', $d_fmt, '</span>';
+                } else {
+                    echo '<span class="cal_day">', $d_fmt, '</span>';
+                }
+                // Show a converted date
+                foreach (explode('_and_', $CALENDAR_FORMAT) as $convcal) {
+                    switch ($convcal) {
+                        case 'french':
+                            $alt_date = new FrenchDate($cal_date->minJD + $d - 1);
+                            break;
+                        case 'gregorian':
+                            $alt_date = new GregorianDate($cal_date->minJD + $d - 1);
+                            break;
+                        case 'jewish':
+                            $alt_date = new JewishDate($cal_date->minJD + $d - 1);
+                            break;
+                        case 'julian':
+                            $alt_date = new JulianDate($cal_date->minJD + $d - 1);
+                            break;
+                        case 'hijri':
+                            $alt_date = new HijriDate($cal_date->minJD + $d - 1);
+                            break;
+                        case 'jalali':
+                            $alt_date = new JalaliDate($cal_date->minJD + $d - 1);
+                            break;
+                        default:
+                            break 2;
+                    }
+                    if (get_class($alt_date) !== get_class($cal_date)) {
+                        echo '<span class="rtl_cal_day">' . $alt_date->format("%j %M") . '</span>';
+                        // Just show the first conversion
+                        break;
+                    }
+                }
+                echo '<br style="clear: both;"><div class="details1" style="height: 150px; overflow: auto;">';
+                echo calendar_list_text($cal_facts[$d], '', '', false);
+                echo '</div>';
+            }
+            echo '</td>';
+            if (($d + $cal_date->minJD - $week_start) % $days_in_week === 0) {
+                echo '</tr>';
+            }
+        }
+        echo '</table>';
+        break;
 }
 echo '</div>'; //close "calendar-page"
 
@@ -598,47 +602,51 @@ echo '</div>'; //close "calendar-page"
  * Filter a list of anniversaries
  *
  * @param Fact[] $facts
- * @param string    $filterof
- * @param string    $filtersx
+ * @param string $filterof
+ * @param string $filtersx
  *
  * @return array
  */
-function apply_filter($facts, $filterof, $filtersx) {
-	$filtered      = array();
-	$hundred_years = WT_CLIENT_JD - 36525;
-	foreach ($facts as $fact) {
-		$record = $fact->getParent();
-		if ($filtersx) {
-			// Filter on sex
-			if ($record instanceof Individual && $filtersx !== $record->getSex()) {
-				continue;
-			}
-			// Can't display families if the sex filter is on.
-			if ($record instanceof Family) {
-				continue;
-			}
-		}
-		// Filter living individuals
-		if ($filterof === 'living') {
-			if ($record instanceof Individual && $record->isDead()) {
-				continue;
-			}
-			if ($record instanceof Family) {
-				$husb = $record->getHusband();
-				$wife = $record->getWife();
-				if ($husb && $husb->isDead() || $wife && $wife->isDead()) {
-					continue;
-				}
-			}
-		}
-		// Filter on recent events
-		if ($filterof === 'recent' && $fact->getDate()->MaxJD() < $hundred_years) {
-			continue;
-		}
-		$filtered[] = $fact;
-	}
+function apply_filter($facts, $filterof, $filtersx)
+{
+    $filtered      = array();
+    $hundred_years = WT_CLIENT_JD - 36525;
+    foreach ($facts as $fact) {
+        $record = $fact->getParent();
+        if ($filtersx) {
+            // Filter on sex
+            if ($record instanceof Individual && $filtersx !== $record->getSex()) {
+                continue;
+            }
+            // Can't display families if the sex filter is on.
+            if ($record instanceof Family) {
+                continue;
+            }
+        }
+        // Filter living individuals
+        if ($filterof === 'living') {
+            if ($record instanceof Individual && $record->isDead()) {
+                continue;
+            }
+            if ($record instanceof Family) {
+                $husb = $record->getHusband();
+                $wife = $record->getWife();
+                if ($husb && $husb->isDead() || $wife && $wife->isDead()) {
+                    continue;
+                }
+            }
+        }
+        // Filter on recent events
+        if ($filterof === 'recent'
+            && $fact->getDate()
+                    ->MaxJD() < $hundred_years
+        ) {
+            continue;
+        }
+        $filtered[] = $fact;
+    }
 
-	return $filtered;
+    return $filtered;
 }
 
 /**
@@ -649,53 +657,56 @@ function apply_filter($facts, $filterof, $filtersx) {
  *
  * @return string
  */
-function calendar_fact_text(Fact $fact, $show_places) {
-	$text = $fact->getLabel() . ' — ' . $fact->getDate()->display(true, null, false);
-	if ($fact->anniv) {
-		$text .= ' (' . I18N::translate('%s year anniversary', $fact->anniv) . ')';
-	}
-	if ($show_places && $fact->getAttribute('PLAC')) {
-		$text .= ' — ' . $fact->getAttribute('PLAC');
-	}
+function calendar_fact_text(Fact $fact, $show_places)
+{
+    $text = $fact->getLabel() . ' — ' . $fact->getDate()
+                                             ->display(true, null, false);
+    if ($fact->anniv) {
+        $text .= ' (' . I18N::translate('%s year anniversary', $fact->anniv) . ')';
+    }
+    if ($show_places && $fact->getAttribute('PLAC')) {
+        $text .= ' — ' . $fact->getAttribute('PLAC');
+    }
 
-	return $text;
+    return $text;
 }
 
 /**
  * Format a list of facts for display
  *
- * @param Fact[] $list
- * @param string    $tag1
- * @param string    $tag2
- * @param boolean   $show_sex_symbols
+ * @param Fact[]  $list
+ * @param string  $tag1
+ * @param string  $tag2
+ * @param boolean $show_sex_symbols
  *
  * @return string
  */
-function calendar_list_text($list, $tag1, $tag2, $show_sex_symbols) {
-	global $males, $females;
+function calendar_list_text($list, $tag1, $tag2, $show_sex_symbols)
+{
+    global $males, $females;
 
-	$html = '';
+    $html = '';
 
-	foreach ($list as $id => $facts) {
-		$tmp = GedcomRecord::GetInstance($id);
-		$html .= $tag1 . '<a href="' . $tmp->getHtmlUrl() . '">' . $tmp->getFullName() . '</a> ';
-		if ($show_sex_symbols && $tmp instanceof Individual) {
-			switch ($tmp->getSex()) {
-			case 'M':
-				$html .= '<i class="icon-sex_m_9x9" title="' . I18N::translate('Male') . '"></i>';
-				++$males;
-				break;
-			case 'F':
-				$html .= '<i class="icon-sex_f_9x9" title="' . I18N::translate('Female') . '"></i>';
-				++$females;
-				break;
-			default:
-				$html .= '<i class="icon-sex_u_9x9" title="' . I18N::translate_c('unknown gender', 'Unknown') . '"></i>';
-				break;
-			}
-		}
-		$html .= '<div class="indent">' . $facts . '</div>' . $tag2;
-	}
+    foreach ($list as $id => $facts) {
+        $tmp = GedcomRecord::GetInstance($id);
+        $html .= $tag1 . '<a href="' . $tmp->getHtmlUrl() . '">' . $tmp->getFullName() . '</a> ';
+        if ($show_sex_symbols && $tmp instanceof Individual) {
+            switch ($tmp->getSex()) {
+                case 'M':
+                    $html .= '<i class="icon-sex_m_9x9" title="' . I18N::translate('Male') . '"></i>';
+                    ++$males;
+                    break;
+                case 'F':
+                    $html .= '<i class="icon-sex_f_9x9" title="' . I18N::translate('Female') . '"></i>';
+                    ++$females;
+                    break;
+                default:
+                    $html .= '<i class="icon-sex_u_9x9" title="' . I18N::translate_c('unknown gender', 'Unknown') . '"></i>';
+                    break;
+            }
+        }
+        $html .= '<div class="indent">' . $facts . '</div>' . $tag2;
+    }
 
-	return $html;
+    return $html;
 }

@@ -20,18 +20,19 @@ namespace Fisharebest\Webtrees;
  * element handlers array
  *
  * An array of element handler functions
+ *
  * @global array $elementHandler
  */
-$elementHandler = array();
-$elementHandler['Report']['start']   = __NAMESPACE__ . '\\reportStartHandler';
-$elementHandler['var']['start']      = __NAMESPACE__ . '\\varStartHandler';
-$elementHandler['Title']['start']    = __NAMESPACE__ . '\\titleStartHandler';
-$elementHandler['Title']['end']      = __NAMESPACE__ . '\\titleEndHandler';
+$elementHandler                       = array();
+$elementHandler['Report']['start']    = __NAMESPACE__ . '\\reportStartHandler';
+$elementHandler['var']['start']       = __NAMESPACE__ . '\\varStartHandler';
+$elementHandler['Title']['start']     = __NAMESPACE__ . '\\titleStartHandler';
+$elementHandler['Title']['end']       = __NAMESPACE__ . '\\titleEndHandler';
 $elementHandler['Description']['end'] = __NAMESPACE__ . '\\descriptionEndHandler';
-$elementHandler['Input']['start']    = __NAMESPACE__ . '\\inputStartHandler';
-$elementHandler['Input']['end']      = __NAMESPACE__ . '\\inputEndHandler';
+$elementHandler['Input']['start']     = __NAMESPACE__ . '\\inputStartHandler';
+$elementHandler['Input']['end']       = __NAMESPACE__ . '\\inputEndHandler';
 
-$text = "";
+$text         = "";
 $report_array = array();
 
 /**
@@ -40,34 +41,37 @@ $report_array = array();
  * this function is called whenever a starting element is reached
  *
  * @param resource $parser the resource handler for the xml parser
- * @param string   $name the name of the xml element parsed
- * @param string[] $attrs an array of key value pairs for the attributes
+ * @param string   $name   the name of the xml element parsed
+ * @param string[] $attrs  an array of key value pairs for the attributes
  */
-function startElement($parser, $name, $attrs) {
-	global $elementHandler, $processIfs;
+function startElement($parser, $name, $attrs)
+{
+    global $elementHandler, $processIfs;
 
-	if (($processIfs == 0) || ($name == "if")) {
-		if (isset($elementHandler[$name]["start"])) {
-			call_user_func($elementHandler[$name]["start"], $attrs);
-		}
-	}
+    if (($processIfs == 0) || ($name == "if")) {
+        if (isset($elementHandler[$name]["start"])) {
+            call_user_func($elementHandler[$name]["start"], $attrs);
+        }
+    }
 }
 
 /**
  * xml end element handler
  *
  * this function is called whenever an ending element is reached
+ *
  * @param resource $parser the resource handler for the xml parser
- * @param string $name the name of the xml element parsed
+ * @param string   $name   the name of the xml element parsed
  */
-function endElement($parser, $name) {
-	global $elementHandler, $processIfs;
+function endElement($parser, $name)
+{
+    global $elementHandler, $processIfs;
 
-	if (($processIfs == 0) || ($name == "if")) {
-		if (isset($elementHandler[$name]["end"])) {
-			call_user_func($elementHandler[$name]["end"]);
-		}
-	}
+    if (($processIfs == 0) || ($name == "if")) {
+        if (isset($elementHandler[$name]["end"])) {
+            call_user_func($elementHandler[$name]["end"]);
+        }
+    }
 }
 
 /**
@@ -75,143 +79,158 @@ function endElement($parser, $name) {
  *
  * this function is called whenever raw character data is reached
  * just print it to the screen
+ *
  * @param resource $parser the resource handler for the xml parser
- * @param string $data the name of the xml element parsed
+ * @param string   $data   the name of the xml element parsed
  */
-function characterData($parser, $data) {
-	global $text;
+function characterData($parser, $data)
+{
+    global $text;
 
-	$text .= $data;
+    $text .= $data;
 }
 
 /**
  * @param string[] $attrs
  */
-function reportStartHandler($attrs) {
-	global $report_array;
+function reportStartHandler($attrs)
+{
+    global $report_array;
 
-	$access = WT_PRIV_PUBLIC;
-	if (isset($attrs["access"])) {
-		if (isset($$attrs["access"])) {
-			$access = $$attrs["access"];
-		}
-	}
-	$report_array["access"] = $access;
+    $access = WT_PRIV_PUBLIC;
+    if (isset($attrs["access"])) {
+        if (isset($$attrs["access"])) {
+            $access = $$attrs["access"];
+        }
+    }
+    $report_array["access"] = $access;
 
-	if (isset($attrs["icon"])) {
-		$report_array["icon"] = $attrs["icon"];
-	} else {
-		$report_array["icon"] = "";
-	}
+    if (isset($attrs["icon"])) {
+        $report_array["icon"] = $attrs["icon"];
+    } else {
+        $report_array["icon"] = "";
+    }
 }
 
 /**
  * @param string[] $attrs
  */
-function varStartHandler($attrs) {
-	global $text, $fact, $desc, $type;
+function varStartHandler($attrs)
+{
+    global $text, $fact, $desc, $type;
 
-	$var = $attrs["var"];
-	if (!empty($var)) {
-		$tfact = $fact;
-		if ($fact == "EVEN") {
-			$tfact = $type;
-		}
-		$var = str_replace(array("@fact", "@desc"), array($tfact, $desc), $var);
-		if (preg_match('/^I18N::number\((.+)\)$/', $var, $match)) {
-			$var = I18N::number($match[1]);
-		} elseif (preg_match('/^I18N::translate\(\'(.+)\'\)$/', $var, $match)) {
-			$var = I18N::translate($match[1]);
-		} elseif (preg_match('/^I18N::translate_c\(\'(.+)\', *\'(.+)\'\)$/', $var, $match)) {
-			$var = I18N::translate_c($match[1], $match[2]);
-		}
-		$text .= $var;
-	}
+    $var = $attrs["var"];
+    if (!empty($var)) {
+        $tfact = $fact;
+        if ($fact == "EVEN") {
+            $tfact = $type;
+        }
+        $var = str_replace(array(
+                               "@fact",
+                               "@desc"
+                           ), array(
+                               $tfact,
+                               $desc
+                           ), $var);
+        if (preg_match('/^I18N::number\((.+)\)$/', $var, $match)) {
+            $var = I18N::number($match[1]);
+        } elseif (preg_match('/^I18N::translate\(\'(.+)\'\)$/', $var, $match)) {
+            $var = I18N::translate($match[1]);
+        } elseif (preg_match('/^I18N::translate_c\(\'(.+)\', *\'(.+)\'\)$/', $var, $match)) {
+            $var = I18N::translate_c($match[1], $match[2]);
+        }
+        $text .= $var;
+    }
 }
 
 /**
  *
  */
-function titleStartHandler() {
-	global $text;
+function titleStartHandler()
+{
+    global $text;
 
-	$text = "";
+    $text = "";
 }
 
 /**
  *
  */
-function titleEndHandler() {
-	global $report_array, $text;
+function titleEndHandler()
+{
+    global $report_array, $text;
 
-	$report_array["title"] = $text;
-	$text = "";
+    $report_array["title"] = $text;
+    $text                  = "";
 }
 
 /**
  *
  */
-function descriptionEndHandler() {
-	global $report_array, $text;
+function descriptionEndHandler()
+{
+    global $report_array, $text;
 
-	$report_array["description"] = $text;
-	$text = "";
+    $report_array["description"] = $text;
+    $text                        = "";
 }
 
 /**
  * @param string[] $attrs
  */
-function inputStartHandler($attrs) {
-	global $input, $text;
+function inputStartHandler($attrs)
+{
+    global $input, $text;
 
-	$text = "";
-	$input = array();
-	$input["name"] = "";
-	$input["type"] = "";
-	$input["lookup"] = "";
-	$input["default"] = "";
-	$input["value"] = "";
-	$input["options"] = "";
-	if (isset($attrs["name"])) {
-		$input["name"] = $attrs["name"];
-	}
-	if (isset($attrs["type"])) {
-		$input["type"] = $attrs["type"];
-	}
-	if (isset($attrs["lookup"])) {
-		$input["lookup"] = $attrs["lookup"];
-	}
-	if (isset($attrs["default"])) {
-		if ($attrs["default"] == "NOW") {
-			$input["default"] = date("d M Y");
-		} else {
-			$match = array();
-			if (preg_match("/NOW\s*([+\-])\s*(\d+)/", $attrs['default'], $match) > 0) {
-				$plus = 1;
-				if ($match[1] == "-") {
-					$plus = -1;
-				}
-				$input["default"] = date("d M Y", WT_TIMESTAMP + $plus * 60 * 60 * 24 * $match[2]);
-			} else {
-				$input["default"] = $attrs["default"];
-			}
-		}
-	}
-	if (isset($attrs["options"])) {
-		$input["options"] = $attrs["options"];
-	}
+    $text             = "";
+    $input            = array();
+    $input["name"]    = "";
+    $input["type"]    = "";
+    $input["lookup"]  = "";
+    $input["default"] = "";
+    $input["value"]   = "";
+    $input["options"] = "";
+    if (isset($attrs["name"])) {
+        $input["name"] = $attrs["name"];
+    }
+    if (isset($attrs["type"])) {
+        $input["type"] = $attrs["type"];
+    }
+    if (isset($attrs["lookup"])) {
+        $input["lookup"] = $attrs["lookup"];
+    }
+    if (isset($attrs["default"])) {
+        if ($attrs["default"] == "NOW") {
+            $input["default"] = date("d M Y");
+        } else {
+            $match = array();
+            if (preg_match("/NOW\s*([+\-])\s*(\d+)/", $attrs['default'], $match) > 0) {
+                $plus = 1;
+                if ($match[1] == "-") {
+                    $plus = -1;
+                }
+                $input["default"] = date("d M Y", WT_TIMESTAMP + $plus * 60 * 60 * 24 * $match[2]);
+            } else {
+                $input["default"] = $attrs["default"];
+            }
+        }
+    }
+    if (isset($attrs["options"])) {
+        $input["options"] = $attrs["options"];
+    }
 }
 
 /**
  *
  */
-function inputEndHandler() {
-	global $report_array, $text, $input;
+function inputEndHandler()
+{
+    global $report_array, $text, $input;
 
-	$input["value"] = $text;
-	if (!isset($report_array["inputs"])) {
-		$report_array["inputs"] = array();
-	}
-	$report_array["inputs"][] = $input;
-	$text = "";
+    $input["value"] = $text;
+    if (!isset($report_array["inputs"])) {
+        $report_array["inputs"] = array();
+    }
+    $report_array["inputs"][] = $input;
+    $text                     = "";
 }

@@ -22,21 +22,21 @@ use PDOException;
 // - change index on name table
 
 try {
-	Database::exec(
-		"ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
-	);
+    Database::exec(
+        "ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
+    );
 } catch (PDOException $ex) {
-	// Already been run?
+    // Already been run?
 }
 
 
 try {
-	// The INDILIST and FAMLIST scripts have been rewritten to use this index
-	Database::exec(
-		"ALTER TABLE `##name` DROP INDEX ix2, ADD INDEX ix2 (n_surn, n_file, n_type, n_id), ADD INDEX ix3 (n_givn, n_file, n_type, n_id)"
-	);
+    // The INDILIST and FAMLIST scripts have been rewritten to use this index
+    Database::exec(
+        "ALTER TABLE `##name` DROP INDEX ix2, ADD INDEX ix2 (n_surn, n_file, n_type, n_id), ADD INDEX ix3 (n_givn, n_file, n_type, n_id)"
+    );
 } catch (PDOException $ex) {
-	// Already been run?
+    // Already been run?
 }
 
 // Update the version to indicate success

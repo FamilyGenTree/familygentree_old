@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class AncestryController
  */
-class AncestryControllerTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class AncestryControllerTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\AncestryController'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\AncestryController'));
+    }
 }

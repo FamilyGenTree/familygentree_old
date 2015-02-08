@@ -20,13 +20,13 @@ namespace Fisharebest\Webtrees;
 // - update config data defining theme selection
 
 Database::exec(
-	"UPDATE `##gedcom_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
+    "UPDATE `##gedcom_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
 );
 Database::exec(
-	"UPDATE `##user_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
+    "UPDATE `##user_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
 );
 Database::exec(
-	"UPDATE `##user_gedcom_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
+    "UPDATE `##user_gedcom_setting` SET setting_value=TRIM(LEADING 'themes/' FROM TRIM(TRAILING '/' FROM setting_value)) WHERE setting_name='THEME_DIR'"
 );
 
 // Update the version to indicate success

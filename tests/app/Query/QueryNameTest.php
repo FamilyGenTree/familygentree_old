@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class WT_Query_Name
  */
-class QueryNameTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class QueryNameTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\WT_Query_Name'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\WT_Query_Name'));
+    }
 }

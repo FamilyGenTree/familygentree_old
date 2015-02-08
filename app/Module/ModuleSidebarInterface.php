@@ -19,31 +19,33 @@ namespace Fisharebest\Webtrees;
 /**
  * Interface ModuleSidebarInterface - Classes and libraries for module system
  */
-interface ModuleSidebarInterface {
-	/**
-	 * The user can change the order of sidebars.  Until they do this, they are shown in this order.
-	 *
-	 * @return integer
-	 */
-	public function defaultSidebarOrder();
+interface ModuleSidebarInterface
+{
+    /**
+     * The user can change the order of sidebars.  Until they do this, they are shown in this order.
+     *
+     * @return integer
+     */
+    public function defaultSidebarOrder();
 
-	/**
-	 * Load this sidebar synchronously.
-	 * @return string
-	 */
-	public function getSidebarContent();
+    /**
+     * Load this sidebar synchronously.
+     *
+     * @return string
+     */
+    public function getSidebarContent();
 
-	/**
-	 * Load this sidebar asynchronously.
-	 *
-	 * @return string
-	 */
-	public function getSidebarAjaxContent();
+    /**
+     * Load this sidebar asynchronously.
+     *
+     * @return string
+     */
+    public function getSidebarAjaxContent();
 
-	/**
-	 * Does this sidebar have anything to display for this individual?
-	 *
-	 * @return boolean
-	 */
-	public function hasSidebarContent();
+    /**
+     * Does this sidebar have anything to display for this individual?
+     *
+     * @return boolean
+     */
+    public function hasSidebarContent();
 }

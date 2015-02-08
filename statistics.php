@@ -27,10 +27,10 @@ $tab  = Filter::getInteger('tab', 0, 3);
 $ajax = Filter::getBool('ajax');
 
 if (!$ajax) {
-	$controller = new PageController;
-	$controller->setPageTitle(I18N::translate('Statistics'))
-		->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
-		->addInlineJavascript('
+    $controller = new PageController;
+    $controller->setPageTitle(I18N::translate('Statistics'))
+               ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+               ->addInlineJavascript('
 			jQuery("#statistics_chart").css("visibility", "visible");
 			jQuery("#statistics_chart").tabs({
 				load: function() {
@@ -51,33 +51,33 @@ if (!$ajax) {
 				}
 			});
 		')
-		->pageHeader();
+               ->pageHeader();
 
-	echo '<div id="statistics-page"><h2>', I18N::translate('Statistics'), '</h2>',
-	'<div id="statistics_chart">',
-	'<ul>',
-	'<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=0">',
-	'<span id="stats-indi">', I18N::translate('Individuals'), '</span></a></li>',
-	'<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=1">',
-	'<span id="stats-fam">', I18N::translate('Families'), '</span></a></li>',
-	'<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=2">',
-	'<span id="stats-other">', I18N::translate('Others'), '</span></a></li>',
-	'<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=3">',
-	'<span id="stats-own">', I18N::translate('Own charts'), '</span></a></li>',
-	'</ul>',
-	'<div id="loading-indicator" style="margin:auto;width:100%;"></div>',
-	'</div>', // statistics_chart
-	'</div>', // statistics-page
-	'<br><br>';
+    echo '<div id="statistics-page"><h2>', I18N::translate('Statistics'), '</h2>',
+    '<div id="statistics_chart">',
+    '<ul>',
+    '<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=0">',
+    '<span id="stats-indi">', I18N::translate('Individuals'), '</span></a></li>',
+    '<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=1">',
+    '<span id="stats-fam">', I18N::translate('Families'), '</span></a></li>',
+    '<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=2">',
+    '<span id="stats-other">', I18N::translate('Others'), '</span></a></li>',
+    '<li><a href="statistics.php?ged=', WT_GEDURL, '&amp;ajax=1&amp;tab=3">',
+    '<span id="stats-own">', I18N::translate('Own charts'), '</span></a></li>',
+    '</ul>',
+    '<div id="loading-indicator" style="margin:auto;width:100%;"></div>',
+    '</div>', // statistics_chart
+    '</div>', // statistics-page
+    '<br><br>';
 } else {
-	$controller = new AjaxController;
-	$controller
-		->pageHeader()
-		->addInlineJavascript('autocomplete();')
-		->addInlineJavascript('jQuery("#loading-indicator").removeClass("loading-image");');
-	$stats = new Stats(Globals::i()->WT_TREE);
-	if ($tab == 0) {
-		echo '<fieldset>
+    $controller = new AjaxController;
+    $controller
+        ->pageHeader()
+        ->addInlineJavascript('autocomplete();')
+        ->addInlineJavascript('jQuery("#loading-indicator").removeClass("loading-image");');
+    $stats = new Stats(Globals::i()->WT_TREE);
+    if ($tab == 0) {
+        echo '<fieldset>
 		<legend>', I18N::translate('Total individuals: %s', $stats->totalIndividuals()), '</legend>
 		<table class="facts_table">
 			<tr>
@@ -163,8 +163,8 @@ if (!$ajax) {
 			</tr>
 		</table>
 		<br>';
-		if (Auth::check()) {
-			echo '<b>', I18N::translate('Oldest living individuals'), '</b>
+        if (Auth::check()) {
+            echo '<b>', I18N::translate('Oldest living individuals'), '</b>
 			<table class="facts_table">
 				<tr>
 					<td class="facts_label">', I18N::translate('Males'), '</td>
@@ -176,8 +176,8 @@ if (!$ajax) {
 				</tr>
 			</table>
 			<br>';
-		}
-		echo '<b>', I18N::translate('Names'), '</b>
+        }
+        echo '<b>', I18N::translate('Names'), '</b>
 		<table class="facts_table">
 			<tr>
 				<td class="facts_label">', I18N::translate('Total surnames'), '</td>
@@ -197,8 +197,8 @@ if (!$ajax) {
 			</tr>
 		</table>
 		</fieldset>';
-	} else if ($tab == 1) {
-		echo '<fieldset>
+    } else if ($tab == 1) {
+        echo '<fieldset>
 		<legend>', I18N::translate('Total families: %s', $stats->totalFamilies()), '</legend>
 		<b>', I18N::translate('Events'), '</b>
 		<table class="facts_table">
@@ -335,8 +335,8 @@ if (!$ajax) {
 			</tr>
 		</table>
 		</fieldset>';
-	} else if ($tab == 2) {
-		echo '<fieldset>
+    } else if ($tab == 2) {
+        echo '<fieldset>
 		<legend>', I18N::translate('Records'), ': ', $stats->totalRecords(), '</legend>
 		<table class="facts_table">
 			<tr>
@@ -418,191 +418,191 @@ if (!$ajax) {
 			</tr>
 		</table>
 		</fieldset>';
-	} else if ($tab == 3) {
-		echo '<fieldset>
+    } else if ($tab == 3) {
+        echo '<fieldset>
 		<legend>', I18N::translate('Create your own chart'), '</legend>';
-		?>
-		<script>
-			function statusHide(sel) {
-				var box = document.getElementById(sel);
-				box.style.display = 'none';
-				var box_m = document.getElementById(sel + '_m');
-				if (box_m) {
-					box_m.style.display = 'none';
-				}
-				if (sel == 'map_opt') {
-					var box_axes = document.getElementById('axes');
-					if (box_axes) {
-						box_axes.style.display = '';
-					}
-					var box_zyaxes = document.getElementById('zyaxes');
-					if (box_zyaxes) {
-						box_zyaxes.style.display = '';
-					}
-				}
-			}
-			function statusShow(sel) {
-				var box = document.getElementById(sel);
-				box.style.display = '';
-				var box_m = document.getElementById(sel + '_m');
-				if (box_m) {
-					box_m.style.display = 'none';
-				}
-				if (sel == 'map_opt') {
-					var box_axes = document.getElementById('axes');
-					if (box_axes) {
-						box_axes.style.display = 'none';
-					}
-					var box_zyaxes = document.getElementById('zyaxes');
-					if (box_zyaxes) {
-						box_zyaxes.style.display = 'none';
-					}
-				}
-			}
-			function statusShowSurname(x) {
-				if (x.value == 'surname_distribution_chart') {
-					document.getElementById('surname_opt').style.display = '';
-				} else if (x.value !== 'surname_distribution_chart') {
-					document.getElementById('surname_opt').style.display = 'none';
-				}
-			}
-			function statsModalDialog(url, title) {
-				var form = jQuery('#own-stats-form');
-				jQuery.post(form.attr('action'), form.serialize(), function (response) {
-					jQuery(response).dialog({
-						modal: true,
-						width: 964,
-						open: function () {
-							var self = this;
-							// Close the window when we click outside it.
-							jQuery(".ui-widget-overlay").on("click", function () {
-								$(self).dialog('close');
-							});
-						}
-					});
-				});
-				return false;
-			}
-		</script>
-		<?php
-		echo '<div id="own-stats"><form method="post" id="own-stats-form" name="form" action="statisticsplot.php" onsubmit="statsModalDialog(\'statisticsplot.php?action=newform\', \'', I18N::translate('Statistics plot'), '\'); return false;">';
-		echo '<input type="hidden" name="action" value="update">';
-		echo '<table width="100%">';
-		if (!isset($plottype)) {
-			$plottype = 11;
-		}
-		if (!isset($charttype)) {
-			$charttype = 1;
-		}
-		if (!isset($plotshow)) {
-			$plotshow = 302;
-		}
-		if (!isset($plotnp)) {
-			$plotnp = 201;
-		}
-		if (isset(Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()])) {
-			$x_axis_boundary_ages    = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_ages'];
-			$x_axis_boundary_months  = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_months'];
-			$x_axis_boundary_numbers = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
-			$x_axis_boundary_periods = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['z_axis_boundary_periods'];
-		} else {
-			$x_axis_boundary_ages    = '1,5,10,20,30,40,50,60,70,80,90,100';
-			$x_axis_boundary_months  = '-24,-12,0,8,12,18,24,48';
-			$x_axis_boundary_numbers = '1,2,3,4,5,6,7,8,9,10';
-			$x_axis_boundary_periods = '1700,1750,1800,1850,1900,1950,2000';
-		}
-		if (isset(Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()])) {
-			$chart_shows = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_shows'];
-			$chart_type  = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_type'];
-			$surname     = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['surname'];
-		} else {
-			$chart_shows = 'world';
-			$chart_type  = 'indi_distribution_chart';
-			$surname     = $stats->getCommonSurname();
-		}
+        ?>
+        <script>
+            function statusHide(sel) {
+                var box = document.getElementById(sel);
+                box.style.display = 'none';
+                var box_m = document.getElementById(sel + '_m');
+                if (box_m) {
+                    box_m.style.display = 'none';
+                }
+                if (sel == 'map_opt') {
+                    var box_axes = document.getElementById('axes');
+                    if (box_axes) {
+                        box_axes.style.display = '';
+                    }
+                    var box_zyaxes = document.getElementById('zyaxes');
+                    if (box_zyaxes) {
+                        box_zyaxes.style.display = '';
+                    }
+                }
+            }
+            function statusShow(sel) {
+                var box = document.getElementById(sel);
+                box.style.display = '';
+                var box_m = document.getElementById(sel + '_m');
+                if (box_m) {
+                    box_m.style.display = 'none';
+                }
+                if (sel == 'map_opt') {
+                    var box_axes = document.getElementById('axes');
+                    if (box_axes) {
+                        box_axes.style.display = 'none';
+                    }
+                    var box_zyaxes = document.getElementById('zyaxes');
+                    if (box_zyaxes) {
+                        box_zyaxes.style.display = 'none';
+                    }
+                }
+            }
+            function statusShowSurname(x) {
+                if (x.value == 'surname_distribution_chart') {
+                    document.getElementById('surname_opt').style.display = '';
+                } else if (x.value !== 'surname_distribution_chart') {
+                    document.getElementById('surname_opt').style.display = 'none';
+                }
+            }
+            function statsModalDialog(url, title) {
+                var form = jQuery('#own-stats-form');
+                jQuery.post(form.attr('action'), form.serialize(), function (response) {
+                    jQuery(response).dialog({
+                        modal: true,
+                        width: 964,
+                        open: function () {
+                            var self = this;
+                            // Close the window when we click outside it.
+                            jQuery(".ui-widget-overlay").on("click", function () {
+                                $(self).dialog('close');
+                            });
+                        }
+                    });
+                });
+                return false;
+            }
+        </script>
+        <?php
+        echo '<div id="own-stats"><form method="post" id="own-stats-form" name="form" action="statisticsplot.php" onsubmit="statsModalDialog(\'statisticsplot.php?action=newform\', \'', I18N::translate('Statistics plot'), '\'); return false;">';
+        echo '<input type="hidden" name="action" value="update">';
+        echo '<table width="100%">';
+        if (!isset($plottype)) {
+            $plottype = 11;
+        }
+        if (!isset($charttype)) {
+            $charttype = 1;
+        }
+        if (!isset($plotshow)) {
+            $plotshow = 302;
+        }
+        if (!isset($plotnp)) {
+            $plotnp = 201;
+        }
+        if (isset(Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()])) {
+            $x_axis_boundary_ages    = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_ages'];
+            $x_axis_boundary_months  = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_months'];
+            $x_axis_boundary_numbers = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['x_axis_boundary_numbers'];
+            $x_axis_boundary_periods = Globals::i()->WT_SESSION->statTicks[Globals::i()->WT_TREE->getTreeId()]['z_axis_boundary_periods'];
+        } else {
+            $x_axis_boundary_ages    = '1,5,10,20,30,40,50,60,70,80,90,100';
+            $x_axis_boundary_months  = '-24,-12,0,8,12,18,24,48';
+            $x_axis_boundary_numbers = '1,2,3,4,5,6,7,8,9,10';
+            $x_axis_boundary_periods = '1700,1750,1800,1850,1900,1950,2000';
+        }
+        if (isset(Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()])) {
+            $chart_shows = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_shows'];
+            $chart_type  = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['chart_type'];
+            $surname     = Globals::i()->WT_SESSION->statTicks1[Globals::i()->WT_TREE->getTreeId()]['surname'];
+        } else {
+            $chart_shows = 'world';
+            $chart_type  = 'indi_distribution_chart';
+            $surname     = $stats->getCommonSurname();
+        }
 
-		echo '<tr>
+        echo '<tr>
 			<td class="descriptionbox width25 wrap">', I18N::translate('Select chart type:'), '</td>
 			<td class="optionbox">
 			<input type="radio" id="stat_11" name="x-as" value="11" ';
-		echo $plottype == '11' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_11">', I18N::translate('Month of birth'), '</label><br>';
-		echo '<input type="radio" id="stat_12" name="x-as" value="12" ';
-		echo $plottype == '12' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_12">', I18N::translate('Month of death'), '</label><br>';
-		echo '<input type="radio" id="stat_13" name="x-as" value="13" ';
-		echo $plottype == '13' ? 'checked' : '';
-		echo " onclick=\"{statusChecked('z_none'); statusDisable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_13">', I18N::translate('Month of marriage'), '</label><br>';
-		echo '<input type="radio" id="stat_15" name="x-as" value="15" ';
-		echo $plottype == '15' ? 'checked' : '';
-		echo " onclick=\"{statusChecked('z_none'); statusDisable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_15">', I18N::translate('Month of first marriage'), '</label><br>';
-		echo '<input type="radio" id="stat_14" name="x-as" value="14" ';
-		echo $plottype == '14' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_14">', I18N::translate('Month of birth of first child in a relation'), '</label><br>';
-		echo '<input type="radio" id="stat_17" name="x-as" value="17" ';
-		echo $plottype == '17' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusShow('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_17">', I18N::translate('Age related to birth year'), '</label><br>';
-		echo '<input type="radio" id="stat_18" name="x-as" value="18" ';
-		echo $plottype == '18' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusShow('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_18">', I18N::translate('Age related to death year'), '</label><br>';
-		echo '<input type="radio" id="stat_19" name="x-as" value="19" ';
-		echo $plottype == '19' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusShow('x_years_m'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_19">', I18N::translate('Age in year of marriage'), '</label><br>';
-		echo '<input type="radio" id="stat_20" name="x-as" value="20" ';
-		echo $plottype == "20" ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusShow('x_years_m'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_20">', I18N::translate('Age in year of first marriage'), '</label><br>';
-		echo '<input type="radio" id="stat_21" name="x-as" value="21" ';
-		echo $plottype == '21' ? 'checked' : '';
-		echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusShow('x_numbers'); statusHide('map_opt');}";
-		echo '"><label for="stat_21">', I18N::translate('Number of children'), '</label><br>';
-		echo '<input type="radio" id="stat_1" name="x-as" value="1" ';
-		echo $plottype == '1' ? 'checked' : '';
-		echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusShow('chart_type'); statusHide('axes');}";
-		echo '"><label for="stat_1">', I18N::translate('Individual distribution'), '</label><br>';
-		echo '<input type="radio" id="stat_2" name="x-as" value="2" ';
-		echo $plottype == '2' ? 'checked' : '';
-		echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
-		echo '"><label for="stat_2">', I18N::translate('Birth by country'), '</label><br>';
-		echo '<input type="radio" id="stat_4" name="x-as" value="4" ';
-		echo $plottype == '4' ? 'checked' : '';
-		echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
-		echo '"><label for="stat_4">', I18N::translate('Marriage by country'), '</label><br>';
-		echo '<input type="radio" id="stat_3" name="x-as" value="3" ';
-		echo $plottype == '3' ? 'checked' : '';
-		echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
-		echo '"><label for="stat_3">', I18N::translate('Death by country'), '</label><br>';
-		echo '<br><div id="x_years" style="display:none;">';
-		echo I18N::translate('Select the desired age interval');
-		echo '<br><select id="x-axis-boundaries-ages" name="x-axis-boundaries-ages">
+        echo $plottype == '11' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_11">', I18N::translate('Month of birth'), '</label><br>';
+        echo '<input type="radio" id="stat_12" name="x-as" value="12" ';
+        echo $plottype == '12' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_12">', I18N::translate('Month of death'), '</label><br>';
+        echo '<input type="radio" id="stat_13" name="x-as" value="13" ';
+        echo $plottype == '13' ? 'checked' : '';
+        echo " onclick=\"{statusChecked('z_none'); statusDisable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_13">', I18N::translate('Month of marriage'), '</label><br>';
+        echo '<input type="radio" id="stat_15" name="x-as" value="15" ';
+        echo $plottype == '15' ? 'checked' : '';
+        echo " onclick=\"{statusChecked('z_none'); statusDisable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_15">', I18N::translate('Month of first marriage'), '</label><br>';
+        echo '<input type="radio" id="stat_14" name="x-as" value="14" ';
+        echo $plottype == '14' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_14">', I18N::translate('Month of birth of first child in a relation'), '</label><br>';
+        echo '<input type="radio" id="stat_17" name="x-as" value="17" ';
+        echo $plottype == '17' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusShow('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_17">', I18N::translate('Age related to birth year'), '</label><br>';
+        echo '<input type="radio" id="stat_18" name="x-as" value="18" ';
+        echo $plottype == '18' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusShow('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_18">', I18N::translate('Age related to death year'), '</label><br>';
+        echo '<input type="radio" id="stat_19" name="x-as" value="19" ';
+        echo $plottype == '19' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusShow('x_years_m'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_19">', I18N::translate('Age in year of marriage'), '</label><br>';
+        echo '<input type="radio" id="stat_20" name="x-as" value="20" ';
+        echo $plottype == "20" ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusShow('x_years_m'); statusHide('x_months'); statusHide('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_20">', I18N::translate('Age in year of first marriage'), '</label><br>';
+        echo '<input type="radio" id="stat_21" name="x-as" value="21" ';
+        echo $plottype == '21' ? 'checked' : '';
+        echo " onclick=\"{statusEnable('z_sex'); statusHide('x_years'); statusHide('x_months'); statusShow('x_numbers'); statusHide('map_opt');}";
+        echo '"><label for="stat_21">', I18N::translate('Number of children'), '</label><br>';
+        echo '<input type="radio" id="stat_1" name="x-as" value="1" ';
+        echo $plottype == '1' ? 'checked' : '';
+        echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusShow('chart_type'); statusHide('axes');}";
+        echo '"><label for="stat_1">', I18N::translate('Individual distribution'), '</label><br>';
+        echo '<input type="radio" id="stat_2" name="x-as" value="2" ';
+        echo $plottype == '2' ? 'checked' : '';
+        echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
+        echo '"><label for="stat_2">', I18N::translate('Birth by country'), '</label><br>';
+        echo '<input type="radio" id="stat_4" name="x-as" value="4" ';
+        echo $plottype == '4' ? 'checked' : '';
+        echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
+        echo '"><label for="stat_4">', I18N::translate('Marriage by country'), '</label><br>';
+        echo '<input type="radio" id="stat_3" name="x-as" value="3" ';
+        echo $plottype == '3' ? 'checked' : '';
+        echo " onclick=\"{statusHide('x_years'); statusHide('x_months'); statusHide('x_numbers'); statusShow('map_opt'); statusHide('chart_type'); statusHide('surname_opt');}";
+        echo '"><label for="stat_3">', I18N::translate('Death by country'), '</label><br>';
+        echo '<br><div id="x_years" style="display:none;">';
+        echo I18N::translate('Select the desired age interval');
+        echo '<br><select id="x-axis-boundaries-ages" name="x-axis-boundaries-ages">
 				<option value="1,5,10,20,30,40,50,60,70,80,90,100" selected>',
-		I18N::plural('interval %s year', 'interval %s years', 10, I18N::number(10)), '</option>
+        I18N::plural('interval %s year', 'interval %s years', 10, I18N::number(10)), '</option>
 				<option value="5,20,40,60,75,80,85,90">',
-		I18N::plural('interval %s year', 'interval %s years', 20, I18N::number(20)), '</option>
+        I18N::plural('interval %s year', 'interval %s years', 20, I18N::number(20)), '</option>
 				<option value="10,25,50,75,100">',
-		I18N::plural('interval %s year', 'interval %s years', 25, I18N::number(25)), '</option>
+        I18N::plural('interval %s year', 'interval %s years', 25, I18N::number(25)), '</option>
 			</select><br>
 			</div>
 			<div id="x_years_m" style="display:none;">';
-		echo I18N::translate('Select the desired age interval');
-		echo '<br><select id="x-axis-boundaries-ages_m" name="x-axis-boundaries-ages_m">
+        echo I18N::translate('Select the desired age interval');
+        echo '<br><select id="x-axis-boundaries-ages_m" name="x-axis-boundaries-ages_m">
 				<option value="16,18,20,22,24,26,28,30,32,35,40,50" selected>',
-		I18N::plural('interval %s year', 'interval %s years', 2, I18N::number(2)), '</option>
+        I18N::plural('interval %s year', 'interval %s years', 2, I18N::number(2)), '</option>
 				<option value="20,25,30,35,40,45,50">',
-		I18N::plural('interval %s year', 'interval %s years', 5, I18N::number(5)), '</option>
+        I18N::plural('interval %s year', 'interval %s years', 5, I18N::number(5)), '</option>
 			</select><br>
 			</div>
 			<div id="x_months" style="display:none;">';
-		echo I18N::translate('Select the desired age interval');
-		echo '<br><select id="x-axis-boundaries-months" name="x-axis-boundaries-months">
+        echo I18N::translate('Select the desired age interval');
+        echo '<br><select id="x-axis-boundaries-months" name="x-axis-boundaries-months">
 				<option value="0,8,12,15,18,24,48" selected>', I18N::translate('months after marriage'), '</option>
 				<option value="-24,-12,0,8,12,18,24,48">', I18N::translate('months before and after marriage'), '</option>
 				<option value="0,6,9,12,15,18,21,24">', I18N::translate('quarters after marriage'), '</option>
@@ -610,8 +610,8 @@ if (!$ajax) {
 			</select><br>
 			</div>
 			<div id="x_numbers" style="display:none;">';
-		echo I18N::translate('Select the desired count interval');
-		echo '<br><select id="x-axis-boundaries-numbers" name="x-axis-boundaries-numbers">
+        echo I18N::translate('Select the desired count interval');
+        echo '<br><select id="x-axis-boundaries-numbers" name="x-axis-boundaries-numbers">
 				<option value="1,2,3,4,5,6,7,8,9,10" selected>', I18N::translate('interval one child'), '</option>
 				<option value="2,4,6,8,10,12">', I18N::translate('interval two children'), '</option>
 			</select>
@@ -619,19 +619,19 @@ if (!$ajax) {
 			</div>
 			<div id="map_opt" style="display:none;">
 			<div id="chart_type">';
-		echo I18N::translate('Chart type');
-		echo '<br><select name="chart_type" onchange="statusShowSurname(this);">
+        echo I18N::translate('Chart type');
+        echo '<br><select name="chart_type" onchange="statusShowSurname(this);">
 				<option value="indi_distribution_chart" selected>', I18N::translate('Individual distribution chart'), '</option>
 				<option value="surname_distribution_chart">', I18N::translate('Surname distribution chart'), '</option>
 			</select>
 			<br>
 			</div>
 			<div id="surname_opt" style="display:none;">';
-		echo WT_Gedcom_Tag::getLabel('SURN'), help_link('google_chart_surname'), '<br><input data-autocomplete-type="SURN" type="text" name="SURN" size="20">';
-		echo '<br>
+        echo WT_Gedcom_Tag::getLabel('SURN'), help_link('google_chart_surname'), '<br><input data-autocomplete-type="SURN" type="text" name="SURN" size="20">';
+        echo '<br>
 			</div>';
-		echo I18N::translate('Geographical area');
-		echo '<br><select id="chart_shows" name="chart_shows">
+        echo I18N::translate('Geographical area');
+        echo '<br><select id="chart_shows" name="chart_shows">
 				<option value="world" selected>', I18N::translate('World'), '</option>
 				<option value="europe">', I18N::translate('Europe'), '</option>
 				<option value="south_america">', I18N::translate('South America'), '</option>
@@ -644,42 +644,42 @@ if (!$ajax) {
 			<td class="descriptionbox width20 wrap" id="axes">', I18N::translate('Categories:'), '</td>
 			<td class="optionbox width30" id="zyaxes">
 			<input type="radio" id="z_none" name="z-as" value="300" ';
-		echo $plotshow == '300' ? 'checked' : '';
-		echo " onclick=\"statusDisable('z-axis-boundaries-periods');";
-		echo '"><label for="z_none">', I18N::translate('overall'), '</label><br>';
-		echo '<input type="radio" id="z_sex" name="z-as" value="301" ';
-		echo $plotshow == '301' ? 'checked' : '';
-		echo " onclick=\"statusDisable('z-axis-boundaries-periods');";
-		echo '"><label for="z_sex">', I18N::translate('gender'), '</label><br>';
-		echo '<input type="radio" id="z_time" name="z-as" value="302" ';
-		echo $plotshow == '302' ? 'checked' : '';
-		echo " onclick=\"statusEnable('z-axis-boundaries-periods');";
-		echo '"><label for="z_time">', I18N::translate('date periods'), '</label><br><br>';
-		echo I18N::translate('Date range'), '<br>';
-		echo '<select id="z-axis-boundaries-periods" name="z-axis-boundaries-periods">
+        echo $plotshow == '300' ? 'checked' : '';
+        echo " onclick=\"statusDisable('z-axis-boundaries-periods');";
+        echo '"><label for="z_none">', I18N::translate('overall'), '</label><br>';
+        echo '<input type="radio" id="z_sex" name="z-as" value="301" ';
+        echo $plotshow == '301' ? 'checked' : '';
+        echo " onclick=\"statusDisable('z-axis-boundaries-periods');";
+        echo '"><label for="z_sex">', I18N::translate('gender'), '</label><br>';
+        echo '<input type="radio" id="z_time" name="z-as" value="302" ';
+        echo $plotshow == '302' ? 'checked' : '';
+        echo " onclick=\"statusEnable('z-axis-boundaries-periods');";
+        echo '"><label for="z_time">', I18N::translate('date periods'), '</label><br><br>';
+        echo I18N::translate('Date range'), '<br>';
+        echo '<select id="z-axis-boundaries-periods" name="z-axis-boundaries-periods">
 				<option value="1700,1750,1800,1850,1900,1950,2000" selected>',
-			/* I18N: from 1700 interval 50 years */
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 50, I18N::digits(1700), I18N::number(50)), '</option>
+            /* I18N: from 1700 interval 50 years */
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 50, I18N::digits(1700), I18N::number(50)), '</option>
 				<option value="1800,1840,1880,1920,1950,1970,2000">',
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 40, I18N::digits(1800), I18N::number(40)), '</option>
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 40, I18N::digits(1800), I18N::number(40)), '</option>
 				<option value="1800,1850,1900,1950,2000">',
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 50, I18N::digits(1800), I18N::number(50)), '</option>
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 50, I18N::digits(1800), I18N::number(50)), '</option>
 				<option value="1900,1920,1940,1960,1980,1990,2000">',
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 20, I18N::digits(1900), I18N::number(20)), '</option>
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 20, I18N::digits(1900), I18N::number(20)), '</option>
 				<option value="1900,1925,1950,1975,2000">',
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 25, I18N::digits(1900), I18N::number(25)), '</option>
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 25, I18N::digits(1900), I18N::number(25)), '</option>
 				<option value="1940,1950,1960,1970,1980,1990,2000">',
-		I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 10, I18N::digits(1940), I18N::number(10)), '</option>
+        I18N::plural('from %1$s interval %2$s year', 'from %1$s interval %2$s years', 10, I18N::digits(1940), I18N::number(10)), '</option>
 			</select>
 			<br><br>';
-		echo I18N::translate('results:'), '<br>';
-		echo '<input type="radio" id="y_num" name="y-as" value="201" ';
-		echo $plotnp == '201' ? 'checked' : '';
-		echo '><label for="y_num">', I18N::translate('numbers'), '</label><br>';
-		echo '<input type="radio" id="y_perc" name="y-as" value="202" ';
-		echo $plotnp == '202' ? 'checked' : '';
-		echo '><label for="y_perc">', I18N::translate('percentage'), '</label><br>';
-		echo '</td>
+        echo I18N::translate('results:'), '<br>';
+        echo '<input type="radio" id="y_num" name="y-as" value="201" ';
+        echo $plotnp == '201' ? 'checked' : '';
+        echo '><label for="y_num">', I18N::translate('numbers'), '</label><br>';
+        echo '<input type="radio" id="y_perc" name="y-as" value="202" ';
+        echo $plotnp == '202' ? 'checked' : '';
+        echo '><label for="y_perc">', I18N::translate('percentage'), '</label><br>';
+        echo '</td>
 			</tr>
 			</table>
 			<table width="100%">
@@ -692,5 +692,5 @@ if (!$ajax) {
 		</table>
 		</form></div>
 		</fieldset>';
-	}
+    }
 }

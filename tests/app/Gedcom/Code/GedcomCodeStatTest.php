@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class WT_Gedcom_Code_Stat
  */
-class GedcomCodeStatTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class GedcomCodeStatTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\WT_Gedcom_Code_Stat'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\WT_Gedcom_Code_Stat'));
+    }
 }

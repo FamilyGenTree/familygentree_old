@@ -29,9 +29,9 @@ use PDOException;
 Database::exec("UPDATE `##name` SET n_full=REPLACE(n_full, '/', '') WHERE n_surn IS NOT NULL");
 
 try {
-	Database::exec("ALTER TABLE `##name` DROP n_list");
+    Database::exec("ALTER TABLE `##name` DROP n_list");
 } catch (PDOException $x) {
-	// Already done?
+    // Already done?
 }
 
 // Update the version to indicate success

@@ -21,22 +21,25 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class NoteController
  */
-class NoteControllerTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-		defined('WT_ROOT') || define('WT_ROOT', '');
-	}
+class NoteControllerTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        defined('WT_ROOT') || define('WT_ROOT', '');
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\NoteController'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\NoteController'));
+    }
 }

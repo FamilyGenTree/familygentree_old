@@ -23,9 +23,9 @@ use PDOException;
 
 // Originally migrated from PGV, but never used.
 try {
-	Database::exec("DROP TABLE `##ip_address`");
+    Database::exec("DROP TABLE `##ip_address`");
 } catch (PDOException $ex) {
-	// Already deleted?
+    // Already deleted?
 }
 
 // No longer used
@@ -33,8 +33,8 @@ Database::exec("DELETE FROM `##user_setting` WHERE setting_name in ('edit_accoun
 
 // https://bugs.launchpad.net/webtrees/+bug/1405672
 Database::exec(
-	"UPDATE `##site_access_rule` SET user_agent_pattern = 'Mozilla/5.0 (% Konqueror/%'" .
-	" WHERE user_agent_pattern='Mozilla/5.0 (compatible; Konqueror/%'"
+    "UPDATE `##site_access_rule` SET user_agent_pattern = 'Mozilla/5.0 (% Konqueror/%'" .
+    " WHERE user_agent_pattern='Mozilla/5.0 (compatible; Konqueror/%'"
 );
 
 // Update the version to indicate success

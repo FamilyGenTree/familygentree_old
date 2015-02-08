@@ -21,75 +21,84 @@ use PHPUnit_Framework_TestCase;
 /**
  * Unit tests for the global functions in the file includes/functions/functions_charts.php
  */
-class FunctionsChartsTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class FunctionsChartsTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that function print_sosa_number() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintSosaNumberExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_sosa_number'), true);
-	}
+    /**
+     * Test that function print_sosa_number() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintSosaNumberExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_sosa_number'), true);
+    }
 
-	/**
-	 * Test that function print_family_children() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintFamilyParentsExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_family_children'), true);
-	}
+    /**
+     * Test that function print_family_children() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintFamilyParentsExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_family_children'), true);
+    }
 
-	/**
-	 * Test that function print_family_children() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintFamilyChildrenExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_family_children'), true);
-	}
+    /**
+     * Test that function print_family_children() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintFamilyChildrenExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_family_children'), true);
+    }
 
-	/**
-	 * Test that function print_sosa_family() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintSosaFamilyExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_sosa_family'), true);
-	}
+    /**
+     * Test that function print_sosa_family() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintSosaFamilyExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_sosa_family'), true);
+    }
 
-	/**
-	 * Test that function print_url_arrow() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintUrlArrowExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_url_arrow'), true);
-	}
+    /**
+     * Test that function print_url_arrow() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintUrlArrowExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_url_arrow'), true);
+    }
 
-	/**
-	 * Test that function get_sosa_name() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionGetSosaNameExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\get_sosa_name'), true);
-	}
+    /**
+     * Test that function get_sosa_name() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionGetSosaNameExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\get_sosa_name'), true);
+    }
 
-	/**
-	 * Test that function print_cousins() exists in the correct namespace.
-	 *
-	 * @return void
-	 */
-	public function testFunctionPrintCousinsExists() {
-		$this->assertEquals(function_exists(__NAMESPACE__ . '\\print_cousins'), true);
-	}
+    /**
+     * Test that function print_cousins() exists in the correct namespace.
+     *
+     * @return void
+     */
+    public function testFunctionPrintCousinsExists()
+    {
+        $this->assertEquals(function_exists(__NAMESPACE__ . '\\print_cousins'), true);
+    }
 }

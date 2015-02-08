@@ -26,27 +26,27 @@ $controller = new PageController;
 $obj = GedcomRecord::getInstance(Filter::get('pid', WT_REGEX_XREF));
 
 if (
-	$obj instanceof Individual ||
-	$obj instanceof Family ||
-	$obj instanceof Source ||
-	$obj instanceof Repository ||
-	$obj instanceof Note ||
-	$obj instanceof Media
+    $obj instanceof Individual
+    || $obj instanceof Family
+    || $obj instanceof Source
+    || $obj instanceof Repository
+    || $obj instanceof Note
+    || $obj instanceof Media
 ) {
-	Zend_Session::writeClose();
-	header('Location: ' . WT_BASE_URL . $obj->getRawUrl());
-	
-	return;
+    Zend_Session::writeClose();
+    header('Location: ' . WT_BASE_URL . $obj->getRawUrl());
+
+    return;
 } elseif (!$obj || !$obj->canShow()) {
-	$controller->pageHeader();
-	echo '<div class="error">', I18N::translate('This information is private and cannot be shown.'), '</div>';
+    $controller->pageHeader();
+    echo '<div class="error">', I18N::translate('This information is private and cannot be shown.'), '</div>';
 } else {
-	$controller->pageHeader();
-	echo
-		'<pre style="white-space:pre-wrap; word-wrap:break-word;">',
-		preg_replace(
-			'/@(' . WT_REGEX_XREF . ')@/', '@<a href="gedrecord.php?pid=$1">$1</a>@',
-			Filter::escapeHtml($obj->getGedcom())
-		),
-		'</pre>';
+    $controller->pageHeader();
+    echo
+    '<pre style="white-space:pre-wrap; word-wrap:break-word;">',
+    preg_replace(
+        '/@(' . WT_REGEX_XREF . ')@/', '@<a href="gedrecord.php?pid=$1">$1</a>@',
+        Filter::escapeHtml($obj->getGedcom())
+    ),
+    '</pre>';
 }

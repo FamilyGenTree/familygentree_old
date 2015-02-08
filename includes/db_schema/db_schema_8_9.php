@@ -22,11 +22,11 @@ use PDOException;
 // - add support for the persian/jalali calendar
 
 try {
-	Database::exec(
-		"ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
-	);
+    Database::exec(
+        "ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
+    );
 } catch (PDOException $ex) {
-	// Already been run?
+    // Already been run?
 }
 
 // Update the version to indicate success

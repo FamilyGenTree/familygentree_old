@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Unit tests for the batch update plugin: married_names
  */
-class MarriedNamesBuPluginTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class MarriedNamesBuPluginTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists.
-	 *
-	 * @return void
-	 */
-	public function testFunctionGetUserFullNameExists() {
-		$this->assertEquals(true, class_exists(__NAMESPACE__ . '\\BatchUpdateMarriedNamesPlugin'));
-	}
+    /**
+     * Test that the class exists.
+     *
+     * @return void
+     */
+    public function testFunctionGetUserFullNameExists()
+    {
+        $this->assertEquals(true, class_exists(__NAMESPACE__ . '\\BatchUpdateMarriedNamesPlugin'));
+    }
 }

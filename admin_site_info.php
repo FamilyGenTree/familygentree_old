@@ -21,12 +21,15 @@ require './includes/session.php';
 
 $controller = new PageController;
 $controller
-	->restrictAccess(Auth::isAdmin())
-	->setPageTitle(I18N::translate('Server information'))
-	->pageHeader();
+    ->restrictAccess(Auth::isAdmin())
+    ->setPageTitle(I18N::translate('Server information'))
+    ->pageHeader();
 
-$variables = Database::prepare("SHOW VARIABLES")->fetchAssoc();
-array_walk($variables, function(&$x) { $x = str_replace(',', ', ', $x); });
+$variables = Database::prepare("SHOW VARIABLES")
+                     ->fetchAssoc();
+array_walk($variables, function (&$x) {
+    $x = str_replace(',', ', ', $x);
+});
 
 ob_start();
 phpinfo(INFO_ALL & ~INFO_CREDITS & ~INFO_LICENSE);
@@ -37,68 +40,76 @@ $html  = $matches[2];
 ?>
 
 <ol class="breadcrumb small">
-	<li><a href="admin.php"><?php echo I18N::translate('Control panel'); ?></a></li>
-	<li class="active"><?php echo $controller->getPageTitle(); ?></li>
+    <li><a href="admin.php"><?php echo I18N::translate('Control panel'); ?></a></li>
+    <li class="active"><?php echo $controller->getPageTitle(); ?></li>
 </ol>
 
 <h1><?php echo $controller->getPageTitle(); ?></h1>
 
 <div class="row">
-	<div class="col-xs-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h2 class="panel-title">
-					<?php echo I18N::translate('Time'); ?>
-				</h2>
-			</div>
-			<div class="panel-body">
-				<?php echo /* I18N: The local time on the server */ I18N::translate('Server time'); ?> —
-				<?php echo format_timestamp(WT_SERVER_TIMESTAMP); ?><br>
-				<?php echo /* I18N: The local time on the client/browser */ I18N::translate('Client time'); ?> —
-				<?php echo format_timestamp(WT_CLIENT_TIMESTAMP); ?><br>
-				<?php echo /* I18N: Timezone - http://en.wikipedia.org/wiki/UTC */ I18N::translate('UTC'); ?> —
-				<?php echo format_timestamp(WT_TIMESTAMP); ?>
-			</div>
-		</div>
-	</div>
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <?php echo I18N::translate('Time'); ?>
+                </h2>
+            </div>
+            <div class="panel-body">
+                <?php echo /* I18N: The local time on the server */
+                I18N::translate('Server time'); ?> —
+                <?php echo format_timestamp(WT_SERVER_TIMESTAMP); ?><br>
+                <?php echo /* I18N: The local time on the client/browser */
+                I18N::translate('Client time'); ?> —
+                <?php echo format_timestamp(WT_CLIENT_TIMESTAMP); ?><br>
+                <?php echo /* I18N: Timezone - http://en.wikipedia.org/wiki/UTC */
+                I18N::translate('UTC'); ?> —
+                <?php echo format_timestamp(WT_TIMESTAMP); ?>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
-	<div class="col-xs-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h2 class="panel-title">
-					<?php echo I18N::translate('PHP information'); ?>
-				</h2>
-			</div>
-			<div class="panel-body">
-				<style type="text/css" scoped>
-					<?php echo $style; ?>
-					table { width: 100%; }
-					td.v { word-break: break-all; }
-				</style>
-				<?php echo $html; ?>
-			</div>
-		</div>
-	</div>
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <?php echo I18N::translate('PHP information'); ?>
+                </h2>
+            </div>
+            <div class="panel-body">
+                <style type="text/css" scoped>
+                    <?php echo $style; ?>
+                    table {
+                        width: 100%;
+                    }
+
+                    td.v {
+                        word-break: break-all;
+                    }
+                </style>
+                <?php echo $html; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
-	<div class="col-xs-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h2 class="panel-title">
-					<?php echo I18N::translate('MySQL variables'); ?>
-				</h2>
-			</div>
-			<div class="panel-body">
-				<dl>
-					<?php foreach ($variables as $variable => $value): ?>
-						<dt><?php echo Filter::escapeHtml($variable); ?></dt>
-						<dd><?php echo Filter::escapeHtml($value); ?></dd>
-					<?php endforeach; ?>
-				</dl>
-			</div>
-		</div>
-	</div>
+    <div class="col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title">
+                    <?php echo I18N::translate('MySQL variables'); ?>
+                </h2>
+            </div>
+            <div class="panel-body">
+                <dl>
+                    <?php foreach ($variables as $variable => $value): ?>
+                        <dt><?php echo Filter::escapeHtml($variable); ?></dt>
+                        <dd><?php echo Filter::escapeHtml($value); ?></dd>
+                    <?php endforeach; ?>
+                </dl>
+            </div>
+        </div>
+    </div>
 </div>

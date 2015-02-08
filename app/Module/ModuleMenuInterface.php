@@ -19,18 +19,19 @@ namespace Fisharebest\Webtrees;
 /**
  * Interface ModuleMenuInterface - Classes and libraries for module system
  */
-interface ModuleMenuInterface {
-	/**
-	 * The user can re-order menus.  Until they do, they are shown in this order.
-	 *
-	 * @return integer
-	 */
-	public function defaultMenuOrder();
+interface ModuleMenuInterface
+{
+    /**
+     * The user can re-order menus.  Until they do, they are shown in this order.
+     *
+     * @return integer
+     */
+    public function defaultMenuOrder();
 
-	/**
-	 * A menu, to be added to the main application menu.
-	 *
-	 * @return Menu|null
-	 */
-	public function getMenu();
+    /**
+     * A menu, to be added to the main application menu.
+     *
+     * @return Menu|null
+     */
+    public function getMenu();
 }

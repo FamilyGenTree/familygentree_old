@@ -32,71 +32,76 @@ namespace Fisharebest\Webtrees;
  * Only the first two functions are required: themeId() and themeName().
  * The rest are just examples, and should be removed in actual themes.
  */
-class CustomTheme extends WebtreesTheme {
-	/**
-	 * Give your theme a unique identifier.  Themes beginning with an underscore
-	 * are reserved for internal use.
-	 *
-	 * {@inheritdoc}
-	 */
-	public function themeId() {
-		return '_custom';
-	}
+class CustomTheme extends WebtreesTheme
+{
+    /**
+     * Give your theme a unique identifier.  Themes beginning with an underscore
+     * are reserved for internal use.
+     *
+     * {@inheritdoc}
+     */
+    public function themeId()
+    {
+        return '_custom';
+    }
 
-	/**
-	 * Give your theme a name.  This is shown to the users.
-	 * Use HTML entities where appropriate.  e.g. “Black &amp; white”.
-	 *
-	 * You could use switch($this->locale) {} to provide a translated versions
-	 * of the theme name.
-	 *
-	 * {@inheritdoc}
-	 */
-	public function themeName() {
-		return 'Custom theme';
-	}
+    /**
+     * Give your theme a name.  This is shown to the users.
+     * Use HTML entities where appropriate.  e.g. “Black &amp; white”.
+     *
+     * You could use switch($this->locale) {} to provide a translated versions
+     * of the theme name.
+     *
+     * {@inheritdoc}
+     */
+    public function themeName()
+    {
+        return 'Custom theme';
+    }
 
-	/**
-	 * This is an example function which shows how to add an additional CSS file to the theme.
-	 *
-	 * {@inheritdoc}
-	 */
-	public function stylesheets() {
-		try {
-			$css_files   = parent::stylesheets();
-			// Put a version number in the URL, to prevent browsers from caching old versions.
-			$css_files[] = WT_BASE_URL . 'themes/custom/custom.css';
-		} catch (\Exception $ex) {
-			// Something went wrong with our script?  Use the default behaviour instead.
-			return parent::stylesheets();
-		}
+    /**
+     * This is an example function which shows how to add an additional CSS file to the theme.
+     *
+     * {@inheritdoc}
+     */
+    public function stylesheets()
+    {
+        try {
+            $css_files = parent::stylesheets();
+            // Put a version number in the URL, to prevent browsers from caching old versions.
+            $css_files[] = WT_BASE_URL . 'themes/custom/custom.css';
+        } catch (\Exception $ex) {
+            // Something went wrong with our script?  Use the default behaviour instead.
+            return parent::stylesheets();
+        }
 
-		return $css_files;
-	}
+        return $css_files;
+    }
 
-	/**
-	 * This is an example function which shows one way to remove an entry from a menu.
-	 *
-	 * {@inheritdoc}
-	 */
-	public function menuLists() {
-		try {
-			// Start with the default "Lists" menu.
-			$menu = parent::menuLists();
-			// Remove the "notes" sub-menu.
-			$submenus = array_filter($menu->getSubmenus(), function(Menu $menu) {
-				return $menu->getId() !== 'menu-list-note';
-			});
-			// Replace the sub-menus
-			$menu->setSubmenus($submenus);
-		} catch (\Exception $ex) {
-			// Something went wrong with our script?  Maybe the core code was updated?
-			// Use the default behaviour instead, so that our theme continues to work.
-			return parent::menuLists();
-		}
+    /**
+     * This is an example function which shows one way to remove an entry from a menu.
+     *
+     * {@inheritdoc}
+     */
+    public function menuLists()
+    {
+        try {
+            // Start with the default "Lists" menu.
+            $menu = parent::menuLists();
+            // Remove the "notes" sub-menu.
+            $submenus = array_filter($menu->getSubmenus(), function (Menu $menu) {
+                return $menu->getId() !== 'menu-list-note';
+            });
+            // Replace the sub-menus
+            $menu->setSubmenus($submenus);
+        } catch (\Exception $ex) {
+            // Something went wrong with our script?  Maybe the core code was updated?
+            // Use the default behaviour instead, so that our theme continues to work.
+            return parent::menuLists();
+        }
 
-		return $menu;
-	}
+        return $menu;
+    }
 }
 
 return new CustomTheme; // This script must return a theme object.

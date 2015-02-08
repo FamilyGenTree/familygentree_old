@@ -23,9 +23,9 @@ use PDOException;
 // Add the new constraints
 
 try {
-	Database::exec("ALTER TABLE `##favorite` CHANGE note note VARCHAR(1000) NULL");
+    Database::exec("ALTER TABLE `##favorite` CHANGE note note VARCHAR(1000) NULL");
 } catch (PDOException $ex) {
-	// Already updated?
+    // Already updated?
 }
 
 // Update the version to indicate success

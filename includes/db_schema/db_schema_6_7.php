@@ -22,27 +22,27 @@ use PDOException;
 // - remove tables/columns relating to remote linking
 
 try {
-	Database::exec(
-		"DROP TABLE `##remotelinks`"
-	);
+    Database::exec(
+        "DROP TABLE `##remotelinks`"
+    );
 } catch (PDOException $ex) {
-	// already been done?
+    // already been done?
 }
 
 try {
-	Database::exec(
-		"ALTER TABLE `##sources` DROP INDEX ix2"
-	);
+    Database::exec(
+        "ALTER TABLE `##sources` DROP INDEX ix2"
+    );
 } catch (PDOException $ex) {
-	// already been done?
+    // already been done?
 }
 
 try {
-	Database::exec(
-		"ALTER TABLE `##sources` DROP COLUMN s_dbid"
-	);
+    Database::exec(
+        "ALTER TABLE `##sources` DROP COLUMN s_dbid"
+    );
 } catch (PDOException $ex) {
-	// already been done?
+    // already been done?
 }
 
 // Update the version to indicate success

@@ -21,19 +21,19 @@ namespace Fisharebest\Webtrees;
 
 // Tree settings become site settings
 Database::exec(
-	"INSERT IGNORE INTO `##site_setting` (setting_name, setting_value)" .
-	" SELECT setting_name, setting_value" .
-	" FROM `##gedcom_setting`" .
-	" WHERE setting_name IN ('SHOW_REGISTER_CAUTION', 'WELCOME_TEXT_CUST_HEAD') OR setting_name like 'WELCOME_TEXT_AUTH_MODE%'" .
-	" GROUP BY setting_name"
+    "INSERT IGNORE INTO `##site_setting` (setting_name, setting_value)" .
+    " SELECT setting_name, setting_value" .
+    " FROM `##gedcom_setting`" .
+    " WHERE setting_name IN ('SHOW_REGISTER_CAUTION', 'WELCOME_TEXT_CUST_HEAD') OR setting_name like 'WELCOME_TEXT_AUTH_MODE%'" .
+    " GROUP BY setting_name"
 );
 
 Database::exec(
-	"DELETE FROM `##gedcom_setting` WHERE setting_name IN ('ALLOW_EDIT_GEDCOM', 'SHOW_REGISTER_CAUTION', 'WELCOME_TEXT_CUST_HEAD') OR setting_name like 'WELCOME_TEXT_AUTH_MODE%'"
+    "DELETE FROM `##gedcom_setting` WHERE setting_name IN ('ALLOW_EDIT_GEDCOM', 'SHOW_REGISTER_CAUTION', 'WELCOME_TEXT_CUST_HEAD') OR setting_name like 'WELCOME_TEXT_AUTH_MODE%'"
 );
 
 Database::exec(
-	"DELETE FROM `##site_setting` WHERE setting_name IN ('STORE_MESSAGES')"
+    "DELETE FROM `##site_setting` WHERE setting_name IN ('STORE_MESSAGES')"
 );
 
 // Update the version to indicate success

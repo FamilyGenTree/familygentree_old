@@ -19,36 +19,44 @@ namespace Fisharebest\Webtrees;
 /**
  * Class relative_ext_report_WT_Module
  */
-class relative_ext_report_WT_Module extends Module implements ModuleReportInterface {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		// This text also appears in the .XML file - update both together
-		return /* I18N: Name of a report */ I18N::translate('Related individuals');
-	}
+class relative_ext_report_WT_Module extends Module implements ModuleReportInterface
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        // This text also appears in the .XML file - update both together
+        return /* I18N: Name of a report */
+            I18N::translate('Related individuals');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		// This text also appears in the .XML file - update both together
-		return /* I18N: Description of the “Related individuals” module */ I18N::translate('A report of the individuals that are closely related to an individual.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        // This text also appears in the .XML file - update both together
+        return /* I18N: Description of the “Related individuals” module */
+            I18N::translate('A report of the individuals that are closely related to an individual.');
+    }
 
-	/** {@inheritdoc} */
-	public function defaultAccessLevel() {
-		return WT_PRIV_PUBLIC;
-	}
+    /** {@inheritdoc} */
+    public function defaultAccessLevel()
+    {
+        return WT_PRIV_PUBLIC;
+    }
 
-	/** {@inheritdoc} */
-	public function getReportMenus() {
-		global $controller;
+    /** {@inheritdoc} */
+    public function getReportMenus()
+    {
+        global $controller;
 
-		$menus = array();
-		$menu = new Menu(
-			$this->getTitle(),
-			'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml&amp;pid=' . $controller->getSignificantIndividual()->getXref(),
-			'menu-report-' . $this->getName()
-		);
-		$menus[] = $menu;
+        $menus   = array();
+        $menu    = new Menu(
+            $this->getTitle(),
+            'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml&amp;pid=' . $controller->getSignificantIndividual()
+                                                                                                                                                            ->getXref(),
+            'menu-report-' . $this->getName()
+        );
+        $menus[] = $menu;
 
-		return $menus;
-	}
+        return $menus;
+    }
 }

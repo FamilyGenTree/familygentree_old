@@ -24,15 +24,15 @@ use PDOException;
 // Also clean out some old/unused values and files.
 
 try {
-	Database::exec("ALTER TABLE `##gedcom` ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0");
+    Database::exec("ALTER TABLE `##gedcom` ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0");
 } catch (PDOException $ex) {
-	// If this fails, it has probably already been done.
+    // If this fails, it has probably already been done.
 }
 
 try {
-	Database::exec("ALTER TABLE `##gedcom` ADD INDEX ix1 (sort_order)");
+    Database::exec("ALTER TABLE `##gedcom` ADD INDEX ix1 (sort_order)");
 } catch (PDOException $ex) {
-	// If this fails, it has probably already been done.
+    // If this fails, it has probably already been done.
 }
 
 // No longer used

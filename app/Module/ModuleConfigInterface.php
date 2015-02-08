@@ -19,12 +19,13 @@ namespace Fisharebest\Webtrees;
 /**
  * Interface ModuleConfigInterface - Classes and libraries for module system
  */
-interface ModuleConfigInterface {
-	/**
-	 * The URL to a page where the user can modify the configuration of this module.
-	 * These links are displayed in the admin page menu.
-	 *
-	 * @return string
-	 */
-	public function getConfigLink();
+interface ModuleConfigInterface
+{
+    /**
+     * The URL to a page where the user can modify the configuration of this module.
+     * These links are displayed in the admin page menu.
+     *
+     * @return string
+     */
+    public function getConfigLink();
 }

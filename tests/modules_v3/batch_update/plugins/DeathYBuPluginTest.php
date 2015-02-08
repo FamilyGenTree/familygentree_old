@@ -21,21 +21,24 @@ use PHPUnit_Framework_TestCase;
 /**
  * Unit tests for the batch update plugin: death_y
  */
-class DeathYBuPluginTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-	}
+class DeathYBuPluginTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+    }
 
-	/**
-	 * Test that the class exists.
-	 *
-	 * @return void
-	 */
-	public function testFunctionGetUserFullNameExists() {
-		$this->assertEquals(true, class_exists(__NAMESPACE__ . '\\BatchUpdateMissingDeathPlugin'));
-	}
+    /**
+     * Test that the class exists.
+     *
+     * @return void
+     */
+    public function testFunctionGetUserFullNameExists()
+    {
+        $this->assertEquals(true, class_exists(__NAMESPACE__ . '\\BatchUpdateMissingDeathPlugin'));
+    }
 }

@@ -21,22 +21,25 @@ use PHPUnit_Framework_TestCase;
 /**
  * Test harness for the class FamilyController
  */
-class FamilyControllerTest extends PHPUnit_Framework_TestCase {
-	/**
-	 * Prepare the environment for these tests
-	 *
-	 * @return void
-	 */
-	public function setUp() {
-		defined('WT_ROOT') || define('WT_ROOT', '');
-	}
+class FamilyControllerTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Prepare the environment for these tests
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        defined('WT_ROOT') || define('WT_ROOT', '');
+    }
 
-	/**
-	 * Test that the class exists
-	 *
-	 * @return void
-	 */
-	public function testClassExists() {
-		$this->assertTrue(class_exists(__NAMESPACE__ . '\FamilyController'));
-	}
+    /**
+     * Test that the class exists
+     *
+     * @return void
+     */
+    public function testClassExists()
+    {
+        $this->assertTrue(class_exists(__NAMESPACE__ . '\FamilyController'));
+    }
 }

@@ -29,20 +29,20 @@ Database::exec("DROP TABLE IF EXISTS `##media_mapping`");
 
 // Make this table look like all the others
 try {
-	Database::exec(
-		"ALTER TABLE `##media`" .
-		" DROP   m_id," .
-		" CHANGE m_media   m_id       VARCHAR(20)  COLLATE utf8_unicode_ci NOT NULL," .
-		" CHANGE m_file    m_filename VARCHAR(512) COLLATE utf8_unicode_ci DEFAULT NULL," .
-		" CHANGE m_gedfile m_file     INTEGER                              NOT NULL," .
-		" CHANGE m_gedrec  m_gedcom   MEDIUMTEXT   COLLATE utf8_unicode_ci DEFAULT NULL," .
-		" ADD    m_type               VARCHAR(20)  COLLATE utf8_unicode_ci NULL AFTER m_ext," .
-		" ADD    PRIMARY KEY     (m_file, m_id)," .
-		" ADD            KEY ix2 (m_ext, m_type)," .
-		" ADD            KEY ix3 (m_titl)"
-	);
+    Database::exec(
+        "ALTER TABLE `##media`" .
+        " DROP   m_id," .
+        " CHANGE m_media   m_id       VARCHAR(20)  COLLATE utf8_unicode_ci NOT NULL," .
+        " CHANGE m_file    m_filename VARCHAR(512) COLLATE utf8_unicode_ci DEFAULT NULL," .
+        " CHANGE m_gedfile m_file     INTEGER                              NOT NULL," .
+        " CHANGE m_gedrec  m_gedcom   MEDIUMTEXT   COLLATE utf8_unicode_ci DEFAULT NULL," .
+        " ADD    m_type               VARCHAR(20)  COLLATE utf8_unicode_ci NULL AFTER m_ext," .
+        " ADD    PRIMARY KEY     (m_file, m_id)," .
+        " ADD            KEY ix2 (m_ext, m_type)," .
+        " ADD            KEY ix3 (m_titl)"
+    );
 } catch (PDOException $ex) {
-	// Assume we've already done this
+    // Assume we've already done this
 }
 
 // Populate the new column

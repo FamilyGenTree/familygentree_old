@@ -20,347 +20,365 @@ use Fgt\Globals;
 /**
  * Class GEDFact_assistant_WT_Module
  */
-class GEDFact_assistant_WT_Module extends Module {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		return /* I18N: Name of a module */ I18N::translate('Census assistant');
-	}
+class GEDFact_assistant_WT_Module extends Module
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        return /* I18N: Name of a module */
+            I18N::translate('Census assistant');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		return /* I18N: Description of the “Census assistant” module */ I18N::translate('An alternative way to enter census transcripts and link them to individuals.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        return /* I18N: Description of the “Census assistant” module */
+            I18N::translate('An alternative way to enter census transcripts and link them to individuals.');
+    }
 
-	/** {@inheritdoc} */
-	public function modAction($mod_action) {
-		switch ($mod_action) {
-		case '_CENS/census_3_find':
-			// TODO: this file should be a method in this class
-			require WT_ROOT . WT_MODULES_DIR . $this->getName() . '/_CENS/census_3_find.php';
-			break;
-		case 'media_3_find':
-			self::media_3_find();
-			break;
-		case 'media_query_3a':
-			self::media_query_3a();
-			break;
-		default:
-			echo $mod_action;
-			http_response_code(404);
-		}
-	}
+    /** {@inheritdoc} */
+    public function modAction($mod_action)
+    {
+        switch ($mod_action) {
+            case '_CENS/census_3_find':
+                // TODO: this file should be a method in this class
+                require WT_ROOT . WT_MODULES_DIR . $this->getName() . '/_CENS/census_3_find.php';
+                break;
+            case 'media_3_find':
+                self::media_3_find();
+                break;
+            case 'media_query_3a':
+                self::media_query_3a();
+                break;
+            default:
+                echo $mod_action;
+                http_response_code(404);
+        }
+    }
 
-	/**
-	 * ...
-	 */
-	private static function media_3_find() {
-		$controller = new SimpleController;
-		$filter     = Filter::get('filter');
-		$multiple   = Filter::getBool('multiple');
+    /**
+     * ...
+     */
+    private static function media_3_find()
+    {
+        $controller = new SimpleController;
+        $filter     = Filter::get('filter');
+        $multiple   = Filter::getBool('multiple');
 
-		$controller
-			->setPageTitle(I18N::translate('Find an individual'))
-			->pageHeader();
+        $controller
+            ->setPageTitle(I18N::translate('Find an individual'))
+            ->pageHeader();
 
-		echo '<script>';
-		?>
+        echo '<script>';
+        ?>
 
-			function pasterow(id, name, gend, yob, age, bpl) {
-				window.opener.opener.insertRowToTable(id, name, '', gend, '', yob, age, 'Y', '', bpl);
-			}
+        function pasterow(id, name, gend, yob, age, bpl) {
+        window.opener.opener.insertRowToTable(id, name, '', gend, '', yob, age, 'Y', '', bpl);
+        }
 
-			function pasteid(id, name, thumb) {
-				if (thumb) {
-					window.opener.paste_id(id, name, thumb);
-					<?php if (!$multiple) echo "window.close();"; ?>
-				} else {
-					// GEDFact_assistant ========================
-					if (window.opener.document.getElementById('addlinkQueue')) {
-						window.opener.insertRowToTable(id, name);
-						// Check if Indi, Fam or source ===================
-						/*
-						if (id.match("I")=="I") {
-							var win01 = window.opener.window.open('edit_interface.php?action=addmedia_links&noteid=newnote&pid='+id, 'win01', edit_window_specs);
-							if (window.focus) {win01.focus();}
-						} else if (id.match("F")=="F") {
-							// TODO --- alert('Opening Navigator with family id entered will come later');
-						}
-						*/
-					}
-					window.opener.paste_id(id);
-					if (window.opener.pastename) {
-						window.opener.pastename(name);
-					}
-					<?php if (!$multiple) echo "window.close();"; ?>
-				}
-			}
-			function checknames(frm) {
-				if (document.forms[0].subclick) {
-					button = document.forms[0].subclick.value;
-				} else {
-					button = "";
-				}
-				if (frm.filter.value.length<2&button!="all") {
-					alert("<?php echo I18N::translate('Please enter more than one character'); ?>");
-					frm.filter.focus();
-					return false;
-				}
-				if (button=="all") {
-					frm.filter.value = "";
-				}
-				return true;
-			}
-		<?php
-		echo '</script>';
+        function pasteid(id, name, thumb) {
+        if (thumb) {
+        window.opener.paste_id(id, name, thumb);
+        <?php if (!$multiple) {
+        echo "window.close();";
+    } ?>
+        } else {
+        // GEDFact_assistant ========================
+        if (window.opener.document.getElementById('addlinkQueue')) {
+        window.opener.insertRowToTable(id, name);
+        // Check if Indi, Fam or source ===================
+        /*
+        if (id.match("I")=="I") {
+        var win01 = window.opener.window.open('edit_interface.php?action=addmedia_links&noteid=newnote&pid='+id, 'win01', edit_window_specs);
+        if (window.focus) {win01.focus();}
+        } else if (id.match("F")=="F") {
+        // TODO --- alert('Opening Navigator with family id entered will come later');
+        }
+        */
+        }
+        window.opener.paste_id(id);
+        if (window.opener.pastename) {
+        window.opener.pastename(name);
+        }
+        <?php if (!$multiple) {
+        echo "window.close();";
+    } ?>
+        }
+        }
+        function checknames(frm) {
+        if (document.forms[0].subclick) {
+        button = document.forms[0].subclick.value;
+        } else {
+        button = "";
+        }
+        if (frm.filter.value.length<2&button!="all") {
+        alert("<?php echo I18N::translate('Please enter more than one character'); ?>");
+        frm.filter.focus();
+        return false;
+        }
+        if (button=="all") {
+        frm.filter.value = "";
+        }
+        return true;
+        }
+        <?php
+        echo '</script>';
 
-		echo "<div align=\"center\">";
-		echo "<table class=\"list_table width90\" border=\"0\">";
-		echo "<tr><td style=\"padding: 10px;\" valign=\"top\" class=\"facts_label03 width90\">"; // start column for find text header
-		echo $controller->getPageTitle();
-		echo "</td>";
-		echo "</tr>";
-		echo "</table>";
-		echo "<br>";
-		echo '<button onclick="window.close();">', I18N::translate('close'), '</button>';
-		echo "<br>";
+        echo "<div align=\"center\">";
+        echo "<table class=\"list_table width90\" border=\"0\">";
+        echo "<tr><td style=\"padding: 10px;\" valign=\"top\" class=\"facts_label03 width90\">"; // start column for find text header
+        echo $controller->getPageTitle();
+        echo "</td>";
+        echo "</tr>";
+        echo "</table>";
+        echo "<br>";
+        echo '<button onclick="window.close();">', I18N::translate('close'), '</button>';
+        echo "<br>";
 
-		$filter = trim($filter);
-		$filter_array = explode(' ', preg_replace('/ {2,}/', ' ', $filter));
-		echo "<table class=\"tabs_table width90\"><tr>";
-		$myindilist = search_indis_names($filter_array, array(WT_GED_ID), 'AND');
-		if ($myindilist) {
-			echo "<td class=\"list_value_wrap\"><ul>";
-			usort($myindilist, __NAMESPACE__ . '\GedcomRecord::compare');
-			foreach ($myindilist as $indi) {
-				$nam = Filter::escapeHtml($indi->getFullName());
-				echo "<li><a href=\"#\" onclick=\"pasterow(
-					'".$indi->getXref() . "' ,
-					'".$nam . "' ,
-					'".$indi->getSex() . "' ,
-					'".$indi->getbirthyear() . "' ,
-					'".(1901 - $indi->getbirthyear()) . "' ,
-					'".$indi->getbirthplace() . "'); return false;\">
-					<b>".$indi->getFullName() . "</b>&nbsp;&nbsp;&nbsp;";
+        $filter       = trim($filter);
+        $filter_array = explode(' ', preg_replace('/ {2,}/', ' ', $filter));
+        echo "<table class=\"tabs_table width90\"><tr>";
+        $myindilist = search_indis_names($filter_array, array(WT_GED_ID), 'AND');
+        if ($myindilist) {
+            echo "<td class=\"list_value_wrap\"><ul>";
+            usort($myindilist, __NAMESPACE__ . '\GedcomRecord::compare');
+            foreach ($myindilist as $indi) {
+                $nam = Filter::escapeHtml($indi->getFullName());
+                echo "<li><a href=\"#\" onclick=\"pasterow(
+					'" . $indi->getXref() . "' ,
+					'" . $nam . "' ,
+					'" . $indi->getSex() . "' ,
+					'" . $indi->getbirthyear() . "' ,
+					'" . (1901 - $indi->getbirthyear()) . "' ,
+					'" . $indi->getbirthplace() . "'); return false;\">
+					<b>" . $indi->getFullName() . "</b>&nbsp;&nbsp;&nbsp;";
 
-				$born = WT_Gedcom_Tag::getLabel('BIRT');
-				echo "</span><br><span class=\"list_item\">", $born, " ", $indi->getbirthyear(), "&nbsp;&nbsp;&nbsp;", $indi->getbirthplace(), "</span></a></li>";
-			echo "<hr>";
-			}
-			echo '</ul></td></tr><tr><td class="list_label">', I18N::translate('Total individuals: %s', count($myindilist)), '</tr></td>';
-		} else {
-			echo "<td class=\"list_value_wrap\">";
-			echo I18N::translate('No results found.');
-			echo "</td></tr>";
-		}
-		echo "</table>";
-		echo '</div>';
-	}
+                $born = WT_Gedcom_Tag::getLabel('BIRT');
+                echo "</span><br><span class=\"list_item\">", $born, " ", $indi->getbirthyear(), "&nbsp;&nbsp;&nbsp;", $indi->getbirthplace(), "</span></a></li>";
+                echo "<hr>";
+            }
+            echo '</ul></td></tr><tr><td class="list_label">', I18N::translate('Total individuals: %s', count($myindilist)), '</tr></td>';
+        } else {
+            echo "<td class=\"list_value_wrap\">";
+            echo I18N::translate('No results found.');
+            echo "</td></tr>";
+        }
+        echo "</table>";
+        echo '</div>';
+    }
 
-	/**
-	 * ...
-	 */
-	private static function media_query_3a() {
-		$iid2 = Filter::get('iid', WT_REGEX_XREF);
+    /**
+     * ...
+     */
+    private static function media_query_3a()
+    {
+        $iid2 = Filter::get('iid', WT_REGEX_XREF);
 
-		$controller = new SimpleController;
-		$controller
-			->setPageTitle(I18N::translate('Link to an existing media object'))
-			->pageHeader();
+        $controller = new SimpleController;
+        $controller
+            ->setPageTitle(I18N::translate('Link to an existing media object'))
+            ->pageHeader();
 
-		$record = GedcomRecord::getInstance($iid2);
-		if ($record) {
-			$headjs = '';
-			if ($record instanceof Family) {
-				if ($record->getHusband()) {
-					$headjs = $record->getHusband()->getXref();
-				} elseif ($record->getWife()) {
-					$headjs = $record->getWife()->getXref();
-				}
-			}
-			?>
-			<script>
-			function insertId() {
-				if (window.opener.document.getElementById('addlinkQueue')) {
-					// alert('Please move this alert window and examine the contents of the pop-up window, then click OK')
-					window.opener.insertRowToTable('<?php echo $record->getXref(); ?>', '<?php echo htmlSpecialChars($record->getFullName()); ?>', '<?php echo $headjs; ?>');
-					window.close();
-				}
-			}
-			</script>
-			<?php
+        $record = GedcomRecord::getInstance($iid2);
+        if ($record) {
+            $headjs = '';
+            if ($record instanceof Family) {
+                if ($record->getHusband()) {
+                    $headjs = $record->getHusband()
+                                     ->getXref();
+                } elseif ($record->getWife()) {
+                    $headjs = $record->getWife()
+                                     ->getXref();
+                }
+            }
+            ?>
+            <script>
+                function insertId() {
+                    if (window.opener.document.getElementById('addlinkQueue')) {
+                        // alert('Please move this alert window and examine the contents of the pop-up window, then click OK')
+                        window.opener.insertRowToTable('<?php echo $record->getXref(); ?>', '<?php echo htmlSpecialChars($record->getFullName()); ?>', '<?php echo $headjs; ?>');
+                        window.close();
+                    }
+                }
+            </script>
+        <?php
 
-		} else {
-			?>
-			<script>
-			function insertId() {
-				window.opener.alert('<?php echo strtoupper($iid2); ?> - <?php echo I18N::translate('Not a valid individual, family, or source ID'); ?>');
-				window.close();
-			}
-			</script>
-			<?php
-		}
-		?>
-		<script>window.onLoad = insertId();</script>
-		<?php
-	}
+        } else {
+            ?>
+            <script>
+                function insertId() {
+                    window.opener.alert('<?php echo strtoupper($iid2); ?> - <?php echo I18N::translate('Not a valid individual, family, or source ID'); ?>');
+                    window.close();
+                }
+            </script>
+        <?php
+        }
+        ?>
+        <script>window.onLoad = insertId();</script>
+    <?php
+    }
 
-	/**
-	 * Convert custom markup into HTML
-	 *
-	 * @param Note $note
-	 *
-	 * @return string
-	 */
-	public static function formatCensusNote(Note $note) {
-		$headers = array(
-			'AgM'        => 'Age at first marriage',
-			'Age'        => 'Age at last birthday',
-			'Assets'     => 'Assets = Owned,Rented - Value,Rent - Radio - Farm',
-			'BIC'        => 'Born in County',
-			'BOE'        => 'Born outside England',
-			'BP'         => 'Birthplace - (Chapman format)',
-			'Birthplace' => 'Birthplace (Full format)',
-			'Bmth'       => 'Month of birth - If born within Census year',
-			'ChB'        => 'Children born alive',
-			'ChD'        => 'Children who have died',
-			'ChL'        => 'Children still living',
-			'DOB'        => 'Date of birth',
-			'Edu'        => 'Education - At School, Can Read, Can Write', // or "Cannot Read, Cannot Write" ??
-			'EmD'        => 'Employed?',
-			'EmN'        => 'Unemployed?',
-			'EmR'        => 'Employer?',
-			'Employ'     => 'Employment',
-			'Eng?'       => 'English spoken?',
-			'EngL'       => 'English spoken?, if not, Native Language',
-			'FBP'        => 'Father’s Birthplace - (Chapman format)',
-			'Health'     => 'Health - 1.Blind, 2.Deaf & Dumb, 3.Idiotic, 4.Insane, 5.Disabled etc',
-			'Home'       => 'Home Ownership - Owned/Rented-Free/Mortgaged-Farm/House-Farm Schedule number',
-			'Industry'   => 'Industry',
-			'Infirm'     => 'Infirmities - 1. Deaf & Dumb, 2. Blind, 3. Lunatic, 4. Imbecile/feeble-minded',
-			'Lang'       => 'If Foreign Born - Native Language',
-			'MBP'        => 'Mother’s Birthplace - (Chapman format)',
-			'MC'         => 'Marital Condition - Married, Single, Unmarried, Widowed or Divorced',
-			'Mmth'       => 'Month of marriage - If married during Census Year',
-			'MnsE'       => 'Months employed during Census Year',
-			'MnsU'       => 'Months unemployed during Census Year',
-			'N/A'        => 'If Foreign Born - Naturalized, Alien',
-			'NL'         => 'If Foreign Born - Native Language',
-			'Name'       => 'Full Name or Married name if married',
-			'Occupation' => 'Occupation',
-			'Par'        => 'Parentage - Father if foreign born, Mother if foreign born',
-			'Race'       => 'Race or Color - Black, White, Mulatto, Asian, Indian, Chinese etc',
-			'Relation'   => 'Relationship to Head of Household',
-			'Sex'        => 'Male or Female',
-			'Situ'       => 'Situation - Disease, Infirmity, Convict, Pauper etc',
-			'Ten'        => 'Tenure - Owned/Rented, (if owned)Free/Morgaged',
-			'Vet'        => 'War Veteran?',
-			'WH'         => 'Working at Home?',
-			'War'        => 'War or Expedition',
-			'WksU'       => 'Weeks unemployed during Census Year',
-			'YOI'        => 'If Foreign Born - Year of immigration',
-			'YON'        => 'If Foreign Born - Year of naturalization',
-			'YUS'        => 'If Foreign Born - Years in the USA',
-			'YrsM'       => 'Years Married, or Y if married in Census Year',
-		);
+    /**
+     * Convert custom markup into HTML
+     *
+     * @param Note $note
+     *
+     * @return string
+     */
+    public static function formatCensusNote(Note $note)
+    {
+        $headers = array(
+            'AgM'        => 'Age at first marriage',
+            'Age'        => 'Age at last birthday',
+            'Assets'     => 'Assets = Owned,Rented - Value,Rent - Radio - Farm',
+            'BIC'        => 'Born in County',
+            'BOE'        => 'Born outside England',
+            'BP'         => 'Birthplace - (Chapman format)',
+            'Birthplace' => 'Birthplace (Full format)',
+            'Bmth'       => 'Month of birth - If born within Census year',
+            'ChB'        => 'Children born alive',
+            'ChD'        => 'Children who have died',
+            'ChL'        => 'Children still living',
+            'DOB'        => 'Date of birth',
+            'Edu'        => 'Education - At School, Can Read, Can Write',
+            // or "Cannot Read, Cannot Write" ??
+            'EmD'        => 'Employed?',
+            'EmN'        => 'Unemployed?',
+            'EmR'        => 'Employer?',
+            'Employ'     => 'Employment',
+            'Eng?'       => 'English spoken?',
+            'EngL'       => 'English spoken?, if not, Native Language',
+            'FBP'        => 'Father’s Birthplace - (Chapman format)',
+            'Health'     => 'Health - 1.Blind, 2.Deaf & Dumb, 3.Idiotic, 4.Insane, 5.Disabled etc',
+            'Home'       => 'Home Ownership - Owned/Rented-Free/Mortgaged-Farm/House-Farm Schedule number',
+            'Industry'   => 'Industry',
+            'Infirm'     => 'Infirmities - 1. Deaf & Dumb, 2. Blind, 3. Lunatic, 4. Imbecile/feeble-minded',
+            'Lang'       => 'If Foreign Born - Native Language',
+            'MBP'        => 'Mother’s Birthplace - (Chapman format)',
+            'MC'         => 'Marital Condition - Married, Single, Unmarried, Widowed or Divorced',
+            'Mmth'       => 'Month of marriage - If married during Census Year',
+            'MnsE'       => 'Months employed during Census Year',
+            'MnsU'       => 'Months unemployed during Census Year',
+            'N/A'        => 'If Foreign Born - Naturalized, Alien',
+            'NL'         => 'If Foreign Born - Native Language',
+            'Name'       => 'Full Name or Married name if married',
+            'Occupation' => 'Occupation',
+            'Par'        => 'Parentage - Father if foreign born, Mother if foreign born',
+            'Race'       => 'Race or Color - Black, White, Mulatto, Asian, Indian, Chinese etc',
+            'Relation'   => 'Relationship to Head of Household',
+            'Sex'        => 'Male or Female',
+            'Situ'       => 'Situation - Disease, Infirmity, Convict, Pauper etc',
+            'Ten'        => 'Tenure - Owned/Rented, (if owned)Free/Morgaged',
+            'Vet'        => 'War Veteran?',
+            'WH'         => 'Working at Home?',
+            'War'        => 'War or Expedition',
+            'WksU'       => 'Weeks unemployed during Census Year',
+            'YOI'        => 'If Foreign Born - Year of immigration',
+            'YON'        => 'If Foreign Born - Year of naturalization',
+            'YUS'        => 'If Foreign Born - Years in the USA',
+            'YrsM'       => 'Years Married, or Y if married in Census Year',
+        );
 
-		if (preg_match('/(.*)((?:\n.*)*)\n\.start_formatted_area\.\n(.*)((?:\n.*)*)\n.end_formatted_area\.((?:\n.*)*)/', $note->getNote(), $match)) {
-			// This looks like a census-assistant shared note
-			$title     = Filter::escapeHtml($match[1]);
-			$preamble  = Filter::escapeHtml($match[2]);
-			$header    = Filter::escapeHtml($match[3]);
-			$data      = Filter::escapeHtml($match[4]);
-			$postamble = Filter::escapeHtml($match[5]);
+        if (preg_match('/(.*)((?:\n.*)*)\n\.start_formatted_area\.\n(.*)((?:\n.*)*)\n.end_formatted_area\.((?:\n.*)*)/', $note->getNote(), $match)) {
+            // This looks like a census-assistant shared note
+            $title     = Filter::escapeHtml($match[1]);
+            $preamble  = Filter::escapeHtml($match[2]);
+            $header    = Filter::escapeHtml($match[3]);
+            $data      = Filter::escapeHtml($match[4]);
+            $postamble = Filter::escapeHtml($match[5]);
 
-			$fmt_headers = array();
-			foreach ($headers as $key=>$value) {
-				$fmt_headers['.b.' . $key] = '<span title="' . Filter::escapeHtml($value) . '">' . $key . '</span>';
-			}
+            $fmt_headers = array();
+            foreach ($headers as $key => $value) {
+                $fmt_headers['.b.' . $key] = '<span title="' . Filter::escapeHtml($value) . '">' . $key . '</span>';
+            }
 
-			// Substitue header labels and format as HTML
-			$thead = '<tr><th>' . strtr(str_replace('|', '</th><th>', $header), $fmt_headers) . '</th></tr>';
+            // Substitue header labels and format as HTML
+            $thead = '<tr><th>' . strtr(str_replace('|', '</th><th>', $header), $fmt_headers) . '</th></tr>';
 
-			// Format data as HTML
-			$tbody = '';
-			foreach (explode("\n", $data) as $row) {
-				$tbody .= '<tr>';
-				foreach (explode('|', $row) as $column) {
-					$tbody .= '<td>' . $column . '</td>';
-				}
-				$tbody .= '</tr>';
-			}
+            // Format data as HTML
+            $tbody = '';
+            foreach (explode("\n", $data) as $row) {
+                $tbody .= '<tr>';
+                foreach (explode('|', $row) as $column) {
+                    $tbody .= '<td>' . $column . '</td>';
+                }
+                $tbody .= '</tr>';
+            }
 
-			return
-				$title . "\n" . // The newline allows the framework to expand the details and turn the first line into a link
-				'<p>' . $preamble . '</p>' .
-				'<table class="table-census-assistant">' .
-				'<thead>' . $thead . '</thead>' .
-				'<tbody>' . $tbody . '</tbody>' .
-				'</table>' .
-				'<p>' . $postamble . '</p>';
-		} else {
-			// Not a census-assistant shared note - apply default formatting
-			return Filter::formatText($note->getNote(), Globals::i()->WT_TREE);
-		}
-	}
+            return
+                $title . "\n" . // The newline allows the framework to expand the details and turn the first line into a link
+                '<p>' . $preamble . '</p>' .
+                '<table class="table-census-assistant">' .
+                '<thead>' . $thead . '</thead>' .
+                '<tbody>' . $tbody . '</tbody>' .
+                '</table>' .
+                '<p>' . $postamble . '</p>';
+        } else {
+            // Not a census-assistant shared note - apply default formatting
+            return Filter::formatText($note->getNote(), Globals::i()->WT_TREE);
+        }
+    }
 
-	/**
-	 * Modify the “add shared note” field, to create a note using the assistant
-	 *
-	 * @param string $element_id
-	 * @param string $xref
-	 * @param string $action
-	 *
-	 * @return string
-	 */
-	static function print_addnewnote_assisted_link($element_id, $xref, $action) {
-		global $controller;
+    /**
+     * Modify the “add shared note” field, to create a note using the assistant
+     *
+     * @param string $element_id
+     * @param string $xref
+     * @param string $action
+     *
+     * @return string
+     */
+    static function print_addnewnote_assisted_link($element_id, $xref, $action)
+    {
+        global $controller;
 
-		// We do not yet support family records
-		if (!GedcomRecord::getInstance($xref) instanceof Individual) {
-			return '';
-		}
+        // We do not yet support family records
+        if (!GedcomRecord::getInstance($xref) instanceof Individual) {
+            return '';
+        }
 
-		// Only modify “add shared note” links on the add/edit actions.
-		// TODO: does the “edit” action work?
-		if ($action != 'add' && $action != 'edit') {
-			return '';
-		}
+        // Only modify “add shared note” links on the add/edit actions.
+        // TODO: does the “edit” action work?
+        if ($action != 'add' && $action != 'edit') {
+            return '';
+        }
 
-		// There are lots of “add shared note” links.  We only need to modify the 2nd one
-		static $n = 0;
-		if (++$n != 2) {
-			return '';
-		}
+        // There are lots of “add shared note” links.  We only need to modify the 2nd one
+        static $n = 0;
+        if (++$n != 2) {
+            return '';
+        }
 
-		$controller->addInlineJavascript('
+        $controller->addInlineJavascript('
 			var pid_array=jQuery("#pid_array");
 			function set_pid_array(pa) {
 				pid_array.val(pa);
 			}
 		');
 
-		return
-			'<br>' .
-			'<input type="hidden" name="pid_array" id="pid_array" value="">' .
-			'<a href="#" onclick="return addnewnote_assisted(document.getElementById(\'' . $element_id . '\'), \'' . $xref . '\');">' .
-			I18N::translate('Create a new shared note using assistant') .
-			'</a>';
-	}
+        return
+            '<br>' .
+            '<input type="hidden" name="pid_array" id="pid_array" value="">' .
+            '<a href="#" onclick="return addnewnote_assisted(document.getElementById(\'' . $element_id . '\'), \'' . $xref . '\');">' .
+            I18N::translate('Create a new shared note using assistant') .
+            '</a>';
+    }
 
-	/**
-	 * Add a selector containing UK/US/FR census dates
-	 *
-	 * @param string $action
-	 * @param string $tag
-	 * @param string $element_id
-	 *
-	 * @return string
-	 */
-	public static function censusDateSelector($action, $tag, $element_id) {
-		global $controller;
+    /**
+     * Add a selector containing UK/US/FR census dates
+     *
+     * @param string $action
+     * @param string $tag
+     * @param string $element_id
+     *
+     * @return string
+     */
+    public static function censusDateSelector($action, $tag, $element_id)
+    {
+        global $controller;
 
-		if ($action == 'add' && $tag == 'CENS') {
-			$controller->addInlineJavascript('
+        if ($action == 'add' && $tag == 'CENS') {
+            $controller->addInlineJavascript('
 				function addDate(theCensDate) {
 					var ddate = theCensDate.split(", ");
 					document.getElementById("setctry").value = ddate[3];
@@ -375,7 +393,7 @@ class GEDFact_assistant_WT_Module extends Module {
 				}
 			');
 
-			return '
+            return '
 				<select id="selcensdate" name="selcensdate" onchange = "if (this.options[this.selectedIndex].value!=\'\') {
 										addDate(this.options[this.selectedIndex].value);
 									}">
@@ -429,8 +447,8 @@ class GEDFact_assistant_WT_Module extends Module {
 				<input type="hidden" id="setctry" name="setctry" value="">
 				<input type="hidden" id="setyear" name="setyear" value="">
 			';
-		} else {
-			return '';
-		}
-	}
+        } else {
+            return '';
+        }
+    }
 }

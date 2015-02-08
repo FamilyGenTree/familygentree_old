@@ -21,80 +21,91 @@ use Fgt\Globals;
  * Class extra_info_WT_Module
  * A sidebar to show non-genealogical information about an individual
  */
-class extra_info_WT_Module extends Module implements ModuleSidebarInterface {
-	/** {@inheritdoc} */
-	public function getTitle() {
-		return /* I18N: Name of a module/sidebar */ I18N::translate('Extra information');
-	}
+class extra_info_WT_Module extends Module implements ModuleSidebarInterface
+{
+    /** {@inheritdoc} */
+    public function getTitle()
+    {
+        return /* I18N: Name of a module/sidebar */
+            I18N::translate('Extra information');
+    }
 
-	/** {@inheritdoc} */
-	public function getDescription() {
-		return /* I18N: Description of the “Extra information” module */ I18N::translate('A sidebar showing non-genealogical information about an individual.');
-	}
+    /** {@inheritdoc} */
+    public function getDescription()
+    {
+        return /* I18N: Description of the “Extra information” module */
+            I18N::translate('A sidebar showing non-genealogical information about an individual.');
+    }
 
-	/** {@inheritdoc} */
-	public function defaultSidebarOrder() {
-		return 10;
-	}
+    /** {@inheritdoc} */
+    public function defaultSidebarOrder()
+    {
+        return 10;
+    }
 
-	/** {@inheritdoc} */
-	public function hasSidebarContent() {
-		return true;
-	}
+    /** {@inheritdoc} */
+    public function hasSidebarContent()
+    {
+        return true;
+    }
 
-	/** {@inheritdoc} */
-	public function getSidebarContent() {
-		global $controller;
+    /** {@inheritdoc} */
+    public function getSidebarContent()
+    {
+        global $controller;
 
-		$indifacts = array();
-		// The individual’s own facts
-		foreach ($controller->record->getFacts() as $fact) {
-			if (self::showFact($fact)) {
-				$indifacts[] = $fact;
-			}
-		}
+        $indifacts = array();
+        // The individual’s own facts
+        foreach ($controller->record->getFacts() as $fact) {
+            if (self::showFact($fact)) {
+                $indifacts[] = $fact;
+            }
+        }
 
-		ob_start();
-		if (!$indifacts) {
-			echo I18N::translate('There are no facts for this individual.');
-		} else {
-			foreach ($indifacts as $fact) {
-				print_fact($fact, $controller->record);
-			}
-		}
-		if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
-			$hitCount = 0;
-			require WT_ROOT . 'includes/hitcount.php';
-			echo '<div id="hitcounter">', I18N::translate('Hit count:'), ' ', $hitCount, '</div>';
-		}
-		return strip_tags(ob_get_clean(), '<a><div><span>');
-	}
+        ob_start();
+        if (!$indifacts) {
+            echo I18N::translate('There are no facts for this individual.');
+        } else {
+            foreach ($indifacts as $fact) {
+                print_fact($fact, $controller->record);
+            }
+        }
+        if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
+            $hitCount = 0;
+            require WT_ROOT . 'includes/hitcount.php';
+            echo '<div id="hitcounter">', I18N::translate('Hit count:'), ' ', $hitCount, '</div>';
+        }
 
-	/** {@inheritdoc} */
-	public function getSidebarAjaxContent() {
-		return '';
-	}
+        return strip_tags(ob_get_clean(), '<a><div><span>');
+    }
 
-	/**
-	 * Does this module display a particular fact
-	 *
-	 * @param Fact $fact
-	 *
-	 * @return boolean
-	 */
-	public static function showFact(Fact $fact) {
-		switch ($fact->getTag()) {
-		case 'AFN':
-		case 'CHAN':
-		case 'IDNO':
-		case 'REFN':
-		case 'RFN':
-		case 'RIN':
-		case 'SSN':
-		case '_UID':
-			return true;
-		default:
-			return false;
-		}
-	}
+    /** {@inheritdoc} */
+    public function getSidebarAjaxContent()
+    {
+        return '';
+    }
+
+    /**
+     * Does this module display a particular fact
+     *
+     * @param Fact $fact
+     *
+     * @return boolean
+     */
+    public static function showFact(Fact $fact)
+    {
+        switch ($fact->getTag()) {
+            case 'AFN':
+            case 'CHAN':
+            case 'IDNO':
+            case 'REFN':
+            case 'RFN':
+            case 'RIN':
+            case 'SSN':
+            case '_UID':
+                return true;
+            default:
+                return false;
+        }
+    }
 }

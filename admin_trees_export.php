@@ -22,17 +22,19 @@ define('WT_SCRIPT_NAME', 'admin_trees_export.php');
 require './includes/session.php';
 
 if (Auth::isManager(Globals::i()->WT_TREE) && Filter::checkCsrf()) {
-	$filename = WT_DATA_DIR . Globals::i()->WT_TREE->getName();
-	// Force a ".ged" suffix
-	if (strtolower(substr($filename, -4)) != '.ged') {
-		$filename .= '.ged';
-	}
+    $filename = WT_DATA_DIR . Globals::i()->WT_TREE->getName();
+    // Force a ".ged" suffix
+    if (strtolower(substr($filename, -4)) != '.ged') {
+        $filename .= '.ged';
+    }
 
-	if (Globals::i()->WT_TREE->exportGedcom($filename)) {
-		FlashMessages::addMessage(/* I18N: %s is a filename */ I18N::translate('Family tree exported to %s.', '<span dir="ltr">' . $filename . '</span>'), 'success');
-	} else {
-		FlashMessages::addMessage(/* I18N: %s is a filename */ I18N::translate('Unable to create %s.  Check the permissions.', $filename), 'danger');
-	}
+    if (Globals::i()->WT_TREE->exportGedcom($filename)) {
+        FlashMessages::addMessage(/* I18N: %s is a filename */
+            I18N::translate('Family tree exported to %s.', '<span dir="ltr">' . $filename . '</span>'), 'success');
+    } else {
+        FlashMessages::addMessage(/* I18N: %s is a filename */
+            I18N::translate('Unable to create %s.  Check the permissions.', $filename), 'danger');
+    }
 }
 
 header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php');

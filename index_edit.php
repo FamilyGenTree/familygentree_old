@@ -28,135 +28,159 @@ $controller = new PageController;
 $user_id   = Filter::get('user_id', WT_REGEX_INTEGER, Filter::post('user_id', WT_REGEX_INTEGER));
 $gedcom_id = Filter::get('gedcom_id', WT_REGEX_INTEGER, Filter::post('gedcom_id', WT_REGEX_INTEGER));
 if ($user_id) {
-	$gedcom_id = null;
-	if ($user_id < 0) {
-		$controller->setPageTitle(I18N::translate('Set the default blocks for new users'));
-		$can_reset = false;
-	} else {
-		$controller->setPageTitle(I18N::translate('Change the “My page” blocks'));
-		$can_reset = true;
-	}
+    $gedcom_id = null;
+    if ($user_id < 0) {
+        $controller->setPageTitle(I18N::translate('Set the default blocks for new users'));
+        $can_reset = false;
+    } else {
+        $controller->setPageTitle(I18N::translate('Change the “My page” blocks'));
+        $can_reset = true;
+    }
 } else {
-	if ($gedcom_id < 0) {
-		$controller->setPageTitle(I18N::translate('Set the default blocks for new family trees'));
-		$can_reset = false;
-	} else {
-		$controller->setPageTitle(I18N::translate('Change the “Home page” blocks'));
-		$can_reset = true;
-	}
+    if ($gedcom_id < 0) {
+        $controller->setPageTitle(I18N::translate('Set the default blocks for new family trees'));
+        $can_reset = false;
+    } else {
+        $controller->setPageTitle(I18N::translate('Change the “Home page” blocks'));
+        $can_reset = true;
+    }
 }
 
 if ($user_id < 0 || $gedcom_id < 0 || Auth::isAdmin() && $user_id != Auth::id()) {
-	// We're doing this from an admin page.  Use the admin theme, and return there afterwards.
-	Theme::theme(new AdministrationTheme)->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-	$return_to = 'admin_trees_manage.php?ged=';
+    // We're doing this from an admin page.  Use the admin theme, and return there afterwards.
+    Theme::theme(new AdministrationTheme)
+         ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+    $return_to = 'admin_trees_manage.php?ged=';
 } else {
-	$return_to = 'index.php';
+    $return_to = 'index.php';
 }
 
 // Only an admin can edit the "default" page
 // Only managers can edit the "home page"
 // Only a user or an admin can edit a user’s "my page"
 if (
-	$gedcom_id < 0 && !Auth::isAdmin() ||
-	$gedcom_id > 0 && !Auth::isManager(Tree::get($gedcom_id)) ||
-	$user_id && Auth::id() != $user_id && !Auth::isAdmin()
+    $gedcom_id < 0 && !Auth::isAdmin() || $gedcom_id > 0 && !Auth::isManager(Tree::get($gedcom_id)) || $user_id && Auth::id() != $user_id && !Auth::isAdmin()
 ) {
-	header('Location: ' . WT_BASE_URL . $return_to);
+    header('Location: ' . WT_BASE_URL . $return_to);
 
-	return;
+    return;
 }
 
 $action = Filter::get('action');
 
 if ($can_reset && Filter::post('default') === '1') {
-	if ($user_id) {
-		$defaults = get_user_blocks(-1);
-	} else {
-		$defaults = get_gedcom_blocks(-1);
-	}
-	$main  = $defaults['main'];
-	$right = $defaults['side'];
+    if ($user_id) {
+        $defaults = get_user_blocks(-1);
+    } else {
+        $defaults = get_gedcom_blocks(-1);
+    }
+    $main  = $defaults['main'];
+    $right = $defaults['side'];
 } else {
-	if (isset($_REQUEST['main'])) {
-		$main = $_REQUEST['main'];
-	} else {
-		$main = array();
-	}
+    if (isset($_REQUEST['main'])) {
+        $main = $_REQUEST['main'];
+    } else {
+        $main = array();
+    }
 
-	if (isset($_REQUEST['right'])) {
-		$right = $_REQUEST['right'];
-	} else {
-		$right = array();
-	}
+    if (isset($_REQUEST['right'])) {
+        $right = $_REQUEST['right'];
+    } else {
+        $right = array();
+    }
 }
 // Define all the icons we're going to use
 $IconUarrow = 'icon-uarrow';
 $IconDarrow = 'icon-darrow';
 if (Globals::i()->TEXT_DIRECTION === 'ltr') {
-	$IconRarrow  = 'icon-rarrow';
-	$IconLarrow  = 'icon-larrow';
-	$IconRDarrow = 'icon-rdarrow';
-	$IconLDarrow = 'icon-ldarrow';
+    $IconRarrow  = 'icon-rarrow';
+    $IconLarrow  = 'icon-larrow';
+    $IconRDarrow = 'icon-rdarrow';
+    $IconLDarrow = 'icon-ldarrow';
 } else {
-	$IconRarrow  = 'icon-larrow';
-	$IconLarrow  = 'icon-rarrow';
-	$IconRDarrow = 'icon-ldarrow';
-	$IconLDarrow = 'icon-rdarrow';
+    $IconRarrow  = 'icon-larrow';
+    $IconLarrow  = 'icon-rarrow';
+    $IconRDarrow = 'icon-ldarrow';
+    $IconLDarrow = 'icon-rdarrow';
 }
 
 $all_blocks = array();
 foreach (Module::getActiveBlocks() as $name => $block) {
-	if ($user_id && $block->isUserBlock() || $gedcom_id && $block->isGedcomBlock()) {
-		$all_blocks[$name] = $block;
-	}
+    if ($user_id && $block->isUserBlock() || $gedcom_id && $block->isGedcomBlock()) {
+        $all_blocks[$name] = $block;
+    }
 }
 
 if ($user_id) {
-	$blocks = get_user_blocks($user_id);
+    $blocks = get_user_blocks($user_id);
 } else {
-	$blocks = get_gedcom_blocks($gedcom_id);
+    $blocks = get_gedcom_blocks($gedcom_id);
 }
 
 if ($action === 'update') {
-	Zend_Session::writeClose();
-	foreach (array('main', 'side') as $location) {
-		if ($location === 'main') {
-			$new_blocks = $main;
-		} else {
-			$new_blocks = $right;
-		}
-		foreach ($new_blocks as $order => $block_name) {
-			if (is_numeric($block_name)) {
-				// existing block
-				Database::prepare("UPDATE `##block` SET block_order=? WHERE block_id=?")->execute(array($order, $block_name));
-				// existing block moved location
-				Database::prepare("UPDATE `##block` SET location=? WHERE block_id=?")->execute(array($location, $block_name));
-			} else {
-				// new block
-				if ($user_id) {
-					Database::prepare("INSERT INTO `##block` (user_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")->execute(array($user_id, $location, $order, $block_name));
-				} else {
-					Database::prepare("INSERT INTO `##block` (gedcom_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")->execute(array($gedcom_id, $location, $order, $block_name));
-				}
-			}
-		}
-		// deleted blocks
-		foreach ($blocks[$location] as $block_id=>$block_name) {
-			if (!in_array($block_id, $main) && !in_array($block_id, $right)) {
-				Database::prepare("DELETE FROM `##block_setting` WHERE block_id=?")->execute(array($block_id));
-				Database::prepare("DELETE FROM `##block`         WHERE block_id=?")->execute(array($block_id));
-			}
-		}
-	}
-	header('Location: ' . WT_BASE_URL . $return_to);
+    Zend_Session::writeClose();
+    foreach (array(
+                 'main',
+                 'side'
+             ) as $location) {
+        if ($location === 'main') {
+            $new_blocks = $main;
+        } else {
+            $new_blocks = $right;
+        }
+        foreach ($new_blocks as $order => $block_name) {
+            if (is_numeric($block_name)) {
+                // existing block
+                Database::prepare("UPDATE `##block` SET block_order=? WHERE block_id=?")
+                        ->execute(array(
+                                      $order,
+                                      $block_name
+                                  ));
+                // existing block moved location
+                Database::prepare("UPDATE `##block` SET location=? WHERE block_id=?")
+                        ->execute(array(
+                                      $location,
+                                      $block_name
+                                  ));
+            } else {
+                // new block
+                if ($user_id) {
+                    Database::prepare("INSERT INTO `##block` (user_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
+                            ->execute(array(
+                                          $user_id,
+                                          $location,
+                                          $order,
+                                          $block_name
+                                      ));
+                } else {
+                    Database::prepare("INSERT INTO `##block` (gedcom_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
+                            ->execute(array(
+                                          $gedcom_id,
+                                          $location,
+                                          $order,
+                                          $block_name
+                                      ));
+                }
+            }
+        }
+        // deleted blocks
+        foreach ($blocks[$location] as $block_id => $block_name) {
+            if (!in_array($block_id, $main) && !in_array($block_id, $right)) {
+                Database::prepare("DELETE FROM `##block_setting` WHERE block_id=?")
+                        ->execute(array($block_id));
+                Database::prepare("DELETE FROM `##block`         WHERE block_id=?")
+                        ->execute(array($block_id));
+            }
+        }
+    }
+    header('Location: ' . WT_BASE_URL . $return_to);
 
-	return;
+    return;
 }
 
 $controller
-	->pageHeader()
-	->addInlineJavascript('
+    ->pageHeader()
+    ->addInlineJavascript('
 	/**
 	 * Move Up Block Javascript function
 	 *
@@ -274,36 +298,36 @@ $controller
 	');
 
 
-	// Load Block Description array for use by javascript
-	foreach ($all_blocks as $block_name => $block) {
-		$controller->addInlineJavascript(
-			'block_descr["' . $block_name . '"] = "' . Filter::escapeJs($block->getDescription()) . '";'
-		);
-	}
-	$controller->addInlineJavascript(
-		'block_descr["advice1"] = "' . I18N::translate('Highlight a block name and then click on one of the arrow icons to move that highlighted block in the indicated direction.') . '";'
-	);
+// Load Block Description array for use by javascript
+foreach ($all_blocks as $block_name => $block) {
+    $controller->addInlineJavascript(
+        'block_descr["' . $block_name . '"] = "' . Filter::escapeJs($block->getDescription()) . '";'
+    );
+}
+$controller->addInlineJavascript(
+    'block_descr["advice1"] = "' . I18N::translate('Highlight a block name and then click on one of the arrow icons to move that highlighted block in the indicated direction.') . '";'
+);
 ?>
 
 <?php if ($return_to !== 'index.php'): ?>
-<ol class="breadcrumb small">
-	<li><a href="admin.php"><?php echo I18N::translate('Control panel'); ?></a></li>
-	<?php if ($user_id): ?>
-	<li><a href="admin_users.php"><?php echo I18N::translate('User administration'); ?></a></li>
-	<?php else: ?>
-	<li><a href="admin_trees_manage.php"><?php echo I18N::translate('Manage family trees'); ?></a></li>
-	<?php endif; ?>
-	<li class="active"><?php echo $controller->getPageTitle(); ?></li>
-</ol>
+    <ol class="breadcrumb small">
+        <li><a href="admin.php"><?php echo I18N::translate('Control panel'); ?></a></li>
+        <?php if ($user_id): ?>
+            <li><a href="admin_users.php"><?php echo I18N::translate('User administration'); ?></a></li>
+        <?php else: ?>
+            <li><a href="admin_trees_manage.php"><?php echo I18N::translate('Manage family trees'); ?></a></li>
+        <?php endif; ?>
+        <li class="active"><?php echo $controller->getPageTitle(); ?></li>
+    </ol>
 <?php endif; ?>
 
-<h1><?php echo $controller->getPageTitle(); ?></h1>
+    <h1><?php echo $controller->getPageTitle(); ?></h1>
 
-<form name="config_setup" method="post" action="index_edit.php?action=update" onsubmit="select_options();" >
-	<input type="hidden" name="user_id"   value="<?php echo $user_id; ?>">
-	<input type="hidden" name="gedcom_id" value="<?php echo $gedcom_id; ?>">
-	<table border="1" id="change_blocks">
-		<tr>
+    <form name="config_setup" method="post" action="index_edit.php?action=update" onsubmit="select_options();">
+    <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+    <input type="hidden" name="gedcom_id" value="<?php echo $gedcom_id; ?>">
+    <table border="1" id="change_blocks">
+        <tr>
 	<?php
 	// NOTE: Row 1: Column legends
 		echo '<td class="descriptionbox center vmiddle" colspan="2">';
@@ -328,9 +352,9 @@ $controller
 	// NOTE: Row 2 column 2: Left (Main) block list
 	echo '<td class="optionbox center">';
 		echo '<select multiple="multiple" id="main_select" name="main[]" size="10" onchange="show_description(\'main_select\');">';
-		foreach ($blocks['main'] as $block_id=>$block_name) {
-			echo '<option value="', $block_id, '">', $all_blocks[$block_name]->getTitle(), '</option>';
-		}
+		foreach ($blocks['main'] as $block_id => $block_name) {
+            echo '<option value="', $block_id, '">', $all_blocks[$block_name]->getTitle(), '</option>';
+        }
 		echo '</select>';
 	echo '</td>';
 	// NOTE: Row 2 column 3: Left/Right buttons for left (main) block list
@@ -346,9 +370,9 @@ $controller
 	// Row 2 column 4: Middle (Available) block list
 	echo '<td class="optionbox center">';
 		echo '<select id="available_select" name="available[]" size="10" onchange="show_description(\'available_select\');">';
-		foreach ($all_blocks as $block_name=>$block) {
-			echo '<option value="', $block_name, '">', $block->getTitle(), '</option>';
-		}
+		foreach ($all_blocks as $block_name => $block) {
+            echo '<option value="', $block_name, '">', $block->getTitle(), '</option>';
+        }
 		echo '</select>';
 	echo '</td>';
 	// NOTE: Row 2 column 5: Left/Right buttons for right block list
@@ -364,9 +388,9 @@ $controller
 	// NOTE: Row 2 column 6: Right block list
 	echo '<td class="optionbox center">';
 		echo '<select multiple="multiple" id="right_select" name="right[]" size="10" onchange="show_description(\'right_select\');">';
-		foreach ($blocks['side'] as $block_id=>$block_name) {
-			echo '<option value="', $block_id, '">', $all_blocks[$block_name]->getTitle(), '</option>';
-		}
+		foreach ($blocks['side'] as $block_id => $block_name) {
+            echo '<option value="', $block_id, '">', $all_blocks[$block_name]->getTitle(), '</option>';
+        }
 		echo '</select>';
 	echo '</td>';
 	// NOTE: Row 2 column 7: Up/Down buttons for right block list
@@ -383,12 +407,12 @@ $controller
 	echo I18N::translate('Highlight a block name and then click on one of the arrow icons to move that highlighted block in the indicated direction.');
 	echo '</div></td></tr>';
 	if ($can_reset) {
-		echo '<tr><td class="topbottombar" colspan="4">';
-		echo '<input type="checkbox" name="default" value="1">', I18N::translate('Restore the default block layout'), '</td>';
-		echo '<td class="topbottombar" colspan="3">';
-	} else {
-		echo '<td class="topbottombar" colspan="7">';
-	}
+        echo '<tr><td class="topbottombar" colspan="4">';
+        echo '<input type="checkbox" name="default" value="1">', I18N::translate('Restore the default block layout'), '</td>';
+        echo '<td class="topbottombar" colspan="3">';
+    } else {
+        echo '<td class="topbottombar" colspan="7">';
+    }
 	echo '<input type="submit" value="', I18N::translate('save'), '">';
 	echo '</td></tr></table>';
 	echo '</form>';

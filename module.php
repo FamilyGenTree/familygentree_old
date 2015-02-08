@@ -24,8 +24,8 @@ $mod         = Filter::get('mod');
 $mod_action  = Filter::get('mod_action');
 
 if ($mod && array_key_exists($mod, $all_modules)) {
-	$module = $all_modules[$mod];
-	$module->modAction($mod_action);
+    $module = $all_modules[$mod];
+    $module->modAction($mod_action);
 } else {
-	header('Location: ' . WT_BASE_URL);
+    header('Location: ' . WT_BASE_URL);
 }

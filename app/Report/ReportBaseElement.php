@@ -19,112 +19,122 @@ namespace Fisharebest\Webtrees;
 /**
  * Class ReportBaseElement
  */
-class ReportBaseElement {
-	/**
-	 * @var string
-	 */
-	public $text = "";
+class ReportBaseElement
+{
+    /**
+     * @var string
+     */
+    public $text = "";
 
-	/**
-	 * Element renderer
-	 *
-	  *@param ReportHtml|ReportPdf $renderer
-	 *
-	 * @return void
-	 */
-	function render($renderer) {
-		//-- to be implemented in inherited classes
-	}
+    /**
+     * Element renderer
+     *
+     * @param ReportHtml|ReportPdf $renderer
+     *
+     * @return void
+     */
+    function render($renderer)
+    {
+        //-- to be implemented in inherited classes
+    }
 
-	/**
-	 * @param ReportHtml|ReportPdf $renderer
+    /**
+     * @param ReportHtml|ReportPdf $renderer
+     *
+     * @return float
+     */
+    function getHeight($renderer)
+    {
+        return 0.0;
+    }
 
+    /**
+     * @param ReportHtml|ReportPdf $renderer
+     *
+     * @return float
+     */
+    function getWidth($renderer)
+    {
+        return 0.0;
+    }
 
+    /**
+     * @param string $t
+     *
+     * @return integer
+     */
+    function addText($t)
+    {
+        global $wt_report, $reportTitle, $reportDescription;
 
-*
-*@return float
-	 */
-	function getHeight($renderer) {
-		return 0.0;
-	}
+        $t = trim($t, "\r\n\t");
+        $t = str_replace(array(
+                             "<br>",
+                             "&nbsp;"
+                         ), array(
+                             "\n",
+                             " "
+                         ), $t);
+        $t = strip_tags($t);
+        $t = htmlspecialchars_decode($t);
+        $this->text .= $t;
 
-	/**
-	 * @param ReportHtml|ReportPdf $renderer
+        // Adding the title and description to the Document Properties
+        if ($reportTitle) {
+            $wt_report->addTitle($t);
+        } elseif ($reportDescription) {
+            $wt_report->addDescription($t);
+        }
 
+        return 0;
+    }
 
+    /**
+     * @return integer
+     */
+    function addNewline()
+    {
+        $this->text .= "\n";
 
-*
-*@return float
-	 */
-	function getWidth($renderer) {
-		return 0.0;
-	}
+        return 0;
+    }
 
-	/**
-	 * @param string $t
-	 *
-	 * @return integer
-	 */
-	function addText($t) {
-		global $wt_report, $reportTitle, $reportDescription;
+    /**
+     * @return string
+     */
+    function getValue()
+    {
+        return $this->text;
+    }
 
-		$t = trim($t, "\r\n\t");
-		$t = str_replace(array("<br>", "&nbsp;"), array("\n", " "), $t);
-		$t = strip_tags($t);
-		$t = htmlspecialchars_decode($t);
-		$this->text .= $t;
+    /**
+     * @param $wrapwidth
+     * @param $cellwidth
+     *
+     * @return integer
+     */
+    function setWrapWidth($wrapwidth, $cellwidth)
+    {
+        return 0;
+    }
 
-		// Adding the title and description to the Document Properties
-		if ($reportTitle) {
-			$wt_report->addTitle($t);
-		} elseif ($reportDescription) {
-			$wt_report->addDescription($t);
-		}
+    /**
+     * @param $renderer
+     *
+     * @return void
+     */
+    function renderFootnote($renderer)
+    {
+        // To be implemented in inherited classes
+    }
 
-		return 0;
-	}
-
-	/**
-	 * @return integer
-	 */
-	function addNewline() {
-		$this->text .= "\n";
-
-		return 0;
-	}
-
-	/**
-	 * @return string
-	 */
-	function getValue() {
-		return $this->text;
-	}
-
-	/**
-	 * @param $wrapwidth
-	 * @param $cellwidth
-	 *
-	 * @return integer
-	 */
-	function setWrapWidth($wrapwidth, $cellwidth) {
-		return 0;
-	}
-
-	/**
-	 * @param $renderer
-	 *
-	 * @return void
-	 */
-	function renderFootnote($renderer) {
-		// To be implemented in inherited classes
-	}
-
-	/**
-	 * @param $text
-	 *
-	 * @return void
-	 */
-	function setText($text) {
-		$this->text = $text;
-	}
+    /**
+     * @param $text
+     *
+     * @return void
+     */
+    function setText($text)
+    {
+        $this->text = $text;
+    }
 }

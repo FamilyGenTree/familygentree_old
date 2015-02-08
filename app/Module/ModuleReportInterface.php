@@ -19,11 +19,12 @@ namespace Fisharebest\Webtrees;
 /**
  * Interface ModuleReportInterface - Classes and libraries for module system
  */
-interface ModuleReportInterface {
-	/**
-	 * Return a list of (usually just one) menu items.
-	 *
-	 * @return Menu[]
-	 */
-	public function getReportMenus();
+interface ModuleReportInterface
+{
+    /**
+     * Return a list of (usually just one) menu items.
+     *
+     * @return Menu[]
+     */
+    public function getReportMenus();
 }

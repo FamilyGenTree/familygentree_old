@@ -20,198 +20,216 @@ use Fgt\Globals;
 /**
  * Class FamilyController - Controller for the family page
  */
-class FamilyController extends GedcomRecordController {
-	/**
-	 * Startup activity
-	 */
-	public function __construct() {
-		global $Dbwidth, $bwidth, $pbwidth, $pbheight, $bheight;
-		$bwidth   = $Dbwidth;
-		$pbwidth  = $bwidth + 12;
-		$pbheight = $bheight + 14;
+class FamilyController extends GedcomRecordController
+{
+    /**
+     * Startup activity
+     */
+    public function __construct()
+    {
+        global $Dbwidth, $bwidth, $pbwidth, $pbheight, $bheight;
+        $bwidth   = $Dbwidth;
+        $pbwidth  = $bwidth + 12;
+        $pbheight = $bheight + 14;
 
-		$xref         = Filter::get('famid', WT_REGEX_XREF);
-		$this->record = Family::getInstance($xref);
+        $xref         = Filter::get('famid', WT_REGEX_XREF);
+        $this->record = Family::getInstance($xref);
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * Get significant information from this page, to allow other pages such as
-	 * charts and reports to initialise with the same records
-	 *
-	 * @return Individual
-	 */
-	public function getSignificantIndividual() {
-		if ($this->record) {
-			foreach ($this->record->getSpouses() as $individual) {
-				return $individual;
-			}
-			foreach ($this->record->getChildren() as $individual) {
-				return $individual;
-			}
-		}
-		return parent::getSignificantIndividual();
-	}
+    /**
+     * Get significant information from this page, to allow other pages such as
+     * charts and reports to initialise with the same records
+     *
+     * @return Individual
+     */
+    public function getSignificantIndividual()
+    {
+        if ($this->record) {
+            foreach ($this->record->getSpouses() as $individual) {
+                return $individual;
+            }
+            foreach ($this->record->getChildren() as $individual) {
+                return $individual;
+            }
+        }
 
-	/**
-	 * Get significant information from this page, to allow other pages such as
-	 * charts and reports to initialise with the same records
-	 *
-	 * @return Family
-	 */
-	public function getSignificantFamily() {
-		if ($this->record) {
-			return $this->record;
-		}
-		return parent::getSignificantFamily();
-	}
+        return parent::getSignificantIndividual();
+    }
 
-	/**
-	 * @param string[] $tags an array of HUSB/WIFE/CHIL
-	 *
-	 * @return string
-	 */
-	function getTimelineIndis($tags) {
-		preg_match_all('/\n1 (?:' . implode('|', $tags) . ') @(' . WT_REGEX_XREF . ')@/', $this->record->getGedcom(), $matches);
-		foreach ($matches[1] as &$match) {
-			$match = 'pids%5B%5D=' . $match;
-		}
-		return implode('&amp;', $matches[1]);
-	}
+    /**
+     * Get significant information from this page, to allow other pages such as
+     * charts and reports to initialise with the same records
+     *
+     * @return Family
+     */
+    public function getSignificantFamily()
+    {
+        if ($this->record) {
+            return $this->record;
+        }
 
-	/**
-	 * get edit menu
-	 */
-	function getEditMenu() {
-		if (!$this->record || $this->record->isPendingDeletion()) {
-			return null;
-		}
+        return parent::getSignificantFamily();
+    }
 
-		// edit menu
-		$menu = new Menu(I18N::translate('Edit'), '#', 'menu-fam');
+    /**
+     * @param string[] $tags an array of HUSB/WIFE/CHIL
+     *
+     * @return string
+     */
+    function getTimelineIndis($tags)
+    {
+        preg_match_all('/\n1 (?:' . implode('|', $tags) . ') @(' . WT_REGEX_XREF . ')@/', $this->record->getGedcom(), $matches);
+        foreach ($matches[1] as &$match) {
+            $match = 'pids%5B%5D=' . $match;
+        }
 
-		if (WT_USER_CAN_EDIT) {
-			// edit_fam / members
-			$submenu = new Menu(I18N::translate('Change family members'), '#', 'menu-fam-change');
-			$submenu->setOnclick("return change_family_members('" . $this->record->getXref() . "');");
-			$menu->addSubmenu($submenu);
+        return implode('&amp;', $matches[1]);
+    }
 
-			// edit_fam / add child
-			$submenu = new Menu(I18N::translate('Add a child to this family'), '#', 'menu-fam-addchil');
-			$submenu->setOnclick("return add_child_to_family('" . $this->record->getXref() . "', 'U');");
-			$menu->addSubmenu($submenu);
+    /**
+     * get edit menu
+     */
+    function getEditMenu()
+    {
+        if (!$this->record || $this->record->isPendingDeletion()) {
+            return null;
+        }
 
-			// edit_fam / reorder_children
-			if ($this->record->getNumberOfChildren() > 1) {
-				$submenu = new Menu(I18N::translate('Re-order children'), '#', 'menu-fam-orderchil');
-				$submenu->setOnclick("return reorder_children('" . $this->record->getXref() . "');");
-				$menu->addSubmenu($submenu);
-			}
-		}
+        // edit menu
+        $menu = new Menu(I18N::translate('Edit'), '#', 'menu-fam');
 
-		// delete
-		if (WT_USER_CAN_EDIT) {
-			$submenu = new Menu(I18N::translate('Delete'), '#', 'menu-fam-del');
-			$submenu->setOnclick("return delete_family('" . I18N::translate('Deleting the family will unlink all of the individuals from each other but will leave the individuals in place.  Are you sure you want to delete this family?') . "', '" . $this->record->getXref() . "');");
-			$menu->addSubmenu($submenu);
-		}
+        if (WT_USER_CAN_EDIT) {
+            // edit_fam / members
+            $submenu = new Menu(I18N::translate('Change family members'), '#', 'menu-fam-change');
+            $submenu->setOnclick("return change_family_members('" . $this->record->getXref() . "');");
+            $menu->addSubmenu($submenu);
 
-		// edit raw
-		if (Auth::isAdmin() || WT_USER_CAN_EDIT && $this->record->getTree()->getPreference('SHOW_GEDCOM_RECORD')) {
-			$submenu = new Menu(I18N::translate('Edit raw GEDCOM'), '#', 'menu-fam-editraw');
-			$submenu->setOnclick("return edit_raw('" . $this->record->getXref() . "');");
-			$menu->addSubmenu($submenu);
-		}
+            // edit_fam / add child
+            $submenu = new Menu(I18N::translate('Add a child to this family'), '#', 'menu-fam-addchil');
+            $submenu->setOnclick("return add_child_to_family('" . $this->record->getXref() . "', 'U');");
+            $menu->addSubmenu($submenu);
 
-		// add to favorites
-		if (array_key_exists('user_favorites', Module::getActiveModules())) {
-			$submenu = new Menu(
-				/* I18N: Menu option.  Add [the current page] to the list of favorites */ I18N::translate('Add to favorites'),
-				'#',
-				'menu-fam-addfav'
-			);
-			$submenu->setOnclick("jQuery.post('module.php?mod=user_favorites&amp;mod_action=menu-add-favorite',{xref:'" . $this->record->getXref() . "'},function(){location.reload();})");
-			$menu->addSubmenu($submenu);
-		}
+            // edit_fam / reorder_children
+            if ($this->record->getNumberOfChildren() > 1) {
+                $submenu = new Menu(I18N::translate('Re-order children'), '#', 'menu-fam-orderchil');
+                $submenu->setOnclick("return reorder_children('" . $this->record->getXref() . "');");
+                $menu->addSubmenu($submenu);
+            }
+        }
 
-		// Get the link for the first submenu and set it as the link for the main menu
-		if ($menu->getSubmenus()) {
-			$submenus = $menu->getSubmenus();
-			$menu->setLink($submenus[0]->getLink());
-			$menu->setOnClick($submenus[0]->getOnClick());
-		}
+        // delete
+        if (WT_USER_CAN_EDIT) {
+            $submenu = new Menu(I18N::translate('Delete'), '#', 'menu-fam-del');
+            $submenu->setOnclick("return delete_family('" . I18N::translate('Deleting the family will unlink all of the individuals from each other but will leave the individuals in place.  Are you sure you want to delete this family?') . "', '" . $this->record->getXref() . "');");
+            $menu->addSubmenu($submenu);
+        }
 
-		return $menu;
-	}
+        // edit raw
+        if (Auth::isAdmin()
+            || WT_USER_CAN_EDIT
+               && $this->record->getTree()
+                               ->getPreference('SHOW_GEDCOM_RECORD')
+        ) {
+            $submenu = new Menu(I18N::translate('Edit raw GEDCOM'), '#', 'menu-fam-editraw');
+            $submenu->setOnclick("return edit_raw('" . $this->record->getXref() . "');");
+            $menu->addSubmenu($submenu);
+        }
 
-	/**
-	 * Get significant information from this page, to allow other pages such as
-	 * charts and reports to initialise with the same records
-	 *
-	 * @return string
-	 */
-	public function getSignificantSurname() {
-		if ($this->record && $this->record->getHusband()) {
-			list($surn) = explode(',', $this->record->getHusband()->getSortname());
-			return $surn;
-		} else {
-			return '';
-		}
-	}
+        // add to favorites
+        if (array_key_exists('user_favorites', Module::getActiveModules())) {
+            $submenu = new Menu(
+            /* I18N: Menu option.  Add [the current page] to the list of favorites */
+                I18N::translate('Add to favorites'),
+                '#',
+                'menu-fam-addfav'
+            );
+            $submenu->setOnclick("jQuery.post('module.php?mod=user_favorites&amp;mod_action=menu-add-favorite',{xref:'" . $this->record->getXref() . "'},function(){location.reload();})");
+            $menu->addSubmenu($submenu);
+        }
 
-	/**
-	 * Print the facts
-	 */
-	public function printFamilyFacts() {
-		global $linkToID;
+        // Get the link for the first submenu and set it as the link for the main menu
+        if ($menu->getSubmenus()) {
+            $submenus = $menu->getSubmenus();
+            $menu->setLink($submenus[0]->getLink());
+            $menu->setOnClick($submenus[0]->getOnClick());
+        }
 
-		$linkToID = $this->record->getXref(); // -- Tell addmedia.php what to link to
+        return $menu;
+    }
 
-		$indifacts = $this->record->getFacts();
-		if ($indifacts) {
-			sort_facts($indifacts);
-			foreach ($indifacts as $fact) {
-				print_fact($fact, $this->record);
-			}
-		} else {
-			echo '<tr><td class="messagebox" colspan="2">', I18N::translate('No facts for this family.'), '</td></tr>';
-		}
+    /**
+     * Get significant information from this page, to allow other pages such as
+     * charts and reports to initialise with the same records
+     *
+     * @return string
+     */
+    public function getSignificantSurname()
+    {
+        if ($this->record && $this->record->getHusband()) {
+            list($surn) = explode(',', $this->record->getHusband()
+                                                    ->getSortname());
 
-		if (WT_USER_CAN_EDIT) {
-			print_add_new_fact($this->record->getXref(), $indifacts, 'FAM');
+            return $surn;
+        } else {
+            return '';
+        }
+    }
 
-			echo '<tr><td class="descriptionbox">';
-			echo I18N::translate('Note');
-			echo '</td><td class="optionbox">';
-			echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','NOTE');\">", I18N::translate('Add a new note'), '</a>';
-			echo help_link('add_note');
-			echo '</td></tr>';
+    /**
+     * Print the facts
+     */
+    public function printFamilyFacts()
+    {
+        global $linkToID;
 
-			echo '<tr><td class="descriptionbox">';
-			echo I18N::translate('Shared note');
-			echo '</td><td class="optionbox">';
-			echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SHARED_NOTE');\">", I18N::translate('Add a new shared note'), '</a>';
-			echo help_link('add_shared_note');
-			echo '</td></tr>';
+        $linkToID = $this->record->getXref(); // -- Tell addmedia.php what to link to
 
-			if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
-				echo '<tr><td class="descriptionbox">';
-				echo I18N::translate('Media object');
-				echo '</td><td class="optionbox">';
-				echo "<a href=\"#\" onclick=\"window.open('addmedia.php?action=showmediaform&amp;linktoid=" . $this->record->getXref() . "', '_blank', edit_window_specs); return false;\">", I18N::translate('Add a new media object'), '</a>';
-				echo help_link('OBJE');
-				echo '<br>';
-				echo "<a href=\"#\" onclick=\"window.open('inverselink.php?linktoid=" . $this->record->getXref() . "&amp;linkto=family', '_blank', find_window_specs); return false;\">", I18N::translate('Link to an existing media object'), '</a>';
-				echo '</td></tr>';
-			}
+        $indifacts = $this->record->getFacts();
+        if ($indifacts) {
+            sort_facts($indifacts);
+            foreach ($indifacts as $fact) {
+                print_fact($fact, $this->record);
+            }
+        } else {
+            echo '<tr><td class="messagebox" colspan="2">', I18N::translate('No facts for this family.'), '</td></tr>';
+        }
 
-			echo '<tr><td class="descriptionbox">';
-			echo I18N::translate('Source');
-			echo '</td><td class="optionbox">';
-			echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SOUR');\">", I18N::translate('Add a new source citation'), '</a>';
-			echo help_link('add_source');
-			echo '</td></tr>';
-		}
-	}
+        if (WT_USER_CAN_EDIT) {
+            print_add_new_fact($this->record->getXref(), $indifacts, 'FAM');
+
+            echo '<tr><td class="descriptionbox">';
+            echo I18N::translate('Note');
+            echo '</td><td class="optionbox">';
+            echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','NOTE');\">", I18N::translate('Add a new note'), '</a>';
+            echo help_link('add_note');
+            echo '</td></tr>';
+
+            echo '<tr><td class="descriptionbox">';
+            echo I18N::translate('Shared note');
+            echo '</td><td class="optionbox">';
+            echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SHARED_NOTE');\">", I18N::translate('Add a new shared note'), '</a>';
+            echo help_link('add_shared_note');
+            echo '</td></tr>';
+
+            if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
+                echo '<tr><td class="descriptionbox">';
+                echo I18N::translate('Media object');
+                echo '</td><td class="optionbox">';
+                echo "<a href=\"#\" onclick=\"window.open('addmedia.php?action=showmediaform&amp;linktoid=" . $this->record->getXref() . "', '_blank', edit_window_specs); return false;\">", I18N::translate('Add a new media object'), '</a>';
+                echo help_link('OBJE');
+                echo '<br>';
+                echo "<a href=\"#\" onclick=\"window.open('inverselink.php?linktoid=" . $this->record->getXref() . "&amp;linkto=family', '_blank', find_window_specs); return false;\">", I18N::translate('Link to an existing media object'), '</a>';
+                echo '</td></tr>';
+            }
+
+            echo '<tr><td class="descriptionbox">';
+            echo I18N::translate('Source');
+            echo '</td><td class="optionbox">';
+            echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SOUR');\">", I18N::translate('Add a new source citation'), '</a>';
+            echo help_link('add_source');
+            echo '</td></tr>';
+        }
+    }
 }

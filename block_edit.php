@@ -20,44 +20,47 @@ define('WT_SCRIPT_NAME', 'block_edit.php');
 require './includes/session.php';
 
 $block_id = Filter::getInteger('block_id');
-$block = Database::prepare(
-	"SELECT SQL_CACHE * FROM `##block` WHERE block_id=?"
-)->execute(array($block_id))->fetchOneRow();
+$block    = Database::prepare(
+    "SELECT SQL_CACHE * FROM `##block` WHERE block_id=?"
+)
+                    ->execute(array($block_id))
+                    ->fetchOneRow();
 
 // Check access.  (1) the block must exist and be enabled, (2) gedcom blocks require
 // managers, (3) user blocks require the user or an admin
 if (
-	!$block ||
-	!array_key_exists($block->module_name, Module::getActiveBlocks(WT_GED_ID)) ||
-	$block->gedcom_id && !Auth::isManager(Tree::get($block->gedcom_id)) ||
-	$block->user_id && $block->user_id != Auth::id() && !Auth::isAdmin()
+    !$block
+    || !array_key_exists($block->module_name, Module::getActiveBlocks(WT_GED_ID))
+    || $block->gedcom_id && !Auth::isManager(Tree::get($block->gedcom_id))
+    || $block->user_id && $block->user_id != Auth::id() && !Auth::isAdmin()
 ) {
-	return;
+    return;
 }
 
 $class_name = __NAMESPACE__ . '\\' . $block->module_name . '_WT_Module';
-$block = new $class_name;
+$block      = new $class_name;
 
 $controller = new AjaxController;
 $controller->pageHeader();
 
 if (array_key_exists('ckeditor', Module::getActiveModules())) {
-	ckeditor_WT_Module::enableEditor($controller);
+    ckeditor_WT_Module::enableEditor($controller);
 }
 
 ?>
-<form name="block" method="post" action="block_edit.php?block_id=<?php echo $block_id; ?>" onsubmit="return modalDialogSubmitAjax(this);" >
-	<input type="hidden" name="save" value="1">
-	<?php echo Filter::getCsrf(); ?>
-	<p>
-		<?php echo $block->getDescription(); ?>
-	</p>
-	<table class="facts_table">
-		<?php echo $block->configureBlock($block_id); ?>
-		<tr>
-			<td colspan="2" class="topbottombar">
-				<input type="submit" value="<?php echo I18N::translate('save'); ?>">
-			</td>
-		</tr>
-	</table>
+<form name="block" method="post" action="block_edit.php?block_id=<?php echo $block_id; ?>"
+      onsubmit="return modalDialogSubmitAjax(this);">
+    <input type="hidden" name="save" value="1">
+    <?php echo Filter::getCsrf(); ?>
+    <p>
+        <?php echo $block->getDescription(); ?>
+    </p>
+    <table class="facts_table">
+        <?php echo $block->configureBlock($block_id); ?>
+        <tr>
+            <td colspan="2" class="topbottombar">
+                <input type="submit" value="<?php echo I18N::translate('save'); ?>">
+            </td>
+        </tr>
+    </table>
 </form>

@@ -1,7 +1,7 @@
 <?php
 namespace Fisharebest\Webtrees;
 
-	// Standard theme
+    // Standard theme
 //
 // webtrees: online genealogy
 // Copyright (C) 2015 webtrees development team.

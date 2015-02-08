@@ -23,9 +23,9 @@ use PDOException;
 
 // Convert MULTI_MEDIA (0=false, 1=true) to MEDIA_UPLOAD (1=members, 0=managers, -1=nobody)
 try {
-	Database::exec("UPDATE `##gedcom_setting` SET setting_name='MEDIA_UPLOAD' WHERE setting_name='MULTI_MEDIA'");
+    Database::exec("UPDATE `##gedcom_setting` SET setting_name='MEDIA_UPLOAD' WHERE setting_name='MULTI_MEDIA'");
 } catch (PDOException $ex) {
-	// This could theoretically cause a duplicate key error, if a MULTI_MEDIA setting already exists
+    // This could theoretically cause a duplicate key error, if a MULTI_MEDIA setting already exists
 }
 
 // Remove old settings

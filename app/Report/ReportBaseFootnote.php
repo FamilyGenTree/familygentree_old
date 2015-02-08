@@ -19,110 +19,122 @@ namespace Fisharebest\Webtrees;
 /**
  * Class ReportBaseFootnote
  */
-class ReportBaseFootnote extends ReportBaseElement {
-	/**
-	 * The name of the style for this element
-	 *
-	 * @var string
-	 */
-	public $styleName = "";
+class ReportBaseFootnote extends ReportBaseElement
+{
+    /**
+     * The name of the style for this element
+     *
+     * @var string
+     */
+    public $styleName = "";
 
-	/**
-	 * Numbers for the links
-	 *
-	 * @var int
-	 */
-	public $num;
+    /**
+     * Numbers for the links
+     *
+     * @var int
+     */
+    public $num;
 
-	/**
-	 * The text that will be printed with the number
-	 *
-	 * @var string
-	 */
-	public $numText = "";
+    /**
+     * The text that will be printed with the number
+     *
+     * @var string
+     */
+    public $numText = "";
 
-	/**
-	 * Remaining width of a cell
-	 *
-	 * @var float User unit (points)
-	 */
-	public $wrapWidthRemaining;
+    /**
+     * Remaining width of a cell
+     *
+     * @var float User unit (points)
+     */
+    public $wrapWidthRemaining;
 
-	/**
-	 * Original width of a cell
-	 *
-	 * @var float User unit (points)
-	 */
-	public $wrapWidthCell;
+    /**
+     * Original width of a cell
+     *
+     * @var float User unit (points)
+     */
+    public $wrapWidthCell;
 
-	public $addlink;
+    public $addlink;
 
-	/**
-	 * @param string $style
-	 */
-	function __construct($style = "") {
-		$this->text = "";
-		if (!empty($style)) {
-			$this->styleName = $style;
-		} else {
-			$this->styleName = "footnote";
-		}
+    /**
+     * @param string $style
+     */
+    function __construct($style = "")
+    {
+        $this->text = "";
+        if (!empty($style)) {
+            $this->styleName = $style;
+        } else {
+            $this->styleName = "footnote";
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	/**
-	 * @param $t
-	 *
-	 * @return integer
-	 */
-	function addText($t) {
-		$t = trim($t, "\r\n\t");
-		$t = str_replace(array("<br>", "&nbsp;"), array("\n", " "), $t);
-		$t = strip_tags($t);
-		$t = htmlspecialchars_decode($t);
-		$this->text .= $t;
+    /**
+     * @param $t
+     *
+     * @return integer
+     */
+    function addText($t)
+    {
+        $t = trim($t, "\r\n\t");
+        $t = str_replace(array(
+                             "<br>",
+                             "&nbsp;"
+                         ), array(
+                             "\n",
+                             " "
+                         ), $t);
+        $t = strip_tags($t);
+        $t = htmlspecialchars_decode($t);
+        $this->text .= $t;
 
-		return 0;
-	}
+        return 0;
+    }
 
-	/**
-	 * @param $wrapwidth
-	 * @param $cellwidth
-	 *
-	 * @return mixed
-	 */
-	function setWrapWidth($wrapwidth, $cellwidth) {
-		$this->wrapWidthCell = $cellwidth;
-		if (strpos($this->numText, "\n") !== false) {
-			$this->wrapWidthRemaining = $cellwidth;
-		} else {
-			$this->wrapWidthRemaining = $wrapwidth;
-		}
+    /**
+     * @param $wrapwidth
+     * @param $cellwidth
+     *
+     * @return mixed
+     */
+    function setWrapWidth($wrapwidth, $cellwidth)
+    {
+        $this->wrapWidthCell = $cellwidth;
+        if (strpos($this->numText, "\n") !== false) {
+            $this->wrapWidthRemaining = $cellwidth;
+        } else {
+            $this->wrapWidthRemaining = $wrapwidth;
+        }
 
-		return $this->wrapWidthRemaining;
-	}
+        return $this->wrapWidthRemaining;
+    }
 
-	/**
-	 * @param $n
-	 *
-	 * @return integer
-	 */
-	function setNum($n) {
-		$this->num = $n;
-		$this->numText = "$n ";
+    /**
+     * @param $n
+     *
+     * @return integer
+     */
+    function setNum($n)
+    {
+        $this->num = $n;
+        $this->numText = "$n ";
 
-		return 0;
-	}
+        return 0;
+    }
 
-	/**
-	 * @param $a
-	 *
-	 * @return integer
-	 */
-	function setAddlink($a) {
-		$this->addlink = $a;
+    /**
+     * @param $a
+     *
+     * @return integer
+     */
+    function setAddlink($a)
+    {
+        $this->addlink = $a;
 
-		return 0;
-	}
+        return 0;
+    }
 }

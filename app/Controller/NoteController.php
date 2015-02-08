@@ -19,59 +19,63 @@ namespace Fisharebest\Webtrees;
 /**
  * Class NoteController - Controller for the shared note page
  */
-class NoteController extends GedcomRecordController {
-	/**
-	 * Startup activity
-	 */
-	public function __construct() {
-		$xref         = Filter::get('nid', WT_REGEX_XREF);
-		$this->record = Note::getInstance($xref);
+class NoteController extends GedcomRecordController
+{
+    /**
+     * Startup activity
+     */
+    public function __construct()
+    {
+        $xref         = Filter::get('nid', WT_REGEX_XREF);
+        $this->record = Note::getInstance($xref);
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * get edit menu
-	 */
-	function getEditMenu() {
-		if (!$this->record || $this->record->isPendingDeletion()) {
-			return null;
-		}
+    /**
+     * get edit menu
+     */
+    function getEditMenu()
+    {
+        if (!$this->record || $this->record->isPendingDeletion()) {
+            return null;
+        }
 
-		// edit menu
-		$menu = new Menu(I18N::translate('Edit'), '#', 'menu-note');
+        // edit menu
+        $menu = new Menu(I18N::translate('Edit'), '#', 'menu-note');
 
-		if (WT_USER_CAN_EDIT) {
-			$submenu = new Menu(I18N::translate('Edit note'), '#', 'menu-note-edit');
-			$submenu->setOnclick('return edit_note(\'' . $this->record->getXref() . '\');');
-			$menu->addSubmenu($submenu);
-		}
+        if (WT_USER_CAN_EDIT) {
+            $submenu = new Menu(I18N::translate('Edit note'), '#', 'menu-note-edit');
+            $submenu->setOnclick('return edit_note(\'' . $this->record->getXref() . '\');');
+            $menu->addSubmenu($submenu);
+        }
 
-		// delete
-		if (WT_USER_CAN_EDIT) {
-			$submenu = new Menu(I18N::translate('Delete'), '#', 'menu-note-del');
-			$submenu->setOnclick("return delete_note('" . I18N::translate('Are you sure you want to delete “%s”?', strip_tags($this->record->getFullName())) . "', '" . $this->record->getXref() . "');");
-			$menu->addSubmenu($submenu);
-		}
+        // delete
+        if (WT_USER_CAN_EDIT) {
+            $submenu = new Menu(I18N::translate('Delete'), '#', 'menu-note-del');
+            $submenu->setOnclick("return delete_note('" . I18N::translate('Are you sure you want to delete “%s”?', strip_tags($this->record->getFullName())) . "', '" . $this->record->getXref() . "');");
+            $menu->addSubmenu($submenu);
+        }
 
-		// add to favorites
-		if (array_key_exists('user_favorites', Module::getActiveModules())) {
-			$submenu = new Menu(
-				/* I18N: Menu option.  Add [the current page] to the list of favorites */ I18N::translate('Add to favorites'),
-				'#',
-				'menu-note-addfav'
-			);
-			$submenu->setOnclick("jQuery.post('module.php?mod=user_favorites&amp;mod_action=menu-add-favorite',{xref:'" . $this->record->getXref() . "'},function(){location.reload();})");
-			$menu->addSubmenu($submenu);
-		}
+        // add to favorites
+        if (array_key_exists('user_favorites', Module::getActiveModules())) {
+            $submenu = new Menu(
+            /* I18N: Menu option.  Add [the current page] to the list of favorites */
+                I18N::translate('Add to favorites'),
+                '#',
+                'menu-note-addfav'
+            );
+            $submenu->setOnclick("jQuery.post('module.php?mod=user_favorites&amp;mod_action=menu-add-favorite',{xref:'" . $this->record->getXref() . "'},function(){location.reload();})");
+            $menu->addSubmenu($submenu);
+        }
 
-		// Get the link for the first submenu and set it as the link for the main menu
-		if ($menu->getSubmenus()) {
-			$submenus = $menu->getSubmenus();
-			$menu->setLink($submenus[0]->getLink());
-			$menu->setOnClick($submenus[0]->getOnClick());
-		}
+        // Get the link for the first submenu and set it as the link for the main menu
+        if ($menu->getSubmenus()) {
+            $submenus = $menu->getSubmenus();
+            $menu->setLink($submenus[0]->getLink());
+            $menu->setOnClick($submenus[0]->getOnClick());
+        }
 
-		return $menu;
-	}
+        return $menu;
+    }
 }
