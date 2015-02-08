@@ -24,10 +24,10 @@
     ],
     "psr-4": {
       "Fisharebest\\Webtrees\\": [
-        "app/",
+        "old_app/",
         "modules_v3/"
       ],
-      "Fgt\\": ["src/Fgt"]
+      "Fgt\\": ["old_src/Fgt"]
     }
   },
   "require": {
