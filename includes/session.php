@@ -397,7 +397,7 @@ define('WT_USER_NAME', Auth::id() ? Auth::user()->getUserName() : '');
 if (isset($_REQUEST['ged'])) {
 	// .... from the URL or form action
 	Globals::i()->GEDCOM = $_REQUEST['ged'];
-} elseif (Globals::i()->WT_SESSION->GEDCOM) {
+} elseif (!empty(Globals::i()->WT_SESSION->GEDCOM)) {
 	// .... the most recently used one
 	Globals::i()->GEDCOM = Globals::i()->WT_SESSION->GEDCOM;
 } else {
@@ -409,7 +409,9 @@ if (isset($_REQUEST['ged'])) {
 Globals::i()->WT_TREE = null;
 foreach (Tree::getAll() as $tree) {
 	Globals::i()->WT_TREE = $tree;
-	if (Globals::i()->WT_TREE->getName() == Globals::i()->GEDCOM && (Globals::i()->WT_TREE->getPreference('imported') || Auth::isAdmin())) {
+	if (Globals::i()->WT_TREE->getName() == (isset(Globals::i()->GEDCOM) ? Globals::i()->GEDCOM : null)
+		&& (Globals::i()->WT_TREE->getPreference('imported') || Auth::isAdmin())
+	) {
 		break;
 	}
 }
