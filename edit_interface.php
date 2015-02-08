@@ -2335,7 +2335,7 @@ function keep_chan(GedcomRecord $record = null) {
  * @param string        $gender
  */
 function print_indi_form($nextaction, Individual $person = null, Family $family = null, Fact $name_fact = null, $famtag = 'CHIL', $gender = 'U') {
-	global $NPFX_accept, $bdm, $controller;
+	global $bdm, $controller;
 
 	$SURNAME_TRADITION = Globals::i()->WT_TREE->getPreference('SURNAME_TRADITION');
 
@@ -2631,7 +2631,7 @@ function print_indi_form($nextaction, Individual $person = null, Family $family 
 	}
 
 	// Populate any missing 2 XXXX fields from the 1 NAME field
-	$npfx_accept = implode('|', $NPFX_accept);
+	$npfx_accept = implode('|', Constants::$NPFX_ACCEPT);
 	if (preg_match("/((($npfx_accept)\.? +)*)([^\n\/\"]*)(\"(.*)\")? *\/(([a-z]{2,3} +)*)(.*)\/ *(.*)/i", $name_fields['NAME'], $name_bits)) {
 		if (empty($name_fields['NPFX'])) {
 			$name_fields['NPFX'] = $name_bits[1];
