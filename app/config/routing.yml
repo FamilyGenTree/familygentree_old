@@ -2,7 +2,3 @@ webtrees_legacy:
     resource: "@WebtreesLegacyBundle/Resources/config/routing.yml"
     prefix:   /
 
-app:
-    resource: @AppBundle/Controller/
-    type:     annotation
-
