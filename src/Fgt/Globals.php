@@ -22,6 +22,7 @@ use Fisharebest\Webtrees\Tree;
  * @property string                        SEARCH_SPIDER
  * @property string                        GEDCOM
  * @property string                        DATE_FORMAT
+ * @property string                        TIME_FORMAT
  *
  * @package Fgt
  *
@@ -40,7 +41,8 @@ class Globals
         'WT_REQUEST'     => 1,
         'SEARCH_SPIDER'  => 1,
         'GEDCOM'         => 1,
-        'DATE_FORMAT'    => 'initDateFormat'
+        'DATE_FORMAT'    => 'initDateFormat',
+        'TIME_FORMAT'    => 'initTimeFormat'
     );
     protected static $instance;
     protected        $varContainer = array();
@@ -138,6 +140,12 @@ class Globals
     {
         // I18N: This is the format string for full dates.  See http://php.net/date for codes
         return I18N::noop('%j %F %Y');
+    }
+
+    protected function initTimeFormat()
+    {
+        // I18N: This is the format string for the time-of-day.  See http://php.net/date for codes
+        return I18N::noop('%H:%i:%s');
     }
 
 }

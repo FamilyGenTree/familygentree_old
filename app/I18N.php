@@ -277,8 +277,6 @@ class I18N {
 		}
 
 		// Extract language settings from the translation file
-		global $TIME_FORMAT; // I18N: This is the format string for the time-of-day.  See http://php.net/date for codes
-		$TIME_FORMAT = self::noop('%H:%i:%s');
 
 		// Alphabetic sorting sequence (upper-case letters), used by webtrees to sort strings
 		list(, self::$alphabet_upper) = explode('=', self::noop('ALPHABET_upper=ABCDEFGHIJKLMNOPQRSTUVWXYZ'));

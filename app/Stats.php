@@ -5482,8 +5482,6 @@ class Stats {
 	 * @return string
 	 */
 	private function getLatestUserData($type = 'userid', $params = array()) {
-		global $TIME_FORMAT;
-
 		static $user_id = null;
 
 		if ($user_id === null) {
@@ -5511,7 +5509,7 @@ class Stats {
 			if (is_array($params) && isset($params[0]) && $params[0] != '') {
 				$datestamp = $params[0];
 			} else {
-				$datestamp = str_replace('%', '', $TIME_FORMAT);
+				$datestamp = str_replace('%', '', Globals::i()->TIME_FORMAT);
 			}
 			return date($datestamp, $user->getPreference('reg_timestamp'));
 		case 'loggedin':

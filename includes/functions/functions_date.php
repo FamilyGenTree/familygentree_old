@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Globals;
 
 /**
  * @param string  $age_string
@@ -58,7 +59,7 @@ function get_age_at_event($age_string, $show_years) {
 
 /**
  * Convert a unix timestamp into a formated date-time value, for logs, etc.
- * We can’t just use date("Globals::i()->DATE_FORMAT- $TIME_FORMAT") as this doesn't
+ * We can’t just use date("Globals::i()->DATE_FORMAT- Globals::i()->TIME_FORMAT") as this doesn't
  * support internationalisation.
  * Don't attempt to convert into other calendars, as not all days start at
  * midnight, and we can only get it wrong.
@@ -68,9 +69,7 @@ function get_age_at_event($age_string, $show_years) {
  * @return string
  */
 function format_timestamp($time) {
-	global $TIME_FORMAT;
-
-	$time_fmt = $TIME_FORMAT;
+	$time_fmt = Globals::i()->TIME_FORMAT;
 	// PHP::date() doesn't do I18N.  Do it ourselves....
 	preg_match_all('/%[^%]/', $time_fmt, $matches);
 	foreach ($matches[0] as $match) {
