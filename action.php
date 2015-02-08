@@ -25,7 +25,7 @@ require './includes/session.php';
 header('Content-type: text/html; charset=UTF-8');
 
 if (!Filter::checkCsrf()) {
-    Zend_Session::writeClose();
+    Application::i()->shutDown();
     http_response_code(406);
 
     return;

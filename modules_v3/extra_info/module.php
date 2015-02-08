@@ -71,9 +71,9 @@ class extra_info_WT_Module extends Module implements ModuleSidebarInterface
             }
         }
         if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
-            $hitCount = 0;
+            Globals::i()->hitCount = 0;
             require WT_ROOT . 'includes/hitcount.php';
-            echo '<div id="hitcounter">', I18N::translate('Hit count:'), ' ', $hitCount, '</div>';
+            echo '<div id="hitcounter">', I18N::translate('Hit count:'), ' ', Globals::i()->hitCount, '</div>';
         }
 
         return strip_tags(ob_get_clean(), '<a><div><span>');

@@ -99,6 +99,6 @@ if ($page_parameter) {
     $hitCount = 1;
 }
 
-$hitCount = '<span class="hit-counter">' . I18N::number($hitCount) . '</span>';
+Globals::i()->hitCount = '<span class="hit-counter">' . I18N::number($hitCount) . '</span>';
 
-unset($page_name, $page_parameter);
+unset($page_name, $page_parameter, $hitCount);

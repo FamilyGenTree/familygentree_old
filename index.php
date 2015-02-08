@@ -142,7 +142,7 @@ if ($ctype === 'user') {
 }
 
 if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
-    echo '<span>' . I18N::translate('Hit count:') . ' ' . $hitCount . '</span>';
+    echo '<span>' . I18N::translate('Hit count:') . ' ' . Globals::i()->hitCount . '</span>';
 }
 
 echo '</div></div>';

@@ -61,14 +61,14 @@ class Auth
     public static function isManager(Tree $tree = null, User $user = null)
     {
         if ($tree === null) {
-            $tree = Globals::i()->WT_TREE;
+            $tree = isset(Globals::i()->WT_TREE) ? Globals::i()->WT_TREE : null;
         }
 
         if ($user === null) {
             $user = self::user();
         }
 
-        return self::isAdmin($user) || $user && $tree->getUserPreference($user, 'canedit') === 'admin';
+        return self::isAdmin($user) || ($user && $tree && $tree->getUserPreference($user, 'canedit') === 'admin');
     }
 
     /**
@@ -143,7 +143,7 @@ class Auth
     public static function id()
     {
 
-        return Globals::i()->WT_SESSION ? Globals::i()->WT_SESSION->wt_user : null;
+        return isset(Globals::i()->WT_SESSION) ? Globals::i()->WT_SESSION->wt_user : null;
     }
 
     /**

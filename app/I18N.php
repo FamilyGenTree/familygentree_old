@@ -484,7 +484,7 @@ class I18N
                 } else {
                     $prefs = explode(',', str_replace(' ', '', $_SERVER['HTTP_ACCEPT_LANGUAGE']));
                 }
-                if (Globals::i()->WT_TREE) {
+                if (isset(Globals::i()->WT_TREE)) {
                     // Add the tree’s default language as a low-priority
                     $locale  = Globals::i()->WT_TREE->getPreference('LANGUAGE');
                     $prefs[] = $locale . ';q=0.2';

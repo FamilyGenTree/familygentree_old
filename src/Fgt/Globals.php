@@ -15,7 +15,7 @@ use Fisharebest\Webtrees\Tree;
 /**
  * Class Globals
  *
- * @property \Zend_Session                 WT_SESSION
+ * @property \Zend_Session_Namespace       WT_SESSION
  * @property Tree                          WT_TREE
  * @property string|mixed                  TEXT_DIRECTION
  * @property \Zend_Controller_Request_Http WT_REQUEST
@@ -23,6 +23,7 @@ use Fisharebest\Webtrees\Tree;
  * @property string                        GEDCOM
  * @property string                        DATE_FORMAT
  * @property string                        TIME_FORMAT
+ * @property string                        hitCount
  *
  * @package Fgt
  *
@@ -42,7 +43,8 @@ class Globals
         'SEARCH_SPIDER'  => 1,
         'GEDCOM'         => 1,
         'DATE_FORMAT'    => 'initDateFormat',
-        'TIME_FORMAT'    => 'initTimeFormat'
+        'TIME_FORMAT'    => 'initTimeFormat',
+        'hitCount'=> 1
     );
     protected static $instance;
     protected        $varContainer = array();

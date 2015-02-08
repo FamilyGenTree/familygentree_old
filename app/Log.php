@@ -43,7 +43,7 @@ class Log
     private static function addLog($message, $log_type, Tree $tree = null)
     {
         if (!$tree) {
-            $tree = Globals::i()->WT_TREE;
+            $tree = isset(Globals::i()->WT_TREE) ? Globals::i()->WT_TREE : null;
         }
 
         Database::prepare(
@@ -52,7 +52,7 @@ class Log
                 ->execute(array(
                               $log_type,
                               $message,
-                              Globals::i()->WT_REQUEST->getClientIp(),
+                              isset(Globals::i()->WT_REQUEST)?Globals::i()->WT_REQUEST->getClientIp():'unknown',
                               Auth::id(),
                               $tree ? $tree->getTreeId() : null
                           ));
