@@ -211,10 +211,10 @@ class Date {
 	 */
 	function display($url = false, $date_format = null, $convert_calendars = true) {
 		$CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');
-		$DATE_FORMAT     = Globals::i()->WT_TREE->getPreference('DATE_FORMAT');
+		$dateFormat     = Globals::i()->WT_TREE->getPreference('DATE_FORMAT');
 
 		if ($date_format === null) {
-			$date_format = $DATE_FORMAT;
+			$date_format = $dateFormat;
 		}
 
 		if ($convert_calendars) {

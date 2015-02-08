@@ -58,7 +58,7 @@ function get_age_at_event($age_string, $show_years) {
 
 /**
  * Convert a unix timestamp into a formated date-time value, for logs, etc.
- * We can’t just use date("$DATE_FORMAT- $TIME_FORMAT") as this doesn't
+ * We can’t just use date("Globals::i()->DATE_FORMAT- $TIME_FORMAT") as this doesn't
  * support internationalisation.
  * Don't attempt to convert into other calendars, as not all days start at
  * midnight, and we can only get it wrong.

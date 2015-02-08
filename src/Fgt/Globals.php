@@ -9,6 +9,7 @@ namespace Fgt;
 
 
 use \Exception;
+use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 
 /**
@@ -20,6 +21,7 @@ use Fisharebest\Webtrees\Tree;
  * @property \Zend_Controller_Request_Http WT_REQUEST
  * @property string                        SEARCH_SPIDER
  * @property string                        GEDCOM
+ * @property string                        DATE_FORMAT
  *
  * @package Fgt
  *
@@ -37,7 +39,8 @@ class Globals
         'TEXT_DIRECTION' => 1,
         'WT_REQUEST'     => 1,
         'SEARCH_SPIDER'  => 1,
-        'GEDCOM'         => 1
+        'GEDCOM'         => 1,
+        'DATE_FORMAT'    => 'initDateFormat'
     );
     protected static $instance;
     protected        $varContainer = array();
@@ -76,6 +79,12 @@ class Globals
         }
         if (isset($this->varContainer[$name])) {
             return $this->varContainer[$name];
+        } else {
+            if (method_exists($this, static::$ALLOWED_VARS[$name])) {
+                $this->varContainer[$name] = $this->{static::$ALLOWED_VARS[$name]};
+
+                return $this->varContainer[$name];
+            }
         }
         throw new Exception("$name was never initialized, but accessed. Unknown result.");
     }
@@ -86,7 +95,7 @@ class Globals
      *
      * @throws Exception
      */
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         if (!isset(static::$ALLOWED_VARS[$name])) {
             throw new Exception("$name is not an allowed global");
@@ -100,7 +109,7 @@ class Globals
      * @return bool
      * @throws Exception
      */
-    function __isset($name)
+    public function __isset($name)
     {
         if (!isset(static::$ALLOWED_VARS[$name])) {
             throw new Exception("$name is not an allowed global");
@@ -114,7 +123,7 @@ class Globals
      *
      * @throws Exception
      */
-    function __unset($name)
+    public function __unset($name)
     {
         if (!isset(static::$ALLOWED_VARS[$name])) {
             throw new Exception("$name is not an allowed global");
@@ -122,5 +131,13 @@ class Globals
         unset($this->varContainer[$name]);
     }
 
+    /**
+     *
+     */
+    protected function initDateFormat()
+    {
+        // I18N: This is the format string for full dates.  See http://php.net/date for codes
+        return I18N::noop('%j %F %Y');
+    }
 
 }

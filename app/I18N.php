@@ -277,9 +277,6 @@ class I18N {
 		}
 
 		// Extract language settings from the translation file
-		global $DATE_FORMAT; // I18N: This is the format string for full dates.  See http://php.net/date for codes
-		$DATE_FORMAT = self::noop('%j %F %Y');
-
 		global $TIME_FORMAT; // I18N: This is the format string for the time-of-day.  See http://php.net/date for codes
 		$TIME_FORMAT = self::noop('%H:%i:%s');
 
