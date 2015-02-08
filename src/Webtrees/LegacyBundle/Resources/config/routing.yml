@@ -1,0 +1,3 @@
+webtrees_legacy_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: WebtreesLegacyBundle:Default:index }
