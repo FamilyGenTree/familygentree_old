@@ -370,7 +370,7 @@ if (count($controller->people) > 0) {
                 ? "left" : "right") . ";\">";
         echo $controller->topyear . '—';
         echo '</div>';
-        sort_facts($controller->indifacts);
+        Functions::i()->sort_facts($controller->indifacts);
         $factcount = 0;
         foreach ($controller->indifacts as $fact) {
             $controller->print_time_fact($fact);

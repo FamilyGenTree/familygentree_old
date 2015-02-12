@@ -1766,14 +1766,14 @@ function print_changes_list($change_ids, $sort)
 
     switch ($sort) {
         case 'name':
-            uasort($arr, __NAMESPACE__ . '\event_sort_name');
+            uasort($arr, array(Functions::i(),'event_sort_name'));
             break;
         case 'date_asc':
-            uasort($arr, __NAMESPACE__ . '\event_sort');
+            uasort($arr, array(Functions::i(),'event_sort'));
             $arr = array_reverse($arr);
             break;
         case 'date_desc':
-            uasort($arr, __NAMESPACE__ . '\event_sort');
+            uasort($arr, array(Functions::i(),'event_sort'));
     }
     $html = '';
     foreach ($arr as $value) {

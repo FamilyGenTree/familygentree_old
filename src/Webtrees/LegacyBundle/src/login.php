@@ -120,7 +120,7 @@ switch ($action) {
             // We're logging in as an administrator
             if (Auth::isAdmin()) {
                 // Check for updates
-                $latest_version_txt = fetch_latest_version();
+                $latest_version_txt = Functions::i()->fetch_latest_version();
                 if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
                     list($latest_version, $earliest_version, $download_url) = explode('|', $latest_version_txt);
                     if (version_compare(WT_VERSION, $latest_version) < 0) {

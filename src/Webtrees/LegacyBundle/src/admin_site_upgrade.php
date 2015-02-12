@@ -25,7 +25,7 @@ define('WT_SCRIPT_NAME', 'admin_site_upgrade.php');
 Application::i()->init()->started();
 
 // Check for updates
-$latest_version_txt = fetch_latest_version();
+$latest_version_txt = Functions::i()->fetch_latest_version();
 if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
     list($latest_version, $earliest_version, $download_url) = explode('|', $latest_version_txt);
 } else {

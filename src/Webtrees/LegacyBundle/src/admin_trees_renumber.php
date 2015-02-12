@@ -91,7 +91,7 @@ if (Filter::get('go')) {
             " `##link` WRITE," .
             " `##user_gedcom_setting` WRITE"
         );
-        $new_xref = get_new_xref($type);
+        $new_xref = Functions::i()->get_new_xref($type);
         switch ($type) {
             case 'INDI':
                 Database::prepare(

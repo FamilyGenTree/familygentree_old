@@ -6006,9 +6006,9 @@ class Stats
                 }
                 if (Auth::id() != $user->getUserId() && $user->getPreference('contactmethod') != 'none') {
                     if ($type == 'list') {
-                        $content .= '<br><a class="icon-email" href="#" onclick="return message(\'' . $user->getUserId() . '\', \'\', \'' . Filter::escapeJs(get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
+                        $content .= '<br><a class="icon-email" href="#" onclick="return message(\'' . $user->getUserId() . '\', \'\', \'' . Filter::escapeJs(Functions::i()->get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
                     } else {
-                        $content .= ' <a class="icon-email" href="#" onclick="return message(\'' . $user->getUserId() . '\', \'\', \'' . Filter::escapeJs(get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
+                        $content .= ' <a class="icon-email" href="#" onclick="return message(\'' . $user->getUserId() . '\', \'\', \'' . Filter::escapeJs(Functions::i()->get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
                     }
                 }
                 if ($type == 'list') {

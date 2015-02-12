@@ -16,6 +16,8 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 $newgedrec = "0 @XREF@ NOTE\n";
 
 if (isset($_REQUEST['EVEN'])) {

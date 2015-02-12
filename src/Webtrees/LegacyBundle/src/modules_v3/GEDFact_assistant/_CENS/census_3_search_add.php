@@ -130,7 +130,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $nam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censdate);
                             $submenu = new Menu($parentlinks);
@@ -260,7 +260,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $husbnam;
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censyear);
                             $submenu = new Menu($parentlinks);
@@ -393,7 +393,7 @@ use Fgt\Globals;
                                     $chfulmn = rtrim($chnam[$i]['givn'], '*') . ' ' . $chnam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $child);
+                            $label = Functions::i()->get_close_relationship_name($person, $child);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($child->getXref(), $label, $censyear);
                             $submenu = new Menu($spouselinks);
@@ -545,7 +545,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $nam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censyear);
                             $submenu = new Menu($parentlinks);
@@ -684,7 +684,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $husbnam;
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censyear);
                             $submenu = new Menu($parentlinks);
@@ -818,7 +818,7 @@ use Fgt\Globals;
                                     $chfulmn = rtrim($chnam[$i]['givn'], '*') . ' ' . $chnam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $child);
+                            $label = Functions::i()->get_close_relationship_name($person, $child);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($child->getXref(), $label, $censyear);
                             $submenu = new Menu($spouselinks);
@@ -975,7 +975,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $nam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censyear);
                             $submenu = new Menu($parentlinks);
@@ -1114,7 +1114,7 @@ use Fgt\Globals;
                                     $fulmn = rtrim($nam[$i]['givn'], '*') . ' ' . $husbnam;
                                 }
                             }
-                            $label = get_close_relationship_name($person, $gparent);
+                            $label = Functions::i()->get_close_relationship_name($person, $gparent);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($gparent->getXref(), $label, $censyear);
                             $submenu = new Menu($parentlinks);
@@ -1256,7 +1256,7 @@ use Fgt\Globals;
                                     $chfulmn = rtrim($chnam[$i]['givn'], '*') . ' ' . $chnam[$i]['surname'];
                                 }
                             }
-                            $label = get_close_relationship_name($person, $child);
+                            $label = Functions::i()->get_close_relationship_name($person, $child);
                             $menu  = new Menu($label);
                             print_pedigree_person_nav_cens($child->getXref(), $label, $censyear);
                             $submenu = new Menu($spouselinks);

@@ -180,7 +180,7 @@ switch ($action) {
                 FlashMessages::addMessage(
                     I18N::translate('There was an error uploading your file.') .
                     '<br>' .
-                    file_upload_error_text($_FILES['mediafile']['error'])
+                    Functions::i()->file_upload_error_text($_FILES['mediafile']['error'])
                 );
                 $filename = '';
                 break;
@@ -308,7 +308,7 @@ switch ($action) {
         $newFilename = $folderName . $fileName;
 
         // Cannot rename local to external or vice-versa
-        if (isFileExternal($oldFilename) != isFileExternal($filename)) {
+        if (Functions::i()->isFileExternal($oldFilename) != Functions::i()->isFileExternal($filename)) {
             FlashMessages::addMessage(I18N::translate('The media file %1$s could not be renamed to %2$s.', '<span class="filename">' . $oldFilename . '</span>', '<span class="filename">' . $newFilename . '</span>'));
             break;
         }
@@ -446,7 +446,7 @@ if ($gedfile == 'FILE') {
 }
 
 // Filename on server
-$isExternal = isFileExternal($gedfile);
+$isExternal = Functions::i()->isFileExternal($gedfile);
 if ($gedfile == 'FILE') {
     if (WT_USER_GEDCOM_ADMIN) {
         add_simple_tag(
@@ -619,7 +619,7 @@ if (!empty($gedrec)) {
             $fact     = trim($match[2]);
             $event    = trim($match[3]);
             if ($fact === 'NOTE' || $fact === 'TEXT') {
-                $event .= get_cont($subLevel + 1, $subrec);
+                $event .= Functions::i()->get_cont($subLevel + 1, $subrec);
             }
             if ($sourceSOUR !== '' && $subLevel <= $sourceLevel) {
                 // Get rid of all saved Source data

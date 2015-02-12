@@ -45,7 +45,7 @@ class Fact
     /** @var Place The place of this fact, from the “2 PLAC …” attribute */
     private $place;
 
-    /** @var integer Temporary(!) variable Used by sort_facts() */
+    /** @var integer Temporary(!) variable Used by Functions::i()->sort_facts() */
     public $sortOrder;
 
     /**

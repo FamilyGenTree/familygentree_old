@@ -52,13 +52,4 @@ class FunctionsMediaDbTest extends PHPUnit_Framework_TestCase
         $this->assertSame(45097156608, return_bytes('42G'));
     }
 
-    /**
-     * Test that function hasMemoryForImage() exists in the correct namespace.
-     *
-     * @return void
-     */
-    public function testFunctionHasMemoryForImageExists()
-    {
-        $this->assertEquals(function_exists(__NAMESPACE__ . '\\hasMemoryForImage'), true);
-    }
 }

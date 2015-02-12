@@ -1255,7 +1255,7 @@ function gedcomStartHandler($attrs)
                 } else {
                     $temp      = explode(" ", trim($tgedrec));
                     $level     = $temp[0] + 1;
-                    $newgedrec = get_sub_record($level, "$level $tag", $tgedrec);
+                    $newgedrec = Functions::i()->get_sub_record($level, "$level $tag", $tgedrec);
                     $tgedrec   = $newgedrec;
                 }
             }
@@ -1694,10 +1694,10 @@ function repeatTagStartHandler($attrs)
                 $t = $tags[$i];
                 if (!empty($t)) {
                     if ($i < ($count - 1)) {
-                        $subrec = get_sub_record($level, "$level $t", $subrec);
+                        $subrec = Functions::i()->get_sub_record($level, "$level $t", $subrec);
                         if (empty($subrec)) {
                             $level--;
-                            $subrec = get_sub_record($level, "@ $t", $gedrec);
+                            $subrec = Functions::i()->get_sub_record($level, "@ $t", $gedrec);
                             if (empty($subrec)) {
                                 return;
                             }
@@ -1711,7 +1711,7 @@ function repeatTagStartHandler($attrs)
             $count = preg_match_all("/$level $t(.*)/", $subrec, $match, PREG_SET_ORDER);
             $i     = 0;
             while ($i < $count) {
-                $repeats[] = get_sub_record($level, "$level $t", $subrec, $i + 1);
+                $repeats[] = Functions::i()->get_sub_record($level, "$level $t", $subrec, $i + 1);
                 $i++;
             }
         }
@@ -1895,7 +1895,7 @@ function factsStartHandler($attrs)
     $record = GedcomRecord::getInstance($id);
     if (empty($attrs['diff']) && !empty($id)) {
         $facts = $record->getFacts();
-        sort_facts($facts);
+        Functions::i()->sort_facts($facts);
         $repeats  = array();
         $nonfacts = explode(',', $tag);
         foreach ($facts as $event) {
@@ -1969,7 +1969,7 @@ function factsEndHandler()
                     }
                 }
                 $desc = trim($match[2]);
-                $desc .= get_cont(2, $gedrec);
+                $desc .= Functions::i()->get_cont(2, $gedrec);
             }
             //-- start the sax parser
             $repeat_parser = xml_parser_create();
@@ -2854,7 +2854,7 @@ function listStartHandler($attrs)
                         $tag  = str_replace("EMAIL", "_EMAIL", $tag);
                         $tags = explode(":", $tag);
                         $t    = end($tags);
-                        $v    = get_sub_record(1, $tag, $grec);
+                        $v    = Functions::i()->get_sub_record(1, $tag, $grec);
                     }
 
                     switch ($expr) {
@@ -3377,14 +3377,14 @@ function get_gedcom_value($tag, $level, $gedrec)
     $subrec = $gedrec;
     foreach ($tags as $t) {
         $lastsubrec = $subrec;
-        $subrec     = get_sub_record($level, "$level $t", $subrec);
+        $subrec     = Functions::i()->get_sub_record($level, "$level $t", $subrec);
         if (empty($subrec) && $origlevel == 0) {
             $level--;
-            $subrec = get_sub_record($level, "$level $t", $lastsubrec);
+            $subrec = Functions::i()->get_sub_record($level, "$level $t", $lastsubrec);
         }
         if (empty($subrec)) {
             if ($t == "TITL") {
-                $subrec = get_sub_record($level, "$level ABBR", $lastsubrec);
+                $subrec = Functions::i()->get_sub_record($level, "$level ABBR", $lastsubrec);
                 if (!empty($subrec)) {
                     $t = "ABBR";
                 }
@@ -3393,7 +3393,7 @@ function get_gedcom_value($tag, $level, $gedrec)
                 if ($level > 0) {
                     $level--;
                 }
-                $subrec = get_sub_record($level, "@ $t", $gedrec);
+                $subrec = Functions::i()->get_sub_record($level, "@ $t", $gedrec);
                 if (empty($subrec)) {
                     return;
                 }
@@ -3421,7 +3421,7 @@ function get_gedcom_value($tag, $level, $gedrec)
             }
         }
         if ($level != 0 || $t != "NOTE") {
-            $value .= get_cont($level + 1, $subrec);
+            $value .= Functions::i()->get_cont($level + 1, $subrec);
         }
 
         return $value;

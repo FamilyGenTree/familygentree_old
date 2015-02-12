@@ -49,7 +49,7 @@ class IndexPHP {
         $all_blocks = Module::getActiveBlocks();
 
 // The latest version is shown on the administration page.  This updates it every day.
-        fetch_latest_version();
+        Functions::i()->fetch_latest_version();
 
 // We generate individual blocks using AJAX
         if ($action === 'ajax') {

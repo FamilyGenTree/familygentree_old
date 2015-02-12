@@ -36,7 +36,7 @@ foreach ($person->getSpouseFamilies() as $family) {
         $facts[] = $fact;
     }
 }
-sort_facts($facts);
+Functions::i()->sort_facts($facts);
 
 foreach ($facts as $event) {
     switch ($event->getTag()) {

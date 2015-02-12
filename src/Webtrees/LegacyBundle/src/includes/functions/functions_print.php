@@ -66,7 +66,7 @@ function print_pedigree_person(Individual $person = null, $style = 1)
  */
 function print_note_record($text, $nlevel, $nrec, $textOnly = false)
 {
-    $text .= get_cont($nlevel, $nrec);
+    $text .= Functions::i()->get_cont($nlevel, $nrec);
 
     // Check if shared note (we have already checked that it exists)
     if (preg_match('/^0 @(' . WT_REGEX_XREF . ')@ NOTE/', $nrec, $match)) {
@@ -273,7 +273,7 @@ function format_asso_rela_record(Fact $event)
             $values = array('<a href="' . $person->getHtmlUrl() . '">' . $person->getFullName() . '</a>');
             if (!Globals::i()->SEARCH_SPIDER) {
                 foreach ($associates as $associate) {
-                    $relationship_name = get_associate_relationship_name($associate, $person);
+                    $relationship_name = Functions::i()->get_associate_relationship_name($associate, $person);
                     if (!$relationship_name) {
                         $relationship_name = WT_Gedcom_Tag::getLabel('RELA');
                     }
@@ -524,7 +524,7 @@ function format_fact_place(Fact $event, $anchor = false, $sub_records = false, $
     }
 
     if ($sub_records) {
-        $placerec = get_sub_record(2, '2 PLAC', $event->getGedcom());
+        $placerec = Functions::i()->get_sub_record(2, '2 PLAC', $event->getGedcom());
         if (!empty($placerec)) {
             if (preg_match_all('/\n3 (?:_HEB|ROMN) (.+)/', $placerec, $matches)) {
                 foreach ($matches[1] as $match) {

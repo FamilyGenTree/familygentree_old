@@ -1144,7 +1144,7 @@ function create_media_object($level, $gedrec, $ged_id)
                              ->fetchOne();
 
     if (!$xref) {
-        $xref = get_new_xref("OBJE", $ged_id);
+        $xref = Functions::i()->get_new_xref("OBJE", $ged_id);
         // renumber the lines
         $gedrec = preg_replace_callback('/\n(\d+)/', function ($m) use ($level) {
             return "\n" . ($m[1] - $level);

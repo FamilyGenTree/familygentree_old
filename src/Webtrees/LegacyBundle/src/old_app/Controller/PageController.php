@@ -135,7 +135,7 @@ class PageController extends BaseController
     public function restrictAccess($condition)
     {
         if ($condition !== true) {
-            header('Location: ' . WT_LOGIN_URL . '?url=' . rawurlencode(get_query_url()));
+            header('Location: ' . WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()->get_query_url()));
             exit;
         }
 

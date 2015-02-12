@@ -137,7 +137,7 @@ class sources_tab_WT_Module extends Module implements ModuleTabInterface
                     $this->facts[] = $fact;
                 }
             }
-            sort_facts($this->facts);
+            Functions::i()->sort_facts($this->facts);
         }
 
         return $this->facts;

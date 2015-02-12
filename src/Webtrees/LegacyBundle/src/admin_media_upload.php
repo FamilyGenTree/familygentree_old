@@ -138,7 +138,7 @@ if ($action == "upload") {
                     FlashMessages::addMessage(
                         I18N::translate('There was an error uploading your file.') .
                         '<br>' .
-                        file_upload_error_text($_FILES['mediafile' . $i]['error'])
+                        Functions::i()->file_upload_error_text($_FILES['mediafile' . $i]['error'])
                     );
                     $filename = '';
                     break;

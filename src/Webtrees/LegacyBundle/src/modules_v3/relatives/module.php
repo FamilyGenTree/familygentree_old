@@ -124,7 +124,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                 ?>
                 <tr>
                     <td class="<?php echo $class; ?>">
-                        <?php echo get_close_relationship_name($controller->record, $person); ?>
+                        <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
                         <?php echo Theme::theme()
@@ -161,7 +161,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                 ?>
                 <tr>
                     <td class="<?php echo $class; ?>">
-                        <?php echo get_close_relationship_name($controller->record, $person); ?>
+                        <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
                         <?php echo Theme::theme()
@@ -256,7 +256,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                 <tr>
                     <td class="<?php echo $class; ?>">
                         <?php echo self::ageDifference($prev, $next, $child_number); ?>
-                        <?php echo get_close_relationship_name($controller->record, $person); ?>
+                        <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
                         <?php echo Theme::theme()

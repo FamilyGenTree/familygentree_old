@@ -69,7 +69,7 @@ class logged_in_WT_Module extends Module implements ModuleBlockInterface
                 $content .= '<div class="logged_in_name">';
                 $content .= Filter::escapeHtml($user->getRealName()) . ' - ' . Filter::escapeHtml($user->getUserName());
                 if (Auth::id() != $user->getUserId() && $user->getPreference('contactmethod') != 'none') {
-                    $content .= ' <a class="icon-email" href="#" onclick="return message(\'' . Filter::escapeHtml($user->getUserName()) . '\', \'\', \'' . Filter::escapeHtml(get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
+                    $content .= ' <a class="icon-email" href="#" onclick="return message(\'' . Filter::escapeHtml($user->getUserName()) . '\', \'\', \'' . Filter::escapeHtml(Functions::i()->get_query_url()) . '\');" title="' . I18N::translate('Send a message') . '"></a>';
                 }
                 $content .= '</div>';
             }

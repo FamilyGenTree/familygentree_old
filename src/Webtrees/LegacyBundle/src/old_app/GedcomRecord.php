@@ -1151,7 +1151,7 @@ class GedcomRecord
             }
         }
         if ($sort) {
-            sort_facts($facts);
+            Functions::i()->sort_facts($facts);
         }
 
         return $facts;
@@ -1342,7 +1342,7 @@ class GedcomRecord
 
         // webtrees creates XREFs containing digits.  Anything else (e.g. “new”) is just a placeholder.
         if (!preg_match('/\d/', $xref)) {
-            $xref   = get_new_xref($type);
+            $xref   = Functions::i()->get_new_xref($type);
             $gedcom = preg_replace('/^0 @(' . WT_REGEX_XREF . ')@/', '0 @' . $xref . '@', $gedcom);
         }
 

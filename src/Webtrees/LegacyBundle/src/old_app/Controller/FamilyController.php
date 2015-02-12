@@ -188,7 +188,7 @@ class FamilyController extends GedcomRecordController
 
         $indifacts = $this->record->getFacts();
         if ($indifacts) {
-            sort_facts($indifacts);
+            Functions::i()->sort_facts($indifacts);
             foreach ($indifacts as $fact) {
                 print_fact($fact, $this->record);
             }

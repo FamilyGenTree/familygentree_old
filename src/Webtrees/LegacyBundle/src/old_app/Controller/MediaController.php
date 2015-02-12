@@ -129,7 +129,7 @@ class MediaController extends GedcomRecordController
             $facts[] = new Fact('1 __FILE_SIZE__ ' . $this->record->getFilesize(), $this->record, 0);
         }
 
-        sort_facts($facts);
+        Functions::i()->sort_facts($facts);
 
         return $facts;
     }

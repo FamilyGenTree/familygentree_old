@@ -16,6 +16,8 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 $xref = Filter::get('xref', WT_REGEX_XREF);
 
 $person = Individual::getInstance($xref);

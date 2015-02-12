@@ -1215,7 +1215,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('THEME_DIR', get_theme_names(), I18N::translate('<default theme>'), Globals::i()->WT_TREE->getPreference('THEME_DIR'), 'class="form-control"'); ?>
+                <?php echo select_edit_control('THEME_DIR', Functions::i()->get_theme_names(), I18N::translate('<default theme>'), Globals::i()->WT_TREE->getPreference('THEME_DIR'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Default theme” configuration setting */
                     I18N::translate('You can change the appearance of webtrees using “themes”.  Each theme has a different style, layout, color scheme, etc.'); ?>

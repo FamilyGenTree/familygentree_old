@@ -67,11 +67,11 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
         ->setPageTitle(I18N::translate(/* I18N: %s are individual’s names */
             'Relationships between %1$s and %2$s', $person1->getFullName(), $person2->getFullName()))
         ->PageHeader();
-    $node = get_relationship($person1, $person2, $followspouse, 0, $path_to_find);
+    $node = Functions::i()->get_relationship($person1, $person2, $followspouse, 0, $path_to_find);
     // If no blood relationship exists, look for relationship via marriage
     if ($path_to_find == 0 && $node == false && $followspouse == false) {
         $followspouse = true;
-        $node         = get_relationship($person1, $person2, $followspouse, 0, $path_to_find);
+        $node         = Functions::i()->get_relationship($person1, $person2, $followspouse, 0, $path_to_find);
     }
     $disp = true;
 } else {
@@ -183,7 +183,7 @@ if ($person1 && $person2) {
         }
     } else {
         if ($node) {
-            echo '<h3>', I18N::translate('Relationship: %s', get_relationship_name($node)), '</h3>';
+            echo '<h3>', I18N::translate('Relationship: %s', Functions::i()->get_relationship_name($node)), '</h3>';
 
             // Use relative layout to position the person boxes.
             echo '<div id="relationship_chart" style="position:relative;">';

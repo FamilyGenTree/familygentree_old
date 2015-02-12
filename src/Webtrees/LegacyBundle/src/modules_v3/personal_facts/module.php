@@ -116,7 +116,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
             $indifacts[] = $fact;
         }
 
-        sort_facts($indifacts);
+        Functions::i()->sort_facts($indifacts);
 
         ob_start();
 

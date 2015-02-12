@@ -984,8 +984,8 @@ function print_main_notes(Fact $fact, $level)
             }
         } else {
             // Inline notes
-            $nrec = get_sub_record($level, "$level NOTE", $factrec, $j + 1);
-            $text = $match[$j][1] . get_cont($level + 1, $nrec);
+            $nrec = Functions::i()->get_sub_record($level, "$level NOTE", $factrec, $j + 1);
+            $text = $match[$j][1] . Functions::i()->get_cont($level + 1, $nrec);
             $text = Filter::formatText($text, Globals::i()->WT_TREE);
         }
 

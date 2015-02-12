@@ -23,10 +23,6 @@ class FunctionsDbPhp
      * @var FunctionsDbPhp
      */
     protected static $instance;
-    /**
-     * @var array
-     */
-    protected $valueStore = array();
 
     /**
      * Singleton protected

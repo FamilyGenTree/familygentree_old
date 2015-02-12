@@ -200,7 +200,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                     $indifacts[] = $fact;
                 }
             }
-            sort_facts($indifacts);
+            Functions::i()->sort_facts($indifacts);
 
             $this->buildIndividualMap($controller->record, $indifacts, $famids);
             echo '</div>';
@@ -1459,7 +1459,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                     $curgen++;
                 }
 
-                $relationship = get_close_relationship_name($controller->root, $person);
+                $relationship = Functions::i()->get_close_relationship_name($controller->root, $person);
 
                 $event = '<img src="' . WT_STATIC_URL . WT_MODULES_DIR . 'googlemap/images/sq' . $curgen . '.png" width="10" height="10"> ' .
                          '<strong>' . $relationship . '</strong>';
@@ -2125,7 +2125,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         // Create the markers list array
         $gmarks = array();
-        sort_facts($indifacts);
+        Functions::i()->sort_facts($indifacts);
         $i = 0;
         foreach ($indifacts as $fact) {
             if (!$fact->getPlace()
@@ -4688,7 +4688,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         ->fetchOneColumn();
             foreach ($gedcom_records as $gedrec) {
                 $i        = 1;
-                $placerec = get_sub_record(2, '2 PLAC', $gedrec, $i);
+                $placerec = Functions::i()->get_sub_record(2, '2 PLAC', $gedrec, $i);
                 while (!empty($placerec)) {
                     if (preg_match("/2 PLAC (.+)/", $placerec, $match)) {
                         $placelist[$j]          = array();
@@ -4720,7 +4720,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         $j = $j + 1;
                     }
                     $i        = $i + 1;
-                    $placerec = get_sub_record(2, '2 PLAC', $gedrec, $i);
+                    $placerec = Functions::i()->get_sub_record(2, '2 PLAC', $gedrec, $i);
                 }
             }
             asort($placelist);
@@ -5131,7 +5131,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 		function delete_place(placeid) {
 			var answer=confirm('<?php echo I18N::translate('Remove this location?'); ?>');
 			if (answer == true) {
-				window.location = '<?php echo get_query_url(array('action' => 'DeleteRecord')); ?>&action=DeleteRecord&deleteRecord=' + placeid;
+				window.location = '<?php echo Functions::i()->get_query_url(array('action' => 'DeleteRecord')); ?>&action=DeleteRecord&deleteRecord=' + placeid;
 			}
 		}
 		</script>

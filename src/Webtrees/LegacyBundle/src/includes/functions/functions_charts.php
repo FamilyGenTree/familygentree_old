@@ -523,7 +523,7 @@ function get_sosa_name($sosa)
         $sosa /= 2;
     }
 
-    return get_relationship_name_from_path($path, null, null);
+    return Functions::i()->get_relationship_name_from_path($path, null, null);
 }
 
 /**

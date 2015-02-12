@@ -659,7 +659,7 @@ class LifespanController extends PageController
                     $unparsedEvents[] = $fact;
                 }
             }
-            sort_facts($unparsedEvents);
+            Functions::i()->sort_facts($unparsedEvents);
 
             $eventinformation = Array();
             foreach ($unparsedEvents as $val) {

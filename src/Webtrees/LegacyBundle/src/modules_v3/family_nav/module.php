@@ -131,7 +131,7 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface
         foreach ($facts as $fact) {
             $spouse = $fact->getTarget();
             if ($spouse instanceof Individual) {
-                $menu = new Menu(get_close_relationship_name($controller->record, $spouse));
+                $menu = new Menu(Functions::i()->get_close_relationship_name($controller->record, $spouse));
                 $menu->addClass('', 'submenu flyout');
                 $menu->addSubmenu(new Menu($this->getParents($spouse)));
                 ?>
@@ -156,7 +156,7 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface
         foreach ($family->getFacts('CHIL', false, $access_level) as $fact) {
             $child = $fact->getTarget();
             if ($child instanceof Individual) {
-                $menu = new Menu(get_close_relationship_name($controller->record, $child));
+                $menu = new Menu(Functions::i()->get_close_relationship_name($controller->record, $child));
                 $menu->addClass('', 'submenu flyout');
                 $menu->addSubmenu(new Menu($this->getFamily($child)));
                 ?>
