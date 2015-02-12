@@ -46,7 +46,7 @@ $controller
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" name="rootid" id="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Box width'); ?>
@@ -158,7 +158,7 @@ switch ($controller->chart_style) {
         echo '<div id="ancestry_booklet">';
         // Booklet
         // first page : show indi facts
-        print_pedigree_person($controller->root);
+        FunctionsPrint::i()->print_pedigree_person($controller->root);
         // process the tree
         $ancestors = $controller->sosaAncestors($PEDIGREE_GENERATIONS - 1);
         $ancestors = array_filter($ancestors); // The SOSA array includes empty placeholders

@@ -195,7 +195,7 @@ echo ' <input type="text" name="year" value="', $year, '" size="4"> ';
 echo '<a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $cal_date->y === -1 ? 1
     : $cal_date->y + 1, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '">+1</a>';
 echo ' | <a href="?cal=', $cal, '&amp;day=', $cal_date->d, '&amp;month=', $cal_month, '&amp;year=', $today->y, '&amp;filterev=', $filterev, '&amp;filterof=', $filterof, '&amp;filtersx=', $filtersx, '&amp;view=', $view, '"><b>' . $today->format('%Y') . '</b></a>';
-echo help_link('annivers_year_select');
+echo FunctionsPrint::i()->help_link('annivers_year_select');
 echo '</td> ';
 
 // Filtering options

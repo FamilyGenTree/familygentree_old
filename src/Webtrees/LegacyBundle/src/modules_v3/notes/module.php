@@ -70,7 +70,7 @@ class notes_WT_Module extends Module implements ModuleTabInterface
 				<input id="checkbox_note2" type="checkbox" <?php echo Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES')
         ? 'checked' : ''; ?> onclick="jQuery('tr.row_note2').toggle();">
 				<label for="checkbox_note2"><?php echo I18N::translate('Show all notes'); ?></label>
-				<?php echo help_link('show_fact_sources'); ?>
+				<?php echo FunctionsPrint::i()->help_link('show_fact_sources'); ?>
 			</td>
 		</tr>
 		<?php
@@ -99,7 +99,7 @@ class notes_WT_Module extends Module implements ModuleTabInterface
                        onclick="add_new_record('<?php echo $controller->record->getXref(); ?>','NOTE'); return false;">
                         <?php echo I18N::translate('Add a new note'); ?>
                     </a>
-                    <?php echo help_link('add_note'); ?>
+                    <?php echo FunctionsPrint::i()->help_link('add_note'); ?>
                 </td>
             </tr>
             <tr>
@@ -111,7 +111,7 @@ class notes_WT_Module extends Module implements ModuleTabInterface
                        onclick="add_new_record('<?php echo $controller->record->getXref(); ?>','SHARED_NOTE'); return false;">
                         <?php echo I18N::translate('Add a new shared note'); ?>
                     </a>
-                    <?php echo help_link('add_shared_note'); ?>
+                    <?php echo FunctionsPrint::i()->help_link('add_shared_note'); ?>
                 </td>
             </tr>
         <?php

@@ -225,7 +225,7 @@ function print_fact(Fact $fact, GedcomRecord $record)
             echo '<div class="field"><a href="https://familysearch.org/search/tree/results#count=20&query=afn:', rawurlencode($fact->getValue()), '" target="new">', Filter::escapeHtml($fact->getValue()), '</a></div>';
             break;
         case 'ASSO':
-            // we handle this later, in format_asso_rela_record()
+            // we handle this later, in FunctionsPrint::i()->format_asso_rela_record()
             break;
         case 'EMAIL':
         case 'EMAI':
@@ -322,10 +322,10 @@ function print_fact(Fact $fact, GedcomRecord $record)
     }
 
     // Print the date of this fact/event
-    echo format_fact_date($fact, $record, true, true);
+    echo FunctionsPrint::i()->format_fact_date($fact, $record, true, true);
 
     // Print the place of this fact/event
-    echo '<div class="place">', format_fact_place($fact, true, true, true), '</div>';
+    echo '<div class="place">', FunctionsPrint::i()->format_fact_place($fact, true, true, true), '</div>';
     // A blank line between the primary attributes (value, date, place) and the secondary ones
     echo '<br>';
 
@@ -335,7 +335,7 @@ function print_fact(Fact $fact, GedcomRecord $record)
     }
 
     // Print the associates of this fact/event
-    echo format_asso_rela_record($fact);
+    echo FunctionsPrint::i()->format_asso_rela_record($fact);
 
     // Print any other "2 XXXX" attributes, in the order in which they appear.
     preg_match_all('/\n2 (' . WT_REGEX_TAG . ') (.+)/', $fact->getGedcom(), $matches, PREG_SET_ORDER);
@@ -456,7 +456,7 @@ function print_fact(Fact $fact, GedcomRecord $record)
         }
     }
     echo print_fact_sources($fact->getGedcom(), 2);
-    echo print_fact_notes($fact->getGedcom(), 2);
+    echo FunctionsPrint::i()->print_fact_notes($fact->getGedcom(), 2);
     print_media_links($fact->getGedcom(), 2);
     echo '</td></tr>';
 }
@@ -474,7 +474,7 @@ function print_repository_record($xref)
     if ($repository && $repository->canShow()) {
         echo '<a class="field" href="', $repository->getHtmlUrl(), '">', $repository->getFullName(), '</a><br>';
         echo '<br>';
-        echo print_fact_notes($repository->getGedcom(), 1);
+        echo FunctionsPrint::i()->print_fact_notes($repository->getGedcom(), 1);
     }
 }
 
@@ -546,7 +546,7 @@ function print_fact_sources($factrec, $level)
                 ob_start();
                 print_media_links($srec, $nlevel);
                 $data .= ob_get_clean();
-                $data .= print_fact_notes($srec, $nlevel, false);
+                $data .= FunctionsPrint::i()->print_fact_notes($srec, $nlevel, false);
                 $data .= '</div>';
                 $data .= '</div>';
             } else {
@@ -595,7 +595,7 @@ function print_media_links($factrec, $level)
                 }
                 // NOTE: echo the notes of the media
                 echo '<p>';
-                echo print_fact_notes($media->getGedcom(), 1);
+                echo FunctionsPrint::i()->print_fact_notes($media->getGedcom(), 1);
                 $ttype = preg_match("/" . ($nlevel + 1) . " TYPE (.*)/", $media->getGedcom(), $match);
                 if ($ttype > 0) {
                     $mediaType = WT_Gedcom_Tag::getFileFormTypeValue($match[1]);
@@ -625,7 +625,7 @@ function print_media_links($factrec, $level)
                         }
                     }
                 }
-                echo print_fact_notes($media->getGedcom(), $nlevel);
+                echo FunctionsPrint::i()->print_fact_notes($media->getGedcom(), $nlevel);
                 echo print_fact_sources($media->getGedcom(), $nlevel);
                 echo '</div>'; //close div "media-display-title"
                 echo '</div>'; //close div "media-display"
@@ -768,9 +768,9 @@ function print_main_sources(Fact $fact, $level)
                 if ($nlevel == 2) {
                     print_media_links($source->getGedcom(), 1);
                 }
-                echo print_fact_notes($srec, $nlevel);
+                echo FunctionsPrint::i()->print_fact_notes($srec, $nlevel);
                 if ($nlevel == 2) {
-                    echo print_fact_notes($source->getGedcom(), 1);
+                    echo FunctionsPrint::i()->print_fact_notes($source->getGedcom(), 1);
                 }
                 echo '</div>';
             } else {
@@ -1130,7 +1130,7 @@ function print_main_media(Fact $fact, $level)
                         echo WT_Gedcom_Tag::getLabelValue('_PRIM', I18N::translate('no'));
                         break;
                 }
-                echo print_fact_notes($media->getGedcom(), 1);
+                echo FunctionsPrint::i()->print_fact_notes($media->getGedcom(), 1);
                 echo print_fact_sources($media->getGedcom(), 1);
             } else {
                 echo $xref;

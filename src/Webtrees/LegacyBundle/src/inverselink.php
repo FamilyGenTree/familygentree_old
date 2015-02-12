@@ -80,7 +80,7 @@ if ($linkto == 'manage' && array_key_exists('GEDFact_assistant', Module::getActi
             }
         } else {
             echo '<input data-autocomplete-type="OBJE" type="text" name="mediaid" id="mediaid" size="5">';
-            echo ' ', print_findmedia_link('mediaid', '1media');
+            echo ' ', FunctionsPrint::i()->print_findmedia_link('mediaid', '1media');
             echo '</td></tr>';
         }
 
@@ -94,7 +94,7 @@ if ($linkto == 'manage' && array_key_exists('GEDFact_assistant', Module::getActi
             echo '<td class="optionbox wrap">';
             if ($linktoid == "") {
                 echo '<input class="pedigree_form" type="text" name="linktoid" id="linktopid" size="3" value="', $linktoid, '"> ';
-                echo print_findindi_link('linktopid');
+                echo FunctionsPrint::i()->print_findindi_link('linktopid');
             } else {
                 $record = Individual::getInstance($linktoid);
                 echo $record->format_list('span', false, $record->getFullName());
@@ -106,7 +106,7 @@ if ($linkto == 'manage' && array_key_exists('GEDFact_assistant', Module::getActi
             echo '<td class="optionbox wrap">';
             if ($linktoid == "") {
                 echo '<input class="pedigree_form" type="text" name="linktoid" id="linktofamid" size="3" value="', $linktoid, '"> ';
-                echo print_findfamily_link('linktofamid');
+                echo FunctionsPrint::i()->print_findfamily_link('linktofamid');
             } else {
                 $record = Family::getInstance($linktoid);
                 echo $record->format_list('span', false, $record->getFullName());
@@ -118,7 +118,7 @@ if ($linkto == 'manage' && array_key_exists('GEDFact_assistant', Module::getActi
             echo '<td  class="optionbox wrap">';
             if ($linktoid == "") {
                 echo '<input class="pedigree_form" type="text" name="linktoid" id="linktosid" size="3" value="', $linktoid, '"> ';
-                echo print_findsource_link('linktosid');
+                echo FunctionsPrint::i()->print_findsource_link('linktosid');
             } else {
                 $record = Source::getInstance($linktoid);
                 echo $record->format_list('span', false, $record->getFullName());

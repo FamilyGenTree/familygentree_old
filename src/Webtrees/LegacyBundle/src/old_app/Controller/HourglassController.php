@@ -154,7 +154,7 @@ class HourglassController extends ChartController
                                                        ->parameter('image-hline') . '" width="7" height="3"></td>';
             echo '<td>';
             //-- print the father box
-            print_pedigree_person($family->getHusband());
+            FunctionsPrint::i()->print_pedigree_person($family->getHusband());
             echo "</td>";
             if ($family->getHusband()) {
                 $ARID = $family->getHusband()
@@ -192,7 +192,7 @@ class HourglassController extends ChartController
                                                       ->parameter('image-hline') . '" width="7" height="3" alt=""></td>',
             '<td>';
             //-- print the mother box
-            print_pedigree_person($family->getWife());
+            FunctionsPrint::i()->print_pedigree_person($family->getWife());
             echo '</td>';
             if ($family->getWife()) {
                 $ARID = $family->getWife()
@@ -341,7 +341,7 @@ class HourglassController extends ChartController
         }
 
         echo '<table id="table2_' . $pid . '"><tr><td>';
-        print_pedigree_person($person);
+        FunctionsPrint::i()->print_pedigree_person($person);
         echo '</td><td><img class="line2" src="' . Theme::theme()
                                                         ->parameter('image-hline') . '" width="7" height="3">';
 
@@ -354,7 +354,7 @@ class HourglassController extends ChartController
                 $temph = $bheight;
                 $bwidth -= 10;
                 $bheight -= 10;
-                print_pedigree_person($family->getSpouse($person));
+                FunctionsPrint::i()->print_pedigree_person($family->getSpouse($person));
                 $bwidth  = $tempw;
                 $bheight = $temph;
                 $numkids += 0.95;

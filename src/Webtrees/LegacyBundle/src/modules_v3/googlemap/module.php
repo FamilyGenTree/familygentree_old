@@ -548,7 +548,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         </tr>
                         <tr>
                             <th>
-                                <?php echo I18N::translate('Display short placenames'), help_link('GM_DISP_SHORT_PLACE', 'googlemap'); ?>
+                                <?php echo I18N::translate('Display short placenames'), FunctionsPrint::i()->help_link('GM_DISP_SHORT_PLACE', 'googlemap'); ?>
                             </th>
                             <td>
                                 <?php echo FunctionsEdit::i()->edit_field_yes_no('NEW_GM_DISP_SHORT_PLACE', $this->getSetting('GM_DISP_SHORT_PLACE')); ?>
@@ -861,7 +861,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                     <td class="optionbox">
                         <input class="pedigree_form" data-autocomplete-type="INDI" type="text" id="rootid" name="rootid"
                                size="3" value="<?php echo $controller->root->getXref(); ?>">
-                        <?php echo print_findindi_link('rootid'); ?>
+                        <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                     </td>
                     <td class="optionbox">
                         <select name="PEDIGREE_GENERATIONS">
@@ -4451,7 +4451,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 				<td class="descriptionbox"><?php echo WT_Gedcom_Tag::getLabel('PLAC'); ?></td>
 				<td class="optionbox"><input type="text" id="new_pl_name" name="NEW_PLACE_NAME" value="<?php echo Filter::escapeHtml($place_name); ?>" size="25" class="address_input">
 					<div id="INDI_PLAC_pop" style="display: inline;">
-					<?php echo print_specialchar_link('new_pl_name'); ?></div></td><td class="optionbox">
+					<?php echo FunctionsPrint::i()->print_specialchar_link('new_pl_name'); ?></div></td><td class="optionbox">
 					<label for="new_pl_name"><a href="#" onclick="showLocation_all(document.getElementById('new_pl_name').value); return false">&nbsp;<?php echo I18N::translate('Search globally'); ?></a></label>
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					<label for="new_pl_name"><a href="#" onclick="showLocation_level(document.getElementById('new_pl_name').value); return false">&nbsp;<?php echo I18N::translate('Search locally'); ?></a></label>

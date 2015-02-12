@@ -366,12 +366,12 @@ $controller->pageHeader();
             <div class="col-sm-9">
                 <input data-autocomplete-type="IFSRO" type="text" name="gid1" id="gid1" maxlength="20"
                        value="<?php echo $gid1; ?>">
-                <?php echo print_findindi_link('gid1'); ?>
-                <?php echo print_findfamily_link('gid1'); ?>
-                <?php echo print_findsource_link('gid1'); ?>
-                <?php echo print_findrepository_link('gid1'); ?>
-                <?php echo print_findmedia_link('gid1'); ?>
-                <?php echo print_findnote_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findindi_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findfamily_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findsource_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findrepository_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findmedia_link('gid1'); ?>
+                <?php echo FunctionsPrint::i()->print_findnote_link('gid1'); ?>
             </div>
         </div>
 
@@ -385,12 +385,12 @@ $controller->pageHeader();
             <div class="col-sm-9">
                 <input data-autocomplete-type="IFSRO" type="text" name="gid2" id="gid2" maxlength="20"
                        value="<?php echo $gid2; ?>">
-                <?php echo print_findindi_link('gid2'); ?>
-                <?php echo print_findfamily_link('gid2'); ?>
-                <?php echo print_findsource_link('gid2'); ?>
-                <?php echo print_findrepository_link('gid2'); ?>
-                <?php echo print_findmedia_link('gid2'); ?>
-                <?php echo print_findnote_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findindi_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findfamily_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findsource_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findrepository_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findmedia_link('gid2'); ?>
+                <?php echo FunctionsPrint::i()->print_findnote_link('gid2'); ?>
             </div>
         </div>
 

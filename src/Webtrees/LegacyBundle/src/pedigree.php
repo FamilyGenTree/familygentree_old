@@ -72,7 +72,7 @@ $controller
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" id="rootid" name="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td class="optionbox center">
                     <?php echo FunctionsEdit::i()->edit_field_integers('PEDIGREE_GENERATIONS', $controller->PEDIGREE_GENERATIONS, 3, $MAX_PEDIGREE_GENERATIONS); ?>
@@ -164,7 +164,7 @@ for ($i = ($controller->treesize - 1); $i >= 0; $i--) {
 
     printf(BOX_WRAPPER, $posn, $xoffset, $yoffset, $controller->pbwidth, $controller->pbheight);
 
-    print_pedigree_person($controller->ancestors[$i]);
+    FunctionsPrint::i()->print_pedigree_person($controller->ancestors[$i]);
     if ($can_go_back) {
         $did = 1;
         if ($i > (int)($controller->treesize / 2) + (int)($controller->treesize / 4)) {

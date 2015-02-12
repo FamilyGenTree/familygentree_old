@@ -106,7 +106,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
                     $title .= I18N::translate('Interactive tree of %s', $person->getFullName());
                     break;
             }
-            $title .= help_link('index_charts', $this->getName());
+            $title .= FunctionsPrint::i()->help_link('index_charts', $this->getName());
             $content = '<table cellspacing="0" cellpadding="0" border="0"><tr>';
             if ($type == 'descendants' || $type == 'hourglass') {
                 $content .= "<td valign=\"middle\">";
@@ -120,7 +120,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
                 if ($type != 'hourglass') {
                     $content .= "<td valign=\"middle\">";
                     ob_start();
-                    print_pedigree_person($person);
+                    FunctionsPrint::i()->print_pedigree_person($person);
                     $content .= ob_get_clean();
                     $content .= "</td>";
                 }
@@ -226,7 +226,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
                 <input data-autocomplete-type="INDI" type="text" name="pid" id="pid" value="<?php echo $pid; ?>"
                        size="5">
                 <?php
-                echo print_findindi_link('pid');
+                echo FunctionsPrint::i()->print_findindi_link('pid');
                 $root = Individual::getInstance($pid);
                 if ($root) {
                     echo ' <span class="list_item">', $root->getFullName(), $root->format_first_major_fact(WT_EVENTS_BIRT, 1), '</span>';

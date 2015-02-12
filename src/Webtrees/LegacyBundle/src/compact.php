@@ -42,7 +42,7 @@ $controller
                 <td class="optionbox vmiddle">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" name="rootid" id="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td <?php echo Globals::i()->WT_TREE->getPreference('SHOW_HIGHLIGHT_IMAGES') ? 'rowspan="2"' : ''; ?>
                     class="facts_label03">

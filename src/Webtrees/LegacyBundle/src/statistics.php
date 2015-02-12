@@ -628,7 +628,7 @@ if (!$ajax) {
 			<br>
 			</div>
 			<div id="surname_opt" style="display:none;">';
-        echo WT_Gedcom_Tag::getLabel('SURN'), help_link('google_chart_surname'), '<br><input data-autocomplete-type="SURN" type="text" name="SURN" size="20">';
+        echo WT_Gedcom_Tag::getLabel('SURN'), FunctionsPrint::i()->help_link('google_chart_surname'), '<br><input data-autocomplete-type="SURN" type="text" name="SURN" size="20">';
         echo '<br>
 			</div>';
         echo I18N::translate('Geographical area');

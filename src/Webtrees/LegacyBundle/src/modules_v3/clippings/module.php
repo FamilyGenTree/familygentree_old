@@ -227,9 +227,9 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                                                size="5">
                                     </td>
                                     <td class="optionbox">
-                                        <?php echo print_findindi_link('cart_item_id'); ?>
-                                        <?php echo print_findfamily_link('cart_item_id'); ?>
-                                        <?php echo print_findsource_link('cart_item_id', ''); ?>
+                                        <?php echo FunctionsPrint::i()->print_findindi_link('cart_item_id'); ?>
+                                        <?php echo FunctionsPrint::i()->print_findfamily_link('cart_item_id'); ?>
+                                        <?php echo FunctionsPrint::i()->print_findsource_link('cart_item_id', ''); ?>
                                         <input type="submit" value="<?php echo I18N::translate('Add'); ?>">
 
                                     </td>
@@ -255,15 +255,15 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
 					<input type="hidden" name="pid" value="<?php echo $pid; ?>">
 					<table>
 					<tr><td colspan="2" class="topbottombar"><h2><?php echo I18N::translate('Download'); ?></h2></td></tr>
-					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Zip file(s)'), help_link('zip'); ?></td>
+					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Zip file(s)'), FunctionsPrint::i()->help_link('zip'); ?></td>
 					<td class="optionbox"><input type="checkbox" name="Zip" value="yes"></td></tr>
 
-					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Include media (automatically zips files)'), help_link('include_media'); ?></td>
+					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Include media (automatically zips files)'), FunctionsPrint::i()->help_link('include_media'); ?></td>
 					<td class="optionbox"><input type="checkbox" name="IncludeMedia" value="yes"></td></tr>
 
 					<?php if (WT_USER_GEDCOM_ADMIN) { ?>
                         <tr>
-                            <td class="descriptionbox width50 wrap"><?php echo I18N::translate('Apply privacy settings?'), help_link('apply_privacy'); ?></td>
+                            <td class="descriptionbox width50 wrap"><?php echo I18N::translate('Apply privacy settings?'), FunctionsPrint::i()->help_link('apply_privacy'); ?></td>
                             <td class="optionbox">
                                 <input type="radio" name="privatize_export" value="none"
                                        checked> <?php echo I18N::translate('None'); ?><br>
@@ -277,7 +277,7 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                         </tr>
                     <?php } elseif (WT_USER_CAN_ACCESS) { ?>
                         <tr>
-                            <td class="descriptionbox width50 wrap"><?php echo I18N::translate('Apply privacy settings?'), help_link('apply_privacy'); ?></td>
+                            <td class="descriptionbox width50 wrap"><?php echo I18N::translate('Apply privacy settings?'), FunctionsPrint::i()->help_link('apply_privacy'); ?></td>
                             <td class="optionbox">
                                 <input type="radio" name="privatize_export" value="user"
                                        checked> <?php echo I18N::translate('Member'); ?><br>
@@ -287,10 +287,10 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                         </tr>
                     <?php } ?>
 
-					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)'), help_link('utf8_ansi'); ?></td>
+					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)'), FunctionsPrint::i()->help_link('utf8_ansi'); ?></td>
 					<td class="optionbox"><input type="checkbox" name="convert" value="yes"></td></tr>
 
-					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Add the GEDCOM media path to filenames'), help_link('GEDCOM_MEDIA_PATH'); ?></td>
+					<tr><td class="descriptionbox width50 wrap"><?php echo I18N::translate('Add the GEDCOM media path to filenames'), FunctionsPrint::i()->help_link('GEDCOM_MEDIA_PATH'); ?></td>
 					<td class="optionbox">
 						<input type="checkbox" name="conv_path" value="<?php echo Filter::escapeHtml(Globals::i()->WT_TREE->getPreference('GEDCOM_MEDIA_PATH')); ?>">
 						<span dir="auto"><?php echo Filter::escapeHtml(Globals::i()->WT_TREE->getPreference('GEDCOM_MEDIA_PATH')); ?></span>
@@ -320,9 +320,9 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
 							<input type="text" data-autocomplete-type="IFSRO" name="id" id="cart_item_id" size="8">
 						</td>
 						<td class="optionbox">
-							<?php echo print_findindi_link('cart_item_id'); ?>
-                        <?php echo print_findfamily_link('cart_item_id'); ?>
-                        <?php echo print_findsource_link('cart_item_id'); ?>
+							<?php echo FunctionsPrint::i()->print_findindi_link('cart_item_id'); ?>
+                        <?php echo FunctionsPrint::i()->print_findfamily_link('cart_item_id'); ?>
+                        <?php echo FunctionsPrint::i()->print_findsource_link('cart_item_id'); ?>
 							<input type="submit" value="<?php echo I18N::translate('Add'); ?>">
 
 						</td>
@@ -677,16 +677,16 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
 		<input type="hidden" name="action" value="download">
 		<table>
 		<tr><td colspan="2" class="topbottombar"><h2>' . I18N::translate('Download') . '</h2></td></tr>
-		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Zip file(s)') . help_link('zip') . '</td>
+		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Zip file(s)') . FunctionsPrint::i()->help_link('zip') . '</td>
 		<td class="optionbox"><input type="checkbox" name="Zip" value="yes" checked></td></tr>
 
-		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Include media (automatically zips files)') . help_link('include_media') . '</td>
+		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Include media (automatically zips files)') . FunctionsPrint::i()->help_link('include_media') . '</td>
 		<td class="optionbox"><input type="checkbox" name="IncludeMedia" value="yes" checked></td></tr>
 		';
 
         if (WT_USER_GEDCOM_ADMIN) {
             $out .=
-                '<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Apply privacy settings?') . help_link('apply_privacy') . '</td>' .
+                '<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Apply privacy settings?') . FunctionsPrint::i()->help_link('apply_privacy') . '</td>' .
                 '<td class="optionbox">' .
                 '	<input type="radio" name="privatize_export" value="none" checked> ' . I18N::translate('None') . '<br>' .
                 '	<input type="radio" name="privatize_export" value="gedadmin"> ' . I18N::translate('Manager') . '<br>' .
@@ -695,7 +695,7 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                 '</td></tr>';
         } elseif (WT_USER_CAN_ACCESS) {
             $out .=
-                '<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Apply privacy settings?') . help_link('apply_privacy') . '</td>' .
+                '<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Apply privacy settings?') . FunctionsPrint::i()->help_link('apply_privacy') . '</td>' .
                 '<td class="list_value">' .
                 '	<input type="radio" name="privatize_export" value="user" checked> ' . I18N::translate('Member') . '<br>' .
                 '	<input type="radio" name="privatize_export" value="visitor"> ' . I18N::translate('Visitor') .
@@ -703,11 +703,11 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
         }
 
         $out .= '
-		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)') . help_link('utf8_ansi') . '</td>
+		<tr><td class="descriptionbox width50 wrap">' . I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)') . FunctionsPrint::i()->help_link('utf8_ansi') . '</td>
 		<td class="optionbox"><input type="checkbox" name="convert" value="yes"></td></tr>
 
 		<tr>
-		<td class="descriptionbox width50 wrap">' . I18N::translate('Add the GEDCOM media path to filenames') . help_link('GEDCOM_MEDIA_PATH') . '</td>
+		<td class="descriptionbox width50 wrap">' . I18N::translate('Add the GEDCOM media path to filenames') . FunctionsPrint::i()->help_link('GEDCOM_MEDIA_PATH') . '</td>
 		<td class="optionbox">
 		<input type="checkbox" name="conv_path" value="' . Filter::escapeHtml(Globals::i()->WT_TREE->getPreference('GEDCOM_MEDIA_PATH')) . '">
 		<span dir="auto">' . Filter::escapeHtml(Globals::i()->WT_TREE->getPreference('GEDCOM_MEDIA_PATH')) . '</span></td>

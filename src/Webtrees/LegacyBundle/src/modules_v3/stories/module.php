@@ -252,7 +252,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                 echo '<tr>';
                 echo '<td class="optionbox">';
                 echo '<input data-autocomplete-type="INDI" type="text" name="xref" id="pid" size="4" value="' . $xref . '">';
-                echo print_findindi_link('pid');
+                echo FunctionsPrint::i()->print_findindi_link('pid');
                 if ($xref) {
                     $person = Individual::getInstance($xref);
                     if ($person) {

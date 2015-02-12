@@ -197,20 +197,20 @@ class FamilyController extends GedcomRecordController
         }
 
         if (WT_USER_CAN_EDIT) {
-            print_add_new_fact($this->record->getXref(), $indifacts, 'FAM');
+            FunctionsPrint::i()->print_add_new_fact($this->record->getXref(), $indifacts, 'FAM');
 
             echo '<tr><td class="descriptionbox">';
             echo I18N::translate('Note');
             echo '</td><td class="optionbox">';
             echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','NOTE');\">", I18N::translate('Add a new note'), '</a>';
-            echo help_link('add_note');
+            echo FunctionsPrint::i()->help_link('add_note');
             echo '</td></tr>';
 
             echo '<tr><td class="descriptionbox">';
             echo I18N::translate('Shared note');
             echo '</td><td class="optionbox">';
             echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SHARED_NOTE');\">", I18N::translate('Add a new shared note'), '</a>';
-            echo help_link('add_shared_note');
+            echo FunctionsPrint::i()->help_link('add_shared_note');
             echo '</td></tr>';
 
             if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
@@ -218,7 +218,7 @@ class FamilyController extends GedcomRecordController
                 echo I18N::translate('Media object');
                 echo '</td><td class="optionbox">';
                 echo "<a href=\"#\" onclick=\"window.open('addmedia.php?action=showmediaform&amp;linktoid=" . $this->record->getXref() . "', '_blank', edit_window_specs); return false;\">", I18N::translate('Add a new media object'), '</a>';
-                echo help_link('OBJE');
+                echo FunctionsPrint::i()->help_link('OBJE');
                 echo '<br>';
                 echo "<a href=\"#\" onclick=\"window.open('inverselink.php?linktoid=" . $this->record->getXref() . "&amp;linkto=family', '_blank', find_window_specs); return false;\">", I18N::translate('Link to an existing media object'), '</a>';
                 echo '</td></tr>';
@@ -228,7 +228,7 @@ class FamilyController extends GedcomRecordController
             echo I18N::translate('Source');
             echo '</td><td class="optionbox">';
             echo "<a href=\"#\" onclick=\"return add_new_record('" . $this->record->getXref() . "','SOUR');\">", I18N::translate('Add a new source citation'), '</a>';
-            echo help_link('add_source');
+            echo FunctionsPrint::i()->help_link('add_source');
             echo '</td></tr>';
         }
     }

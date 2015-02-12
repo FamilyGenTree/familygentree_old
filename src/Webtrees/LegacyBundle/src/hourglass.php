@@ -46,7 +46,7 @@ $gencount = 0;
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" name="rootid" id="rootid"
                            size="3" value="<?php echo $controller->pid; ?>">
-                    <?php echo print_findindi_link('pid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('pid'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Show details'); ?>
@@ -70,7 +70,7 @@ $gencount = 0;
                     <?php echo FunctionsEdit::i()->edit_field_integers('generations', $controller->generations, 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS')); ?>
                 </td>
                 <td class="descriptionbox">
-                    <?php echo I18N::translate('Show spouses'), help_link('show_spouse'); ?>
+                    <?php echo I18N::translate('Show spouses'), FunctionsPrint::i()->help_link('show_spouse'); ?>
                 </td>
                 <td class="optionbox">
                     <input type="checkbox" value="1" name="show_spouse" <?php echo $controller->show_spouse ? 'checked'

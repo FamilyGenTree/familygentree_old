@@ -154,7 +154,7 @@ switch ($action) {
             ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
             ->addInlineJavascript('autocomplete();');
 
-        init_calendar_popup();
+        FunctionsPrint::i()->init_calendar_popup();
 
         echo '<div id="reportengine-page">
 		<form name="setupreport" method="get" action="reportengine.php" onsubmit="if (this.output[1].checked) {this.target=\'_blank\';}">
@@ -247,13 +247,13 @@ switch ($action) {
             if (isset($input['lookup'])) {
                 echo '<input type="hidden" name="type[', Filter::escapeHtml($input['name']), ']" value="', Filter::escapeHtml($input['lookup']), '">';
                 if ($input['lookup'] == 'INDI') {
-                    echo print_findindi_link('pid');
+                    echo FunctionsPrint::i()->print_findindi_link('pid');
                 } elseif ($input['lookup'] == 'PLAC') {
-                    echo print_findplace_link($input['name']);
+                    echo FunctionsPrint::i()->print_findplace_link($input['name']);
                 } elseif ($input['lookup'] == 'FAM') {
-                    echo print_findfamily_link('famid');
+                    echo FunctionsPrint::i()->print_findfamily_link('famid');
                 } elseif ($input['lookup'] == 'SOUR') {
-                    echo print_findsource_link($input['name']);
+                    echo FunctionsPrint::i()->print_findsource_link($input['name']);
                 } elseif ($input['lookup'] == 'DATE') {
                     echo ' <a href="#" onclick="cal_toggleDate(\'div_', Filter::EscapeJs($input['name']), '\', \'', Filter::EscapeJs($input['name']), '\'); return false;" class="icon-button_calendar" title="', I18N::translate('Select a date'), '"></a>';
                     echo '<div id="div_', Filter::EscapeHtml($input['name']), '" style="position:absolute;visibility:hidden;background-color:white;"></div>';

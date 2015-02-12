@@ -184,12 +184,12 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
             $content .= '<input type="radio" name="fav_category" value="record" checked onclick="jQuery(\'#gid' . $uniqueID . '\').removeAttr(\'disabled\'); jQuery(\'#url, #favtitle\').attr(\'disabled\',\'disabled\').val(\'\');">';
             $content .= '<label for="gid' . $uniqueID . '">' . I18N::translate('Enter an individual, family, or source ID') . '</label>';
             $content .= '<input class="pedigree_form" data-autocomplete-type="IFSRO" type="text" name="gid" id="gid' . $uniqueID . '" size="5" value="">';
-            $content .= ' ' . print_findindi_link('gid' . $uniqueID);
-            $content .= ' ' . print_findfamily_link('gid' . $uniqueID);
-            $content .= ' ' . print_findsource_link('gid' . $uniqueID);
-            $content .= ' ' . print_findrepository_link('gid' . $uniqueID);
-            $content .= ' ' . print_findnote_link('gid' . $uniqueID);
-            $content .= ' ' . print_findmedia_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findindi_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findfamily_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findsource_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findrepository_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findnote_link('gid' . $uniqueID);
+            $content .= ' ' . FunctionsPrint::i()->print_findmedia_link('gid' . $uniqueID);
             $content .= '</div>';
             $content .= '<div class="add_fav_url">';
             $content .= '<input type="radio" name="fav_category" value="url" onclick="jQuery(\'#url, #favtitle\').removeAttr(\'disabled\'); jQuery(\'#gid' . $uniqueID . '\').attr(\'disabled\',\'disabled\').val(\'\');">';

@@ -588,27 +588,27 @@ class FunctionsEdit
             switch ($fact) {
                 case 'FORM':
                     if ($upperlevel != 'OBJE') {
-                        echo help_link($fact);
+                        echo FunctionsPrint::i()->help_link($fact);
                     }
                     break;
                 case 'NOTE':
                     if ($islink) {
-                        echo help_link('edit_add_SHARED_NOTE');
+                        echo FunctionsPrint::i()->help_link('edit_add_SHARED_NOTE');
                     } else {
-                        echo help_link($fact);
+                        echo FunctionsPrint::i()->help_link($fact);
                     }
                     break;
                 case 'NAME':
                     if ($upperlevel != 'REPO') {
-                        echo help_link($fact);
+                        echo FunctionsPrint::i()->help_link($fact);
                     }
                     break;
                 case 'ASSO':
                 case '_ASSO': // Some apps (including webtrees) use "2 _ASSO", since "2 ASSO" is not strictly valid GEDCOM
                     if ($level == 1) {
-                        echo help_link('ASSO_1');
+                        echo FunctionsPrint::i()->help_link('ASSO_1');
                     } else {
-                        echo help_link('ASSO_2');
+                        echo FunctionsPrint::i()->help_link('ASSO_2');
                     }
                     break;
                 case 'ADDR':
@@ -638,7 +638,7 @@ class FunctionsEdit
                 case 'WWW':
                 case '_HEB':
                 case '_PRIM':
-                    echo help_link($fact);
+                    echo FunctionsPrint::i()->help_link($fact);
                     break;
             }
         }
@@ -827,7 +827,7 @@ class FunctionsEdit
             // split PLAC
             if ($fact == 'PLAC') {
                 echo "<div id=\"", $element_id, "_pop\" style=\"display: inline;\">";
-                echo print_specialchar_link($element_id), ' ', print_findplace_link($element_id);
+                echo FunctionsPrint::i()->print_specialchar_link($element_id), ' ', FunctionsPrint::i()->print_findplace_link($element_id);
                 echo '<span  onclick="jQuery(\'tr[id^=', $upperlevel, '_LATI],tr[id^=', $upperlevel, '_LONG],tr[id^=LATI],tr[id^=LONG]\').toggle(\'fast\'); return false;" class="icon-target" title="', WT_Gedcom_Tag::getLabel('LATI'), ' / ', WT_Gedcom_Tag::getLabel('LONG'), '"></span>';
                 echo '</div>';
                 if (array_key_exists('places_assistant', Module::getActiveModules())) {
@@ -835,7 +835,7 @@ class FunctionsEdit
                     \places_assistant_WT_Module::print_place_subfields($element_id);
                 }
             } elseif (!in_array($fact, $tmp_array)) {
-                echo print_specialchar_link($element_id);
+                echo FunctionsPrint::i()->print_specialchar_link($element_id);
             }
         }
         // MARRiage TYPE : hide text field and show a selection list
@@ -884,17 +884,17 @@ class FunctionsEdit
                 break;
             case 'FAMC':
             case 'FAMS':
-                echo print_findfamily_link($element_id);
+                echo FunctionsPrint::i()->print_findfamily_link($element_id);
                 break;
             case 'ASSO':
             case '_ASSO':
-                echo print_findindi_link($element_id, $element_id . '_description');
+                echo FunctionsPrint::i()->print_findindi_link($element_id, $element_id . '_description');
                 break;
             case 'FILE':
-                print_findmedia_link($element_id, "0file");
+                FunctionsPrint::i()->print_findmedia_link($element_id, "0file");
                 break;
             case 'SOUR':
-                echo print_findsource_link($element_id, $element_id . '_description'), ' ', $this->print_addnewsource_link($element_id);
+                echo FunctionsPrint::i()->print_findsource_link($element_id, $element_id . '_description'), ' ', $this->print_addnewsource_link($element_id);
                 //-- checkboxes to apply '1 SOUR' to BIRT/MARR/DEAT as '2 SOUR'
                 if ($level == 1) {
                     echo '<br>';
@@ -948,13 +948,13 @@ class FunctionsEdit
                 }
                 break;
             case 'REPO':
-                echo print_findrepository_link($element_id), ' ', $this->print_addnewrepository_link($element_id);
+                echo FunctionsPrint::i()->print_findrepository_link($element_id), ' ', $this->print_addnewrepository_link($element_id);
                 break;
             case 'NOTE':
                 // Shared Notes Icons ========================================
                 if ($islink) {
                     // Print regular Shared Note icons ---------------------------
-                    echo ' ', print_findnote_link($element_id, $element_id . '_description'), ' ', $this->print_addnewnote_link($element_id);
+                    echo ' ', FunctionsPrint::i()->print_findnote_link($element_id, $element_id . '_description'), ' ', $this->print_addnewnote_link($element_id);
                     if ($value) {
                         echo ' ', $this->print_editnote_link($value);
                     }
@@ -966,7 +966,7 @@ class FunctionsEdit
                 }
                 break;
             case 'OBJE':
-                echo print_findmedia_link($element_id, '1media');
+                echo FunctionsPrint::i()->print_findmedia_link($element_id, '1media');
                 if (!$value) {
                     echo ' ', $this->print_addnewmedia_link($element_id);
                     $value = 'new';
@@ -1019,7 +1019,7 @@ class FunctionsEdit
 
         // pastable values
         if ($fact == 'FORM' && $upperlevel == 'OBJE') {
-            print_autopaste_link($element_id, Constants::$FILE_FORM_ACCEPT);
+            FunctionsPrint::i()->print_autopaste_link($element_id, Constants::$FILE_FORM_ACCEPT);
         }
         echo '</div>', $extra, '</td></tr>';
 
@@ -1037,7 +1037,7 @@ class FunctionsEdit
         switch ($tag) {
             case 'SOUR':
                 echo "<a href=\"#\" onclick=\"return expand_layer('newsource');\"><i id=\"newsource_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new source citation'), '</a>';
-                echo help_link('edit_add_SOUR');
+                echo FunctionsPrint::i()->help_link('edit_add_SOUR');
                 echo '<br>';
                 echo '<div id="newsource" style="display: none;">';
                 echo '<table class="facts_table">';
@@ -1066,12 +1066,12 @@ class FunctionsEdit
                 //-- Add a new ASSOciate
                 if ($tag == 'ASSO') {
                     echo "<a href=\"#\" onclick=\"return expand_layer('newasso');\"><i id=\"newasso_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new associate'), '</a>';
-                    echo help_link('edit_add_ASSO');
+                    echo FunctionsPrint::i()->help_link('edit_add_ASSO');
                     echo '<br>';
                     echo '<div id="newasso" style="display: none;">';
                 } else {
                     echo "<a href=\"#\" onclick=\"return expand_layer('newasso2');\"><i id=\"newasso2_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new associate'), '</a>';
-                    echo help_link('edit_add_ASSO');
+                    echo FunctionsPrint::i()->help_link('edit_add_ASSO');
                     echo '<br>';
                     echo '<div id="newasso2" style="display: none;">';
                 }
@@ -1090,7 +1090,7 @@ class FunctionsEdit
             case 'NOTE':
                 //-- Retrieve existing note or add new note to fact
                 echo "<a href=\"#\" onclick=\"return expand_layer('newnote');\"><i id=\"newnote_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new note'), '</a>';
-                echo help_link('edit_add_NOTE');
+                echo FunctionsPrint::i()->help_link('edit_add_NOTE');
                 echo '<br>';
                 echo '<div id="newnote" style="display: none;">';
                 echo '<table class="facts_table">';
@@ -1101,7 +1101,7 @@ class FunctionsEdit
 
             case 'SHARED_NOTE':
                 echo "<a href=\"#\" onclick=\"return expand_layer('newshared_note');\"><i id=\"newshared_note_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new shared note'), '</a>';
-                echo help_link('edit_add_SHARED_NOTE');
+                echo FunctionsPrint::i()->help_link('edit_add_SHARED_NOTE');
                 echo '<br>';
                 echo '<div id="newshared_note" style="display: none;">';
                 echo '<table class="facts_table">';
@@ -1113,7 +1113,7 @@ class FunctionsEdit
             case 'OBJE':
                 if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
                     echo "<a href=\"#\" onclick=\"return expand_layer('newobje');\"><i id=\"newobje_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new media object'), '</a>';
-                    echo help_link('OBJE');
+                    echo FunctionsPrint::i()->help_link('OBJE');
                     echo '<br>';
                     echo '<div id="newobje" style="display: none;">';
                     echo '<table class="facts_table">';
@@ -1124,7 +1124,7 @@ class FunctionsEdit
 
             case 'RESN':
                 echo "<a href=\"#\" onclick=\"return expand_layer('newresn');\"><i id=\"newresn_img\" class=\"icon-plus\"></i> ", I18N::translate('Add a new restriction'), '</a>';
-                echo help_link('RESN');
+                echo FunctionsPrint::i()->help_link('RESN');
                 echo '<br>';
                 echo '<div id="newresn" style="display: none;">';
                 echo '<table class="facts_table">';

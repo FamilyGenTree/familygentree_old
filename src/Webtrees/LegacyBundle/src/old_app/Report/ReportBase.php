@@ -2223,7 +2223,7 @@ function footnoteTextsStartHandler()
  */
 function ageAtDeathStartHandler()
 {
-    // This duplicates functionality in format_fact_date()
+    // This duplicates functionality in FunctionsPrint::i()->format_fact_date()
     global $currentElement, $gedrec, $factrec;
 
     $match = array();

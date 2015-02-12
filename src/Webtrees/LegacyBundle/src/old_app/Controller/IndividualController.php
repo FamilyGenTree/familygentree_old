@@ -212,7 +212,7 @@ class IndividualController extends GedcomRecordController
             echo '<div id="indi_sour" class="clearfloat">', print_fact_sources($factrec, 2), '</div>';
         }
         if (preg_match("/\n2 NOTE/", $factrec)) {
-            echo '<div id="indi_note" class="clearfloat">', print_fact_notes($factrec, 2), '</div>';
+            echo '<div id="indi_note" class="clearfloat">', FunctionsPrint::i()->print_fact_notes($factrec, 2), '</div>';
         }
         echo '</div>';
     }

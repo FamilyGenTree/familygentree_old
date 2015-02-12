@@ -208,7 +208,7 @@ $default_individual   = Individual::getInstance(WT_USER_ROOT_ID);
             <div class="value">
                 <input data-autocomplete-type="INDI" type="text" name="form_rootid" id="form_rootid"
                        value="<?php WT_USER_ROOT_ID; ?>">
-                <?php echo print_findindi_link('form_rootid'); ?>
+                <?php echo FunctionsPrint::i()->print_findindi_link('form_rootid'); ?>
                 <br>
                 <?php if ($default_individual): ?>
                     <?php echo $default_individual->format_list('span'); ?>

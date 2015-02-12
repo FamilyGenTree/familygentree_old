@@ -325,7 +325,7 @@ function format_indi_table($datalist, $option = '')
                 $class     = '';
                 $sex_image = '';
             }
-            $html .= '<a ' . $title . ' href="' . $person->getHtmlUrl() . '"' . $class . '>' . highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
+            $html .= '<a ' . $title . ' href="' . $person->getHtmlUrl() . '"' . $class . '>' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
         }
         // Indi parents
         $html .= $person->getPrimaryParentsNames('parents details1', 'none');
@@ -381,7 +381,7 @@ function format_indi_table($datalist, $option = '')
                 $html .= $tmp->getShortName();
             } else {
                 $html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
-                $html .= highlight_search_hits($tmp->getShortName()) . '</a>';
+                $html .= FunctionsPrint::i()->highlight_search_hits($tmp->getShortName()) . '</a>';
             }
         }
         $html .= '</td>';
@@ -436,7 +436,7 @@ function format_indi_table($datalist, $option = '')
                 $html .= $tmp->getShortName();
             } else {
                 $html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
-                $html .= highlight_search_hits($tmp->getShortName()) . '</a>';
+                $html .= FunctionsPrint::i()->highlight_search_hits($tmp->getShortName()) . '</a>';
             }
         }
         $html .= '</td>';
@@ -818,7 +818,7 @@ function format_fam_table($datalist)
             }
             // Only show married names if they are the name we are filtering by.
             if ($name['type'] != '_MARNM' || $num == $husb->getPrimaryName()) {
-                $html .= '<a ' . $title . ' href="' . $family->getHtmlUrl() . '"' . $class . '>' . highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
+                $html .= '<a ' . $title . ' href="' . $family->getHtmlUrl() . '"' . $class . '>' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
             }
         }
         // Husband parents
@@ -863,7 +863,7 @@ function format_fam_table($datalist)
             }
             // Only show married names if they are the name we are filtering by.
             if ($name['type'] != '_MARNM' || $num == $wife->getPrimaryName()) {
-                $html .= '<a ' . $title . ' href="' . $family->getHtmlUrl() . '"' . $class . '>' . highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
+                $html .= '<a ' . $title . ' href="' . $family->getHtmlUrl() . '"' . $class . '>' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>' . $sex_image . '<br>';
             }
         }
         // Wife parents
@@ -932,7 +932,7 @@ function format_fam_table($datalist)
                 $html .= $tmp->getShortName();
             } else {
                 $html .= '<a href="' . $tmp->getURL() . '" title="' . strip_tags($tmp->getFullName()) . '">';
-                $html .= highlight_search_hits($tmp->getShortName()) . '</a>';
+                $html .= FunctionsPrint::i()->highlight_search_hits($tmp->getShortName()) . '</a>';
             }
         }
         $html .= '</td>';
@@ -1121,9 +1121,9 @@ function format_sour_table($datalist)
                 $html .= '<br>';
             }
             if ($n == $source->getPrimaryName()) {
-                $html .= '<a class="name2" href="' . $source->getHtmlUrl() . '">' . highlight_search_hits($name['full']) . '</a>';
+                $html .= '<a class="name2" href="' . $source->getHtmlUrl() . '">' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>';
             } else {
-                $html .= '<a href="' . $source->getHtmlUrl() . '">' . highlight_search_hits($name['full']) . '</a>';
+                $html .= '<a href="' . $source->getHtmlUrl() . '">' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>';
             }
         }
         $html .= '</td>';
@@ -1136,7 +1136,7 @@ function format_sour_table($datalist)
         } else {
             $author = '';
         }
-        $html .= '<td>' . highlight_search_hits($author) . '</td>';
+        $html .= '<td>' . FunctionsPrint::i()->highlight_search_hits($author) . '</td>';
         //-- Linked INDIs
         $num = count($source->linkedIndividuals('SOUR'));
         $html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
@@ -1254,7 +1254,7 @@ function format_note_table($datalist)
         }
         $html .= '<tr' . $class . '>';
         //-- Shared Note name
-        $html .= '<td><a class="name2" href="' . $note->getHtmlUrl() . '">' . highlight_search_hits($note->getFullName()) . '</a></td>';
+        $html .= '<td><a class="name2" href="' . $note->getHtmlUrl() . '">' . FunctionsPrint::i()->highlight_search_hits($note->getFullName()) . '</a></td>';
         //-- Linked INDIs
         $num = count($note->linkedIndividuals('NOTE'));
         $html .= '<td>' . I18N::number($num) . '</td><td>' . $num . '</td>';
@@ -1367,9 +1367,9 @@ function format_repo_table($repositories)
                 $html .= '<br>';
             }
             if ($n == $repository->getPrimaryName()) {
-                $html .= '<a class="name2" href="' . $repository->getHtmlUrl() . '">' . highlight_search_hits($name['full']) . '</a>';
+                $html .= '<a class="name2" href="' . $repository->getHtmlUrl() . '">' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>';
             } else {
-                $html .= '<a href="' . $repository->getHtmlUrl() . '">' . highlight_search_hits($name['full']) . '</a>';
+                $html .= '<a href="' . $repository->getHtmlUrl() . '">' . FunctionsPrint::i()->highlight_search_hits($name['full']) . '</a>';
             }
         }
         $html .= '</td>';
@@ -1481,7 +1481,7 @@ function format_media_table($media_objects)
             //-- Object name(s)
             $html .= '<td>';
             $html .= '<a href="' . $media_object->getHtmlUrl() . '" class="list_item name2">';
-            $html .= highlight_search_hits($name) . '</a>';
+            $html .= FunctionsPrint::i()->highlight_search_hits($name) . '</a>';
             if (WT_USER_CAN_EDIT || WT_USER_CAN_ACCEPT) {
                 $html .= '<br><a href="' . $media_object->getHtmlUrl() . '">' . basename($media_object->getFilename()) . '</a>';
             }

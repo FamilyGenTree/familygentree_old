@@ -233,7 +233,7 @@ class TimelineController extends PageController
         echo $event->getLabel();
         echo ' — ';
         if ($record instanceof Individual) {
-            echo format_fact_date($event, $record, false, false);
+            echo FunctionsPrint::i()->format_fact_date($event, $record, false, false);
         } elseif ($record instanceof Family) {
             echo $gdate->display();
             if ($record->getHusband()

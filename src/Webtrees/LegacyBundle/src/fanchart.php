@@ -81,7 +81,7 @@ $controller
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" name="rootid" id="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td class="descriptionbox">
                     <label for="fan_style">
@@ -106,7 +106,7 @@ $controller
                 </td>
                 <td class="descriptionbox">
                     <label for="fan_width">
-                        <?php echo I18N::translate('Width'), help_link('fan_width'); ?>
+                        <?php echo I18N::translate('Width'), FunctionsPrint::i()->help_link('fan_width'); ?>
                     </label>
                 </td>
                 <td class="optionbox">

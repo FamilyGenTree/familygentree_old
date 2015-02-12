@@ -45,13 +45,13 @@ if ($controller->record && $controller->record->canShow()) {
                 '<a href="#" onclick="accept_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the deletion and then accept or reject it.', 'accept') . '</a>',
                 '<a href="#" onclick="reject_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the deletion and then accept or reject it.', 'reject') . '</a>'
             ),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         } elseif (WT_USER_CAN_EDIT) {
             echo
             '<p class="ui-state-highlight">',
             I18N::translate('This individual has been deleted.  The deletion will need to be reviewed by a moderator.'),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         }
     } elseif ($controller->record->isPendingAddtion()) {
@@ -64,13 +64,13 @@ if ($controller->record && $controller->record->canShow()) {
                 '<a href="#" onclick="accept_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the changes and then accept or reject them.', 'accept') . '</a>',
                 '<a href="#" onclick="reject_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the changes and then accept or reject them.', 'reject') . '</a>'
             ),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         } elseif (WT_USER_CAN_EDIT) {
             echo
             '<p class="ui-state-highlight">',
             I18N::translate('This individual has been edited.  The changes need to be reviewed by a moderator.'),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         }
     }

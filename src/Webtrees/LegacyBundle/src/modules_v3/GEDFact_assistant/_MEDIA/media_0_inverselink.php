@@ -183,9 +183,9 @@ if ($action == 'choose' && $paramok) {
     echo '&nbsp;';
     echo '<img style="border-style:none;" src="', Theme::theme()
                                                        ->parameter('image-add'), '" alt="', I18N::translate('Add'), ' " title="', I18N::translate('Add'), '" align="middle" name="addLink" value="" onclick="blankwin(); return false;">';
-    echo ' ', print_findindi_link('gid');
-    echo ' ', print_findfamily_link('gid');
-    echo ' ', print_findsource_link('gid');
+    echo ' ', FunctionsPrint::i()->print_findindi_link('gid');
+    echo ' ', FunctionsPrint::i()->print_findfamily_link('gid');
+    echo ' ', FunctionsPrint::i()->print_findsource_link('gid');
     echo '</td></tr></table>';
     echo "<sub>" . I18N::translate('Enter or search for the ID of the individual, family, or source to which this media item should be linked.') . "</sub>";
     echo '<br><br>';
@@ -591,7 +591,7 @@ function shiftlinks() {
         } else {
             echo "<input type=\"checkbox\" name=\"preserve_last_changed\">";
         }
-        echo I18N::translate('Do not update the “last change” record'), help_link('no_update_CHAN');
+        echo I18N::translate('Do not update the “last change” record'), FunctionsPrint::i()->help_link('no_update_CHAN');
         echo "</td></tr>";
     }
     ?>

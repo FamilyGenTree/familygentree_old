@@ -42,7 +42,7 @@ $controller
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" id="rootid" name="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Box width'); ?>

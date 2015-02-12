@@ -131,7 +131,7 @@ class FunctionsCharts
         } else {
             echo '<td valign="top">';
         }
-        print_pedigree_person($husb);
+        FunctionsPrint::i()->print_pedigree_person($husb);
         echo "</td></tr></table>";
         echo "</td>";
         // husband’s parents
@@ -157,14 +157,14 @@ class FunctionsCharts
                     $this->print_sosa_number(trim(substr($label, 0, -3), ".") . ".");
                 }
                 echo "<td valign=\"top\">";
-                print_pedigree_person(Individual::getInstance($hfam->getHusband()
+                FunctionsPrint::i()->print_pedigree_person(Individual::getInstance($hfam->getHusband()
                                                                    ->getXref()));
                 echo "</td></tr></table>";
             } elseif ($hfam && !$hfam->getHusband()) {
                 // Empty box for grandfather
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\" border=\"0\"><tr>";
                 echo '<td valign="top">';
-                print_pedigree_person($hfam->getHusband());
+                FunctionsPrint::i()->print_pedigree_person($hfam->getHusband());
                 echo '</td></tr></table>';
             }
             echo "</td>";
@@ -192,14 +192,14 @@ class FunctionsCharts
                     $this->print_sosa_number(trim(substr($label, 0, -3), ".") . ".");
                 }
                 echo '<td valign="top">';
-                print_pedigree_person(Individual::getInstance($hfam->getWife()
+                FunctionsPrint::i()->print_pedigree_person(Individual::getInstance($hfam->getWife()
                                                                    ->getXref()));
                 echo '</td></tr></table>';
             } elseif ($hfam && !$hfam->getWife()) {
                 // Empty box for grandmother
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\" border=\"0\"><tr>";
                 echo '<td valign="top">';
-                print_pedigree_person($hfam->getWife());
+                FunctionsPrint::i()->print_pedigree_person($hfam->getWife());
                 echo '</td></tr></table>';
             }
             echo '</td>';
@@ -237,7 +237,7 @@ class FunctionsCharts
         } else {
             echo '<td valign="top">';
         }
-        print_pedigree_person($wife);
+        FunctionsPrint::i()->print_pedigree_person($wife);
         echo "</td></tr></table>";
         echo "</td>";
         // wife’s parents
@@ -263,14 +263,14 @@ class FunctionsCharts
                     $this->print_sosa_number(trim(substr($label, 0, -3), ".") . ".");
                 }
                 echo "<td valign=\"top\">";
-                print_pedigree_person(Individual::getInstance($hfam->getHusband()
+                FunctionsPrint::i()->print_pedigree_person(Individual::getInstance($hfam->getHusband()
                                                                    ->getXref()));
                 echo "</td></tr></table>";
             } elseif ($hfam && !$hfam->getHusband()) {
                 // Empty box for grandfather
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\" border=\"0\"><tr>";
                 echo '<td valign="top">';
-                print_pedigree_person($hfam->getHusband());
+                FunctionsPrint::i()->print_pedigree_person($hfam->getHusband());
                 echo '</td></tr></table>';
             }
             echo "</td>";
@@ -298,14 +298,14 @@ class FunctionsCharts
                     $this->print_sosa_number(trim(substr($label, 0, -3), ".") . ".");
                 }
                 echo "<td valign=\"top\">";
-                print_pedigree_person(Individual::getInstance($hfam->getWife()
+                FunctionsPrint::i()->print_pedigree_person(Individual::getInstance($hfam->getWife()
                                                                    ->getXref()));
                 echo "</td></tr></table>";
             } elseif ($hfam && !$hfam->getWife()) {
                 // Empty box for grandmother
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\" border=\"0\"><tr>";
                 echo '<td valign="top">';
-                print_pedigree_person($hfam->getWife());
+                FunctionsPrint::i()->print_pedigree_person($hfam->getWife());
                 echo '</td></tr></table>';
             }
             echo '</td>';
@@ -373,7 +373,7 @@ class FunctionsCharts
                 } else {
                     echo '<td valign="middle">';
                 }
-                print_pedigree_person($child);
+                FunctionsPrint::i()->print_pedigree_person($child);
                 echo "</td>";
                 if ($sosa != 0) {
                     // loop for all families where current child is a spouse
@@ -446,7 +446,7 @@ class FunctionsCharts
                         } else {
                             echo "\">";
                         }
-                        print_pedigree_person($spouse);
+                        FunctionsPrint::i()->print_pedigree_person($spouse);
                         echo "</td>";
                         // cousins
                         if ($show_cousins) {
@@ -598,7 +598,7 @@ class FunctionsCharts
                 }
                 echo ' src="', Theme::theme()
                                     ->parameter('image-hline'), '" alt=""></td><td>';
-                print_pedigree_person($fchil);
+                FunctionsPrint::i()->print_pedigree_person($fchil);
                 echo '</td></tr>';
                 if ($i < $ctkids) {
                     echo '<tr>';

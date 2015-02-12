@@ -36,11 +36,11 @@ echo '<h3>', $controller->getPageTitle(), '&nbsp;&nbsp;';
 // When more languages are added to the wiki, we can expand or redesign this
 switch (WT_LOCALE) {
     case 'fr':
-        echo wiki_help_link('/fr/Module_Assistant_Recensement');
+        echo FunctionsPrint::i()->wiki_help_link('/fr/Module_Assistant_Recensement');
         break;
     case 'en':
     default:
-        echo wiki_help_link('/en/Census_Assistant_module');
+        echo FunctionsPrint::i()->wiki_help_link('/en/Census_Assistant_module');
         break;
 }
 echo '</h3>';

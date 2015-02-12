@@ -119,7 +119,7 @@ class AncestryController extends ChartController
                                     ->parameter('image-hline'), '" height="3" width="', Theme::theme()
                                                                                              ->parameter('chart-descendancy-indent') - 2, '"></td><td>';
         }
-        print_pedigree_person($person);
+        FunctionsPrint::i()->print_pedigree_person($person);
         echo '</td>';
         echo '<td>';
         if ($sosa > 1) {

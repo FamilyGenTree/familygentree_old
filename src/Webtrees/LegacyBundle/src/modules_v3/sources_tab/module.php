@@ -71,7 +71,7 @@ class sources_tab_WT_Module extends Module implements ModuleTabInterface
                            type="checkbox" <?php echo Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES')
                         ? 'checked' : ''; ?> onclick="jQuery('tr.row_sour2').toggle();">
                     <label
-                        for="checkbox_sour2"><?php echo I18N::translate('Show all sources'), help_link('show_fact_sources'); ?></label>
+                        for="checkbox_sour2"><?php echo I18N::translate('Show all sources'), FunctionsPrint::i()->help_link('show_fact_sources'); ?></label>
                 </td>
             </tr>
             <?php
@@ -98,7 +98,7 @@ class sources_tab_WT_Module extends Module implements ModuleTabInterface
                            onclick="add_new_record('<?php echo $controller->record->getXref(); ?>','SOUR'); return false;">
                             <?php echo I18N::translate('Add a new source citation'); ?>
                         </a>
-                        <?php echo help_link('add_source'); ?>
+                        <?php echo FunctionsPrint::i()->help_link('add_source'); ?>
                     </td>
                 </tr>
             <?php

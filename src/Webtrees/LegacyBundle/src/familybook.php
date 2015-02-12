@@ -42,7 +42,7 @@ $controller
                 <td class="optionbox">
                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" name="rootid" id="rootid"
                            size="3" value="<?php echo $controller->root->getXref(); ?>">
-                    <?php echo print_findindi_link('rootid'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('rootid'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Show details'); ?>
@@ -78,7 +78,7 @@ $controller
                     </select>
                 </td>
                 <td class="descriptionbox">
-                    <?php echo I18N::translate('Show spouses'), help_link('show_spouse'); ?>
+                    <?php echo I18N::translate('Show spouses'), FunctionsPrint::i()->help_link('show_spouse'); ?>
                 </td>
                 <td class="optionbox">
                     <input type="checkbox" value="1" name="show_spouse" <?php if ($controller->show_spouse) {
@@ -88,7 +88,7 @@ $controller
             </tr>
             <tr>
                 <td class="descriptionbox">
-                    <?php echo I18N::translate('Descent steps'), help_link('fambook_descent'); ?>
+                    <?php echo I18N::translate('Descent steps'), FunctionsPrint::i()->help_link('fambook_descent'); ?>
                 </td>
                 <td class="optionbox">
                     <input type="text" size="3" name="descent" value="<?php echo $controller->descent; ?>">

@@ -143,7 +143,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
 
         //-- new fact link
         if ($controller->record->canEdit()) {
-            print_add_new_fact($controller->record->getXref(), $indifacts, 'INDI');
+            FunctionsPrint::i()->print_add_new_fact($controller->record->getXref(), $indifacts, 'INDI');
         }
         echo '</tbody>';
         echo '</table>';

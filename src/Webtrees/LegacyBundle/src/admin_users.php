@@ -667,7 +667,7 @@ switch (Filter::get('action')) {
                                 id="rootid<?php echo $tree->getTreeId(); ?>"
                                 value="<?php echo Filter::escapeHtml($tree->getUserPreference($user, 'rootid')); ?>"
                                 >
-                            <?php echo print_findindi_link('rootid' . $tree->getTreeId()), '', $tree->getName(); ?>
+                            <?php echo FunctionsPrint::i()->print_findindi_link('rootid' . $tree->getTreeId()), '', $tree->getName(); ?>
                         </td>
                         <td>
                             <input
@@ -679,7 +679,7 @@ switch (Filter::get('action')) {
                                 id="gedcomid<?php echo $tree->getTreeId(); ?>"
                                 value="<?php echo Filter::escapeHtml($tree->getUserPreference($user, 'gedcomid')); ?>"
                                 >
-                            <?php echo print_findindi_link('gedcomid' . $tree->getTreeId(), '', $tree->getName()); ?>
+                            <?php echo FunctionsPrint::i()->print_findindi_link('gedcomid' . $tree->getTreeId(), '', $tree->getName()); ?>
                         </td>
                         <td>
                             <select name="RELATIONSHIP_PATH_LENGTH<?php echo $tree->getTreeId(); ?>"

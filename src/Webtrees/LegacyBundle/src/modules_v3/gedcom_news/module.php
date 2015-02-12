@@ -140,7 +140,7 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
                 $content .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
             }
             $content .= '<a href="index.php?gedcom_news_archive=yes&amp;ctype=' . $ctype . '">' . I18N::translate('View archive') . "</a>";
-            $content .= help_link('gedcom_news_archive') . '<br>';
+            $content .= FunctionsPrint::i()->help_link('gedcom_news_archive') . '<br>';
         }
 
         if ($template) {
@@ -182,7 +182,7 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
 
         echo
         '<tr><td class="descriptionbox wrap width33">',
-        I18N::translate('Limit display by:'), help_link('gedcom_news_limit'),
+        I18N::translate('Limit display by:'), FunctionsPrint::i()->help_link('gedcom_news_limit'),
         '</td><td class="optionbox"><select name="limit"><option value="nolimit" ',
             ($limit == 'nolimit' ? 'selected' : '') . ">",
             I18N::translate('No limit') . "</option>",
@@ -193,7 +193,7 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
         '</select></td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
-        echo I18N::translate('Limit:'), help_link('gedcom_news_flag');
+        echo I18N::translate('Limit:'), FunctionsPrint::i()->help_link('gedcom_news_flag');
         echo '</td><td class="optionbox"><input type="text" name="flag" size="4" maxlength="4" value="' . $flag . '"></td></tr>';
     }
 }

@@ -103,7 +103,7 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface
             $needle   = '1 NOTE';
             $before   = substr($haystack, 0, strpos($haystack, $needle));
             $after    = substr(strstr($haystack, $needle), strlen($needle));
-            $notes    = print_fact_notes($before . $needle . $after, 1, true);
+            $notes    = FunctionsPrint::i()->print_fact_notes($before . $needle . $after, 1, true);
 
             // Prepare Below Thumbnail  menu ----------------------------------------------------
             $menu = new Menu('<div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">' . $media->getFullName() . '</div>');

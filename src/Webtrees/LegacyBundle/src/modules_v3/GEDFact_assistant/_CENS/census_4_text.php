@@ -31,7 +31,7 @@ namespace Webtrees\LegacyBundle\Legacy;
     <div class="optionbox">
         <textarea wrap="off" name="NOTE" id="NOTE"></textarea><br>
         <center>
-            <?php echo print_specialchar_link('NOTE'); ?>
+            <?php echo FunctionsPrint::i()->print_specialchar_link('NOTE'); ?>
         </center>
     </div>
 </div>

@@ -36,13 +36,13 @@ if ($controller->record && $controller->record->canShow()) {
                 '<a href="#" onclick="accept_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the deletion and then accept or reject it.', 'accept') . '</a>',
                 '<a href="#" onclick="reject_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the deletion and then accept or reject it.', 'reject') . '</a>'
             ),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         } elseif (WT_USER_CAN_EDIT) {
             echo
             '<p class="ui-state-highlight">',
             I18N::translate('This source has been deleted.  The deletion will need to be reviewed by a moderator.'),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         }
     } elseif ($controller->record->isPendingAddtion()) {
@@ -55,13 +55,13 @@ if ($controller->record && $controller->record->canShow()) {
                 '<a href="#" onclick="accept_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the changes and then accept or reject them.', 'accept') . '</a>',
                 '<a href="#" onclick="reject_changes(\'' . $controller->record->getXref() . '\');">' . I18N::translate_c('You should review the changes and then accept or reject them.', 'reject') . '</a>'
             ),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         } elseif (WT_USER_CAN_EDIT) {
             echo
             '<p class="ui-state-highlight">',
             I18N::translate('This source has been edited.  The changes need to be reviewed by a moderator.'),
-            ' ', help_link('pending_changes'),
+            ' ', FunctionsPrint::i()->help_link('pending_changes'),
             '</p>';
         }
     }
@@ -145,14 +145,14 @@ foreach ($facts as $fact) {
 
 // new fact link
 if ($controller->record->canEdit()) {
-    print_add_new_fact($controller->record->getXref(), $facts, 'SOUR');
+    FunctionsPrint::i()->print_add_new_fact($controller->record->getXref(), $facts, 'SOUR');
     // new media
     if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
         echo '<tr><td class="descriptionbox">';
         echo WT_Gedcom_Tag::getLabel('OBJE');
         echo '</td><td class="optionbox">';
         echo '<a href="#" onclick="window.open(\'addmedia.php?action=showmediaform&amp;linktoid=', $controller->record->getXref(), '\', \'_blank\', edit_window_specs); return false;">', I18N::translate('Add a new media object'), '</a>';
-        echo help_link('OBJE');
+        echo FunctionsPrint::i()->help_link('OBJE');
         echo '<br>';
         echo '<a href="#" onclick="window.open(\'inverselink.php?linktoid=', $controller->record->getXref(), '&amp;linkto=source\', \'_blank\', find_window_specs); return false;">', I18N::translate('Link to an existing media object'), '</a>';
         echo '</td></tr>';

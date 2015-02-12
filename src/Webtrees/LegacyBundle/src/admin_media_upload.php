@@ -197,7 +197,7 @@ for ($i = 1; $i < 6; $i++) {
     echo '<input name="mediafile', $i, '" type="file" size="40">';
     echo '</td></tr>';
     echo '<tr><td>';
-    echo I18N::translate('Thumbnail to upload'), help_link('upload_thumbnail_file');
+    echo I18N::translate('Thumbnail to upload'), FunctionsPrint::i()->help_link('upload_thumbnail_file');
     echo '</td>';
     echo '<td>';
     echo '<input name="thumbnail', $i, '" type="file" size="40">';
@@ -205,7 +205,7 @@ for ($i = 1; $i < 6; $i++) {
 
     if (WT_USER_GEDCOM_ADMIN) {
         echo '<tr><td>';
-        echo I18N::translate('Filename on server'), help_link('upload_server_file');
+        echo I18N::translate('Filename on server'), FunctionsPrint::i()->help_link('upload_server_file');
         echo '</td>';
         echo '<td>';
         echo '<input name="filename', $i, '" type="text" size="40">';
@@ -219,7 +219,7 @@ for ($i = 1; $i < 6; $i++) {
 
     if (WT_USER_GEDCOM_ADMIN) {
         echo '<tr><td>';
-        echo I18N::translate('Folder name on server'), help_link('upload_server_folder');
+        echo I18N::translate('Folder name on server'), FunctionsPrint::i()->help_link('upload_server_folder');
         echo '</td>';
         echo '<td>';
 

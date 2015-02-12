@@ -127,7 +127,7 @@ $people = count($controller->people);
 
 ?>
     <div id="lifespan-page">
-        <h2><?php echo I18N::translate('Lifespans'), help_link('lifespan_chart'); ?></h2>
+        <h2><?php echo I18N::translate('Lifespans'), FunctionsPrint::i()->help_link('lifespan_chart'); ?></h2>
         <table>
             <tr>
                 <td>
@@ -140,7 +140,7 @@ $people = count($controller->people);
                                     <br>
                                     <input class="pedigree_form" data-autocomplete-type="INDI" type="text" size="5"
                                            id="newpid" name="newpid">
-                                    <?php print_findindi_link('newpid'); ?>
+                                    <?php FunctionsPrint::i()->print_findindi_link('newpid'); ?>
                                     <br>
 
                                     <div>

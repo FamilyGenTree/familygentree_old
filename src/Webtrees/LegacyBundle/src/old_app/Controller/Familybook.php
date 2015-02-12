@@ -96,7 +96,7 @@ class FamilybookController extends ChartController
      */
     private function printDescendency(Individual $person = null, $count)
     {
-        global $bwidth, $bheight, $show_full, $box_width; // print_pedigree_person() requires these globals.
+        global $bwidth, $bheight, $show_full, $box_width; // FunctionsPrint::i()->print_pedigree_person() requires these globals.
 
         if ($count > $this->dgenerations) {
             return 0;
@@ -187,7 +187,7 @@ class FamilybookController extends ChartController
         }
         echo '<table><tr><td>';
         if ($person) {
-            print_pedigree_person($person);
+            FunctionsPrint::i()->print_pedigree_person($person);
             echo '</td><td>',
             '<img class="line2" src="', Theme::theme()
                                              ->parameter('image-hline'), '" width="8" height="3" alt="">';
@@ -206,7 +206,7 @@ class FamilybookController extends ChartController
                     $tempw = $bwidth;
                     $temph = $bheight;
                     $bwidth -= 5;
-                    print_pedigree_person($spouse);
+                    FunctionsPrint::i()->print_pedigree_person($spouse);
                     $bwidth  = $tempw;
                     $bheight = $temph;
                     $numkids += 0.95;
@@ -306,7 +306,7 @@ class FamilybookController extends ChartController
             '<td>';
             $lh = $savlh; // restore original line height
             //-- print the father box
-            print_pedigree_person($family->getHusband());
+            FunctionsPrint::i()->print_pedigree_person($family->getHusband());
             echo '</td>';
             if ($family->getHusband()) {
                 echo '<td>';
@@ -331,7 +331,7 @@ class FamilybookController extends ChartController
                                                  ->parameter('image-hline'), '" height="3"></td>',
             '<td>';
             //-- print the mother box
-            print_pedigree_person($family->getWife());
+            FunctionsPrint::i()->print_pedigree_person($family->getWife());
             echo '</td>';
             if ($family->getWife()) {
                 echo '<td>';

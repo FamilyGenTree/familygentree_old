@@ -175,7 +175,7 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
                 $content .= '<a href="' . $source->getHtmlUrl() . '">' . I18N::translate('View source') . ' — ' . $source->getFullname() . '</a><br>';
             }
             $content .= '<br><div class="indent">';
-            $content .= print_fact_notes($random_media->getGedcom(), "1", false);
+            $content .= FunctionsPrint::i()->print_fact_notes($random_media->getGedcom(), "1", false);
             $content .= '</div>';
             $content .= '</td></tr></table>';
             $content .= '</div>'; // random_picture_content

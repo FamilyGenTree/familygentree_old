@@ -105,7 +105,7 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
                 <td class="optionbox vmiddle">
                     <input tabindex="1" class="pedigree_form" data-autocomplete-type="INDI" type="text" name="pid1"
                            id="pid1" size="3" value="<?php echo $pid1; ?>">
-                    <?php echo print_findindi_link('pid1'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('pid1'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Show details'); ?>
@@ -121,7 +121,7 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
                 <td class="optionbox vmiddle">
                     <input tabindex="2" class="pedigree_form" data-autocomplete-type="INDI" type="text" name="pid2"
                            id="pid2" size="3" value="<?php echo $pid2; ?>">
-                    <?php echo print_findindi_link('pid2'); ?>
+                    <?php echo FunctionsPrint::i()->print_findindi_link('pid2'); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Show oldest top'); ?>
@@ -147,7 +147,7 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
                     ?>
                 </td>
                 <td class="descriptionbox">
-                    <?php echo I18N::translate('Check relationships by marriage'), help_link('CHECK_MARRIAGE_RELATIONS'); ?>
+                    <?php echo I18N::translate('Check relationships by marriage'), FunctionsPrint::i()->help_link('CHECK_MARRIAGE_RELATIONS'); ?>
                 </td>
                 <td class="optionbox" id="followspousebox">
                     <input tabindex="6" type="checkbox" name="followspouse" value="1" <?php echo $followspouse
@@ -158,7 +158,7 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
                 <?php
                 if ($node) {
                     echo '<input type="submit" value="', I18N::translate('Find next path'), '" onclick="document.people.path_to_find.value=', $path_to_find + 1, ';">';
-                    echo help_link('next_path');
+                    echo FunctionsPrint::i()->help_link('next_path');
                 }
                 ?>
             </td>
@@ -424,7 +424,7 @@ if ($person1 && $person2) {
 
                 echo '<div style="position:absolute; ', Globals::i()->TEXT_DIRECTION == 'ltr' ? 'left'
                     : 'right', ':', $pxoffset, 'px; top:', $pyoffset, 'px; width:', $Dbwidth, 'px; height:', $Dbheight, 'px; z-index:', $zIndex, ';">';
-                print_pedigree_person($person);
+                FunctionsPrint::i()->print_pedigree_person($person);
                 echo '</div>';
             }
         }

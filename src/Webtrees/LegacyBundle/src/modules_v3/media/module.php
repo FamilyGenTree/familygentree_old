@@ -88,7 +88,7 @@ class media_WT_Module extends Module implements ModuleTabInterface
                        onclick="window.open('addmedia.php?action=showmediaform&amp;linktoid=<?php echo $controller->record->getXref(); ?>&amp;ged=<?php echo WT_GEDURL; ?>', '_blank', edit_window_specs); return false;">
                         <?php echo I18N::translate('Add a new media object'); ?>
                     </a>
-                    <?php echo help_link('OBJE'); ?>
+                    <?php echo FunctionsPrint::i()->help_link('OBJE'); ?>
                     <br>
                     <a href="#"
                        onclick="window.open('inverselink.php?linktoid=<?php echo $controller->record->getXref(); ?>&amp;ged=<?php echo WT_GEDURL; ?>&amp;linkto=person', '_blank', find_window_specs); return false;">

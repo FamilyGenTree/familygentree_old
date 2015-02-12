@@ -151,7 +151,7 @@ class DescendancyController extends ChartController
                                       ->parameter('image-hline') . "\" height=\"3\" width=\"", Theme::theme()
                                                                                                     ->parameter('chart-descendancy-indent') - 3, "\" alt=\"\"></td><td>";
         }
-        print_pedigree_person($person);
+        FunctionsPrint::i()->print_pedigree_person($person);
         echo '</td>';
 
         // check if child has parents and add an arrow
@@ -232,7 +232,7 @@ class DescendancyController extends ChartController
         echo '<ul id="' . $uid . '" class="generation">';
         echo '<li>';
         echo '<table><tr><td>';
-        print_pedigree_person($spouse);
+        FunctionsPrint::i()->print_pedigree_person($spouse);
         echo '</td>';
 
         // check if spouse has parents and add an arrow

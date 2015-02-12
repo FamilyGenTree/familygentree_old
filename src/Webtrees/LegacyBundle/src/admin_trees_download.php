@@ -109,13 +109,13 @@ $controller->pageHeader();
     <div id="tree-download">
         <dl>
             <dt>
-                <?php echo I18N::translate('Zip file(s)'), help_link('download_zipped'); ?>
+                <?php echo I18N::translate('Zip file(s)'), FunctionsPrint::i()->help_link('download_zipped'); ?>
             </dt>
             <dd>
                 <input type="checkbox" name="zip" value="yes">
             </dd>
             <dt>
-                <?php echo I18N::translate('Apply privacy settings?'), help_link('apply_privacy'); ?>
+                <?php echo I18N::translate('Apply privacy settings?'), FunctionsPrint::i()->help_link('apply_privacy'); ?>
             </dt>
             <dd>
                 <input type="radio" name="privatize_export" value="none"
@@ -131,13 +131,13 @@ $controller->pageHeader();
                        value="visitor">&nbsp;&nbsp;<?php echo I18N::translate('Visitor'); ?>
             </dd>
             <dt>
-                <?php echo I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)'), help_link('utf8_ansi'); ?>
+                <?php echo I18N::translate('Convert from UTF-8 to ANSI (ISO-8859-1)'), FunctionsPrint::i()->help_link('utf8_ansi'); ?>
             </dt>
             <dd>
                 <input type="checkbox" name="convert" value="yes">
             </dd>
             <dt>
-                <?php echo I18N::translate('Add the GEDCOM media path to filenames'), help_link('GEDCOM_MEDIA_PATH'); ?>
+                <?php echo I18N::translate('Add the GEDCOM media path to filenames'), FunctionsPrint::i()->help_link('GEDCOM_MEDIA_PATH'); ?>
             </dt>
             <dd>
                 <input type="checkbox" name="conv_path" value="<?php echo Filter::escapeHtml($GEDCOM_MEDIA_PATH); ?>">

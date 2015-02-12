@@ -409,15 +409,15 @@ if ($linktoid) {
 }
 echo '<table class="facts_table">';
 echo '<tr><td class="topbottombar" colspan="2">';
-echo $controller->getPageTitle(), help_link('OBJE');
+echo $controller->getPageTitle(), FunctionsPrint::i()->help_link('OBJE');
 echo '</td></tr>';
 if (!$linktoid && $action == 'create') {
     echo '<tr><td class="descriptionbox wrap width25">';
     echo I18N::translate('Enter an individual, family, or source ID');
     echo '</td><td class="optionbox wrap"><input type="text" data-autocomplete-type="IFS" name="linktoid" id="linktoid" size="6" value="">';
-    echo ' ', print_findindi_link('linktoid');
-    echo ' ', print_findfamily_link('linktoid');
-    echo ' ', print_findsource_link('linktoid');
+    echo ' ', FunctionsPrint::i()->print_findindi_link('linktoid');
+    echo ' ', FunctionsPrint::i()->print_findfamily_link('linktoid');
+    echo ' ', FunctionsPrint::i()->print_findsource_link('linktoid');
     echo '<p class="sub">', I18N::translate('Enter or search for the ID of the individual, family, or source to which this media item should be linked.'), '</p></td></tr>';
 }
 
@@ -441,7 +441,7 @@ if ($gedfile == 'FILE') {
     // Check for thumbnail generation support
     if (WT_USER_GEDCOM_ADMIN) {
         echo '<tr><td class="descriptionbox wrap width25">';
-        echo I18N::translate('Thumbnail to upload') . help_link('upload_thumbnail_file') . '</td><td class="optionbox wrap"><input type="file" name="thumbnail" size="40"></td></tr>';
+        echo I18N::translate('Thumbnail to upload') . FunctionsPrint::i()->help_link('upload_thumbnail_file') . '</td><td class="optionbox wrap"><input type="file" name="thumbnail" size="40"></td></tr>';
     }
 }
 
@@ -473,7 +473,7 @@ if ($gedfile == 'FILE') {
 
     echo '<tr>';
     echo '<td class="descriptionbox wrap width25">';
-    echo I18N::translate('Filename on server'), help_link('upload_server_file');
+    echo I18N::translate('Filename on server'), FunctionsPrint::i()->help_link('upload_server_file');
     echo '</td>';
     echo '<td class="optionbox wrap wrap">';
     if (WT_USER_GEDCOM_ADMIN) {
@@ -494,7 +494,7 @@ if ($gedfile == 'FILE') {
 // Box for user to choose the folder to store the image
 if (!$isExternal) {
     echo '<tr><td class="descriptionbox wrap width25">';
-    echo I18N::translate('Folder name on server'), help_link('upload_server_folder'), '</td><td class="optionbox wrap">';
+    echo I18N::translate('Folder name on server'), FunctionsPrint::i()->help_link('upload_server_folder'), '</td><td class="optionbox wrap">';
     //-- don’t let regular users change the location of media items
     if ($action !== 'update' || WT_USER_GEDCOM_ADMIN) {
         $mediaFolders = WT_Query_Media::folderList();
@@ -686,7 +686,7 @@ if (Auth::isAdmin()) {
     } else {
         echo '<input type="checkbox" name="preserve_last_changed">';
     }
-    echo I18N::translate('Do not update the “last change” record'), help_link('no_update_CHAN'), '<br>';
+    echo I18N::translate('Do not update the “last change” record'), FunctionsPrint::i()->help_link('no_update_CHAN'), '<br>';
     echo '</td></tr>';
 }
 echo '</table>';

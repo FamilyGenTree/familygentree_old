@@ -432,7 +432,7 @@ class Fact
                         ->getTree()
                         ->getPreference('SHOW_PARENTS_AGE')
             ) {
-                $attributes[] = $date->display() . format_parents_age($this->getParent(), $date);
+                $attributes[] = $date->display() . FunctionsPrint::i()->format_parents_age($this->getParent(), $date);
             } else {
                 $attributes[] = $date->display();
             }

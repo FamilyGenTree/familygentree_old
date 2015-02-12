@@ -70,7 +70,7 @@ foreach ($facts as $event) {
             break;
         case 'ASSO':
             // Associates
-            echo format_asso_rela_record($event);
+            echo FunctionsPrint::i()->format_asso_rela_record($event);
             break;
         default:
             // Simple version of print_fact()

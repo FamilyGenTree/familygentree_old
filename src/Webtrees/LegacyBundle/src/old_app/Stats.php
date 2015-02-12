@@ -188,7 +188,7 @@ class Stats
             } elseif ($tags[$i] == 'help') {
                 // re-merge, just in case
                 $new_tags[]   = "#{$full_tag}#";
-                $new_values[] = help_link(implode(':', $params));
+                $new_values[] = FunctionsPrint::i()->help_link(implode(':', $params));
             }
         }
 
@@ -1466,7 +1466,7 @@ class Stats
                 $fact = GedcomRecord::getInstance($row['d_gid'], $this->tree->getTreeId())
                                     ->getFirstFact($row['d_fact']);
                 if ($fact) {
-                    $result = format_fact_place($fact, true, true, true);
+                    $result = FunctionsPrint::i()->format_fact_place($fact, true, true, true);
                 } else {
                     $result = I18N::translate('Private');
                 }
@@ -2952,7 +2952,7 @@ class Stats
             case 'place':
                 $fact = $record->getFirstFact($row['fact']);
                 if ($fact) {
-                    $result = format_fact_place($fact, true, true, true);
+                    $result = FunctionsPrint::i()->format_fact_place($fact, true, true, true);
                 } else {
                     $result = I18N::translate('Private');
                 }

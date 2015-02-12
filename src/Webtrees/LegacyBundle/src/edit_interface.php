@@ -59,7 +59,7 @@ switch ($action) {
         <div id="edit_interface-page">
             <h4>
                 <?php echo $controller->getPageTitle(); ?>
-                <?php echo help_link('edit_edit_raw'); ?>
+                <?php echo FunctionsPrint::i()->help_link('edit_edit_raw'); ?>
             </h4>
             <pre>     <?php echo '0 @' . $record->getXref() . '@ ' . $record::RECORD_TYPE; ?></pre>
             <form method="post" action="edit_interface.php">
@@ -173,8 +173,8 @@ switch ($action) {
         <div id="edit_interface-page">
             <h4>
                 <?php echo $controller->getPageTitle(); ?>
-                <?php echo help_link('edit_edit_raw'); ?>
-                <?php print_specialchar_link('gedcom'); ?>
+                <?php echo FunctionsPrint::i()->help_link('edit_edit_raw'); ?>
+                <?php FunctionsPrint::i()->print_specialchar_link('gedcom'); ?>
             </h4>
 
             <form method="post" action="edit_interface.php">
@@ -274,7 +274,7 @@ switch ($action) {
 
         echo '<div id="edit_interface-page">';
         echo '<h4>', $controller->getPageTitle(), '</h4>';
-        init_calendar_popup();
+        FunctionsPrint::i()->init_calendar_popup();
         echo '<form name="editform" method="post" action="edit_interface.php" enctype="multipart/form-data">';
         echo '<input type="hidden" name="ged" value="', Filter::escapeHtml(WT_GEDCOM), '">';
         echo '<input type="hidden" name="action" value="update">';
@@ -357,7 +357,7 @@ switch ($action) {
         echo '<div id="edit_interface-page">';
         echo '<h4>', $controller->getPageTitle(), '</h4>';
 
-        init_calendar_popup();
+        FunctionsPrint::i()->init_calendar_popup();
         echo '<form name="addform" method="post" action="edit_interface.php" enctype="multipart/form-data">';
         echo '<input type="hidden" name="ged" value="', Filter::escapeHtml(WT_GEDCOM), '">';
         echo '<input type="hidden" name="action" value="update">';
@@ -1015,7 +1015,7 @@ switch ($action) {
                         </td>
                         <td class="facts_value">
                             <input data-autocomplete-type="FAM" type="text" id="famid" name="famid" size="8">
-                            <?php echo print_findfamily_link('famid'); ?>
+                            <?php echo FunctionsPrint::i()->print_findfamily_link('famid'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -1024,7 +1024,7 @@ switch ($action) {
                         </td>
                         <td class="facts_value">
                             <?php echo FunctionsEdit::i()->edit_field_pedi('PEDI', '', '', $person); ?>
-                            <?php echo help_link('PEDI'); ?>
+                            <?php echo FunctionsPrint::i()->help_link('PEDI'); ?>
                         </td>
                     </tr>
                     <?php echo keep_chan($person); ?>
@@ -1106,7 +1106,7 @@ switch ($action) {
         }
 
         $controller->pageHeader();
-        init_calendar_popup();
+        FunctionsPrint::i()->init_calendar_popup();
 
         ?>
         <div id="edit_interface-page">
@@ -1125,7 +1125,7 @@ switch ($action) {
                         </td>
                         <td class="facts_value">
                             <input data-autocomplete-type="INDI" id="spouseid" type="text" name="spid" size="8">
-                            <?php echo print_findindi_link('spouseid'); ?>
+                            <?php echo FunctionsPrint::i()->print_findindi_link('spouseid'); ?>
                         </td>
                     </tr>
                     <?php FunctionsEdit::i()->add_simple_tag("0 MARR Y"); ?>
@@ -1240,47 +1240,47 @@ switch ($action) {
                         <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('TITL'); ?></td>
                         <td class="optionbox wrap"><input type="text" data-autocomplete-type="SOUR_TITL" name="TITL"
                                                           id="TITL" value=""
-                                                          size="60"> <?php echo print_specialchar_link('TITL'); ?></td>
+                                                          size="60"> <?php echo FunctionsPrint::i()->print_specialchar_link('TITL'); ?></td>
                     </tr>
                     <tr>
                         <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ABBR'); ?></td>
                         <td class="optionbox wrap"><input type="text" name="ABBR" id="ABBR" value="" size="40"
-                                                          maxlength="255"> <?php echo print_specialchar_link('ABBR'); ?>
+                                                          maxlength="255"> <?php echo FunctionsPrint::i()->print_specialchar_link('ABBR'); ?>
                         </td>
                     </tr>
                     <?php if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), "_HEB") !== false) { ?>
                         <tr>
-                            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('_HEB'), help_link('_HEB'); ?></td>
+                            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('_HEB'), FunctionsPrint::i()->help_link('_HEB'); ?></td>
                             <td class="optionbox wrap"><input type="text" name="_HEB" id="_HEB" value=""
-                                                              size="60"> <?php echo print_specialchar_link('_HEB'); ?>
+                                                              size="60"> <?php echo FunctionsPrint::i()->print_specialchar_link('_HEB'); ?>
                             </td>
                         </tr>
                     <?php } ?>
                     <?php if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), "ROMN") !== false) { ?>
                         <tr>
-                            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ROMN'), help_link('ROMN'); ?></td>
+                            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ROMN'), FunctionsPrint::i()->help_link('ROMN'); ?></td>
                             <td class="optionbox wrap"><input type="text" name="ROMN" id="ROMN" value=""
-                                                              size="60"> <?php echo print_specialchar_link('ROMN'); ?>
+                                                              size="60"> <?php echo FunctionsPrint::i()->print_specialchar_link('ROMN'); ?>
                             </td>
                         </tr>
                     <?php } ?>
                     <tr>
                         <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('AUTH'); ?></td>
                         <td class="optionbox wrap"><input type="text" name="AUTH" id="AUTH" value="" size="40"
-                                                          maxlength="255"> <?php echo print_specialchar_link('AUTH'); ?>
+                                                          maxlength="255"> <?php echo FunctionsPrint::i()->print_specialchar_link('AUTH'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('PUBL'); ?></td>
                         <td class="optionbox wrap"><textarea name="PUBL" id="PUBL" rows="5"
-                                                             cols="60"></textarea><br><?php echo print_specialchar_link('PUBL'); ?>
+                                                             cols="60"></textarea><br><?php echo FunctionsPrint::i()->print_specialchar_link('PUBL'); ?>
                         </td>
                     </tr>
                     <tr>
                         <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('REPO'); ?></td>
                         <td class="optionbox wrap"><input type="text" data-autocomplete-type="REPO" name="REPO"
                                                           id="REPO" value=""
-                                                          size="10"> <?php echo print_findrepository_link('REPO'), ' ', FunctionsEdit::i()->print_addnewrepository_link('REPO'); ?>
+                                                          size="10"> <?php echo FunctionsPrint::i()->print_findrepository_link('REPO'), ' ', FunctionsEdit::i()->print_addnewrepository_link('REPO'); ?>
                         </td>
                     </tr>
                     <tr>
@@ -1291,11 +1291,11 @@ switch ($action) {
                 </table>
                 <a href="#" onclick="return expand_layer('events');"><i id="events_img" class="icon-plus"></i>
                     <?php echo I18N::translate('Associate events with this source'); ?>
-                </a><?php echo help_link('edit_SOUR_EVEN'); ?>
+                </a><?php echo FunctionsPrint::i()->help_link('edit_SOUR_EVEN'); ?>
                 <div id="events" style="display: none;">
                     <table class="facts_table">
                         <tr>
-                            <td class="descriptionbox wrap width25"><?php echo I18N::translate('Select events'), help_link('edit_SOUR_EVEN'); ?></td>
+                            <td class="descriptionbox wrap width25"><?php echo I18N::translate('Select events'), FunctionsPrint::i()->help_link('edit_SOUR_EVEN'); ?></td>
                             <td class="optionbox wrap"><select name="EVEN[]" multiple="multiple" size="5">
                                     <?php
                                     $parts = explode(',', Globals::i()->WT_TREE->getPreference('INDI_FACTS_ADD'));
@@ -1420,10 +1420,10 @@ switch ($action) {
                 echo '<table class="facts_table">';
                 echo '<tr>';
                 echo '<td class="descriptionbox nowrap">';
-                echo I18N::translate('Shared note'), help_link('SHARED_NOTE');
+                echo I18N::translate('Shared note'), FunctionsPrint::i()->help_link('SHARED_NOTE');
                 echo '</td>';
                 echo '<td class="optionbox wrap"><textarea name="NOTE" id="NOTE" rows="15" cols="87"></textarea>';
-                echo print_specialchar_link('NOTE');
+                echo FunctionsPrint::i()->print_specialchar_link('NOTE');
                 echo '</td>';
                 echo '</tr>';
                 echo keep_chan();
@@ -1534,12 +1534,12 @@ switch ($action) {
                 <?php echo Filter::getCsrf(); ?>
                 <table class="facts_table">
                     <tr>
-                        <td class="descriptionbox wrap width25"><?php echo I18N::translate('Shared note'), help_link('SHARED_NOTE'); ?></td>
+                        <td class="descriptionbox wrap width25"><?php echo I18N::translate('Shared note'), FunctionsPrint::i()->help_link('SHARED_NOTE'); ?></td>
                         <td class="optionbox wrap">
                             <textarea name="NOTE" id="NOTE" rows="15"
                                       cols="90"><?php echo Filter::escapeHtml($note->getNote()); ?></textarea>
                             <br>
-                            <?php echo print_specialchar_link('NOTE'); ?>
+                            <?php echo FunctionsPrint::i()->print_specialchar_link('NOTE'); ?>
                         </td>
                     </tr>
                     <?php echo keep_chan($note); ?>
@@ -1624,30 +1624,30 @@ switch ($action) {
 		<?php echo Filter::getCsrf(); ?>
 		<table class="facts_table">
 			<tr><td class="descriptionbox wrap width25"><?php echo I18N::translate('Repository name'); ?></td>
-			<td class="optionbox wrap"><input type="text" name="REPO_NAME" id="REPO_NAME" value="" size="40" maxlength="255"> <?php echo print_specialchar_link('REPO_NAME'); ?></td></tr>
+			<td class="optionbox wrap"><input type="text" name="REPO_NAME" id="REPO_NAME" value="" size="40" maxlength="255"> <?php echo FunctionsPrint::i()->print_specialchar_link('REPO_NAME'); ?></td></tr>
 			<?php if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), "_HEB") !== false) { ?>
         <tr>
-            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('_HEB'), help_link('_HEB'); ?></td>
+            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('_HEB'), FunctionsPrint::i()->help_link('_HEB'); ?></td>
             <td class="optionbox wrap"><input type="text" name="_HEB" id="_HEB" value="" size="40"
-                                              maxlength="255"> <?php echo print_specialchar_link('_HEB'); ?></td>
+                                              maxlength="255"> <?php echo FunctionsPrint::i()->print_specialchar_link('_HEB'); ?></td>
         </tr>
     <?php } ?>
         <?php if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), "ROMN") !== false) { ?>
         <tr>
-            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ROMN'), help_link('ROMN'); ?></td>
+            <td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ROMN'), FunctionsPrint::i()->help_link('ROMN'); ?></td>
             <td class="optionbox wrap"><input type="text" name="ROMN" id="ROMN" value="" size="40"
-                                              maxlength="255"> <?php echo print_specialchar_link('ROMN'); ?></td>
+                                              maxlength="255"> <?php echo FunctionsPrint::i()->print_specialchar_link('ROMN'); ?></td>
         </tr>
     <?php } ?>
-			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ADDR'), help_link('ADDR'); ?></td>
-			<td class="optionbox wrap"><textarea name="ADDR" id="ADDR" rows="5" cols="60"></textarea><?php echo print_specialchar_link('ADDR'); ?> </td></tr>
-			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('PHON'), help_link('PHON'); ?></td>
+			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('ADDR'), FunctionsPrint::i()->help_link('ADDR'); ?></td>
+			<td class="optionbox wrap"><textarea name="ADDR" id="ADDR" rows="5" cols="60"></textarea><?php echo FunctionsPrint::i()->print_specialchar_link('ADDR'); ?> </td></tr>
+			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('PHON'), FunctionsPrint::i()->help_link('PHON'); ?></td>
 			<td class="optionbox wrap"><input type="text" name="PHON" id="PHON" value="" size="40" maxlength="255"> </td></tr>
-			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('FAX'), help_link('FAX'); ?></td>
+			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('FAX'), FunctionsPrint::i()->help_link('FAX'); ?></td>
 			<td class="optionbox wrap"><input type="text" name="FAX" id="FAX" value="" size="40"></td></tr>
-			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('EMAIL'), help_link('EMAIL'); ?></td>
+			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('EMAIL'), FunctionsPrint::i()->help_link('EMAIL'); ?></td>
 			<td class="optionbox wrap"><input type="text" name="EMAIL" id="EMAIL" value="" size="40" maxlength="255"></td></tr>
-			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('WWW'), help_link('URL'); ?></td>
+			<tr><td class="descriptionbox wrap width25"><?php echo WT_Gedcom_Tag::getLabel('WWW'), FunctionsPrint::i()->help_link('URL'); ?></td>
 			<td class="optionbox wrap"><input type="text" name="WWW" id="WWW" value="" size="40" maxlength="255"> </td></tr>
 			<?php echo keep_chan(); ?>
 		</table>
@@ -2441,7 +2441,7 @@ function keep_chan(GedcomRecord $record = null)
             '<input type="checkbox" name="keep_chan" value="1" ' . (Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN')
                 ? 'checked' : '') . '>' .
             I18N::translate('Do not update the “last change” record') .
-            help_link('no_update_CHAN') .
+            FunctionsPrint::i()->help_link('no_update_CHAN') .
             $details .
             '</td></tr>';
     } else {
@@ -2502,7 +2502,7 @@ function print_indi_form($nextaction, Individual $person = null, Family $family 
 
     echo '<div id="edit_interface-page">';
     echo '<h4>', $controller->getPageTitle(), '</h4>';
-    init_calendar_popup();
+    FunctionsPrint::i()->init_calendar_popup();
     echo '<form method="post" name="addchildform" onsubmit="return checkform();">';
     echo '<input type="hidden" name="ged" value="', Filter::escapeHtml(WT_GEDCOM), '">';
     echo '<input type="hidden" name="action" value="', $nextaction, '">';

@@ -77,7 +77,7 @@ if ($controller->action == "general") {
     if (isset($controller->myquery)) {
         echo $controller->myquery;
     }
-    echo '" size="40" autofocus> ', print_specialchar_link('query'), '</div>
+    echo '" size="40" autofocus> ', FunctionsPrint::i()->print_specialchar_link('query'), '</div>
 			<div class="label">', I18N::translate('Records'), '</div>
 			<div class="value"><p>
 				<input type="checkbox" ';
