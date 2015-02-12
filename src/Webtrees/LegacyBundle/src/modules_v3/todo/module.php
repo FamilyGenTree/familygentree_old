@@ -204,26 +204,26 @@ class todo_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show research tasks that are assigned to other users');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_other', $show_other);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_other', $show_other);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show research tasks that are not assigned to any user');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_unassigned', $show_unassigned);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_unassigned', $show_unassigned);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show research tasks that have a date in the future');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_future', $show_future);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_future', $show_future);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('block', $block);
+        echo FunctionsEdit::i()->edit_field_yes_no('block', $block);
         echo '</td></tr>';
     }
 }

@@ -111,7 +111,7 @@ if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) 
                     <?php echo I18N::translate('Show details'); ?>
                 </td>
                 <td class="optionbox vmiddle">
-                    <?php echo two_state_checkbox('show_full', $show_full); ?>
+                    <?php echo FunctionsEdit::i()->two_state_checkbox('show_full', $show_full); ?>
                 </td>
             </tr>
             <tr>

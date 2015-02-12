@@ -155,7 +155,7 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Presentation style');
         echo '</td><td class="optionbox">';
-        echo select_edit_control('infoStyle', array(
+        echo FunctionsEdit::i()->select_edit_control('infoStyle', array(
             'list'  => I18N::translate('list'),
             'table' => I18N::translate('table')
         ), null, $infoStyle, '');
@@ -164,7 +164,7 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Sort order');
         echo '</td><td class="optionbox">';
-        echo select_edit_control('sortStyle', array(
+        echo FunctionsEdit::i()->select_edit_control('sortStyle', array(
             'name'      => /* I18N: An option in a list-box */
                 I18N::translate('sort by name'),
             'date_asc'  => /* I18N: An option in a list-box */
@@ -178,13 +178,13 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('block', $block);
+        echo FunctionsEdit::i()->edit_field_yes_no('block', $block);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Should this block be hidden when it is empty?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('hide_empty', $hide_empty);
+        echo FunctionsEdit::i()->edit_field_yes_no('hide_empty', $hide_empty);
         echo '</td></tr>';
         echo '<tr><td colspan="2" class="optionbox wrap">';
         echo '<span class="error">', I18N::translate('If you hide an empty block, you will not be able to change its configuration until it becomes visible by no longer being empty.'), '</span>';

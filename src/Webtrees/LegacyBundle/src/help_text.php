@@ -34,7 +34,7 @@ switch ($help) {
     //
     // Tags such as _BIRT_CHIL are pseudo-tags, used to create family events.
     //
-    // Generally, these tags need to be lists explicitly in add_simple_tag()
+    // Generally, these tags need to be lists explicitly in FunctionsEdit::i()->add_simple_tag()
     //////////////////////////////////////////////////////////////////////////////
 
     case 'ADDR':

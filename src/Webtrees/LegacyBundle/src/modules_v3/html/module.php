@@ -324,14 +324,14 @@ class html_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap">';
         echo I18N::translate('Show the date and time of update');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_timestamp', $show_timestamp);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_timestamp', $show_timestamp);
         echo '<input type="hidden" name="timestamp" value="', WT_TIMESTAMP, '">';
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap">';
         echo I18N::translate('Show this block for which languages?');
         echo '</td><td class="optionbox">';
-        echo edit_language_checkboxes('lang', $languages);
+        echo FunctionsEdit::i()->edit_language_checkboxes('lang', $languages);
         echo '</td></tr>';
     }
 }

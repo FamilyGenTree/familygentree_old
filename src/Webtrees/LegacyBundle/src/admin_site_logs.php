@@ -297,7 +297,7 @@ foreach (User::all() as $tmp_user) {
             <label for="type">
                 <?php echo I18N::translate('Type'); ?>
             </label>
-            <?php echo select_edit_control('type', array(
+            <?php echo FunctionsEdit::i()->select_edit_control('type', array(
                 ''       => '',
                 'auth'   => 'auth',
                 'config' => 'config',
@@ -330,14 +330,14 @@ foreach (User::all() as $tmp_user) {
             <label for="user">
                 <?php echo I18N::translate('User'); ?>
             </label>
-            <?php echo select_edit_control('user', $users_array, '', $user, 'class="form-control"'); ?>
+            <?php echo FunctionsEdit::i()->select_edit_control('user', $users_array, '', $user, 'class="form-control"'); ?>
         </div>
 
         <div class="form-group col-sm-4">
             <label for="gedc">
                 <?php echo I18N::translate('Family tree'); ?>
             </label>
-            <?php echo select_edit_control('gedc', Tree::getNameList(), '', $gedc, Auth::isAdmin()
+            <?php echo FunctionsEdit::i()->select_edit_control('gedc', Tree::getNameList(), '', $gedc, Auth::isAdmin()
                 ? 'class="form-control"' : 'disabled class="form-control"'); ?>
         </div>
     </div>

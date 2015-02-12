@@ -434,7 +434,7 @@ switch (Filter::get('action')) {
                 </label>
 
                 <div class="col-sm-9">
-                    <?php echo select_edit_control('language', I18N::installed_languages(), null, $user->getPreference('language', WT_LOCALE), 'class="form-control"'); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('language', I18N::installed_languages(), null, $user->getPreference('language', WT_LOCALE), 'class="form-control"'); ?>
                 </div>
             </div>
 
@@ -489,7 +489,7 @@ switch (Filter::get('action')) {
                 </label>
 
                 <div class="col-sm-9">
-                    <?php echo edit_field_contact('contact_method', $user->getPreference('contactmethod')); ?>
+                    <?php echo FunctionsEdit::i()->edit_field_contact('contact_method', $user->getPreference('contactmethod')); ?>
                     <p class="small text-muted">
                         <?php echo /* I18N: Help text for the “Preferred contact method” configuration setting */
                         I18N::translate('Site members can send each other messages.  You can choose to how these messages are sent to you, or choose not receive them at all.'); ?>
@@ -504,7 +504,7 @@ switch (Filter::get('action')) {
                 </label>
 
                 <div class="col-sm-9">
-                    <?php echo select_edit_control('theme', Theme::themeNames(), I18N::translate('<default theme>'), $user->getPreference('theme'), 'class="form-control"'); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('theme', Theme::themeNames(), I18N::translate('<default theme>'), $user->getPreference('theme'), 'class="form-control"'); ?>
                 </div>
             </div>
 

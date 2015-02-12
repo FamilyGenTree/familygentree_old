@@ -89,7 +89,7 @@ $controller
                     </label>
                 </td>
                 <td class="optionbox">
-                    <?php echo select_edit_control('fan_style', $controller->getFanStyles(), null, $controller->fan_style); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('fan_style', $controller->getFanStyles(), null, $controller->fan_style); ?>
                 </td>
                 <td rowspan="2" class="topbottombar vmiddle">
                     <input type="submit" value="<?php echo I18N::translate('View'); ?>">
@@ -102,7 +102,7 @@ $controller
                     </label>
                 </td>
                 <td class="optionbox">
-                    <?php echo edit_field_integers('generations', $controller->generations, 2, 9); ?>
+                    <?php echo FunctionsEdit::i()->edit_field_integers('generations', $controller->generations, 2, 9); ?>
                 </td>
                 <td class="descriptionbox">
                     <label for="fan_width">

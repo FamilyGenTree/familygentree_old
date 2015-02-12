@@ -320,7 +320,7 @@ switch ($action) {
                 </label>
 
                 <div class="col-sm-9">
-                    <?php echo select_edit_control('rule', $rules_edit, null, $rule, 'class="form-control"'); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('rule', $rules_edit, null, $rule, 'class="form-control"'); ?>
                 </div>
             </div>
 

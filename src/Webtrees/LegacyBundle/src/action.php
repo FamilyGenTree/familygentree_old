@@ -130,7 +130,7 @@ switch (Filter::post('action')) {
                                                                 ->getTreeId()) as $xref) {
                 $linker     = GedcomRecord::getInstance($xref);
                 $old_gedcom = $linker->getGedcom();
-                $new_gedcom = remove_links($old_gedcom, $record->getXref());
+                $new_gedcom = FunctionsEdit::i()->remove_links($old_gedcom, $record->getXref());
                 // FunctionsDbPhp::i()->fetch_all_links() does not take account of pending changes.  The links (or even the
                 // record itself) may have already been deleted.
                 if ($old_gedcom !== $new_gedcom) {
@@ -145,7 +145,7 @@ switch (Filter::post('action')) {
                         if ($match) {
                             $relict     = GedcomRecord::getInstance($match[2][0]);
                             $new_gedcom = $relict->getGedcom();
-                            $new_gedcom = remove_links($new_gedcom, $linker->getXref());
+                            $new_gedcom = FunctionsEdit::i()->remove_links($new_gedcom, $linker->getXref());
                             $relict->updateRecord($new_gedcom, false);
                             FlashMessages::addMessage(/* I18N: %s are names of records, such as sources, repositories or individuals */
                                 I18N::translate('The link from “%1$s” to “%2$s” has been deleted.', $relict->getFullName(), $family->getFullName()));

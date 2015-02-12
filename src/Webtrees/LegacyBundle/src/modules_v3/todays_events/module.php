@@ -137,19 +137,19 @@ class todays_events_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show only events of living individuals?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('filter', $filter);
+        echo FunctionsEdit::i()->edit_field_yes_no('filter', $filter);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show only births, deaths, and marriages?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('onlyBDM', $onlyBDM);
+        echo FunctionsEdit::i()->edit_field_yes_no('onlyBDM', $onlyBDM);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Presentation style');
         echo '</td><td class="optionbox">';
-        echo select_edit_control('infoStyle', array(
+        echo FunctionsEdit::i()->select_edit_control('infoStyle', array(
             'list'  => I18N::translate('list'),
             'table' => I18N::translate('table')
         ), null, $infoStyle, '');
@@ -158,7 +158,7 @@ class todays_events_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Sort order');
         echo '</td><td class="optionbox">';
-        echo select_edit_control('sortStyle', array(
+        echo FunctionsEdit::i()->select_edit_control('sortStyle', array(
             /* I18N: An option in a list-box */
             'alpha' => I18N::translate('sort by name'),
             /* I18N: An option in a list-box */
@@ -170,7 +170,7 @@ class todays_events_WT_Module extends Module implements ModuleBlockInterface
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('block', $block);
+        echo FunctionsEdit::i()->edit_field_yes_no('block', $block);
         echo '</td></tr>';
     }
 }

@@ -302,13 +302,13 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface
         echo /* I18N: label for yes/no option */
         I18N::translate('Show date of last update?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_last_update', $show_last_update);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_last_update', $show_last_update);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show common surnames?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('show_common_surnames', $show_common_surnames);
+        echo FunctionsEdit::i()->edit_field_yes_no('show_common_surnames', $show_common_surnames);
         echo '</td></tr>';
 
         ?>

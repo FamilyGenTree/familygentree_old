@@ -214,7 +214,7 @@ switch ($action) {
             $newged .= "\n1 FILE " . $folderName . $fileName;
         }
 
-        $newged = handle_updates($newged);
+        $newged = FunctionsEdit::i()->handle_updates($newged);
 
         $new_media = GedcomRecord::createRecord($newged, WT_GED_ID);
         if ($linktoid) {
@@ -361,7 +361,7 @@ switch ($action) {
             }
         }
 
-        // Insert the 1 FILE xxx record into the arrays used by function handle_updates()
+        // Insert the 1 FILE xxx record into the arrays used by function FunctionsEdit::i()->handle_updates()
         $glevels = array_merge(array('1'), $glevels);
         $tag     = array_merge(array('FILE'), $tag);
         $islink  = array_merge(array(0), $islink);
@@ -369,7 +369,7 @@ switch ($action) {
 
         $record = GedcomRecord::getInstance($pid);
         $newrec = "0 @$pid@ OBJE\n";
-        $newrec = handle_updates($newrec);
+        $newrec = FunctionsEdit::i()->handle_updates($newrec);
         $record->updateRecord($newrec, $update_CHAN);
 
         if ($pid && $linktoid) {
@@ -449,7 +449,7 @@ if ($gedfile == 'FILE') {
 $isExternal = Functions::i()->isFileExternal($gedfile);
 if ($gedfile == 'FILE') {
     if (WT_USER_GEDCOM_ADMIN) {
-        add_simple_tag(
+        FunctionsEdit::i()->add_simple_tag(
             "1 $gedfile",
             '',
             I18N::translate('Filename on server'),
@@ -537,7 +537,7 @@ if (preg_match('/\n(2 FORM .*)/', $gedrec, $match)) {
 } else {
     $gedform = '2 FORM';
 }
-$formid = add_simple_tag($gedform);
+$formid = FunctionsEdit::i()->add_simple_tag($gedform);
 
 // automatically set the format field from the filename
 $controller->addInlineJavascript('
@@ -561,7 +561,7 @@ if (preg_match('/\n(3 TYPE .*)/', $gedrec, $match)) {
 } else {
     $gedtype = '3 TYPE photo'; // default to ‘Photo’
 }
-add_simple_tag($gedtype);
+FunctionsEdit::i()->add_simple_tag($gedtype);
 
 // 1 FILE / 2 TITL
 if (preg_match('/\n(2 TITL .*)/', $gedrec, $match)) {
@@ -569,7 +569,7 @@ if (preg_match('/\n(2 TITL .*)/', $gedrec, $match)) {
 } else {
     $gedtitl = '2 TITL';
 }
-add_simple_tag($gedtitl);
+FunctionsEdit::i()->add_simple_tag($gedtitl);
 
 // 1 FILE / 2 TITL / 3 _HEB
 if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), '_HEB') !== false) {
@@ -578,7 +578,7 @@ if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), '_HEB') 
     } else {
         $gedtitl = '3 _HEB';
     }
-    add_simple_tag($gedtitl);
+    FunctionsEdit::i()->add_simple_tag($gedtitl);
 }
 
 // 1 FILE / 2 TITL / 3 ROMN
@@ -588,7 +588,7 @@ if (strstr(Globals::i()->WT_TREE->getPreference('ADVANCED_NAME_FACTS'), 'ROMN') 
     } else {
         $gedtitl = '3 ROMN';
     }
-    add_simple_tag($gedtitl);
+    FunctionsEdit::i()->add_simple_tag($gedtitl);
 }
 
 // 1 _PRIM
@@ -597,7 +597,7 @@ if (preg_match('/\n(1 _PRIM .*)/', $gedrec, $match)) {
 } else {
     $gedprim = '1 _PRIM';
 }
-add_simple_tag($gedprim);
+FunctionsEdit::i()->add_simple_tag($gedprim);
 
 //-- print out editing fields for any other data in the media record
 $sourceLevel = 0;
@@ -623,11 +623,11 @@ if (!empty($gedrec)) {
             }
             if ($sourceSOUR !== '' && $subLevel <= $sourceLevel) {
                 // Get rid of all saved Source data
-                add_simple_tag($sourceLevel . ' SOUR ' . $sourceSOUR);
-                add_simple_tag(($sourceLevel + 1) . ' PAGE ' . $sourcePAGE);
-                add_simple_tag(($sourceLevel + 2) . ' TEXT ' . $sourceTEXT);
-                add_simple_tag(($sourceLevel + 2) . ' DATE ' . $sourceDATE, '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
-                add_simple_tag(($sourceLevel + 1) . ' QUAY ' . $sourceQUAY);
+                FunctionsEdit::i()->add_simple_tag($sourceLevel . ' SOUR ' . $sourceSOUR);
+                FunctionsEdit::i()->add_simple_tag(($sourceLevel + 1) . ' PAGE ' . $sourcePAGE);
+                FunctionsEdit::i()->add_simple_tag(($sourceLevel + 2) . ' TEXT ' . $sourceTEXT);
+                FunctionsEdit::i()->add_simple_tag(($sourceLevel + 2) . ' DATE ' . $sourceDATE, '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
+                FunctionsEdit::i()->add_simple_tag(($sourceLevel + 1) . ' QUAY ' . $sourceQUAY);
                 $sourceSOUR = '';
             }
 
@@ -664,18 +664,18 @@ if (!empty($gedrec)) {
 
             // Output anything that isn’t part of a source reference
             if (!empty($fact) && $fact !== 'CONC' && $fact !== 'CONT' && $fact !== 'DATA') {
-                add_simple_tag($subLevel . ' ' . $fact . ' ' . $event);
+                FunctionsEdit::i()->add_simple_tag($subLevel . ' ' . $fact . ' ' . $event);
             }
         }
     }
 
     if ($sourceSOUR !== '') {
         // Get rid of all saved Source data
-        add_simple_tag($sourceLevel . ' SOUR ' . $sourceSOUR);
-        add_simple_tag(($sourceLevel + 1) . ' PAGE ' . $sourcePAGE);
-        add_simple_tag(($sourceLevel + 2) . ' TEXT ' . $sourceTEXT);
-        add_simple_tag(($sourceLevel + 2) . ' DATE ' . $sourceDATE, '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
-        add_simple_tag(($sourceLevel + 1) . ' QUAY ' . $sourceQUAY);
+        FunctionsEdit::i()->add_simple_tag($sourceLevel . ' SOUR ' . $sourceSOUR);
+        FunctionsEdit::i()->add_simple_tag(($sourceLevel + 1) . ' PAGE ' . $sourcePAGE);
+        FunctionsEdit::i()->add_simple_tag(($sourceLevel + 2) . ' TEXT ' . $sourceTEXT);
+        FunctionsEdit::i()->add_simple_tag(($sourceLevel + 2) . ' DATE ' . $sourceDATE, '', WT_Gedcom_Tag::getLabel('DATA:DATE'));
+        FunctionsEdit::i()->add_simple_tag(($sourceLevel + 1) . ' QUAY ' . $sourceQUAY);
     }
 }
 if (Auth::isAdmin()) {
@@ -690,10 +690,10 @@ if (Auth::isAdmin()) {
     echo '</td></tr>';
 }
 echo '</table>';
-print_add_layer('SOUR', 1);
-print_add_layer('NOTE', 1);
-print_add_layer('SHARED_NOTE', 1);
-print_add_layer('RESN', 1);
+FunctionsEdit::i()->print_add_layer('SOUR', 1);
+FunctionsEdit::i()->print_add_layer('NOTE', 1);
+FunctionsEdit::i()->print_add_layer('SHARED_NOTE', 1);
+FunctionsEdit::i()->print_add_layer('RESN', 1);
 ?>
 <p id="save-cancel">
     <input type="submit" class="save" value="<?php echo I18N::translate('save'); ?>">

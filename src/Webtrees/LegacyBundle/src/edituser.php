@@ -248,7 +248,7 @@ $default_individual   = Individual::getInstance(WT_USER_ROOT_ID);
                 </label>
             </div>
             <div class="value">
-                <?php echo edit_field_language('form_language', Auth::user()
+                <?php echo FunctionsEdit::i()->edit_field_language('form_language', Auth::user()
                                                                     ->getPreference('language')); ?>
             </div>
             <div class="label">
@@ -298,7 +298,7 @@ $default_individual   = Individual::getInstance(WT_USER_ROOT_ID);
                 </label>
             </div>
             <div class="value">
-                <?php echo edit_field_contact('form_contact_method', Auth::user()
+                <?php echo FunctionsEdit::i()->edit_field_contact('form_contact_method', Auth::user()
                                                                          ->getPreference('contactmethod')); ?>
                 <p class="small text-muted">
                     <?php echo I18N::translate('Site members can send each other messages.  You can choose to how these messages are sent to you, or choose not receive them at all.'); ?>
@@ -310,7 +310,7 @@ $default_individual   = Individual::getInstance(WT_USER_ROOT_ID);
                 </label>
             </div>
             <div class="value">
-                <?php echo checkbox('form_visible_online', Auth::user()
+                <?php echo FunctionsEdit::i()->checkbox('form_visible_online', Auth::user()
                                                                ->getPreference('visibleonline')); ?>
                 <p class="small text-muted">
                     <?php echo I18N::translate('This checkbox controls your visibility to other users while you’re online.  It also controls your ability to see other online users who are configured to be visible.<br><br>When this box is unchecked, you will be completely invisible to others, and you will also not be able to see other online users.  When this box is checked, exactly the opposite is true.  You will be visible to others, and you will also be able to see others who are configured to be visible.'); ?>

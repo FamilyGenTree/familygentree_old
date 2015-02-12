@@ -75,7 +75,7 @@ $medialist = WT_Query_Media::mediaList(
                     <?php echo I18N::translate('Folder'); ?>
                 </td>
                 <td class="optionbox wrap">
-                    <?php echo select_edit_control('folder', $folders, null, $folder); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('folder', $folders, null, $folder); ?>
                 </td>
                 <?php
                 if (WT_USER_CAN_EDIT || WT_USER_CAN_ACCEPT) {

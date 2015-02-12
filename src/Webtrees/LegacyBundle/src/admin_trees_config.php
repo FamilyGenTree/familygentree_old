@@ -505,7 +505,7 @@ $controller
                 </div>
             </div>
             <div class="col-sm-8">
-                <?php echo select_edit_control('REQUIRE_AUTHENTICATION', array(
+                <?php echo FunctionsEdit::i()->select_edit_control('REQUIRE_AUTHENTICATION', array(
                     '0' => I18N::translate('Show to visitors'),
                     '1' => I18N::translate('Show to members')
                 ), null, Globals::i()->WT_TREE->getPreference('REQUIRE_AUTHENTICATION'), 'class="form-control"'); ?>
@@ -536,7 +536,7 @@ $controller
                 </div>
             </div>
             <div class="col-sm-8">
-                <?php echo select_edit_control('SHOW_DEAD_PEOPLE', array_slice($privacy, 0, 2, true), null, Globals::i()->WT_TREE->getPreference('SHOW_DEAD_PEOPLE'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SHOW_DEAD_PEOPLE', array_slice($privacy, 0, 2, true), null, Globals::i()->WT_TREE->getPreference('SHOW_DEAD_PEOPLE'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Show dead individuals” configuration setting */
                     I18N::translate('Set the privacy access level for all dead individuals.'); ?>
@@ -582,7 +582,7 @@ $controller
                 </div>
             </div>
             <div class="col-sm-8">
-                <?php echo select_edit_control('HIDE_LIVE_PEOPLE', array(
+                <?php echo FunctionsEdit::i()->select_edit_control('HIDE_LIVE_PEOPLE', array(
                     '0' => I18N::translate('Show to visitors'),
                     '1' => I18N::translate('Show to members')
                 ), null, Globals::i()->WT_TREE->getPreference('HIDE_LIVE_PEOPLE'), 'class="form-control"'); ?>
@@ -634,7 +634,7 @@ $controller
                 </div>
             </div>
             <div class="col-sm-8">
-                <?php echo select_edit_control('SHOW_LIVING_NAMES', array_slice($privacy, 0, 3, true), null, Globals::i()->WT_TREE->getPreference('SHOW_LIVING_NAMES'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SHOW_LIVING_NAMES', array_slice($privacy, 0, 3, true), null, Globals::i()->WT_TREE->getPreference('SHOW_LIVING_NAMES'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Show names of private individuals” configuration setting */
                     I18N::translate('This option will show the names (but no other details) of private individuals.  Individuals are private if they are still alive or if a privacy restriction has been added to their individual record.  To hide a specific name, add a privacy restriction to that name record.'); ?>
@@ -656,7 +656,7 @@ $controller
                 </div>
             </div>
             <div class="col-sm-8">
-                <?php echo select_edit_control('SHOW_PRIVATE_RELATIONSHIPS', array(
+                <?php echo FunctionsEdit::i()->select_edit_control('SHOW_PRIVATE_RELATIONSHIPS', array(
                     '0' => I18N::translate('Show to visitors'),
                     '1' => I18N::translate('Show to members')
                 ), null, Globals::i()->WT_TREE->getPreference('SHOW_PRIVATE_RELATIONSHIPS'), 'class="form-control"'); ?>
@@ -674,10 +674,10 @@ $controller
                     <input data-autocomplete-type="IFSRO" id="xref" maxlength="20" name="xref[]" type="text">
                 </td>
                 <td>
-                    <?php echo select_edit_control('tag_type[]', $all_tags, '', null, null); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('tag_type[]', $all_tags, '', null, null); ?>
                 </td>
                 <td>
-                    <?php echo select_edit_control('resn[]', $PRIVACY_CONSTANTS, null, 'privacy', null); ?>
+                    <?php echo FunctionsEdit::i()->select_edit_control('resn[]', $PRIVACY_CONSTANTS, null, 'privacy', null); ?>
                 </td>
                 <td>
                     &nbsp;
@@ -811,7 +811,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('LANGUAGE', I18N::installed_languages(), null, Globals::i()->WT_TREE->getPreference('LANGUAGE'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('LANGUAGE', I18N::installed_languages(), null, Globals::i()->WT_TREE->getPreference('LANGUAGE'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Language” configuration setting */
                     I18N::translate('If a visitor to the website has not specified a preferred language in their browser configuration, or they have specified an unsupported language, then this language will be used.  Typically, this setting applies to search engines.'); ?>
@@ -873,10 +873,10 @@ $controller
             <div class="col-sm-9">
                 <div class=row">
                     <div class="col-sm-6" style="padding-left: 0;">
-                        <?php echo select_edit_control('CALENDAR_FORMAT0', $calendars, null, $CALENDAR_FORMATS[0], 'class="form-control"'); ?>
+                        <?php echo FunctionsEdit::i()->select_edit_control('CALENDAR_FORMAT0', $calendars, null, $CALENDAR_FORMATS[0], 'class="form-control"'); ?>
                     </div>
                     <div class="col-sm-6" style="padding-right: 0;">
-                        <?php echo select_edit_control('CALENDAR_FORMAT1', $calendars, null, $CALENDAR_FORMATS[1], 'class="form-control"'); ?>
+                        <?php echo FunctionsEdit::i()->select_edit_control('CALENDAR_FORMAT1', $calendars, null, $CALENDAR_FORMATS[1], 'class="form-control"'); ?>
                     </div>
                 </div>
                 <p class="small text-muted">
@@ -903,7 +903,7 @@ $controller
                 I18N::translate('Use RIN number instead of GEDCOM ID'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('USE_RIN', $no_yes, Globals::i()->WT_TREE->getPreference('USE_RIN'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('USE_RIN', $no_yes, Globals::i()->WT_TREE->getPreference('USE_RIN'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Use RIN number instead of GEDCOM ID” configuration setting */
                     I18N::translate('Set to <b>Yes</b> to use the RIN number instead of the GEDCOM ID when asked for individual IDs in configuration files, user settings, and charts.  This is useful for genealogy programs that do not consistently export GEDCOMs with the same ID assigned to each individual but always use the same RIN.'); ?>
@@ -918,7 +918,7 @@ $controller
                 I18N::translate('Automatically create globally unique IDs'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('GENERATE_UIDS', $no_yes, Globals::i()->WT_TREE->getPreference('GENERATE_UIDS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('GENERATE_UIDS', $no_yes, Globals::i()->WT_TREE->getPreference('GENERATE_UIDS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Automatically create globally unique IDs” configuration setting */
                     I18N::translate('<b>GUID</b> in this context is an acronym for “Globally Unique ID”.<br><br>GUIDs are intended to help identify each individual in a manner that is repeatable, so that central organizations such as the Family History Center of the LDS church in Salt Lake City, or even compatible programs running on your own server, can determine whether they are dealing with the same individual no matter where the GEDCOM file originates.  The goal of the Family History Center is to have a central repository of genealogical data and expose it through web services.  This will enable any program to access the data and update their data within it.<br><br>If you do not intend to share this GEDCOM file with anyone else, you do not need to let webtrees create these GUIDs; however, doing so will do no harm other than increasing the size of your GEDCOM file.'); ?>
@@ -933,7 +933,7 @@ $controller
                 I18N::translate('Add spaces where notes were wrapped'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('WORD_WRAPPED_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('WORD_WRAPPED_NOTES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('WORD_WRAPPED_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('WORD_WRAPPED_NOTES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Add spaces where notes were wrapped” configuration setting */
                     I18N::translate('Some genealogy programs wrap notes at word boundaries while others wrap notes anywhere.  This can cause webtrees to run words together.  Setting this to <b>Yes</b> will add a space between words where they are wrapped in the original GEDCOM during the import process.  If you have already imported the file you will need to re-import it.'); ?>
@@ -1199,7 +1199,7 @@ $controller
                 I18N::translate('Theme dropdown selector for theme changes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('ALLOW_THEME_DROPDOWN', $hide_show, Globals::i()->WT_TREE->getPreference('ALLOW_THEME_DROPDOWN'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('ALLOW_THEME_DROPDOWN', $hide_show, Globals::i()->WT_TREE->getPreference('ALLOW_THEME_DROPDOWN'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Theme dropdown selector for theme changes” configuration setting */
                     I18N::translate('Gives users the option of selecting their own theme from a menu.<br><br>Even with this option set, the theme currently in effect may not provide for such a menu.  To be effective, this option requires the <b>Allow users to select their own theme</b> option to be set as well.'); ?>
@@ -1215,7 +1215,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('THEME_DIR', Functions::i()->get_theme_names(), I18N::translate('<default theme>'), Globals::i()->WT_TREE->getPreference('THEME_DIR'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('THEME_DIR', Functions::i()->get_theme_names(), I18N::translate('<default theme>'), Globals::i()->WT_TREE->getPreference('THEME_DIR'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Default theme” configuration setting */
                     I18N::translate('You can change the appearance of webtrees using “themes”.  Each theme has a different style, layout, color scheme, etc.'); ?>
@@ -1304,7 +1304,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('MEDIA_UPLOAD', array(
+                <?php echo FunctionsEdit::i()->select_edit_control('MEDIA_UPLOAD', array(
                     WT_PRIV_USER => I18N::translate('Show to members'),
                     WT_PRIV_NONE => I18N::translate('Show to managers'),
                     WT_PRIV_HIDE => I18N::translate('Hide from everyone')
@@ -1323,7 +1323,7 @@ $controller
                 I18N::translate('Show download link in media viewer'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_MEDIA_DOWNLOAD', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_MEDIA_DOWNLOAD'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_MEDIA_DOWNLOAD', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_MEDIA_DOWNLOAD'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Show download link in media viewer” configuration setting */
                     I18N::translate('The Media Viewer can show a link which, when clicked, will download the media file to the local PC.<br><br>You may want to hide the download link for security reasons.'); ?>
@@ -1370,7 +1370,7 @@ $controller
                 I18N::translate('Use silhouettes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('USE_SILHOUETTE', $no_yes, Globals::i()->WT_TREE->getPreference('USE_SILHOUETTE'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('USE_SILHOUETTE', $no_yes, Globals::i()->WT_TREE->getPreference('USE_SILHOUETTE'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Use silhouettes” configuration setting */
                     I18N::translate('Use silhouette images when no highlighted image for that individual has been specified.  The images used are specific to the gender of the individual in question.'); ?>
@@ -1384,7 +1384,7 @@ $controller
                 <?php echo I18N::translate('Show highlight images in individual boxes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_HIGHLIGHT_IMAGES', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_HIGHLIGHT_IMAGES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_HIGHLIGHT_IMAGES', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_HIGHLIGHT_IMAGES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -1399,7 +1399,7 @@ $controller
                 I18N::translate('Add watermarks to thumbnails?'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('WATERMARK_THUMB', $no_yes, Globals::i()->WT_TREE->getPreference('WATERMARK_THUMB'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('WATERMARK_THUMB', $no_yes, Globals::i()->WT_TREE->getPreference('WATERMARK_THUMB'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Add watermarks to thumbnails” configuration setting */
                     I18N::translate('A watermark is text that is added to an image, to discourage others from copying it without permission.'); ?>
@@ -1414,7 +1414,7 @@ $controller
                 I18N::translate('Store watermarked full size images on server?'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SAVE_WATERMARK_IMAGE', $no_yes, Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_IMAGE'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SAVE_WATERMARK_IMAGE', $no_yes, Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_IMAGE'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Store watermarked full size images on server?” configuration setting */
                     I18N::translate('Watermarks can be slow to generate for large images.  Busy websites may prefer to generate them once and store the watermarked image on the server.'); ?>
@@ -1429,7 +1429,7 @@ $controller
                 I18N::translate('Store watermarked thumbnails on server?'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SAVE_WATERMARK_THUMB', $no_yes, Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_THUMB'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SAVE_WATERMARK_THUMB', $no_yes, Globals::i()->WT_TREE->getPreference('SAVE_WATERMARK_THUMB'), 'class="radio-inline"'); ?>
             </div>
         </fieldset>
 
@@ -1440,7 +1440,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SHOW_NO_WATERMARK', $privacy, null, Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SHOW_NO_WATERMARK', $privacy, null, Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Images without watermarks” configuration setting */
                     I18N::translate('Watermarks are optional and normally shown just to visitors.'); ?>
@@ -1534,7 +1534,7 @@ $controller
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SURNAME_LIST_STYLE', $surname_list_styles, null, Globals::i()->WT_TREE->getPreference('SURNAME_LIST_STYLE'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SURNAME_LIST_STYLE', $surname_list_styles, null, Globals::i()->WT_TREE->getPreference('SURNAME_LIST_STYLE'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -1572,7 +1572,7 @@ $controller
                 I18N::translate('Estimated dates for birth and death'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_EST_LIST_DATES', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_EST_LIST_DATES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_EST_LIST_DATES', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_EST_LIST_DATES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Estimated dates for birth and death” configuration setting */
                     I18N::translate('This option controls whether or not to show estimated dates for birth and death instead of leaving blanks on individual lists and charts for individuals whose dates are not known.'); ?>
@@ -1586,7 +1586,7 @@ $controller
                 <?php echo I18N::translate('The date and time of the last update'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_LAST_CHANGE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_LAST_CHANGE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_LAST_CHANGE'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -1601,7 +1601,7 @@ $controller
                 I18N::translate('Default pedigree chart layout'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('PEDIGREE_LAYOUT', $layouts, Globals::i()->WT_TREE->getPreference('PEDIGREE_LAYOUT'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('PEDIGREE_LAYOUT', $layouts, Globals::i()->WT_TREE->getPreference('PEDIGREE_LAYOUT'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -1689,7 +1689,7 @@ $controller
                 I18N::translate('Automatically expand list of events of close relatives'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('EXPAND_RELATIVES_EVENTS', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_RELATIVES_EVENTS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('EXPAND_RELATIVES_EVENTS', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_RELATIVES_EVENTS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Automatically expand list of events of close relatives” configuration setting */
                     I18N::translate('This option controls whether or not to automatically expand the <i>Events of close relatives</i> list.'); ?>
@@ -1835,13 +1835,13 @@ $controller
                 <?php echo /* I18N: The placeholders are edit controls.  Show the [first/last] [1/2/3/4/5] parts of a place name */
                 I18N::translate(
                     'Show the %1$s %2$s parts of a place name.',
-                    select_edit_control('SHOW_PEDIGREE_PLACES_SUFFIX',
+                    FunctionsEdit::i()->select_edit_control('SHOW_PEDIGREE_PLACES_SUFFIX',
                                         array(
                                             false => I18N::translate_c('Show the [first/last] [N] parts of a place name.', 'first'),
                                             true  => I18N::translate_c('Show the [first/last] [N] parts of a place name.', 'last')
                                         ), null, Globals::i()->WT_TREE->getPreference('SHOW_PEDIGREE_PLACES_SUFFIX')
                     ),
-                    select_edit_control('SHOW_PEDIGREE_PLACES', $one_to_nine, null, Globals::i()->WT_TREE->getPreference('SHOW_PEDIGREE_PLACES'))
+                    FunctionsEdit::i()->select_edit_control('SHOW_PEDIGREE_PLACES', $one_to_nine, null, Globals::i()->WT_TREE->getPreference('SHOW_PEDIGREE_PLACES'))
                 ); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Abbreviate place names” configuration setting */
@@ -1859,7 +1859,7 @@ $controller
                 I18N::translate('Format text and notes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('FORMAT_TEXT', $formats, Globals::i()->WT_TREE->getPreference('FORMAT_TEXT'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('FORMAT_TEXT', $formats, Globals::i()->WT_TREE->getPreference('FORMAT_TEXT'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Format text and notes” configuration setting */
                     I18N::translate('To ensure compatibility with other genealogy applications, notes, text, and transcripts should be recorded in simple, unformatted text.  However, formatting is often desirable to aid presentation, comprehension, etc.'); ?>
@@ -1883,7 +1883,7 @@ $controller
                 I18N::translate('Show chart details by default'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('PEDIGREE_FULL_DETAILS', $no_yes, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('PEDIGREE_FULL_DETAILS', $no_yes, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Show chart details by default” configuration setting */
                     I18N::translate('This is the initial setting for the “show details” option on the charts.'); ?>
@@ -1898,7 +1898,7 @@ $controller
                 I18N::translate('Gender icon on charts'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('PEDIGREE_SHOW_GENDER', $hide_show, Globals::i()->WT_TREE->getPreference('PEDIGREE_SHOW_GENDER'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('PEDIGREE_SHOW_GENDER', $hide_show, Globals::i()->WT_TREE->getPreference('PEDIGREE_SHOW_GENDER'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Gender icon on charts” configuration setting */
                     I18N::translate('This option controls whether or not to show the individual’s gender icon on charts.<br><br>Since the gender is also indicated by the color of the box, this option doesn’t conceal the gender.  The option simply removes some duplicate information from the box.'); ?>
@@ -1913,7 +1913,7 @@ $controller
                 I18N::translate('Age of parents next to child’s birthdate'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_PARENTS_AGE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_PARENTS_AGE'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_PARENTS_AGE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_PARENTS_AGE'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Age of parents next to child’s birthdate” configuration setting */
                     I18N::translate('This option controls whether or not to show age of father and mother next to child’s birthdate on charts.'); ?>
@@ -1928,7 +1928,7 @@ $controller
                 I18N::translate('LDS ordinance codes in chart boxes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_LDS_AT_GLANCE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_LDS_AT_GLANCE'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_LDS_AT_GLANCE', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_LDS_AT_GLANCE'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “LDS ordinance codes in chart boxes” configuration setting */
                     I18N::translate('Setting this option to <b>Yes</b> will show status codes for LDS ordinances in chart boxes.<ul><li><b>B</b> - Baptism</li><li><b>E</b> - Endowed</li><li><b>S</b> - Sealed to spouse</li><li><b>P</b> - Sealed to parents</li></ul>An individual who has all of the ordinances done will have <b>BESP</b> printed after their name.  Missing ordinances are indicated by <b>_</b> in place of the corresponding letter code.  For example, <b>BE__</b> indicates missing <b>S</b> and <b>P</b> ordinances.'); ?>
@@ -1979,7 +1979,7 @@ $controller
                 I18N::translate('Fact icons'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_FACT_ICONS', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_FACT_ICONS', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Fact icons” configuration setting */
                     I18N::translate('Set this to <b>Yes</b> to display icons near Fact names on the Personal Facts and Details page.  Fact icons will be displayed only if they exist in the <i>images/facts</i> folder of the current theme.'); ?>
@@ -1994,7 +1994,7 @@ $controller
                 I18N::translate('Automatically expand notes'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('EXPAND_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_NOTES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('EXPAND_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_NOTES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Automatically expand notes” configuration setting */
                     I18N::translate('This option controls whether or not to automatically display content of a <i>Note</i> record on the Individual page.'); ?>
@@ -2009,7 +2009,7 @@ $controller
                 I18N::translate('Automatically expand sources'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('EXPAND_SOURCES', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_SOURCES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('EXPAND_SOURCES', $no_yes, Globals::i()->WT_TREE->getPreference('EXPAND_SOURCES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Automatically expand sources” configuration setting */
                     I18N::translate('This option controls whether or not to automatically display content of a <i>Source</i> record on the Individual page.'); ?>
@@ -2024,7 +2024,7 @@ $controller
                 I18N::translate('Show all notes and source references on notes and sources tabs'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_LEVEL2_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_LEVEL2_NOTES', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_LEVEL2_NOTES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Show all notes and source references on notes and sources tabs” configuration setting */
                     I18N::translate('This option controls whether Notes and Source references that are attached to Facts should be shown on the Notes and Sources tabs of the Individual page.<br><br>Ordinarily, the Notes and Sources tabs show only Notes and Source references that are attached directly to the individual’s database record.  These are <i>level 1</i> Notes and Source references.<br><br>The <b>Yes</b> option causes these tabs to also show Notes and Source references that are part of the various Facts in the individual’s database record.  These are <i>level 2</i> Notes and Source references because the various Facts are at level 1.'); ?>
@@ -2039,7 +2039,7 @@ $controller
                 I18N::translate('Date differences'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_AGE_DIFF', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_AGE_DIFF'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_AGE_DIFF', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_AGE_DIFF'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Date differences” configuration setting */
                     I18N::translate('When this option is selected, webtrees will calculate the age differences between siblings, children, spouses, etc.'); ?>
@@ -2056,7 +2056,7 @@ $controller
                 I18N::translate('Allow users to see raw GEDCOM records'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_GEDCOM_RECORD', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_GEDCOM_RECORD'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_GEDCOM_RECORD', $no_yes, Globals::i()->WT_TREE->getPreference('SHOW_GEDCOM_RECORD'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Allow users to see raw GEDCOM records” configuration setting */
                     I18N::translate('Setting this to <b>Yes</b> will place links on individuals, sources, and families to let users bring up another window containing the raw data taken right out of the GEDCOM file.'); ?>
@@ -2071,7 +2071,7 @@ $controller
                 I18N::translate('GEDCOM errors'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('HIDE_GEDCOM_ERRORS', $hide_show, Globals::i()->WT_TREE->getPreference('HIDE_GEDCOM_ERRORS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('HIDE_GEDCOM_ERRORS', $hide_show, Globals::i()->WT_TREE->getPreference('HIDE_GEDCOM_ERRORS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “GEDCOM errors” configuration setting */
                     I18N::translate('Many genealogy programs create GEDCOM files with custom tags, and webtrees understands most of them.  When unrecognized tags are found, this option lets you choose whether to ignore them or display a warning message.'); ?>
@@ -2086,7 +2086,7 @@ $controller
                 I18N::translate('Hit counters'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_COUNTER', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_COUNTER'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_COUNTER', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_COUNTER'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Hit counters” configuration setting */
                     I18N::translate('Show hit counters on Portal and Individual pages.'); ?>
@@ -2101,7 +2101,7 @@ $controller
                 I18N::translate('Execution statistics'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SHOW_STATS', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_STATS'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SHOW_STATS', $hide_show, Globals::i()->WT_TREE->getPreference('SHOW_STATS'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Execution statistics” configuration setting */
                     I18N::translate('Show runtime statistics and database queries at the bottom of every page.'); ?>
@@ -2657,7 +2657,7 @@ $controller
                 <?php echo I18N::translate('Surname tradition'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('SURNAME_TRADITION', $surname_traditions, Globals::i()->WT_TREE->getPreference('SURNAME_TRADITION'), 'class="radio" style="padding-left:20px;font-weight:normal;"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('SURNAME_TRADITION', $surname_traditions, Globals::i()->WT_TREE->getPreference('SURNAME_TRADITION'), 'class="radio" style="padding-left:20px;font-weight:normal;"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Surname tradition” configuration setting */
                     I18N::translate('When you add a new family member, a default surname can be provided.  This surname will depend on the local tradition.'); ?>
@@ -2672,7 +2672,7 @@ $controller
                 I18N::translate('Use full source citations'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('FULL_SOURCES', $no_yes, Globals::i()->WT_TREE->getPreference('FULL_SOURCES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('FULL_SOURCES', $no_yes, Globals::i()->WT_TREE->getPreference('FULL_SOURCES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Use full source citations” configuration setting */
                     I18N::translate('Source citations can include fields to record the quality of the data (primary, secondary, etc.) and the date the event was recorded in the source.  If you don’t use these fields, you can disable them when creating new source citations.'); ?>
@@ -2687,7 +2687,7 @@ $controller
                 I18N::translate('Source type'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('PREFER_LEVEL2_SOURCES', $source_types, Globals::i()->WT_TREE->getPreference('PREFER_LEVEL2_SOURCES'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('PREFER_LEVEL2_SOURCES', $source_types, Globals::i()->WT_TREE->getPreference('PREFER_LEVEL2_SOURCES'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Source type” configuration setting */
                     I18N::translate('When adding new close relatives, you can add source citations to the records (e.g. INDI, FAM) or the facts (BIRT, MARR, DEAT).  This option controls which checkboxes are ticked by default.'); ?>
@@ -2726,7 +2726,7 @@ $controller
                 I18N::translate('Do not update the “last change” record'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo radio_buttons('NO_UPDATE_CHAN', $no_yes, Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN'), 'class="radio-inline"'); ?>
+                <?php echo FunctionsEdit::i()->radio_buttons('NO_UPDATE_CHAN', $no_yes, Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN'), 'class="radio-inline"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Do not update the ‘last change’ record” configuration setting */
                     I18N::translate('Administrators sometimes need to clean up and correct the data submitted by users.  For example, they might need to correct the PLAC location to include the country.  When administrators make such corrections, information about the original change is normally replaced.  This may not be desirable.<br><br>When this option is selected, webtrees will retain the original change information instead of replacing it with that of the current session.  With this option selected, administrators also have the ability to modify or delete the information associated with the original CHAN tag.'); ?>

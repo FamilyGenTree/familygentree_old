@@ -80,7 +80,7 @@ $controller
                     <?php echo I18N::translate('Generations'); ?>
                 </td>
                 <td class="optionbox">
-                    <?php echo edit_field_integers('generations', $controller->generations, 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS')); ?>
+                    <?php echo FunctionsEdit::i()->edit_field_integers('generations', $controller->generations, 2, Globals::i()->WT_TREE->getPreference('MAX_DESCENDANCY_GENERATIONS')); ?>
                 </td>
                 <td class="descriptionbox">
                     <?php echo I18N::translate('Show details'); ?>

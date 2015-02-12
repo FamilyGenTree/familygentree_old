@@ -262,7 +262,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                 echo '</td>';
                 $languages = explode(',', FunctionsDbPhp::i()->get_block_setting($block_id, 'languages'));
                 echo '<td class="optionbox">';
-                echo edit_language_checkboxes('lang', $languages);
+                echo FunctionsEdit::i()->edit_language_checkboxes('lang', $languages);
                 echo '</td></tr></table>';
                 echo '<p><input type="submit" value="', I18N::translate('save'), '" tabindex="5">';
                 echo '</p>';
@@ -355,7 +355,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
             </label>
             <input type="hidden" name="mod" value="<?php echo $this->getName(); ?>">
             <input type="hidden" name="mod_action" value="admin_config">
-            <?php echo select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM, 'class="form-control"'); ?>
+            <?php echo FunctionsEdit::i()->select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM, 'class="form-control"'); ?>
             <input type="submit" class="btn btn-primary" value="<?php echo I18N::translate('show'); ?>">
         </form>
 

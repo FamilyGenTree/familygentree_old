@@ -124,7 +124,7 @@ $controller
                                     <?php echo $tree->getTitleHtml(); ?>
                                 </td>
                                 <td>
-                                    <?php echo edit_field_access_level('access-' . $module->getName() . '-' . $tree->getTreeId(), $module->getAccessLevel($tree, 'tab')); ?>
+                                    <?php echo FunctionsEdit::i()->edit_field_access_level('access-' . $module->getName() . '-' . $tree->getTreeId(), $module->getAccessLevel($tree, 'tab')); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

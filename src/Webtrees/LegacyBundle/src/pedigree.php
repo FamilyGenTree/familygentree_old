@@ -75,10 +75,10 @@ $controller
                     <?php echo print_findindi_link('rootid'); ?>
                 </td>
                 <td class="optionbox center">
-                    <?php echo edit_field_integers('PEDIGREE_GENERATIONS', $controller->PEDIGREE_GENERATIONS, 3, $MAX_PEDIGREE_GENERATIONS); ?>
+                    <?php echo FunctionsEdit::i()->edit_field_integers('PEDIGREE_GENERATIONS', $controller->PEDIGREE_GENERATIONS, 3, $MAX_PEDIGREE_GENERATIONS); ?>
                 </td>
                 <td class="optionbox center">
-                    <?php echo select_edit_control('talloffset', array(
+                    <?php echo FunctionsEdit::i()->select_edit_control('talloffset', array(
                         0 => I18N::translate('Portrait'),
                         1 => I18N::translate('Landscape'),
                         2 => I18N::translate('Oldest at top'),

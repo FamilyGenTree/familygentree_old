@@ -337,7 +337,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         <tr>
                             <th><?php echo /* I18N: http://en.wikipedia.org/wiki/Google_street_view */
                                 I18N::translate('Google Street View™'); ?></th>
-                            <td><?php echo radio_buttons('NEW_GM_USE_STREETVIEW', array(
+                            <td><?php echo FunctionsEdit::i()->radio_buttons('NEW_GM_USE_STREETVIEW', array(
                                     false => I18N::translate('hide'),
                                     true  => I18N::translate('show')
                                 ), $this->getSetting('GM_USE_STREETVIEW')); ?></td>
@@ -519,7 +519,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                     <table class="gm_edit_config">
                         <tr>
                             <th><?php echo I18N::translate('Use Google Maps™ for the place hierarchy'); ?></th>
-                            <td><?php echo edit_field_yes_no('NEW_GM_PLACE_HIERARCHY', $this->getSetting('GM_PLACE_HIERARCHY')); ?></td>
+                            <td><?php echo FunctionsEdit::i()->edit_field_yes_no('NEW_GM_PLACE_HIERARCHY', $this->getSetting('GM_PLACE_HIERARCHY')); ?></td>
                         </tr>
                         <tr>
                             <th><?php echo I18N::translate('Size of map (in pixels)'); ?></th>
@@ -551,7 +551,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                 <?php echo I18N::translate('Display short placenames'), help_link('GM_DISP_SHORT_PLACE', 'googlemap'); ?>
                             </th>
                             <td>
-                                <?php echo edit_field_yes_no('NEW_GM_DISP_SHORT_PLACE', $this->getSetting('GM_DISP_SHORT_PLACE')); ?>
+                                <?php echo FunctionsEdit::i()->edit_field_yes_no('NEW_GM_DISP_SHORT_PLACE', $this->getSetting('GM_DISP_SHORT_PLACE')); ?>
                                 <p class="small text-muted">
                                     <?php echo I18N::translate('Hide the flags that are configured in the googlemap module.  Usually these are for countries and states.  This serves as a visual cue that the markers around the flag are from the general area, and not the specific spot.'); ?>
                                 </p>
@@ -562,7 +562,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                 <?php echo I18N::translate('Display map coordinates'); ?>
                             </th>
                             <td>
-                                <?php echo edit_field_yes_no('NEW_GM_COORD', $this->getSetting('GM_COORD')); ?>
+                                <?php echo FunctionsEdit::i()->edit_field_yes_no('NEW_GM_COORD', $this->getSetting('GM_COORD')); ?>
                                 <p class="small text-muted">
                                     <?php echo I18N::translate('This options sets whether latitude and longitude are displayed on the pop-up window attached to map markers.'); ?>
                                 </p>
@@ -1701,7 +1701,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 				<input type="hidden" name="mod_action" value="admin_placecheck">
 				<div class="gm_check">
 					<label>', I18N::translate('Family tree'), '</label>';
-        echo select_edit_control('gedcom_id', Tree::getIdList(), null, $gedcom_id, ' onchange="this.form.submit();"');
+        echo FunctionsEdit::i()->select_edit_control('gedcom_id', Tree::getIdList(), null, $gedcom_id, ' onchange="this.form.submit();"');
         echo '<label>', I18N::translate('Country'), '</label>
 					<select name="country" onchange="this.form.submit();">
 						<option value="XYZ" selected>', /* I18N: first/default option in a drop-down listbox */
@@ -5228,7 +5228,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 				</td>
 				<td>
 					<form action="?" onsubmit="add_place_location(this.parent_id.options[this.parent_id.selectedIndex].value); return false;">
-						<?php echo select_edit_control('parent_id', $where_am_i, I18N::translate('Top level'), $parent); ?>
+						<?php echo FunctionsEdit::i()->select_edit_control('parent_id', $where_am_i, I18N::translate('Top level'), $parent); ?>
 						<input type="submit" value="<?php echo I18N::translate('Add'); ?>">
 					</form>
 				</td>
@@ -5242,7 +5242,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 						<input type="hidden" name="mod" value="googlemap">
 						<input type="hidden" name="mod_action" value="admin_places">
 						<input type="hidden" name="action" value="ImportGedcom">
-						<?php echo select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM); ?>
+						<?php echo FunctionsEdit::i()->select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM); ?>
 						<input type="submit" value="<?php echo I18N::translate('Import'); ?>">
 					</form>
 				</td>
@@ -5269,7 +5269,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 						<input type="hidden" name="mod" value="googlemap">
 						<input type="hidden" name="mod_action" value="admin_places">
 						<input type="hidden" name="action" value="ExportFile">
-						<?php echo select_edit_control('parent', $where_am_i, I18N::translate('All'), WT_GED_ID); ?>
+						<?php echo FunctionsEdit::i()->select_edit_control('parent', $where_am_i, I18N::translate('All'), WT_GED_ID); ?>
 						<input type="submit" value="<?php echo I18N::translate('Download'); ?>">
 					</form>
 				</td>

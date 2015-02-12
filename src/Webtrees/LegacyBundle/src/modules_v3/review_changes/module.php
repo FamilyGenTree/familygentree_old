@@ -182,7 +182,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Send out reminder emails?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('sendmail', $sendmail);
+        echo FunctionsEdit::i()->edit_field_yes_no('sendmail', $sendmail);
         echo '<br>';
         echo I18N::translate('Reminder email frequency (days)') . "&nbsp;<input type='text' name='days' value='" . $days . "' size='2'>";
         echo '</td></tr>';
@@ -191,7 +191,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('block', $block);
+        echo FunctionsEdit::i()->edit_field_yes_no('block', $block);
         echo '</td></tr>';
     }
 }

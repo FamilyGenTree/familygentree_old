@@ -391,7 +391,7 @@ class Tree
     }
 
     /**
-     * Create arguments to select_edit_control()
+     * Create arguments to FunctionsEdit::i()->select_edit_control()
      * Note - these will be escaped later
      *
      * @return string[]
@@ -407,7 +407,7 @@ class Tree
     }
 
     /**
-     * Create arguments to select_edit_control()
+     * Create arguments to FunctionsEdit::i()->select_edit_control()
      * Note - these will be escaped later
      *
      * @return string[]

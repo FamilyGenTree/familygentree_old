@@ -94,7 +94,7 @@ $controller
                                     <?php echo $tree->getTitleHtml(); ?>
                                 </td>
                                 <td>
-                                    <?php echo edit_field_access_level('access-' . $module->getName() . '-' . $tree->getTreeId(), $module->getAccessLevel($tree, 'report')); ?>
+                                    <?php echo FunctionsEdit::i()->edit_field_access_level('access-' . $module->getName() . '-' . $tree->getTreeId(), $module->getAccessLevel($tree, 'report')); ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -204,7 +204,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
         <tr>
             <td class="descriptionbox wrap width33"><?php echo I18N::translate('Chart type'); ?></td>
             <td class="optionbox">
-                <?php echo select_edit_control('type',
+                <?php echo FunctionsEdit::i()->select_edit_control('type',
                                                array(
                                                    'pedigree'    => I18N::translate('Pedigree'),
                                                    'descendants' => I18N::translate('Descendants'),
@@ -217,7 +217,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
         <tr>
             <td class="descriptionbox wrap width33"><?php echo I18N::translate('Show details'); ?></td>
             <td class="optionbox">
-                <?php echo edit_field_yes_no('details', $details); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('details', $details); ?>
             </td>
         </tr>
         <tr>

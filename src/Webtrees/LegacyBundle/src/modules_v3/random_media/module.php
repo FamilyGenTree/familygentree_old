@@ -254,7 +254,7 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show only individuals, events, or all?');
         echo '</td><td class="optionbox">';
-        echo select_edit_control('filter', array('indi'  => I18N::translate('Individuals'),
+        echo FunctionsEdit::i()->select_edit_control('filter', array('indi'  => I18N::translate('Individuals'),
                                                  'event' => I18N::translate('Facts and events'),
                                                  'all'   => I18N::translate('All')
         ), null, $filter, '');
@@ -414,13 +414,13 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show slide show controls?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('controls', $controls);
+        echo FunctionsEdit::i()->edit_field_yes_no('controls', $controls);
         echo '</td></tr>';
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Start slide show on page load?');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('start', $start);
+        echo FunctionsEdit::i()->edit_field_yes_no('start', $start);
         echo '</td></tr>';
     }
 }

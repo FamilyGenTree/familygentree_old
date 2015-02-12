@@ -173,11 +173,11 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             echo '</tr><tr>';
             echo '<td>';
             $languages = explode(',', FunctionsDbPhp::i()->get_block_setting($block_id, 'languages'));
-            echo edit_language_checkboxes('lang', $languages);
+            echo FunctionsEdit::i()->edit_language_checkboxes('lang', $languages);
             echo '</td><td>';
             echo '<input type="text" name="block_order" size="3" tabindex="3" value="', $block_order, '"></td>';
             echo '</td><td>';
-            echo select_edit_control('gedcom_id', Tree::getIdList(), I18N::translate('All'), $gedcom_id, 'tabindex="4"');
+            echo FunctionsEdit::i()->select_edit_control('gedcom_id', Tree::getIdList(), I18N::translate('All'), $gedcom_id, 'tabindex="4"');
             echo '</td></tr>';
             echo '</table>';
 
@@ -421,7 +421,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
         I18N::translate('Family tree'), ' ',
         '<input type="hidden" name="mod", value="', $this->getName(), '">',
         '<input type="hidden" name="mod_action" value="admin_config">',
-        select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM),
+        FunctionsEdit::i()->select_edit_control('ged', Tree::getNameList(), null, WT_GEDCOM),
         '<input type="submit" value="', I18N::translate('show'), '">',
         '</form></p>';
 

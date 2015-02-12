@@ -133,7 +133,7 @@ echo '<input type="hidden" name="lang" value="', WT_LOCALE, '">';
 if (!isset($_POST['lang'])) {
     echo
     '<p>', I18N::translate('Change language'), ' ',
-    edit_field_language('change_lang', WT_LOCALE, 'onchange="window.location=\'' . WT_SCRIPT_NAME . '?lang=\'+this.value;">'),
+    FunctionsEdit::i()->edit_field_language('change_lang', WT_LOCALE, 'onchange="window.location=\'' . WT_SCRIPT_NAME . '?lang=\'+this.value;">'),
     '</p>',
     '<h2>', I18N::translate('Checking server configuration'), '</h2>';
     $warnings = false;

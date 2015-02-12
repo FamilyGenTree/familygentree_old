@@ -180,7 +180,7 @@ class batch_update_WT_Module extends Module implements ModuleConfigInterface
             '<input type="hidden" name="data"   value="">' . // will be set by javascript for next update
             '<table id="batch_update"><tr>' .
             '<th>' . I18N::translate('Family tree') . '</th>' .
-            '<td>' . select_edit_control('ged', Tree::getNameList(), '', WT_GEDCOM, 'onchange="reset_reload();"') .
+            '<td>' . FunctionsEdit::i()->select_edit_control('ged', Tree::getNameList(), '', WT_GEDCOM, 'onchange="reset_reload();"') .
             '</td></tr><tr><th>' . I18N::translate('Batch update') . '</th><td><select name="plugin" onchange="reset_reload();">';
         if (!$this->plugin) {
             $html .= '<option value="" selected></option>';

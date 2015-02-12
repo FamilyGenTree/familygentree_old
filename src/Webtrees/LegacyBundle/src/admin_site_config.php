@@ -235,7 +235,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('THEME_DIR', Theme::themeNames(), null, Site::getPreference('THEME_DIR'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('THEME_DIR', Theme::themeNames(), null, Site::getPreference('THEME_DIR'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the "Default theme" site configuration setting */
                     I18N::translate('You can change the appearance of webtrees using “themes”.  Each theme has a different style, layout, color scheme, etc.'); ?>
@@ -254,7 +254,7 @@ $controller->pageHeader();
                 I18N::translate('Allow users to select their own theme'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('ALLOW_USER_THEMES', Site::getPreference('ALLOW_USER_THEMES')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('ALLOW_USER_THEMES', Site::getPreference('ALLOW_USER_THEMES')); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Allow users to select their own theme” site configuration setting */
                     I18N::translate('Gives users the option of selecting their own theme.'); ?>
@@ -269,7 +269,7 @@ $controller->pageHeader();
                 I18N::translate('Show list of family trees'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('ALLOW_CHANGE_GEDCOM', Site::getPreference('ALLOW_CHANGE_GEDCOM')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('ALLOW_CHANGE_GEDCOM', Site::getPreference('ALLOW_CHANGE_GEDCOM')); ?>
                 <p class="small text-muted">
                     <?php /* I18N: Help text for the “Show list of family trees” site configuration setting */
                     I18N::translate('For websites with more than one family tree, this option will show the list of family trees in the main menu, the search pages, etc.'); ?>
@@ -305,7 +305,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SERVER_URL', array(Config::get(Config::BASE_URL) => Config::get(Config::BASE_URL)), '', Site::getPreference('SERVER_URL'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SERVER_URL', array(Config::get(Config::BASE_URL) => Config::get(Config::BASE_URL)), '', Site::getPreference('SERVER_URL'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the "Website URL" site configuration setting */
                     I18N::translate('If your website can be reached using more than one URL, such as <b>http://www.example.com/webtrees/</b> and <b>http://webtrees.example.com/</b>, you can specify the preferred URL.  Requests for the other URLs will be redirected to the preferred one.'); ?>
@@ -325,7 +325,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SMTP_ACTIVE', $SMTP_ACTIVE_OPTIONS, null, Site::getPreference('SMTP_ACTIVE'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SMTP_ACTIVE', $SMTP_ACTIVE_OPTIONS, null, Site::getPreference('SMTP_ACTIVE'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Messages” site configuration setting */
                     I18N::translate('webtrees needs to send emails, such as password reminders and website notifications.  To do this, it can use this server’s built in PHP mail facility (which is not always available) or an external SMTP (mail-relay) service, for which you will need to provide the connection details.'); ?>
@@ -399,7 +399,7 @@ $controller->pageHeader();
                 I18N::translate('Use password'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('SMTP_AUTH', Site::getPreference('SMTP_AUTH')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('SMTP_AUTH', Site::getPreference('SMTP_AUTH')); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Use password” site configuration setting */
                     I18N::translate('Most SMTP servers require a password.'); ?>
@@ -450,7 +450,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SMTP_SSL', $SMTP_SSL_OPTIONS, null, Site::getPreference('SMTP_SSL'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('SMTP_SSL', $SMTP_SSL_OPTIONS, null, Site::getPreference('SMTP_SSL'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Secure connection” site configuration setting */
                     I18N::translate('Most servers do not use secure connections.'); ?>
@@ -514,7 +514,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('WELCOME_TEXT_AUTH_MODE', $WELCOME_TEXT_AUTH_MODE_OPTIONS, null, Site::getPreference('WELCOME_TEXT_AUTH_MODE'), 'class="form-control"'); ?>
+                <?php echo FunctionsEdit::i()->select_edit_control('WELCOME_TEXT_AUTH_MODE', $WELCOME_TEXT_AUTH_MODE_OPTIONS, null, Site::getPreference('WELCOME_TEXT_AUTH_MODE'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -546,7 +546,7 @@ $controller->pageHeader();
                 I18N::translate('Allow visitors to request account registration'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('USE_REGISTRATION_MODULE', Site::getPreference('USE_REGISTRATION_MODULE')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('USE_REGISTRATION_MODULE', Site::getPreference('USE_REGISTRATION_MODULE')); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the “Allow visitors to request account registration” site configuration setting */
                     I18N::translate('Gives visitors the option of registering themselves for an account on the website.<br><br>The visitor will receive an email message with a code to verify his application for an account.  After verification, an administrator will have to approve the registration before it becomes active.'); ?>
@@ -561,7 +561,7 @@ $controller->pageHeader();
                 I18N::translate('Require an administrator to approve new user registrations'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('REQUIRE_ADMIN_AUTH_REGISTRATION', Site::getPreference('REQUIRE_ADMIN_AUTH_REGISTRATION')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('REQUIRE_ADMIN_AUTH_REGISTRATION', Site::getPreference('REQUIRE_ADMIN_AUTH_REGISTRATION')); ?>
                 <p class="small text-muted">
                 </p>
             </div>
@@ -574,7 +574,7 @@ $controller->pageHeader();
                 I18N::translate('Show acceptable use agreement on “Request new user account” page'); ?>
             </legend>
             <div class="col-sm-9">
-                <?php echo edit_field_yes_no('SHOW_REGISTER_CAUTION', Site::getPreference('SHOW_REGISTER_CAUTION')); ?>
+                <?php echo FunctionsEdit::i()->edit_field_yes_no('SHOW_REGISTER_CAUTION', Site::getPreference('SHOW_REGISTER_CAUTION')); ?>
                 <p class="small text-muted">
                 </p>
             </div>

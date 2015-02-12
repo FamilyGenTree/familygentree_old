@@ -153,7 +153,7 @@ class top10_pageviews_WT_Module extends Module implements ModuleBlockInterface
         echo "<tr><td class=\"descriptionbox wrap width33\">";
         echo I18N::translate('Place counts before or after name?');
         echo "</td><td class=\"optionbox\">";
-        echo select_edit_control('count_placement', array(
+        echo FunctionsEdit::i()->select_edit_control('count_placement', array(
             'before' => I18N::translate('before'),
             'after'  => I18N::translate('after')
         ), null, $count_placement, '');
@@ -163,7 +163,7 @@ class top10_pageviews_WT_Module extends Module implements ModuleBlockInterface
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');
         echo '</td><td class="optionbox">';
-        echo edit_field_yes_no('block', $block);
+        echo FunctionsEdit::i()->edit_field_yes_no('block', $block);
         echo '</td></tr>';
     }
 }

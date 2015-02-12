@@ -696,7 +696,7 @@ $controller
 
                     <div dir="ltr">
                         <?php if (count($media_folders) > 1): ?>
-                            <?php echo Config::get(Config::DATA_DIRECTORY), select_edit_control('media_folder', $media_folders, null, $media_folder, 'onchange="this.form.submit();"'); ?>
+                            <?php echo Config::get(Config::DATA_DIRECTORY), FunctionsEdit::i()->select_edit_control('media_folder', $media_folders, null, $media_folder, 'onchange="this.form.submit();"'); ?>
                         <?php else: ?>
                             <?php echo Config::get(Config::DATA_DIRECTORY), Filter::escapeHtml($media_folder); ?>
                             <input type="hidden" name="media_folder"
@@ -705,7 +705,7 @@ $controller
                     </div>
 
                     <?php if (count($media_paths) > 1): ?>
-                        <?php echo select_edit_control('media_path', $media_paths, null, $media_path, 'onchange="this.form.submit();"'); ?>
+                        <?php echo FunctionsEdit::i()->select_edit_control('media_path', $media_paths, null, $media_path, 'onchange="this.form.submit();"'); ?>
                     <?php else: ?>
                         <?php echo Filter::escapeHtml($media_path); ?>
                         <input type="hidden" name="media_path" value="<?php echo Filter::escapeHtml($media_path); ?>">

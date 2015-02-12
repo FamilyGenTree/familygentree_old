@@ -168,7 +168,7 @@ $controller
         foreach ($modules as $module) {
             $status = $module_status[$module->getName()];
             echo
-            '<tr><td class="text-center">', two_state_checkbox('status-' . $module->getName(), $status === 'enabled'), '</td>',
+            '<tr><td class="text-center">', FunctionsEdit::i()->two_state_checkbox('status-' . $module->getName(), $status === 'enabled'), '</td>',
             '<td>';
             if ($module instanceof ModuleConfigInterface) {
                 echo '<a href="', $module->getConfigLink(), '">';
