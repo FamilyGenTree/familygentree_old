@@ -126,12 +126,12 @@ switch (Filter::post('action')) {
         $record = GedcomRecord::getInstance(Filter::post('xref', WT_REGEX_XREF));
         if ($record && WT_USER_CAN_EDIT && $record->canShow() && $record->canEdit()) {
             // Delete links to this record
-            foreach (fetch_all_links($record->getXref(), $record->getTree()
+            foreach (FunctionsDbPhp::i()->fetch_all_links($record->getXref(), $record->getTree()
                                                                 ->getTreeId()) as $xref) {
                 $linker     = GedcomRecord::getInstance($xref);
                 $old_gedcom = $linker->getGedcom();
                 $new_gedcom = remove_links($old_gedcom, $record->getXref());
-                // fetch_all_links() does not take account of pending changes.  The links (or even the
+                // FunctionsDbPhp::i()->fetch_all_links() does not take account of pending changes.  The links (or even the
                 // record itself) may have already been deleted.
                 if ($old_gedcom !== $new_gedcom) {
                     // If we have removed a link from a family to an individual, and it has only one member

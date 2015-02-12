@@ -5289,7 +5289,7 @@ class Stats
         } else {
             $sorting = 'alpha';
         }
-        $surname_list = get_common_surnames($threshold);
+        $surname_list = FunctionsDbPhp::i()->get_common_surnames($threshold);
         if (count($surname_list) == 0) {
             return '';
         }
@@ -5325,7 +5325,7 @@ class Stats
      */
     public function getCommonSurname()
     {
-        $surnames = array_keys(get_top_surnames($this->tree->getTreeId(), 1, 1));
+        $surnames = array_keys(FunctionsDbPhp::i()->get_top_surnames($this->tree->getTreeId(), 1, 1));
 
         return array_shift($surnames);
     }
@@ -5426,7 +5426,7 @@ class Stats
         }
         $sizes    = explode('x', $size);
         $tot_indi = $this->totalIndividualsQuery();
-        $surnames = get_common_surnames($threshold);
+        $surnames = FunctionsDbPhp::i()->get_common_surnames($threshold);
         if (count($surnames) <= 0) {
             return '';
         }
@@ -6358,7 +6358,7 @@ class Stats
         if ($page_name === null) {
             // index.php?ctype=gedcom
             $page_name      = 'index.php';
-            $page_parameter = 'gedcom:' . get_id_from_gedcom($page_parameter ? $page_parameter : WT_GEDCOM);
+            $page_parameter = 'gedcom:' . FunctionsDbPhp::i()->get_id_from_gedcom($page_parameter ? $page_parameter : WT_GEDCOM);
         } elseif ($page_name == 'index.php') {
             // index.php?ctype=user
             $user           = User::findByIdentifier($page_parameter);

@@ -67,11 +67,11 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
             $limit = 'nolimit';
             $flag  = '0';
         } else {
-            $flag = get_block_setting($block_id, 'flag', 0);
+            $flag = FunctionsDbPhp::i()->get_block_setting($block_id, 'flag', 0);
             if ($flag === '0') {
                 $limit = 'nolimit';
             } else {
-                $limit = get_block_setting($block_id, 'limit', 'nolimit');
+                $limit = FunctionsDbPhp::i()->get_block_setting($block_id, 'limit', 'nolimit');
             }
         }
         if ($cfg) {
@@ -172,12 +172,12 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'limit', Filter::post('limit'));
-            set_block_setting($block_id, 'flag', Filter::post('flag'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'limit', Filter::post('limit'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'flag', Filter::post('flag'));
         }
 
-        $limit = get_block_setting($block_id, 'limit', 'nolimit');
-        $flag  = get_block_setting($block_id, 'flag', 0);
+        $limit = FunctionsDbPhp::i()->get_block_setting($block_id, 'limit', 'nolimit');
+        $flag  = FunctionsDbPhp::i()->get_block_setting($block_id, 'flag', 0);
 
         echo
         '<tr><td class="descriptionbox wrap width33">',

@@ -46,10 +46,10 @@ class todo_WT_Module extends Module implements ModuleBlockInterface
 
         $controller = Application::i()->getActiveController();
 
-        $show_other      = get_block_setting($block_id, 'show_other', '1');
-        $show_unassigned = get_block_setting($block_id, 'show_unassigned', '1');
-        $show_future     = get_block_setting($block_id, 'show_future', '1');
-        $block           = get_block_setting($block_id, 'block', '1');
+        $show_other      = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_other', '1');
+        $show_unassigned = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_unassigned', '1');
+        $show_future     = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_future', '1');
+        $block           = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         if ($cfg) {
             foreach (array(
@@ -114,7 +114,7 @@ class todo_WT_Module extends Module implements ModuleBlockInterface
 
         $found  = false;
         $end_jd = $show_future ? 99999999 : WT_CLIENT_JD;
-        foreach (get_calendar_events(0, $end_jd, '_TODO', WT_GED_ID) as $fact) {
+        foreach (FunctionsDbPhp::i()->get_calendar_events(0, $end_jd, '_TODO', WT_GED_ID) as $fact) {
             $record    = $fact->getParent();
             $user_name = $fact->getAttribute('_WT_USER');
             if ($user_name === Auth::user()
@@ -180,16 +180,16 @@ class todo_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'show_other', Filter::postBool('show_other'));
-            set_block_setting($block_id, 'show_unassigned', Filter::postBool('show_unassigned'));
-            set_block_setting($block_id, 'show_future', Filter::postBool('show_future'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_other', Filter::postBool('show_other'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_unassigned', Filter::postBool('show_unassigned'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_future', Filter::postBool('show_future'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $show_other      = get_block_setting($block_id, 'show_other', '1');
-        $show_unassigned = get_block_setting($block_id, 'show_unassigned', '1');
-        $show_future     = get_block_setting($block_id, 'show_future', '1');
-        $block           = get_block_setting($block_id, 'block', '1');
+        $show_other      = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_other', '1');
+        $show_unassigned = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_unassigned', '1');
+        $show_future     = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_future', '1');
+        $block           = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         ?>
         <tr>

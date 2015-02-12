@@ -2731,9 +2731,9 @@ function listStartHandler($attrs)
                 }
             }
             if ($listname == "family") {
-                $list = search_fams_custom($sql_join, $sql_where, $sql_order_by);
+                $list = FunctionsDbPhp::i()->search_fams_custom($sql_join, $sql_where, $sql_order_by);
             } else {
-                $list = search_indis_custom($sql_join, $sql_where, $sql_order_by);
+                $list = FunctionsDbPhp::i()->search_indis_custom($sql_join, $sql_where, $sql_order_by);
             }
             // Clean up the SQL queries - they will not be used again
             unset($sql_join, $sql_where, $sql_order_by);

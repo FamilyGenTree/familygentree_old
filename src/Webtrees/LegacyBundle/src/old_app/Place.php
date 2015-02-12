@@ -110,7 +110,7 @@ class Place
             $url .= $n ? '&amp;' : '?';
             $url .= 'parent%5B%5D=' . rawurlencode($place);
         }
-        $url .= '&amp;ged=' . rawurlencode(get_gedcom_from_id($this->gedcom_id));
+        $url .= '&amp;ged=' . rawurlencode(FunctionsDbPhp::i()->get_gedcom_from_id($this->gedcom_id));
 
         return $url;
     }

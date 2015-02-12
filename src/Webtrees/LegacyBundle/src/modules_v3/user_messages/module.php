@@ -47,7 +47,7 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
                         ->execute(array($message_id));
             }
         }
-        $block = get_block_setting($block_id, 'block', '1');
+        $block = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
         if ($cfg) {
             foreach (array('block') as $name) {
                 if (array_key_exists($name, $cfg)) {
@@ -152,10 +152,10 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $block = get_block_setting($block_id, 'block', '1');
+        $block = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
         echo '<tr><td class="descriptionbox wrap width33">';
         echo /* I18N: label for a yes/no option */
         I18N::translate('Add a scrollbar when block contents grow');

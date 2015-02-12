@@ -41,9 +41,9 @@ class top10_givnnames_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $num       = get_block_setting($block_id, 'num', '10');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $block     = get_block_setting($block_id, 'block', '0');
+        $num       = FunctionsDbPhp::i()->get_block_setting($block_id, 'num', '10');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '0');
 
         if ($cfg) {
             foreach (array(
@@ -148,14 +148,14 @@ class top10_givnnames_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'num', Filter::postInteger('num', 1, 10000, 10));
-            set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'num', Filter::postInteger('num', 1, 10000, 10));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $num       = get_block_setting($block_id, 'num', '10');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $block     = get_block_setting($block_id, 'block', '0');
+        $num       = FunctionsDbPhp::i()->get_block_setting($block_id, 'num', '10');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '0');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Number of items to show');

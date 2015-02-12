@@ -1882,7 +1882,7 @@ abstract class BaseTheme
      */
     protected function pendingChangesExist()
     {
-        return exists_pending_change(Auth::user(), $this->tree);
+        return FunctionsDbPhp::i()->exists_pending_change(Auth::user(), $this->tree);
     }
 
     /**

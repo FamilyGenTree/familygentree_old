@@ -2,9 +2,9 @@
 
 namespace Webtrees\LegacyBundle\Controller;
 
-use Fgt\Config;
 use Fgt\UrlConstants;
 use Symfony\Component\HttpFoundation\Request;
+use Webtrees\LegacyBundle\Legacy\IndexPHP;
 
 class DefaultController extends AbstractController
 {
@@ -24,8 +24,9 @@ class DefaultController extends AbstractController
     public function indexPhpAction()
     {
         $this->setConfig();
-
-        require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
+        $class = new IndexPHP();
+        $class->run();
+        //require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
         return $this->render('WebtreesLegacyBundle:Default:index.html.twig', array('name' => 'index'));
     }
 

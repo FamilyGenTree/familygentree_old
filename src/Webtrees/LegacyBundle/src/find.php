@@ -493,7 +493,7 @@ if ($action == "filter") {
     // Output Individual
     if ($type == "indi") {
         echo '<div id="find-output">';
-        $myindilist = search_indis_names($filter_array, array(WT_GED_ID), 'AND');
+        $myindilist = FunctionsDbPhp::i()->search_indis_names($filter_array, array(WT_GED_ID), 'AND');
         if ($myindilist) {
             echo '<ul>';
             usort($myindilist, __NAMESPACE__ . '\GedcomRecord::compare');
@@ -514,8 +514,8 @@ if ($action == "filter") {
         // Get the famrecs with hits on names from the family table
         // Get the famrecs with hits in the gedcom record from the family table
         $myfamlist = array_unique(array_merge(
-                                      search_fams_names($filter_array, array(WT_GED_ID), 'AND'),
-                                      search_fams($filter_array, array(WT_GED_ID), 'AND')
+                                      FunctionsDbPhp::i()->search_fams_names($filter_array, array(WT_GED_ID), 'AND'),
+                                      FunctionsDbPhp::i()->search_fams($filter_array, array(WT_GED_ID), 'AND')
                                   ));
 
         if ($myfamlist) {
@@ -621,9 +621,9 @@ if ($action == "filter") {
     if ($type == "repo") {
         echo '<div id="find-output">';
         if ($filter) {
-            $repo_list = search_repos($filter_array, array(WT_GED_ID), 'AND');
+            $repo_list = FunctionsDbPhp::i()->search_repos($filter_array, array(WT_GED_ID), 'AND');
         } else {
-            $repo_list = get_repo_list(WT_GED_ID);
+            $repo_list = FunctionsDbPhp::i()->get_repo_list(WT_GED_ID);
         }
         if ($repo_list) {
             usort($repo_list, __NAMESPACE__ . '\GedcomRecord::compare');
@@ -643,9 +643,9 @@ if ($action == "filter") {
     if ($type == "note") {
         echo '<div id="find-output">';
         if ($filter) {
-            $mynotelist = search_notes($filter_array, array(WT_GED_ID), 'AND');
+            $mynotelist = FunctionsDbPhp::i()->search_notes($filter_array, array(WT_GED_ID), 'AND');
         } else {
-            $mynotelist = get_note_list(WT_GED_ID);
+            $mynotelist = FunctionsDbPhp::i()->get_note_list(WT_GED_ID);
         }
         if ($mynotelist) {
             usort($mynotelist, __NAMESPACE__ . '\GedcomRecord::compare');
@@ -665,9 +665,9 @@ if ($action == "filter") {
     if ($type == "source") {
         echo '<div id="find-output">';
         if ($filter) {
-            $mysourcelist = search_sources($filter_array, array(WT_GED_ID), 'AND');
+            $mysourcelist = FunctionsDbPhp::i()->search_sources($filter_array, array(WT_GED_ID), 'AND');
         } else {
-            $mysourcelist = get_source_list(WT_GED_ID);
+            $mysourcelist = FunctionsDbPhp::i()->get_source_list(WT_GED_ID);
         }
         if ($mysourcelist) {
             usort($mysourcelist, __NAMESPACE__ . '\GedcomRecord::compare');

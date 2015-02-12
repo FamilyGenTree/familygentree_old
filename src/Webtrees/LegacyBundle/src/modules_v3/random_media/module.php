@@ -40,9 +40,9 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $filter   = get_block_setting($block_id, 'filter', 'all');
-        $controls = get_block_setting($block_id, 'controls', '1');
-        $start    = get_block_setting($block_id, 'start', '0') || Filter::getBool('start');
+        $filter   = FunctionsDbPhp::i()->get_block_setting($block_id, 'filter', 'all');
+        $controls = FunctionsDbPhp::i()->get_block_setting($block_id, 'controls', '1');
+        $start    = FunctionsDbPhp::i()->get_block_setting($block_id, 'start', '0') || Filter::getBool('start');
 
         // We can apply the filters using SQL
         // Do not use "ORDER BY RAND()" - it is very slow on large tables.  Use PHP::array_rand() instead.
@@ -54,37 +54,37 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
         )
                              ->execute(array(
                                            WT_GED_ID,
-                                           get_block_setting($block_id, 'filter_avi', '0') ? 'avi' : null,
-                                           get_block_setting($block_id, 'filter_bmp', '1') ? 'bmp' : null,
-                                           get_block_setting($block_id, 'filter_gif', '1') ? 'gif' : null,
-                                           get_block_setting($block_id, 'filter_jpeg', '1') ? 'jpg' : null,
-                                           get_block_setting($block_id, 'filter_jpeg', '1') ? 'jpeg' : null,
-                                           get_block_setting($block_id, 'filter_mp3', '0') ? 'mp3' : null,
-                                           get_block_setting($block_id, 'filter_ole', '1') ? 'ole' : null,
-                                           get_block_setting($block_id, 'filter_pcx', '1') ? 'pcx' : null,
-                                           get_block_setting($block_id, 'filter_pdf', '0') ? 'pdf' : null,
-                                           get_block_setting($block_id, 'filter_png', '1') ? 'png' : null,
-                                           get_block_setting($block_id, 'filter_tiff', '1') ? 'tiff' : null,
-                                           get_block_setting($block_id, 'filter_wav', '0') ? 'wav' : null,
-                                           get_block_setting($block_id, 'filter_audio', '0') ? 'audio' : null,
-                                           get_block_setting($block_id, 'filter_book', '1') ? 'book' : null,
-                                           get_block_setting($block_id, 'filter_card', '1') ? 'card' : null,
-                                           get_block_setting($block_id, 'filter_certificate', '1') ? 'certificate'
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_avi', '0') ? 'avi' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_bmp', '1') ? 'bmp' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_gif', '1') ? 'gif' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_jpeg', '1') ? 'jpg' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_jpeg', '1') ? 'jpeg' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_mp3', '0') ? 'mp3' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_ole', '1') ? 'ole' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_pcx', '1') ? 'pcx' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_pdf', '0') ? 'pdf' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_png', '1') ? 'png' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_tiff', '1') ? 'tiff' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_wav', '0') ? 'wav' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_audio', '0') ? 'audio' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_book', '1') ? 'book' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_card', '1') ? 'card' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_certificate', '1') ? 'certificate'
                                                : null,
-                                           get_block_setting($block_id, 'filter_coat', '1') ? 'coat' : null,
-                                           get_block_setting($block_id, 'filter_document', '1') ? 'document' : null,
-                                           get_block_setting($block_id, 'filter_electronic', '1') ? 'electronic' : null,
-                                           get_block_setting($block_id, 'filter_fiche', '1') ? 'fiche' : null,
-                                           get_block_setting($block_id, 'filter_film', '1') ? 'film' : null,
-                                           get_block_setting($block_id, 'filter_magazine', '1') ? 'magazine' : null,
-                                           get_block_setting($block_id, 'filter_manuscript', '1') ? 'manuscript' : null,
-                                           get_block_setting($block_id, 'filter_map', '1') ? 'map' : null,
-                                           get_block_setting($block_id, 'filter_newspaper', '1') ? 'newspaper' : null,
-                                           get_block_setting($block_id, 'filter_other', '1') ? 'other' : null,
-                                           get_block_setting($block_id, 'filter_painting', '1') ? 'painting' : null,
-                                           get_block_setting($block_id, 'filter_photo', '1') ? 'photo' : null,
-                                           get_block_setting($block_id, 'filter_tombstone', '1') ? 'tombstone' : null,
-                                           get_block_setting($block_id, 'filter_video', '0') ? 'video' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_coat', '1') ? 'coat' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_document', '1') ? 'document' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_electronic', '1') ? 'electronic' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_fiche', '1') ? 'fiche' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_film', '1') ? 'film' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_magazine', '1') ? 'magazine' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_manuscript', '1') ? 'manuscript' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_map', '1') ? 'map' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_newspaper', '1') ? 'newspaper' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_other', '1') ? 'other' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_painting', '1') ? 'painting' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_photo', '1') ? 'photo' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_tombstone', '1') ? 'tombstone' : null,
+                                           FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_video', '0') ? 'video' : null,
                                        ))
                              ->fetchOneColumn();
 
@@ -213,43 +213,43 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'filter', Filter::post('filter', 'indi|event|all', 'all'));
-            set_block_setting($block_id, 'controls', Filter::postBool('controls'));
-            set_block_setting($block_id, 'start', Filter::postBool('start'));
-            set_block_setting($block_id, 'filter_avi', Filter::postBool('filter_avi'));
-            set_block_setting($block_id, 'filter_bmp', Filter::postBool('filter_bmp'));
-            set_block_setting($block_id, 'filter_gif', Filter::postBool('filter_gif'));
-            set_block_setting($block_id, 'filter_jpeg', Filter::postBool('filter_jpeg'));
-            set_block_setting($block_id, 'filter_mp3', Filter::postBool('filter_mp3'));
-            set_block_setting($block_id, 'filter_ole', Filter::postBool('filter_ole'));
-            set_block_setting($block_id, 'filter_pcx', Filter::postBool('filter_pcx'));
-            set_block_setting($block_id, 'filter_pdf', Filter::postBool('filter_pdf'));
-            set_block_setting($block_id, 'filter_png', Filter::postBool('filter_png'));
-            set_block_setting($block_id, 'filter_tiff', Filter::postBool('filter_tiff'));
-            set_block_setting($block_id, 'filter_wav', Filter::postBool('filter_wav'));
-            set_block_setting($block_id, 'filter_audio', Filter::postBool('filter_audio'));
-            set_block_setting($block_id, 'filter_book', Filter::postBool('filter_book'));
-            set_block_setting($block_id, 'filter_card', Filter::postBool('filter_card'));
-            set_block_setting($block_id, 'filter_certificate', Filter::postBool('filter_certificate'));
-            set_block_setting($block_id, 'filter_coat', Filter::postBool('filter_coat'));
-            set_block_setting($block_id, 'filter_document', Filter::postBool('filter_document'));
-            set_block_setting($block_id, 'filter_electronic', Filter::postBool('filter_electronic'));
-            set_block_setting($block_id, 'filter_fiche', Filter::postBool('filter_fiche'));
-            set_block_setting($block_id, 'filter_film', Filter::postBool('filter_film'));
-            set_block_setting($block_id, 'filter_magazine', Filter::postBool('filter_magazine'));
-            set_block_setting($block_id, 'filter_manuscript', Filter::postBool('filter_manuscript'));
-            set_block_setting($block_id, 'filter_map', Filter::postBool('filter_map'));
-            set_block_setting($block_id, 'filter_newspaper', Filter::postBool('filter_newspaper'));
-            set_block_setting($block_id, 'filter_other', Filter::postBool('filter_other'));
-            set_block_setting($block_id, 'filter_painting', Filter::postBool('filter_painting'));
-            set_block_setting($block_id, 'filter_photo', Filter::postBool('filter_photo'));
-            set_block_setting($block_id, 'filter_tombstone', Filter::postBool('filter_tombstone'));
-            set_block_setting($block_id, 'filter_video', Filter::postBool('filter_video'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter', Filter::post('filter', 'indi|event|all', 'all'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'controls', Filter::postBool('controls'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'start', Filter::postBool('start'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_avi', Filter::postBool('filter_avi'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_bmp', Filter::postBool('filter_bmp'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_gif', Filter::postBool('filter_gif'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_jpeg', Filter::postBool('filter_jpeg'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_mp3', Filter::postBool('filter_mp3'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_ole', Filter::postBool('filter_ole'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_pcx', Filter::postBool('filter_pcx'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_pdf', Filter::postBool('filter_pdf'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_png', Filter::postBool('filter_png'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_tiff', Filter::postBool('filter_tiff'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_wav', Filter::postBool('filter_wav'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_audio', Filter::postBool('filter_audio'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_book', Filter::postBool('filter_book'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_card', Filter::postBool('filter_card'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_certificate', Filter::postBool('filter_certificate'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_coat', Filter::postBool('filter_coat'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_document', Filter::postBool('filter_document'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_electronic', Filter::postBool('filter_electronic'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_fiche', Filter::postBool('filter_fiche'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_film', Filter::postBool('filter_film'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_magazine', Filter::postBool('filter_magazine'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_manuscript', Filter::postBool('filter_manuscript'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_map', Filter::postBool('filter_map'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_newspaper', Filter::postBool('filter_newspaper'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_other', Filter::postBool('filter_other'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_painting', Filter::postBool('filter_painting'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_photo', Filter::postBool('filter_photo'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_tombstone', Filter::postBool('filter_tombstone'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter_video', Filter::postBool('filter_video'));
         }
 
-        $filter   = get_block_setting($block_id, 'filter', 'all');
-        $controls = get_block_setting($block_id, 'controls', '1');
-        $start    = get_block_setting($block_id, 'start', '0') || Filter::getBool('start');
+        $filter   = FunctionsDbPhp::i()->get_block_setting($block_id, 'filter', 'all');
+        $controls = FunctionsDbPhp::i()->get_block_setting($block_id, 'controls', '1');
+        $start    = FunctionsDbPhp::i()->get_block_setting($block_id, 'start', '0') || Filter::getBool('start');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Show only individuals, events, or all?');
@@ -261,35 +261,35 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
         echo '</td></tr>';
 
         $filters = array(
-            'avi'         => get_block_setting($block_id, 'filter_avi', '0'),
-            'bmp'         => get_block_setting($block_id, 'filter_bmp', '1'),
-            'gif'         => get_block_setting($block_id, 'filter_gif', '1'),
-            'jpeg'        => get_block_setting($block_id, 'filter_jpeg', '1'),
-            'mp3'         => get_block_setting($block_id, 'filter_mp3', '0'),
-            'ole'         => get_block_setting($block_id, 'filter_ole', '1'),
-            'pcx'         => get_block_setting($block_id, 'filter_pcx', '1'),
-            'pdf'         => get_block_setting($block_id, 'filter_pdf', '0'),
-            'png'         => get_block_setting($block_id, 'filter_png', '1'),
-            'tiff'        => get_block_setting($block_id, 'filter_tiff', '1'),
-            'wav'         => get_block_setting($block_id, 'filter_wav', '0'),
-            'audio'       => get_block_setting($block_id, 'filter_audio', '0'),
-            'book'        => get_block_setting($block_id, 'filter_book', '1'),
-            'card'        => get_block_setting($block_id, 'filter_card', '1'),
-            'certificate' => get_block_setting($block_id, 'filter_certificate', '1'),
-            'coat'        => get_block_setting($block_id, 'filter_coat', '1'),
-            'document'    => get_block_setting($block_id, 'filter_document', '1'),
-            'electronic'  => get_block_setting($block_id, 'filter_electronic', '1'),
-            'fiche'       => get_block_setting($block_id, 'filter_fiche', '1'),
-            'film'        => get_block_setting($block_id, 'filter_film', '1'),
-            'magazine'    => get_block_setting($block_id, 'filter_magazine', '1'),
-            'manuscript'  => get_block_setting($block_id, 'filter_manuscript', '1'),
-            'map'         => get_block_setting($block_id, 'filter_map', '1'),
-            'newspaper'   => get_block_setting($block_id, 'filter_newspaper', '1'),
-            'other'       => get_block_setting($block_id, 'filter_other', '1'),
-            'painting'    => get_block_setting($block_id, 'filter_painting', '1'),
-            'photo'       => get_block_setting($block_id, 'filter_photo', '1'),
-            'tombstone'   => get_block_setting($block_id, 'filter_tombstone', '1'),
-            'video'       => get_block_setting($block_id, 'filter_video', '0'),
+            'avi'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_avi', '0'),
+            'bmp'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_bmp', '1'),
+            'gif'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_gif', '1'),
+            'jpeg'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_jpeg', '1'),
+            'mp3'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_mp3', '0'),
+            'ole'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_ole', '1'),
+            'pcx'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_pcx', '1'),
+            'pdf'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_pdf', '0'),
+            'png'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_png', '1'),
+            'tiff'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_tiff', '1'),
+            'wav'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_wav', '0'),
+            'audio'       => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_audio', '0'),
+            'book'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_book', '1'),
+            'card'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_card', '1'),
+            'certificate' => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_certificate', '1'),
+            'coat'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_coat', '1'),
+            'document'    => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_document', '1'),
+            'electronic'  => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_electronic', '1'),
+            'fiche'       => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_fiche', '1'),
+            'film'        => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_film', '1'),
+            'magazine'    => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_magazine', '1'),
+            'manuscript'  => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_manuscript', '1'),
+            'map'         => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_map', '1'),
+            'newspaper'   => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_newspaper', '1'),
+            'other'       => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_other', '1'),
+            'painting'    => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_painting', '1'),
+            'photo'       => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_photo', '1'),
+            'tombstone'   => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_tombstone', '1'),
+            'video'       => FunctionsDbPhp::i()->get_block_setting($block_id, 'filter_video', '0'),
         );
 
         echo '<tr><td class="descriptionbox wrap width33">';

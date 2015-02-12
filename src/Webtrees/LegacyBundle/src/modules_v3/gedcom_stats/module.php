@@ -41,24 +41,24 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $show_last_update     = get_block_setting($block_id, 'show_last_update', '1');
-        $show_common_surnames = get_block_setting($block_id, 'show_common_surnames', '1');
-        $stat_indi            = get_block_setting($block_id, 'stat_indi', '1');
-        $stat_fam             = get_block_setting($block_id, 'stat_fam', '1');
-        $stat_sour            = get_block_setting($block_id, 'stat_sour', '1');
-        $stat_media           = get_block_setting($block_id, 'stat_media', '1');
-        $stat_repo            = get_block_setting($block_id, 'stat_repo', '1');
-        $stat_surname         = get_block_setting($block_id, 'stat_surname', '1');
-        $stat_events          = get_block_setting($block_id, 'stat_events', '1');
-        $stat_users           = get_block_setting($block_id, 'stat_users', '1');
-        $stat_first_birth     = get_block_setting($block_id, 'stat_first_birth', '1');
-        $stat_last_birth      = get_block_setting($block_id, 'stat_last_birth', '1');
-        $stat_first_death     = get_block_setting($block_id, 'stat_first_death', '1');
-        $stat_last_death      = get_block_setting($block_id, 'stat_last_death', '1');
-        $stat_long_life       = get_block_setting($block_id, 'stat_long_life', '1');
-        $stat_avg_life        = get_block_setting($block_id, 'stat_avg_life', '1');
-        $stat_most_chil       = get_block_setting($block_id, 'stat_most_chil', '1');
-        $stat_avg_chil        = get_block_setting($block_id, 'stat_avg_chil', '1');
+        $show_last_update     = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_last_update', '1');
+        $show_common_surnames = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_common_surnames', '1');
+        $stat_indi            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_indi', '1');
+        $stat_fam             = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_fam', '1');
+        $stat_sour            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_sour', '1');
+        $stat_media           = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_media', '1');
+        $stat_repo            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_repo', '1');
+        $stat_surname         = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_surname', '1');
+        $stat_events          = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_events', '1');
+        $stat_users           = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_users', '1');
+        $stat_first_birth     = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_first_birth', '1');
+        $stat_last_birth      = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_last_birth', '1');
+        $stat_first_death     = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_first_death', '1');
+        $stat_last_death      = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_last_death', '1');
+        $stat_long_life       = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_long_life', '1');
+        $stat_avg_life        = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_avg_life', '1');
+        $stat_most_chil       = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_most_chil', '1');
+        $stat_avg_chil        = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_avg_chil', '1');
 
         // This can be overriden when embedding in an HTML block
         $block     = '0';
@@ -210,7 +210,7 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface
         }
         // NOTE: Print the most common surnames
         if ($show_common_surnames) {
-            $surnames = get_common_surnames(Globals::i()->WT_TREE->getPreference('COMMON_NAMES_THRESHOLD'));
+            $surnames = FunctionsDbPhp::i()->get_common_surnames(Globals::i()->WT_TREE->getPreference('COMMON_NAMES_THRESHOLD'));
             if (count($surnames) > 0) {
                 $content .= '<p><b>' . I18N::translate('Most common surnames') . '</b></p>';
                 $content .= '<div class="common_surnames">';
@@ -258,45 +258,45 @@ class gedcom_stats_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'show_last_update', Filter::postBool('show_last_update'));
-            set_block_setting($block_id, 'show_common_surnames', Filter::postBool('show_common_surnames'));
-            set_block_setting($block_id, 'stat_indi', Filter::postBool('stat_indi'));
-            set_block_setting($block_id, 'stat_fam', Filter::postBool('stat_fam'));
-            set_block_setting($block_id, 'stat_sour', Filter::postBool('stat_sour'));
-            set_block_setting($block_id, 'stat_other', Filter::postBool('stat_other'));
-            set_block_setting($block_id, 'stat_media', Filter::postBool('stat_media'));
-            set_block_setting($block_id, 'stat_repo', Filter::postBool('stat_repo'));
-            set_block_setting($block_id, 'stat_surname', Filter::postBool('stat_surname'));
-            set_block_setting($block_id, 'stat_events', Filter::postBool('stat_events'));
-            set_block_setting($block_id, 'stat_users', Filter::postBool('stat_users'));
-            set_block_setting($block_id, 'stat_first_birth', Filter::postBool('stat_first_birth'));
-            set_block_setting($block_id, 'stat_last_birth', Filter::postBool('stat_last_birth'));
-            set_block_setting($block_id, 'stat_first_death', Filter::postBool('stat_first_death'));
-            set_block_setting($block_id, 'stat_last_death', Filter::postBool('stat_last_death'));
-            set_block_setting($block_id, 'stat_long_life', Filter::postBool('stat_long_life'));
-            set_block_setting($block_id, 'stat_avg_life', Filter::postBool('stat_avg_life'));
-            set_block_setting($block_id, 'stat_most_chil', Filter::postBool('stat_most_chil'));
-            set_block_setting($block_id, 'stat_avg_chil', Filter::postBool('stat_avg_chil'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_last_update', Filter::postBool('show_last_update'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_common_surnames', Filter::postBool('show_common_surnames'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_indi', Filter::postBool('stat_indi'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_fam', Filter::postBool('stat_fam'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_sour', Filter::postBool('stat_sour'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_other', Filter::postBool('stat_other'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_media', Filter::postBool('stat_media'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_repo', Filter::postBool('stat_repo'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_surname', Filter::postBool('stat_surname'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_events', Filter::postBool('stat_events'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_users', Filter::postBool('stat_users'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_first_birth', Filter::postBool('stat_first_birth'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_last_birth', Filter::postBool('stat_last_birth'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_first_death', Filter::postBool('stat_first_death'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_last_death', Filter::postBool('stat_last_death'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_long_life', Filter::postBool('stat_long_life'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_avg_life', Filter::postBool('stat_avg_life'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_most_chil', Filter::postBool('stat_most_chil'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'stat_avg_chil', Filter::postBool('stat_avg_chil'));
         }
 
-        $show_last_update     = get_block_setting($block_id, 'show_last_update', '1');
-        $show_common_surnames = get_block_setting($block_id, 'show_common_surnames', '1');
-        $stat_indi            = get_block_setting($block_id, 'stat_indi', '1');
-        $stat_fam             = get_block_setting($block_id, 'stat_fam', '1');
-        $stat_sour            = get_block_setting($block_id, 'stat_sour', '1');
-        $stat_media           = get_block_setting($block_id, 'stat_media', '1');
-        $stat_repo            = get_block_setting($block_id, 'stat_repo', '1');
-        $stat_surname         = get_block_setting($block_id, 'stat_surname', '1');
-        $stat_events          = get_block_setting($block_id, 'stat_events', '1');
-        $stat_users           = get_block_setting($block_id, 'stat_users', '1');
-        $stat_first_birth     = get_block_setting($block_id, 'stat_first_birth', '1');
-        $stat_last_birth      = get_block_setting($block_id, 'stat_last_birth', '1');
-        $stat_first_death     = get_block_setting($block_id, 'stat_first_death', '1');
-        $stat_last_death      = get_block_setting($block_id, 'stat_last_death', '1');
-        $stat_long_life       = get_block_setting($block_id, 'stat_long_life', '1');
-        $stat_avg_life        = get_block_setting($block_id, 'stat_avg_life', '1');
-        $stat_most_chil       = get_block_setting($block_id, 'stat_most_chil', '1');
-        $stat_avg_chil        = get_block_setting($block_id, 'stat_avg_chil', '1');
+        $show_last_update     = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_last_update', '1');
+        $show_common_surnames = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_common_surnames', '1');
+        $stat_indi            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_indi', '1');
+        $stat_fam             = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_fam', '1');
+        $stat_sour            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_sour', '1');
+        $stat_media           = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_media', '1');
+        $stat_repo            = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_repo', '1');
+        $stat_surname         = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_surname', '1');
+        $stat_events          = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_events', '1');
+        $stat_users           = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_users', '1');
+        $stat_first_birth     = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_first_birth', '1');
+        $stat_last_birth      = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_last_birth', '1');
+        $stat_first_death     = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_first_death', '1');
+        $stat_last_death      = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_last_death', '1');
+        $stat_long_life       = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_long_life', '1');
+        $stat_avg_life        = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_avg_life', '1');
+        $stat_most_chil       = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_most_chil', '1');
+        $stat_avg_chil        = FunctionsDbPhp::i()->get_block_setting($block_id, 'stat_avg_chil', '1');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo /* I18N: label for yes/no option */

@@ -41,11 +41,11 @@ class html_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $title          = get_block_setting($block_id, 'title');
-        $html           = get_block_setting($block_id, 'html');
-        $gedcom         = get_block_setting($block_id, 'gedcom');
-        $show_timestamp = get_block_setting($block_id, 'show_timestamp', '0');
-        $languages      = get_block_setting($block_id, 'languages');
+        $title          = FunctionsDbPhp::i()->get_block_setting($block_id, 'title');
+        $html           = FunctionsDbPhp::i()->get_block_setting($block_id, 'html');
+        $gedcom         = FunctionsDbPhp::i()->get_block_setting($block_id, 'gedcom');
+        $show_timestamp = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_timestamp', '0');
+        $languages      = FunctionsDbPhp::i()->get_block_setting($block_id, 'languages');
 
         // Only show this block for certain languages
         if ($languages && !in_array(WT_LOCALE, explode(',', $languages))) {
@@ -97,7 +97,7 @@ class html_WT_Module extends Module implements ModuleBlockInterface
         $content = $html;
 
         if ($show_timestamp) {
-            $content .= '<br>' . format_timestamp(get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
+            $content .= '<br>' . format_timestamp(FunctionsDbPhp::i()->get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
         }
 
         if ($template) {
@@ -130,13 +130,13 @@ class html_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'gedcom', Filter::post('gedcom'));
-            set_block_setting($block_id, 'title', Filter::post('title'));
-            set_block_setting($block_id, 'html', Filter::post('html'));
-            set_block_setting($block_id, 'show_timestamp', Filter::postBool('show_timestamp'));
-            set_block_setting($block_id, 'timestamp', Filter::post('timestamp'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'gedcom', Filter::post('gedcom'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'title', Filter::post('title'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'html', Filter::post('html'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'show_timestamp', Filter::postBool('show_timestamp'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'timestamp', Filter::post('timestamp'));
             $languages = Filter::postArray('lang', null, array_keys(I18N::installed_languages()));
-            set_block_setting($block_id, 'languages', implode(',', $languages));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'languages', implode(',', $languages));
         }
 
         $templates = array(
@@ -249,11 +249,11 @@ class html_WT_Module extends Module implements ModuleBlockInterface
 			</div>'
         );
 
-        $title          = get_block_setting($block_id, 'title');
-        $html           = get_block_setting($block_id, 'html');
-        $gedcom         = get_block_setting($block_id, 'gedcom');
-        $show_timestamp = get_block_setting($block_id, 'show_timestamp', '0');
-        $languages      = explode(',', get_block_setting($block_id, 'languages'));
+        $title          = FunctionsDbPhp::i()->get_block_setting($block_id, 'title');
+        $html           = FunctionsDbPhp::i()->get_block_setting($block_id, 'html');
+        $gedcom         = FunctionsDbPhp::i()->get_block_setting($block_id, 'gedcom');
+        $show_timestamp = FunctionsDbPhp::i()->get_block_setting($block_id, 'show_timestamp', '0');
+        $languages      = explode(',', FunctionsDbPhp::i()->get_block_setting($block_id, 'languages'));
 
         echo '<tr><td class="descriptionbox wrap">',
         WT_Gedcom_Tag::getLabel('TITL'),

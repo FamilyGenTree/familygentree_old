@@ -71,9 +71,9 @@ $action = Filter::get('action');
 
 if ($can_reset && Filter::post('default') === '1') {
     if ($user_id) {
-        $defaults = get_user_blocks(-1);
+        $defaults = FunctionsDbPhp::i()->get_user_blocks(-1);
     } else {
-        $defaults = get_gedcom_blocks(-1);
+        $defaults = FunctionsDbPhp::i()->get_gedcom_blocks(-1);
     }
     $main  = $defaults['main'];
     $right = $defaults['side'];
@@ -113,9 +113,9 @@ foreach (Module::getActiveBlocks() as $name => $block) {
 }
 
 if ($user_id) {
-    $blocks = get_user_blocks($user_id);
+    $blocks = FunctionsDbPhp::i()->get_user_blocks($user_id);
 } else {
-    $blocks = get_gedcom_blocks($gedcom_id);
+    $blocks = FunctionsDbPhp::i()->get_gedcom_blocks($gedcom_id);
 }
 
 if ($action === 'update') {

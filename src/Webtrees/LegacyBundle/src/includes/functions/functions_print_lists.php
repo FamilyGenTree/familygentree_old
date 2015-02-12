@@ -1960,7 +1960,7 @@ function print_events_table($startjd, $endjd, $events = 'BIRT MARR DEAT', $only_
     $filter          = 0;
     $filtered_events = array();
 
-    foreach (get_events_list($startjd, $endjd, $events) as $fact) {
+    foreach (FunctionsDbPhp::i()->get_events_list($startjd, $endjd, $events) as $fact) {
         $record = $fact->getParent();
         //-- only living people ?
         if ($only_living) {
@@ -2083,7 +2083,7 @@ function print_events_list($startjd, $endjd, $events = 'BIRT MARR DEAT', $only_l
     $filter          = 0;
     $filtered_events = array();
     $html            = '';
-    foreach (get_events_list($startjd, $endjd, $events) as $fact) {
+    foreach (FunctionsDbPhp::i()->get_events_list($startjd, $endjd, $events) as $fact) {
         $record = $fact->getParent();
         //-- only living people ?
         if ($only_living) {

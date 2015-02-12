@@ -361,7 +361,7 @@ class SearchController extends PageController
 
             // Search the individuals
             if (isset ($this->srindi)) {
-                $this->myindilist = search_indis($query_terms, array_keys($this->search_trees), 'AND');
+                $this->myindilist = FunctionsDbPhp::i()->search_indis($query_terms, array_keys($this->search_trees), 'AND');
             } else {
                 $this->myindilist = array();
             }
@@ -369,8 +369,8 @@ class SearchController extends PageController
             // Search the fams
             if (isset ($this->srfams)) {
                 $this->myfamlist = array_merge(
-                    search_fams($query_terms, array_keys($this->search_trees), 'AND'),
-                    search_fams_names($query_terms, array_keys($this->search_trees), 'AND')
+                    FunctionsDbPhp::i()->search_fams($query_terms, array_keys($this->search_trees), 'AND'),
+                    FunctionsDbPhp::i()->search_fams_names($query_terms, array_keys($this->search_trees), 'AND')
                 );
                 $this->myfamlist = array_unique($this->myfamlist);
             } else {
@@ -380,7 +380,7 @@ class SearchController extends PageController
             // Search the sources
             if (isset ($this->srsour)) {
                 if (!empty ($this->query)) {
-                    $this->mysourcelist = search_sources($query_terms, array_keys($this->search_trees), 'AND');
+                    $this->mysourcelist = FunctionsDbPhp::i()->search_sources($query_terms, array_keys($this->search_trees), 'AND');
                 }
             } else {
                 $this->mysourcelist = array();
@@ -389,7 +389,7 @@ class SearchController extends PageController
             // Search the notes
             if (isset ($this->srnote)) {
                 if (!empty ($this->query)) {
-                    $this->mynotelist = search_notes($query_terms, array_keys($this->search_trees), 'AND');
+                    $this->mynotelist = FunctionsDbPhp::i()->search_notes($query_terms, array_keys($this->search_trees), 'AND');
                 }
             } else {
                 $this->mynotelist = array();
@@ -587,7 +587,7 @@ class SearchController extends PageController
             Log::addSearchLog($logstring, $this->search_trees);
 
             if ($this->search_trees) {
-                $this->myindilist = search_indis_soundex($this->soundex, $this->lastname, $this->firstname, $this->place, array_keys($this->search_trees));
+                $this->myindilist = FunctionsDbPhp::i()->search_indis_soundex($this->soundex, $this->lastname, $this->firstname, $this->place, array_keys($this->search_trees));
             } else {
                 $this->myindilist = array();
             }

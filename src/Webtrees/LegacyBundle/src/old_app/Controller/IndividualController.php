@@ -38,7 +38,7 @@ class IndividualController extends GedcomRecordController
         $this->record = Individual::getInstance($xref);
 
         if (!$this->record && Globals::i()->WT_TREE->getPreference('USE_RIN')) {
-            $rin          = find_rin_id($xref);
+            $rin          = FunctionsDbPhp::i()->find_rin_id($xref);
             $this->record = Individual::getInstance($rin);
         }
 

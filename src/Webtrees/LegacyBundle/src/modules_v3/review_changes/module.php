@@ -40,9 +40,9 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $sendmail = get_block_setting($block_id, 'sendmail', '1');
-        $days     = get_block_setting($block_id, 'days', '1');
-        $block    = get_block_setting($block_id, 'block', '1');
+        $sendmail = FunctionsDbPhp::i()->get_block_setting($block_id, 'sendmail', '1');
+        $days     = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '1');
+        $block    = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         if ($cfg) {
             foreach (array(
@@ -71,7 +71,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                 foreach (User::all() as $user) {
                     if ($user->getPreference('contactmethod') !== 'none') {
                         foreach (Tree::getAll() as $tree) {
-                            if (exists_pending_change($user, $tree)) {
+                            if (FunctionsDbPhp::i()->exists_pending_change($user, $tree)) {
                                 I18N::init($user->getPreference('language'));
                                 Mail::systemMessage(
                                     $tree,
@@ -161,14 +161,14 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'days', Filter::postInteger('num', 1, 180, 1));
-            set_block_setting($block_id, 'sendmail', Filter::postBool('sendmail'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'days', Filter::postInteger('num', 1, 180, 1));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'sendmail', Filter::postBool('sendmail'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $sendmail = get_block_setting($block_id, 'sendmail', '1');
-        $days     = get_block_setting($block_id, 'days', '1');
-        $block    = get_block_setting($block_id, 'block', '1');
+        $sendmail = FunctionsDbPhp::i()->get_block_setting($block_id, 'sendmail', '1');
+        $days     = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '1');
+        $block    = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         ?>
         <tr>

@@ -40,12 +40,12 @@ class upcoming_events_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $days      = get_block_setting($block_id, 'days', '7');
-        $filter    = get_block_setting($block_id, 'filter', '1');
-        $onlyBDM   = get_block_setting($block_id, 'onlyBDM', '0');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $sortStyle = get_block_setting($block_id, 'sortStyle', 'alpha');
-        $block     = get_block_setting($block_id, 'block', '1');
+        $days      = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '7');
+        $filter    = FunctionsDbPhp::i()->get_block_setting($block_id, 'filter', '1');
+        $onlyBDM   = FunctionsDbPhp::i()->get_block_setting($block_id, 'onlyBDM', '0');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $sortStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'sortStyle', 'alpha');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         if ($cfg) {
             foreach (array(
@@ -122,20 +122,20 @@ class upcoming_events_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'days', Filter::postInteger('days', 1, 30, 7));
-            set_block_setting($block_id, 'filter', Filter::postBool('filter'));
-            set_block_setting($block_id, 'onlyBDM', Filter::postBool('onlyBDM'));
-            set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
-            set_block_setting($block_id, 'sortStyle', Filter::post('sortStyle', 'alpha|anniv', 'alpha'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'days', Filter::postInteger('days', 1, 30, 7));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'filter', Filter::postBool('filter'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'onlyBDM', Filter::postBool('onlyBDM'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'sortStyle', Filter::post('sortStyle', 'alpha|anniv', 'alpha'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $days      = get_block_setting($block_id, 'days', '7');
-        $filter    = get_block_setting($block_id, 'filter', '1');
-        $onlyBDM   = get_block_setting($block_id, 'onlyBDM', '0');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $sortStyle = get_block_setting($block_id, 'sortStyle', 'alpha');
-        $block     = get_block_setting($block_id, 'block', '1');
+        $days      = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '7');
+        $filter    = FunctionsDbPhp::i()->get_block_setting($block_id, 'filter', '1');
+        $onlyBDM   = FunctionsDbPhp::i()->get_block_setting($block_id, 'onlyBDM', '0');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $sortStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'sortStyle', 'alpha');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Number of days to show');

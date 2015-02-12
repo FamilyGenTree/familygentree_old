@@ -61,7 +61,7 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
                 }
                 break;
         }
-        $block = get_block_setting($block_id, 'block', '1');
+        $block = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
         if ($cfg) {
             foreach (array('block') as $name) {
                 if (array_key_exists($name, $cfg)) {

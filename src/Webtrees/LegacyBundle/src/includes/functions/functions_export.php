@@ -80,7 +80,7 @@ function reformat_record_export($rec)
  */
 function gedcom_header($gedfile)
 {
-    $ged_id = get_id_from_gedcom($gedfile);
+    $ged_id = FunctionsDbPhp::i()->get_id_from_gedcom($gedfile);
 
     // Default values for a new header
     $HEAD = "0 HEAD";
@@ -186,7 +186,7 @@ function export_gedcom($gedcom, $gedout, $exportOptions)
     // Temporarily switch to the specified GEDCOM
     $oldGEDCOM           = Globals::i()->GEDCOM;
     Globals::i()->GEDCOM = $gedcom;
-    $ged_id              = get_id_from_gedcom($gedcom);
+    $ged_id              = FunctionsDbPhp::i()->get_id_from_gedcom($gedcom);
 
     switch ($exportOptions['privatize']) {
         case 'gedadmin':

@@ -367,7 +367,7 @@ class GedcomRecord
         } elseif ($this->tree->getTreeId() == 0) {
             return '#';
         } else {
-            return $link . $this->getXref() . $separator . 'ged=' . rawurlencode(get_gedcom_from_id($this->tree->getTreeId()));
+            return $link . $this->getXref() . $separator . 'ged=' . rawurlencode(FunctionsDbPhp::i()->get_gedcom_from_id($this->tree->getTreeId()));
         }
     }
 

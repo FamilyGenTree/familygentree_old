@@ -94,10 +94,10 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
         $html = '';
         foreach ($block_ids as $block_id) {
             // Only show this block for certain languages
-            $languages = get_block_setting($block_id, 'languages');
+            $languages = FunctionsDbPhp::i()->get_block_setting($block_id, 'languages');
             if (!$languages || in_array(WT_LOCALE, explode(',', $languages))) {
-                $html .= '<div class="story_title descriptionbox center rela">' . get_block_setting($block_id, 'title') . '</div>';
-                $html .= '<div class="story_body optionbox">' . get_block_setting($block_id, 'story_body') . '</div>';
+                $html .= '<div class="story_title descriptionbox center rela">' . FunctionsDbPhp::i()->get_block_setting($block_id, 'title') . '</div>';
+                $html .= '<div class="story_body optionbox">' . FunctionsDbPhp::i()->get_block_setting($block_id, 'story_body') . '</div>';
                 if (WT_USER_CAN_EDIT) {
                     $html .= '<div class="story_edit"><a href="module.php?mod=' . $this->getName() . '&amp;mod_action=admin_edit&amp;block_id=' . $block_id . '">';
                     $html .= I18N::translate('Edit story') . '</a></div>';
@@ -184,10 +184,10 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                     $block_id = Database::getInstance()
                                         ->lastInsertId();
                 }
-                set_block_setting($block_id, 'title', Filter::post('title'));
-                set_block_setting($block_id, 'story_body', Filter::post('story_body'));
+                FunctionsDbPhp::i()->set_block_setting($block_id, 'title', Filter::post('title'));
+                FunctionsDbPhp::i()->set_block_setting($block_id, 'story_body', Filter::post('story_body'));
                 $languages = Filter::postArray('lang', null, array_keys(I18N::installed_languages()));
-                set_block_setting($block_id, 'languages', implode(',', $languages));
+                FunctionsDbPhp::i()->set_block_setting($block_id, 'languages', implode(',', $languages));
                 $this->config();
             } else {
                 $block_id = Filter::getInteger('block_id');
@@ -195,8 +195,8 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                 $controller = Application::i()->setActiveController(new PageController());
                 if ($block_id) {
                     $controller->setPageTitle(I18N::translate('Edit story'));
-                    $title      = get_block_setting($block_id, 'title');
-                    $story_body = get_block_setting($block_id, 'story_body');
+                    $title      = FunctionsDbPhp::i()->get_block_setting($block_id, 'title');
+                    $story_body = FunctionsDbPhp::i()->get_block_setting($block_id, 'story_body');
                     $xref       = Database::prepare(
                         "SELECT xref FROM `##block` WHERE block_id=?"
                     )
@@ -259,7 +259,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                     }
                 }
                 echo '</td>';
-                $languages = explode(',', get_block_setting($block_id, 'languages'));
+                $languages = explode(',', FunctionsDbPhp::i()->get_block_setting($block_id, 'languages'));
                 echo '<td class="optionbox">';
                 echo edit_language_checkboxes('lang', $languages);
                 echo '</td></tr></table>';
@@ -378,7 +378,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
             <?php foreach ($stories as $story): ?>
                 <tr>
                     <td>
-                        <?php echo Filter::escapeHtml(get_block_setting($story->block_id, 'title')); ?>
+                        <?php echo Filter::escapeHtml(FunctionsDbPhp::i()->get_block_setting($story->block_id, 'title')); ?>
                     </td>
                     <td>
                         <?php if ($indi = Individual::getInstance($story->xref)): ?>
@@ -462,8 +462,8 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
 				<tbody>';
             foreach ($stories as $story) {
                 $indi        = Individual::getInstance($story->xref);
-                $story_title = get_block_setting($story->block_id, 'title');
-                $languages   = get_block_setting($story->block_id, 'languages');
+                $story_title = FunctionsDbPhp::i()->get_block_setting($story->block_id, 'title');
+                $languages   = FunctionsDbPhp::i()->get_block_setting($story->block_id, 'languages');
                 if (!$languages || in_array(WT_LOCALE, explode(',', $languages))) {
                     if ($indi) {
                         if ($indi->canShow()) {

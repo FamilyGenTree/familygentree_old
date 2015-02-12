@@ -388,7 +388,7 @@ if ($filterev === 'all') {
 // Fetch data for day/month/year views
 switch ($view) {
     case 'day':
-        $found_facts = apply_filter(get_anniversary_events($cal_date->minJD, $events), $filterof, $filtersx);
+        $found_facts = apply_filter(FunctionsDbPhp::i()->get_anniversary_events($cal_date->minJD, $events), $filterof, $filtersx);
         break;
     case 'month':
         $cal_date->d = 0;
@@ -400,7 +400,7 @@ switch ($view) {
         }
         // Fetch events for each day
         for ($jd = $cal_date->minJD; $jd <= $cal_date->maxJD; ++$jd) {
-            foreach (apply_filter(get_anniversary_events($jd, $events), $filterof, $filtersx) as $fact) {
+            foreach (apply_filter(FunctionsDbPhp::i()->get_anniversary_events($jd, $events), $filterof, $filtersx) as $fact) {
                 $tmp = $fact->getDate()
                             ->minDate();
                 if ($tmp->d >= 1 && $tmp->d <= $tmp->daysInMonth()) {
@@ -417,7 +417,7 @@ switch ($view) {
     case 'year':
         $cal_date->m = 0;
         $cal_date->setJdFromYmd();
-        $found_facts = apply_filter(get_calendar_events($ged_date->MinJD(), $ged_date->MaxJD(), $events), $filterof, $filtersx);
+        $found_facts = apply_filter(FunctionsDbPhp::i()->get_calendar_events($ged_date->MinJD(), $ged_date->MaxJD(), $events), $filterof, $filtersx);
         // Eliminate duplicates (e.g. BET JUL 1900 AND SEP 1900 will appear twice in 1900)
         $found_facts = array_unique($found_facts);
         break;

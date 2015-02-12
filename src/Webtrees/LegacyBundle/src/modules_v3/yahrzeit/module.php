@@ -46,10 +46,10 @@ class yahrzeit_WT_Module extends Module implements ModuleBlockInterface
 
         $controller = Application::i()->getActiveController();
 
-        $days      = get_block_setting($block_id, 'days', '7');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $calendar  = get_block_setting($block_id, 'calendar', 'jewish');
-        $block     = get_block_setting($block_id, 'block', '1');
+        $days      = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '7');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $calendar  = FunctionsDbPhp::i()->get_block_setting($block_id, 'calendar', 'jewish');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         if ($cfg) {
             foreach (array(
@@ -81,7 +81,7 @@ class yahrzeit_WT_Module extends Module implements ModuleBlockInterface
         // Fetch normal anniversaries...
         $yahrzeits = array();
         for ($jd = $startjd - 1; $jd <= $endjd + $days; ++$jd) {
-            foreach (get_anniversary_events($jd, 'DEAT _YART') as $fact) {
+            foreach (FunctionsDbPhp::i()->get_anniversary_events($jd, 'DEAT _YART') as $fact) {
                 // Exact hebrew dates only
                 $date = $fact->getDate();
                 if ($date->MinDate() instanceof JewishDate && $date->MinJD() == $date->MaxJD()) {
@@ -255,16 +255,16 @@ class yahrzeit_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'days', Filter::postInteger('days', 1, 30, 7));
-            set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
-            set_block_setting($block_id, 'calendar', Filter::post('calendar', 'jewish|gregorian', 'jewish'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'days', Filter::postInteger('days', 1, 30, 7));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'calendar', Filter::post('calendar', 'jewish|gregorian', 'jewish'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $days      = get_block_setting($block_id, 'days', '7');
-        $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');
-        $calendar  = get_block_setting($block_id, 'calendar', 'jewish');
-        $block     = get_block_setting($block_id, 'block', '1');
+        $days      = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', '7');
+        $infoStyle = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $calendar  = FunctionsDbPhp::i()->get_block_setting($block_id, 'calendar', 'jewish');
+        $block     = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Number of days to show');

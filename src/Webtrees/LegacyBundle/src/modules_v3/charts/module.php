@@ -45,9 +45,9 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
 
         $PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 
-        $details = get_block_setting($block_id, 'details', '0');
-        $type    = get_block_setting($block_id, 'type', 'pedigree');
-        $pid     = get_block_setting($block_id, 'pid', Auth::check() ? (WT_USER_GEDCOM_ID ? WT_USER_GEDCOM_ID
+        $details = FunctionsDbPhp::i()->get_block_setting($block_id, 'details', '0');
+        $type    = FunctionsDbPhp::i()->get_block_setting($block_id, 'type', 'pedigree');
+        $pid     = FunctionsDbPhp::i()->get_block_setting($block_id, 'pid', Auth::check() ? (WT_USER_GEDCOM_ID ? WT_USER_GEDCOM_ID
             : $PEDIGREE_ROOT_ID) : $PEDIGREE_ROOT_ID);
 
         if ($cfg) {
@@ -74,7 +74,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
         $person = Individual::getInstance($pid);
         if (!$person) {
             $pid = $PEDIGREE_ROOT_ID;
-            set_block_setting($block_id, 'pid', $pid);
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'pid', $pid);
             $person = Individual::getInstance($pid);
         }
 
@@ -182,14 +182,14 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
         $PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'details', Filter::postBool('details'));
-            set_block_setting($block_id, 'type', Filter::post('type', 'pedigree|descendants|hourglass|treenav', 'pedigree'));
-            set_block_setting($block_id, 'pid', Filter::post('pid', WT_REGEX_XREF));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'details', Filter::postBool('details'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'type', Filter::post('type', 'pedigree|descendants|hourglass|treenav', 'pedigree'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'pid', Filter::post('pid', WT_REGEX_XREF));
         }
 
-        $details = get_block_setting($block_id, 'details', '0');
-        $type    = get_block_setting($block_id, 'type', 'pedigree');
-        $pid     = get_block_setting($block_id, 'pid', Auth::check() ? (WT_USER_GEDCOM_ID ? WT_USER_GEDCOM_ID
+        $details = FunctionsDbPhp::i()->get_block_setting($block_id, 'details', '0');
+        $type    = FunctionsDbPhp::i()->get_block_setting($block_id, 'type', 'pedigree');
+        $pid     = FunctionsDbPhp::i()->get_block_setting($block_id, 'pid', Auth::check() ? (WT_USER_GEDCOM_ID ? WT_USER_GEDCOM_ID
             : $PEDIGREE_ROOT_ID) : $PEDIGREE_ROOT_ID);
 
         $controller

@@ -578,7 +578,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
                     )
                             ->execute(array(
                                           $setting->user_id,
-                                          get_id_from_gedcom($gedcom),
+                                          FunctionsDbPhp::i()->get_id_from_gedcom($gedcom),
                                           'gedcomid',
                                           $value
                                       ));
@@ -596,7 +596,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
                     )
                             ->execute(array(
                                           $setting->user_id,
-                                          get_id_from_gedcom($gedcom),
+                                          FunctionsDbPhp::i()->get_id_from_gedcom($gedcom),
                                           'rootid',
                                           $value
                                       ));
@@ -614,7 +614,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
                     )
                             ->execute(array(
                                           $setting->user_id,
-                                          get_id_from_gedcom($gedcom),
+                                          FunctionsDbPhp::i()->get_id_from_gedcom($gedcom),
                                           'canedit',
                                           $value
                                       ));

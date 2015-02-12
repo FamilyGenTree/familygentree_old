@@ -93,7 +93,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
                 break;
         }
 
-        $block = get_block_setting($block_id, 'block', '0');
+        $block = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '0');
 
         if ($cfg) {
             foreach (array('block') as $name) {
@@ -235,10 +235,10 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $block = get_block_setting($block_id, 'block', '0');
+        $block = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '0');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo /* I18N: label for a yes/no option */

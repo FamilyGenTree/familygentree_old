@@ -101,19 +101,19 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                 $block_id = Database::getInstance()
                                     ->lastInsertId();
             }
-            set_block_setting($block_id, 'header', Filter::post('header'));
-            set_block_setting($block_id, 'faqbody', Filter::post('faqbody'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'header', Filter::post('header'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'faqbody', Filter::post('faqbody'));
 
             $languages = Filter::postArray('lang', null, array_keys(I18N::installed_languages()));
-            set_block_setting($block_id, 'languages', implode(',', $languages));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'languages', implode(',', $languages));
             $this->config();
         } else {
             $block_id   = Filter::getInteger('block_id');
             $controller = Application::i()->setActiveController(new PageController());
             if ($block_id) {
                 $controller->setPageTitle(I18N::translate('Edit FAQ item'));
-                $header      = get_block_setting($block_id, 'header');
-                $faqbody     = get_block_setting($block_id, 'faqbody');
+                $header      = FunctionsDbPhp::i()->get_block_setting($block_id, 'header');
+                $faqbody     = FunctionsDbPhp::i()->get_block_setting($block_id, 'faqbody');
                 $block_order = Database::prepare(
                     "SELECT block_order FROM `##block` WHERE block_id = :block_id"
                 )
@@ -172,7 +172,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             echo '<th>', I18N::translate('FAQ visibility'), '<br><small>', I18N::translate('A FAQ item can be displayed on just one of the family trees, or on all the family trees.'), '</small></th>';
             echo '</tr><tr>';
             echo '<td>';
-            $languages = explode(',', get_block_setting($block_id, 'languages'));
+            $languages = explode(',', FunctionsDbPhp::i()->get_block_setting($block_id, 'languages'));
             echo edit_language_checkboxes('lang', $languages);
             echo '</td><td>';
             echo '<input type="text" name="block_order" size="3" tabindex="3" value="', $block_order, '"></td>';

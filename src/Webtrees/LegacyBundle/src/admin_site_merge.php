@@ -85,7 +85,7 @@ foreach ($facts1 as $id1 => $fact1) {
 }
 
 if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYPE === $rec2::RECORD_TYPE && Filter::post('action') === 'merge' && Filter::checkCsrf()) {
-    $ids = fetch_all_links($gid2, WT_GED_ID);
+    $ids = FunctionsDbPhp::i()->fetch_all_links($gid2, WT_GED_ID);
 
     // If we are not auto-accepting, then we can show a link to the pending deletion
     if (Auth::user()
@@ -175,7 +175,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
 
     $rec1->updateRecord($gedcom, true);
     $rec2->deleteRecord();
-    update_favorites($gid2, $gid1);
+    FunctionsDbPhp::i()->update_favorites($gid2, $gid1);
     FlashMessages::addMessage(I18N::translate(
     /* I18N: Records are individuals, sources, etc. */
         'The records “%1$s” and “%2$s” have been merged.',

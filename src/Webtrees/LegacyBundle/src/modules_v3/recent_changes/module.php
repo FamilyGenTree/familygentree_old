@@ -43,11 +43,11 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
     {
         global $ctype;
 
-        $days       = get_block_setting($block_id, 'days', self::DEFAULT_DAYS);
-        $infoStyle  = get_block_setting($block_id, 'infoStyle', 'table');
-        $sortStyle  = get_block_setting($block_id, 'sortStyle', 'date_desc');
-        $block      = get_block_setting($block_id, 'block', '1');
-        $hide_empty = get_block_setting($block_id, 'hide_empty', '0');
+        $days       = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', self::DEFAULT_DAYS);
+        $infoStyle  = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $sortStyle  = FunctionsDbPhp::i()->get_block_setting($block_id, 'sortStyle', 'date_desc');
+        $block      = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
+        $hide_empty = FunctionsDbPhp::i()->get_block_setting($block_id, 'hide_empty', '0');
 
 
         if ($cfg) {
@@ -64,7 +64,7 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
             }
         }
 
-        $found_facts = get_recent_changes(WT_CLIENT_JD - $days);
+        $found_facts = FunctionsDbPhp::i()->get_recent_changes(WT_CLIENT_JD - $days);
 
         if (!$found_facts && $hide_empty) {
             return '';
@@ -132,18 +132,18 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
     public function configureBlock($block_id)
     {
         if (Filter::postBool('save') && Filter::checkCsrf()) {
-            set_block_setting($block_id, 'days', Filter::postInteger('days', 1, self::MAX_DAYS, self::DEFAULT_DAYS));
-            set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
-            set_block_setting($block_id, 'sortStyle', Filter::post('sortStyle', 'name|date_asc|date_desc', 'date_desc'));
-            set_block_setting($block_id, 'hide_empty', Filter::postBool('hide_empty'));
-            set_block_setting($block_id, 'block', Filter::postBool('block'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'days', Filter::postInteger('days', 1, self::MAX_DAYS, self::DEFAULT_DAYS));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'infoStyle', Filter::post('infoStyle', 'list|table', 'table'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'sortStyle', Filter::post('sortStyle', 'name|date_asc|date_desc', 'date_desc'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'hide_empty', Filter::postBool('hide_empty'));
+            FunctionsDbPhp::i()->set_block_setting($block_id, 'block', Filter::postBool('block'));
         }
 
-        $days       = get_block_setting($block_id, 'days', self::DEFAULT_DAYS);
-        $infoStyle  = get_block_setting($block_id, 'infoStyle', 'table');
-        $sortStyle  = get_block_setting($block_id, 'sortStyle', 'date_desc');
-        $block      = get_block_setting($block_id, 'block', '1');
-        $hide_empty = get_block_setting($block_id, 'hide_empty', '0');
+        $days       = FunctionsDbPhp::i()->get_block_setting($block_id, 'days', self::DEFAULT_DAYS);
+        $infoStyle  = FunctionsDbPhp::i()->get_block_setting($block_id, 'infoStyle', 'table');
+        $sortStyle  = FunctionsDbPhp::i()->get_block_setting($block_id, 'sortStyle', 'date_desc');
+        $block      = FunctionsDbPhp::i()->get_block_setting($block_id, 'block', '1');
+        $hide_empty = FunctionsDbPhp::i()->get_block_setting($block_id, 'hide_empty', '0');
 
         echo '<tr><td class="descriptionbox wrap width33">';
         echo I18N::translate('Number of days to show');

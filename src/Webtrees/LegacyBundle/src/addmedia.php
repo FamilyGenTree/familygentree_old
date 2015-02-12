@@ -327,7 +327,7 @@ switch ($action) {
             if ($oldServerFile != $newServerFile) {
                 //-- check if the file is used in more than one gedcom
                 //-- do not allow it to be moved or renamed if it is
-                if (!$media->isExternal() && is_media_used_in_other_gedcom($media->getFilename(), WT_GED_ID)) {
+                if (!$media->isExternal() && FunctionsDbPhp::i()->is_media_used_in_other_gedcom($media->getFilename(), WT_GED_ID)) {
                     FlashMessages::addMessage(I18N::translate('This file is linked to another family tree on this server.  It cannot be deleted, moved, or renamed until these links have been removed.'));
                     break;
                 }
