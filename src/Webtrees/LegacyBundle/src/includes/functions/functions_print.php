@@ -173,14 +173,14 @@ class FunctionsPrint
                 $match[$j][1] = "";
             }
             if (!preg_match("/@(.*)@/", $match[$j][1], $nmatch)) {
-                $data .= FunctionsPrint::i()->print_note_record($match[$j][1], $nlevel, $nrec, $textOnly);
+                $data .= $this->print_note_record($match[$j][1], $nlevel, $nrec, $textOnly);
             } else {
                 $note = Note::getInstance($nmatch[1]);
                 if ($note) {
                     if ($note->canShow()) {
                         $noterec = $note->getGedcom();
                         $nt      = preg_match("/0 @$nmatch[1]@ NOTE (.*)/", $noterec, $n1match);
-                        $data .= FunctionsPrint::i()->print_note_record(($nt > 0) ? $n1match[1]
+                        $data .= $this->print_note_record(($nt > 0) ? $n1match[1]
                                                                             : "", 1, $noterec, $textOnly);
                         if (!$textOnly) {
                             if (strpos($noterec, "1 SOUR") !== false) {
@@ -430,7 +430,7 @@ class FunctionsPrint
                               ->getPreference('SHOW_PARENTS_AGE')
                 ) {
                     // age of parents at child birth
-                    $html .= FunctionsPrint::i()->format_parents_age($record, $date);
+                    $html .= $this->format_parents_age($record, $date);
                 } elseif ($fact !== 'CHAN' && $fact !== '_TODO') {
                     // age at event
                     $birth_date = $record->getBirthDate();
@@ -583,7 +583,7 @@ class FunctionsPrint
                     $html .= ' <a rel="nofollow" href="https://www.openstreetmap.org/#map=15/' . $map_lati . '/' . $map_long . '" class="icon-osm" title="' . I18N::translate('OpenStreetMap™') . '"></a>';
                 }
                 if (preg_match('/\d NOTE (.*)/', $placerec, $match)) {
-                    $html .= '<br>' . FunctionsPrint::i()->print_fact_notes($placerec, 3);
+                    $html .= '<br>' . $this->print_fact_notes($placerec, 3);
                 }
             }
         }
@@ -714,7 +714,7 @@ class FunctionsPrint
             default:
                 return;
         }
-        $addfacts            = array_merge(FunctionsPrint::i()
+        $addfacts            = array_merge($this
                                                          ->CheckFactUnique($uniquefacts, $usedfacts, $type), $addfacts);
         $quickfacts          = array_intersect($quickfacts, $addfacts);
         $translated_addfacts = array();
@@ -726,7 +726,7 @@ class FunctionsPrint
         });
         echo '<tr><td class="descriptionbox">';
         echo I18N::translate('Fact or event');
-        echo FunctionsPrint::i()->help_link('add_facts'), '</td>';
+        echo $this->help_link('add_facts'), '</td>';
         echo '<td class="optionbox wrap">';
         echo '<form method="get" name="newfactform" action="?" onsubmit="return false;">';
         echo '<select id="newfact" name="newfact">';
