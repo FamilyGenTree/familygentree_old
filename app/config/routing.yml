@@ -1,3 +1,11 @@
+fam_gene_tree_setup:
+    resource: "@FamGeneTreeSetupBundle/Resources/config/routing.yml"
+    prefix:   /setup/
+
+fam_gene_tree_app:
+    resource: "@FamGeneTreeAppBundle/Resources/config/routing.yml"
+    prefix:   /
+
 webtrees_legacy:
     resource: "@WebtreesLegacyBundle/Resources/config/routing.yml"
     prefix:   /

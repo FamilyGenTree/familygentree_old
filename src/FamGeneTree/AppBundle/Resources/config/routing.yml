@@ -1,0 +1,3 @@
+fam_gene_tree_app_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FamGeneTreeAppBundle:Default:index }

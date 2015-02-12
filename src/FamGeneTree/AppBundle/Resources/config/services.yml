@@ -1,0 +1,4 @@
+services:
+#    fam_gene_tree_app.example:
+#        class: FamGeneTree\AppBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
