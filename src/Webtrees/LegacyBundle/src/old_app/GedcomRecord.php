@@ -1310,7 +1310,7 @@ class GedcomRecord
             if (Auth::user()
                     ->getPreference('auto_accept')
             ) {
-                accept_all_changes($this->xref, $this->tree->getTreeId());
+                FunctionsImport::i()->accept_all_changes($this->xref, $this->tree->getTreeId());
                 $this->gedcom  = $new_gedcom;
                 $this->pending = null;
             }
@@ -1367,7 +1367,7 @@ class GedcomRecord
         if (Auth::user()
                 ->getPreference('auto_accept')
         ) {
-            accept_all_changes($xref, $gedcom_id);
+            FunctionsImport::i()->accept_all_changes($xref, $gedcom_id);
         }
 
         // Clear this record from the cache
@@ -1417,7 +1417,7 @@ class GedcomRecord
         if (Auth::user()
                 ->getPreference('auto_accept')
         ) {
-            accept_all_changes($this->xref, $this->tree->getTreeId());
+            FunctionsImport::i()->accept_all_changes($this->xref, $this->tree->getTreeId());
             $this->gedcom  = $gedcom;
             $this->pending = null;
         }
@@ -1447,7 +1447,7 @@ class GedcomRecord
         if (Auth::user()
                 ->getPreference('auto_accept')
         ) {
-            accept_all_changes($this->xref, $this->tree->getTreeId());
+            FunctionsImport::i()->accept_all_changes($this->xref, $this->tree->getTreeId());
         }
 
         // Clear the cache

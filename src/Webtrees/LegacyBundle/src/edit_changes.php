@@ -90,10 +90,10 @@ switch ($action) {
         foreach ($changes as $change) {
             if (empty($change->new_gedcom)) {
                 // delete
-                update_record($change->old_gedcom, $gedcom_id, true);
+                FunctionsImport::i()->update_record($change->old_gedcom, $gedcom_id, true);
             } else {
                 // add/update
-                update_record($change->new_gedcom, $gedcom_id, false);
+                FunctionsImport::i()->update_record($change->new_gedcom, $gedcom_id, false);
             }
             Database::prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
                     ->execute(array($change->change_id));
@@ -121,10 +121,10 @@ switch ($action) {
         foreach ($changes as $change) {
             if (empty($change->new_gedcom)) {
                 // delete
-                update_record($change->old_gedcom, $change->gedcom_id, true);
+                FunctionsImport::i()->update_record($change->old_gedcom, $change->gedcom_id, true);
             } else {
                 // add/update
-                update_record($change->new_gedcom, $change->gedcom_id, false);
+                FunctionsImport::i()->update_record($change->new_gedcom, $change->gedcom_id, false);
             }
             Database::prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
                     ->execute(array($change->change_id));

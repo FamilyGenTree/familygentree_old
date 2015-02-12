@@ -41,7 +41,7 @@ switch (Filter::post('action')) {
         if ($record && WT_USER_CAN_ACCEPT && $record->canShow() && $record->canEdit()) {
             FlashMessages::addMessage(/* I18N: %s is the name of an individual, source or other record */
                 I18N::translate('The changes to “%s” have been accepted.', $record->getFullName()));
-            accept_all_changes($record->getXref(), $record->getTree()
+            FunctionsImport::i()->accept_all_changes($record->getXref(), $record->getTree()
                                                           ->getTreeId());
         } else {
             http_response_code(406);
@@ -221,7 +221,7 @@ switch (Filter::post('action')) {
         if ($record && WT_USER_CAN_ACCEPT && $record->canShow() && $record->canEdit()) {
             FlashMessages::addMessage(/* I18N: %s is the name of an individual, source or other record */
                 I18N::translate('The changes to “%s” have been rejected.', $record->getFullName()));
-            reject_all_changes($record->getXref(), $record->getTree()
+            FunctionsImport::i()->reject_all_changes($record->getXref(), $record->getTree()
                                                           ->getTreeId());
         } else {
             http_response_code(406);
