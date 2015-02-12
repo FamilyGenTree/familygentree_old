@@ -184,7 +184,7 @@ class FunctionsPrint
                                                                             : "", 1, $noterec, $textOnly);
                         if (!$textOnly) {
                             if (strpos($noterec, "1 SOUR") !== false) {
-                                $data .= print_fact_sources($noterec, 1);
+                                $data .= FunctionsPrintFacts::i()->print_fact_sources($noterec, 1);
                             }
                         }
                     }
@@ -195,7 +195,7 @@ class FunctionsPrint
             if (!$textOnly) {
                 if (strpos($factrec, "$nlevel SOUR") !== false) {
                     $data .= "<div class=\"indent\">";
-                    $data .= print_fact_sources($nrec, $nlevel);
+                    $data .= FunctionsPrintFacts::i()->print_fact_sources($nrec, $nlevel);
                     $data .= "</div>";
                 }
             }

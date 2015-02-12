@@ -76,10 +76,10 @@ class notes_WT_Module extends Module implements ModuleTabInterface
 		<?php
         foreach ($this->getFactsWithNotes() as $fact) {
             if ($fact->getTag() == 'NOTE') {
-                print_main_notes($fact, 1);
+                FunctionsPrintFacts::i()->print_main_notes($fact, 1);
             } else {
                 for ($i = 2; $i < 4; ++$i) {
-                    print_main_notes($fact, $i);
+                    FunctionsPrintFacts::i()->print_main_notes($fact, $i);
                 }
             }
         }

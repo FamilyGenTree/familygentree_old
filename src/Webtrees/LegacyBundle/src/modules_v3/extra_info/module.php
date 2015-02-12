@@ -68,7 +68,7 @@ class extra_info_WT_Module extends Module implements ModuleSidebarInterface
             echo I18N::translate('There are no facts for this individual.');
         } else {
             foreach ($indifacts as $fact) {
-                print_fact($fact, $controller->record);
+                FunctionsPrintFacts::i()->print_fact($fact, $controller->record);
             }
         }
         if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {

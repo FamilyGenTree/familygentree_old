@@ -636,7 +636,7 @@ class Media extends GedcomRecord
     public function formatListDetails()
     {
         ob_start();
-        print_media_links('1 OBJE @' . $this->getXref() . '@', 1);
+        FunctionsPrintFacts::i()->print_media_links('1 OBJE @' . $this->getXref() . '@', 1);
 
         return ob_get_clean();
     }

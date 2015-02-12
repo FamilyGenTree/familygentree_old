@@ -123,7 +123,7 @@ usort(
 
 // Print the facts
 foreach ($facts as $fact) {
-    print_fact($fact, $controller->record);
+    FunctionsPrintFacts::i()->print_fact($fact, $controller->record);
 }
 
 // new fact link

@@ -118,7 +118,7 @@ echo '</td>
 								<table class="facts_table">';
 $facts = $controller->getFacts();
 foreach ($facts as $f => $fact) {
-    print_fact($fact, $controller->record);
+    FunctionsPrintFacts::i()->print_fact($fact, $controller->record);
 }
 echo '</table>
 							</td>

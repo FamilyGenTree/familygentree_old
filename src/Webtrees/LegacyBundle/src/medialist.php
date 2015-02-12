@@ -313,7 +313,7 @@ if ($search) {
             }
             echo '<br>';
             echo '<div>';
-            echo print_fact_sources($mediaobject->getGedcom(), 1);
+            echo FunctionsPrintFacts::i()->print_fact_sources($mediaobject->getGedcom(), 1);
             echo FunctionsPrint::i()->print_fact_notes($mediaobject->getGedcom(), 1);
             echo '</div>';
             foreach ($mediaobject->linkedIndividuals('OBJE') as $individual) {

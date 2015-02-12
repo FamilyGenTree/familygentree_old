@@ -170,7 +170,7 @@ if (array_key_exists('GEDFact_assistant', Module::getActiveModules())) {
                 </tr>
                 <?php
                 foreach ($facts as $fact) {
-                    print_fact($fact, $controller->record);
+                    FunctionsPrintFacts::i()->print_fact($fact, $controller->record);
                 }
                 if ($controller->record->canEdit()) {
                     FunctionsPrint::i()->print_add_new_fact($controller->record->getXref(), $facts, 'NOTE');

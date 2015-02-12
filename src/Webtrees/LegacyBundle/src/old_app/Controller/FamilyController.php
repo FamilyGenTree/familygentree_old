@@ -190,7 +190,7 @@ class FamilyController extends GedcomRecordController
         if ($indifacts) {
             Functions::i()->sort_facts($indifacts);
             foreach ($indifacts as $fact) {
-                print_fact($fact, $this->record);
+                FunctionsPrintFacts::i()->print_fact($fact, $this->record);
             }
         } else {
             echo '<tr><td class="messagebox" colspan="2">', I18N::translate('No facts for this family.'), '</td></tr>';

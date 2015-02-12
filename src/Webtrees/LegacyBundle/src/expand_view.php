@@ -73,7 +73,7 @@ foreach ($facts as $event) {
             echo FunctionsPrint::i()->format_asso_rela_record($event);
             break;
         default:
-            // Simple version of print_fact()
+            // Simple version of FunctionsPrintFacts::i()->print_fact()
             echo $event->summary();
             break;
     }

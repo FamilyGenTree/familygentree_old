@@ -77,9 +77,9 @@ class sources_tab_WT_Module extends Module implements ModuleTabInterface
             <?php
             foreach ($this->getFactsWithSources() as $fact) {
                 if ($fact->getTag() == 'SOUR') {
-                    print_main_sources($fact, 1);
+                    FunctionsPrintFacts::i()->print_main_sources($fact, 1);
                 } else {
-                    print_main_sources($fact, 2);
+                    FunctionsPrintFacts::i()->print_main_sources($fact, 2);
                 }
             }
             if (!$this->getFactsWithSources()) {

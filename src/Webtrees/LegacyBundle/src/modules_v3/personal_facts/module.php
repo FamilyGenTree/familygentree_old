@@ -138,7 +138,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
         echo '</form></td></tr>';
 
         foreach ($indifacts as $fact) {
-            print_fact($fact, $controller->record);
+            FunctionsPrintFacts::i()->print_fact($fact, $controller->record);
         }
 
         //-- new fact link

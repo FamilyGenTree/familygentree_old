@@ -66,10 +66,10 @@ class media_WT_Module extends Module implements ModuleTabInterface
         echo '<table class="facts_table">';
         foreach ($this->getFactsWithMedia() as $fact) {
             if ($fact->getTag() == 'OBJE') {
-                print_main_media($fact, 1);
+                FunctionsPrintFacts::i()->print_main_media($fact, 1);
             } else {
                 for ($i = 2; $i < 4; ++$i) {
-                    print_main_media($fact, $i);
+                    FunctionsPrintFacts::i()->print_main_media($fact, $i);
                 }
             }
         }
