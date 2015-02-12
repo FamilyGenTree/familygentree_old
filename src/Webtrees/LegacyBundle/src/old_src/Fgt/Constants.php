@@ -8,7 +8,7 @@
 namespace Fgt;
 
 
-use Fisharebest\Webtrees\I18N;
+use Webtrees\LegacyBundle\Legacy\I18N;
 
 class Constants
 {

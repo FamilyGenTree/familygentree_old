@@ -1,5 +1,5 @@
 <?php
-namespace Fisharebest\Webtrees;
+namespace Webtrees\LegacyBundle\Legacy;
 
 // Administration theme
 //

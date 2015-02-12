@@ -8,17 +8,17 @@
 namespace Fgt;
 
 
-use Fisharebest\Webtrees\AdministrationTheme;
-use Fisharebest\Webtrees\Auth;
-use Fisharebest\Webtrees\BaseController;
-use Fisharebest\Webtrees\Database;
-use Fisharebest\Webtrees\Filter;
-use Fisharebest\Webtrees\FlashMessages;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Log;
-use Fisharebest\Webtrees\Site;
-use Fisharebest\Webtrees\Theme;
-use Fisharebest\Webtrees\Tree;
+use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
+use Webtrees\LegacyBundle\Legacy\Auth;
+use Webtrees\LegacyBundle\Legacy\BaseController;
+use Webtrees\LegacyBundle\Legacy\Database;
+use Webtrees\LegacyBundle\Legacy\Filter;
+use Webtrees\LegacyBundle\Legacy\FlashMessages;
+use Webtrees\LegacyBundle\Legacy\I18N;
+use Webtrees\LegacyBundle\Legacy\Log;
+use Webtrees\LegacyBundle\Legacy\Site;
+use Webtrees\LegacyBundle\Legacy\Theme;
+use Webtrees\LegacyBundle\Legacy\Tree;
 
 class Application
 {
@@ -215,9 +215,9 @@ class Application
     }
 
     /**
-     * @param \Fisharebest\Webtrees\BaseController $param
+     * @param \Webtrees\LegacyBundle\Legacy\BaseController $param
      *
-     * @return \Fisharebest\Webtrees\BaseController
+     * @return \Webtrees\LegacyBundle\Legacy\BaseController
      */
     public function setActiveController(BaseController $param)
     {

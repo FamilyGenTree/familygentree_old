@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Fisharebest\Webtrees;
+namespace Webtrees\LegacyBundle\Legacy;
 
 use Fgt\Globals;
 

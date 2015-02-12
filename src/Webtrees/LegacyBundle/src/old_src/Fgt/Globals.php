@@ -9,8 +9,8 @@ namespace Fgt;
 
 
 use \Exception;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Tree;
+use Webtrees\LegacyBundle\Legacy\I18N;
+use Webtrees\LegacyBundle\Legacy\Tree;
 
 /**
  * Class Globals
