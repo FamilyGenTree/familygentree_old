@@ -16,7 +16,9 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$controller = new SimpleController;
+use Fgt\Application;
+
+$controller = Application::i()->setActiveController(new SimpleController());
 
 $filter   = Filter::get('filter');
 $action   = Filter::get('action');

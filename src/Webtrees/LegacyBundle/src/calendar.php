@@ -16,15 +16,16 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'calendar.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $WEEK_START      = Globals::i()->WT_TREE->getPreference('WEEK_START');
 $CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller->setPageTitle(I18N::translate('Anniversary calendar'));
 $controller->pageHeader();
 

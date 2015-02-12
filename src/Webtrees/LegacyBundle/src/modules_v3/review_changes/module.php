@@ -79,7 +79,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                                     I18N::translate('Pending changes'),
                                     I18N::translate('There are pending changes for you to moderate.') .
                                     Mail::EOL . Mail::EOL .
-                                    '<a href="' . WT_BASE_URL . 'index.php?ged=' . WT_GEDURL . '">' . WT_BASE_URL . 'index.php?ged=' . WT_GEDURL . '</a>'
+                                    '<a href="' . Config::get(Config::BASE_URL) . 'index.php?ged=' . WT_GEDURL . '">' . Config::get(Config::BASE_URL) . 'index.php?ged=' . WT_GEDURL . '</a>'
                                 );
                                 I18N::init(WT_LOCALE);
                             }

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -51,7 +52,8 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
+
         $EXPAND_HISTO_EVENTS = false;
 
         $indifacts = array();
@@ -223,7 +225,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
      */
     private static function childFacts(Individual $person, Family $family, $option, $relation)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $SHOW_RELATIVES_EVENTS = $person->getTree()
                                         ->getPreference('SHOW_RELATIVES_EVENTS');
@@ -358,7 +360,7 @@ class personal_facts_WT_Module extends Module implements ModuleTabInterface
      */
     private static function parentFacts(Individual $person, $sosa)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $SHOW_RELATIVES_EVENTS = $person->getTree()
                                         ->getPreference('SHOW_RELATIVES_EVENTS');

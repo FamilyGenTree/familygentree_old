@@ -16,13 +16,15 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use PclZip;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_trees_download.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->setPageTitle(I18N::translate('Download GEDCOM') . ' — ' . Filter::escapeHtml(WT_GEDCOM))
     ->restrictAccess(Auth::isManager());
@@ -48,7 +50,7 @@ if ($action === 'download') {
     }
 
     if ($zip === 'yes') {
-        $temp_dir = WT_DATA_DIR . 'tmp-' . WT_GEDCOM . '-' . date('YmdHis') . '/';
+        $temp_dir = Config::get(Config::DATA_DIRECTORY) . 'tmp-' . WT_GEDCOM . '-' . date('YmdHis') . '/';
         $zip_file = $download_filename . '.zip';
 
         if (!File::mkdir($temp_dir)) {

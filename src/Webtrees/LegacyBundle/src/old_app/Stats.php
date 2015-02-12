@@ -5582,7 +5582,7 @@ class Stats
         if ($common) {
             switch ($type) {
                 case 'table':
-                    global $controller;
+                    $controller = Application::i()->getActiveController();
                     $table_id = Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
                     $controller
                         ->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)

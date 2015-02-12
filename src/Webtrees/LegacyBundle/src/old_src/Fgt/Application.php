@@ -70,10 +70,17 @@ class Application
     /**
      * @return BaseController
      */
-    public function getActiveController() {
+    public function getActiveController()
+    {
         return BaseController::$activeController;
     }
 
+    /**
+     * @return \Doctrine\Common\Cache\CacheProvider
+     */
+    public function cache() {
+        return Config::get(Config::CACHE);
+    }
     /**
      *
      * @return $this
@@ -87,19 +94,20 @@ class Application
         $this->initExtCalendar();
 
         $this->initBaseUrl();
-        $this->initErrorHandler();
+//        $this->initErrorHandler();
 
+        Config::set(Config::CONFIG_PATH, dirname(dirname(dirname(dirname(dirname(dirname(__DIR__)))))) . '/data/config.ini.php');
         $this->initDatabase();
         $this->initMemoryLimit();
 
 // The config.ini.php file must always be in a fixed location.
 // Other user files can be stored elsewhere...
-        define('WT_DATA_DIR', realpath(Site::getPreference('INDEX_DIRECTORY') ? Site::getPreference('INDEX_DIRECTORY')
-                                           : 'data') . DIRECTORY_SEPARATOR);
-
+        Config::set(Config::DATA_DIRECTORY, realpath(Site::getPreference('INDEX_DIRECTORY')
+                                                         ? Site::getPreference('INDEX_DIRECTORY')
+                                                         : dirname(dirname(dirname(dirname(__DIR__)))) . '/data') . DIRECTORY_SEPARATOR);
         $this->redirectToRealUrl();
 
-        $this->request = new \Zend_Controller_Request_Http();
+        $this->request           = new \Zend_Controller_Request_Http();
         Globals::i()->WT_REQUEST = $this->request;
 
         $this->initRobot();
@@ -131,7 +139,7 @@ class Application
         if (Site::getPreference('LOGIN_URL')) {
             define('WT_LOGIN_URL', Site::getPreference('LOGIN_URL'));
         } else {
-            define('WT_LOGIN_URL', WT_BASE_URL . 'login.php');
+            define('WT_LOGIN_URL', Config::get(Config::BASE_URL) . 'login.php');
         }
 
 // If there is no current tree and we need one, then redirect somewhere
@@ -147,7 +155,7 @@ class Application
         ) {
             if (!isset(Globals::i()->WT_TREE) || !Globals::i()->WT_TREE->getPreference('imported')) {
                 if (Auth::isAdmin()) {
-                    header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php');
+                    header('Location: ' . Config::get(Config::BASE_URL) . 'admin_trees_manage.php');
                 } else {
                     header('Location: ' . WT_LOGIN_URL . '?url=' . rawurlencode(WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
                                                                                     ? '?' . $_SERVER['QUERY_STRING']
@@ -164,52 +172,8 @@ class Application
                 ->setPreference('sessiontime', WT_TIMESTAMP);
             Globals::i()->WT_SESSION->activity_time = WT_TIMESTAMP;
         }
+        $this->initTheme();
 
-// Set the theme
-        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === 'module.php' && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
-            // Administration scripts begin with “admin” and use a special administration theme
-            Theme::theme(new AdministrationTheme())
-                 ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-        } else {
-            if (Site::getPreference('ALLOW_USER_THEMES')) {
-                // Requested change of theme?
-                $theme_id = Filter::get('theme');
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = '';
-                }
-                // Last theme used?
-                if (!$theme_id && array_key_exists(Globals::i()->WT_SESSION->theme_id, Theme::themeNames())) {
-                    $theme_id = Globals::i()->WT_SESSION->theme_id;
-                }
-            } else {
-                $theme_id = '';
-            }
-            if (!$theme_id) {
-                // User cannot choose (or has not chosen) a theme.
-                // 1) gedcom setting
-                // 2) site setting
-                // 3) webtrees
-                // 4) first one found
-                if (WT_GED_ID) {
-                    $theme_id = Globals::i()->WT_TREE->getPreference('THEME_DIR');
-                }
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = Site::getPreference('THEME_DIR');
-                }
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = 'webtrees';
-                }
-            }
-            foreach (Theme::installedThemes() as $theme) {
-                if ($theme->themeId() === $theme_id) {
-                    Theme::theme($theme)
-                         ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-                }
-            }
-
-            // Remember this setting
-            Globals::i()->WT_SESSION->theme_id = $theme_id;
-        }
 
 // Page hit counter - load after theme, as we need theme formatting
         if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
@@ -248,6 +212,17 @@ class Application
     public function stopped()
     {
         return $this;
+    }
+
+    /**
+     * @param \Fisharebest\Webtrees\BaseController $param
+     *
+     * @return \Fisharebest\Webtrees\BaseController
+     */
+    public function setActiveController(BaseController $param)
+    {
+        BaseController::$activeController = $param;
+        return $this->getActiveController();
     }
 
     protected function initErrorHandler()
@@ -310,7 +285,7 @@ class Application
         $this->path = Filter::server('REDIRECT_URL', null, Filter::server('PHP_SELF'));
         $path       = substr($this->path, 0, stripos($this->path, WT_SCRIPT_NAME));
 
-        define('WT_BASE_URL', $this->protocol . '://' . $this->host . $this->port . $path);
+        Config::set(Config::BASE_URL, $this->protocol . '://' . $this->host . $this->port . $path . '/');
 
     }
 
@@ -337,21 +312,21 @@ class Application
     {
         $dbConfig = null;
         // Load our configuration file, so we can connect to the database
-        if (file_exists(WT_ROOT . 'data/config.ini.php')) {
-            $dbConfig = parse_ini_file(WT_ROOT . 'data/config.ini.php');
+        if (file_exists(Config::get(Config::CONFIG_PATH))) {
+            $dbConfig = parse_ini_file(Config::get(Config::CONFIG_PATH));
             // Invalid/unreadable config file?
             if (!is_array($dbConfig)) {
-                header('Location: ' . WT_BASE_URL . 'site-unavailable.php');
+                header('Location: ' . UrlConstants::url(UrlConstants::SITE_UNAVAILABLE_PHP));
                 exit;
             }
             // Down for maintenance?
             if (file_exists(WT_ROOT . 'data/offline.txt')) {
-                header('Location: ' . WT_BASE_URL . 'site-offline.php');
+                header('Location: ' . UrlConstants::url(UrlConstants::SITE_OFFLINE_PHP));
                 exit;
             }
         } else {
             // No config file. Set one up.
-            header('Location: ' . WT_BASE_URL . 'setup.php');
+            header('Location: ' . UrlConstants::url(UrlConstants::SETUP_PHP));
             exit;
         }
 
@@ -365,7 +340,7 @@ class Application
             Database::updateSchema(WT_ROOT . 'includes/db_schema/', 'WT_SCHEMA_VERSION', WT_SCHEMA_VERSION);
         } catch (\PDOException $ex) {
             FlashMessages::addMessage($ex->getMessage(), 'danger');
-            header('Location: ' . WT_BASE_URL . 'site-unavailable.php');
+            header('Location: ' . UrlConstants::url(UrlConstants::SITE_UNAVAILABLE_PHP));
             throw $ex;
         }
 
@@ -390,10 +365,10 @@ class Application
     {
         // If we have a preferred URL (e.g. www.example.com instead of www.isp.com/~example), then redirect to it.
         $SERVER_URL = Site::getPreference('SERVER_URL');
-        if ($SERVER_URL && $SERVER_URL != WT_BASE_URL) {
+        if ($SERVER_URL && $SERVER_URL != Config::get(Config::BASE_URL)) {
             header('Location: ' . $SERVER_URL . WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
-                                                      ? '?' . $_SERVER['QUERY_STRING']
-                                                      : ''), true, 301);
+                                                                        ? '?' . $_SERVER['QUERY_STRING']
+                                                                        : ''), true, 301);
             exit;
         }
     }
@@ -524,7 +499,7 @@ class Application
             'gc_maxlifetime'  => Site::getPreference('SESSION_TIME'),
             'gc_probability'  => 1,
             'gc_divisor'      => 100,
-            'cookie_path'     => parse_url(WT_BASE_URL, PHP_URL_PATH),
+            'cookie_path'     => parse_url(Config::get(Config::BASE_URL), PHP_URL_PATH),
             'cookie_httponly' => true,
         );
 
@@ -623,5 +598,54 @@ class Application
     private function initTranslation()
     {
         I18N::init();
+    }
+
+    private function initTheme()
+    {
+// Set the theme
+        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === UrlConstants::MODULE_PHP && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
+            // Administration scripts begin with “admin” and use a special administration theme
+            Theme::theme(new AdministrationTheme())
+                 ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+        } else {
+            if (Site::getPreference('ALLOW_USER_THEMES')) {
+                // Requested change of theme?
+                $theme_id = Filter::get('theme');
+                if (!array_key_exists($theme_id, Theme::themeNames())) {
+                    $theme_id = '';
+                }
+                // Last theme used?
+                if (!$theme_id && array_key_exists(Globals::i()->WT_SESSION->theme_id, Theme::themeNames())) {
+                    $theme_id = Globals::i()->WT_SESSION->theme_id;
+                }
+            } else {
+                $theme_id = '';
+            }
+            if (!$theme_id) {
+                // User cannot choose (or has not chosen) a theme.
+                // 1) gedcom setting
+                // 2) site setting
+                // 3) webtrees
+                // 4) first one found
+                if (WT_GED_ID) {
+                    $theme_id = Globals::i()->WT_TREE->getPreference('THEME_DIR');
+                }
+                if (!array_key_exists($theme_id, Theme::themeNames())) {
+                    $theme_id = Site::getPreference('THEME_DIR');
+                }
+                if (!array_key_exists($theme_id, Theme::themeNames())) {
+                    $theme_id = 'webtrees';
+                }
+            }
+            foreach (Theme::installedThemes() as $theme) {
+                if ($theme->themeId() === $theme_id) {
+                    Theme::theme($theme)
+                         ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+                }
+            }
+
+            // Remember this setting
+            Globals::i()->WT_SESSION->theme_id = $theme_id;
+        }
     }
 }

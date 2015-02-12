@@ -16,14 +16,15 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use PDO;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_users.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller->restrictAccess(Auth::isAdmin());
 
 // Valid values for form variables
@@ -94,8 +95,8 @@ switch (Filter::post('action')) {
                     Mail::systemMessage(
                         Globals::i()->WT_TREE,
                         $user,
-                        I18N::translate('Approval of account at %s', WT_BASE_URL),
-                        I18N::translate('The administrator at the webtrees site %s has approved your application for an account.  You may now login by accessing the following link: %s', WT_BASE_URL, WT_BASE_URL)
+                        I18N::translate('Approval of account at %s', Config::get(Config::BASE_URL)),
+                        I18N::translate('The administrator at the webtrees site %s has approved your application for an account.  You may now login by accessing the following link: %s', Config::get(Config::BASE_URL), Config::get(Config::BASE_URL))
                     );
                 }
 
@@ -128,7 +129,7 @@ switch (Filter::post('action')) {
             }
         }
 
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
 }
@@ -837,7 +838,7 @@ switch (Filter::get('action')) {
             }
         }
 
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
         break;
     default:
         $controller

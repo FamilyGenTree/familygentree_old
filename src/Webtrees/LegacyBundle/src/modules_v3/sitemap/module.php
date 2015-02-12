@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Zend_Session;
 
 /**
@@ -91,7 +92,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                                  ->execute(array('tree_id' => $tree->getTreeId()))
                                  ->fetchOne();
                     for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
-                        $data .= '<sitemap><loc>' . WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-i-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
+                        $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-i-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                     }
                     $n = Database::prepare(
                         "SELECT COUNT(*) FROM `##sources` WHERE s_file = :tree_id"
@@ -100,7 +101,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                                  ->fetchOne();
                     if ($n) {
                         for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
-                            $data .= '<sitemap><loc>' . WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-s-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
+                            $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-s-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
                     $n = Database::prepare(
@@ -110,7 +111,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                                  ->fetchOne();
                     if ($n) {
                         for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
-                            $data .= '<sitemap><loc>' . WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-r-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
+                            $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-r-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
                     $n = Database::prepare(
@@ -120,7 +121,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                                  ->fetchOne();
                     if ($n) {
                         for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
-                            $data .= '<sitemap><loc>' . WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-n-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
+                            $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-n-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
                     $n = Database::prepare(
@@ -130,7 +131,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                                  ->fetchOne();
                     if ($n) {
                         for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
-                            $data .= '<sitemap><loc>' . WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-m-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
+                            $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-m-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
                 }
@@ -161,7 +162,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
             $data = $this->getSetting('sitemap-' . $ged_id . '-' . $rec_type . '-' . $volume . '.xml');
         } else {
             $tree    = Tree::get($ged_id);
-            $data    = '<url><loc>' . WT_BASE_URL . 'index.php?ctype=gedcom&amp;ged=' . $tree->getNameUrl() . '</loc></url>' . PHP_EOL;
+            $data    = '<url><loc>' . Config::get(Config::BASE_URL) . 'index.php?ctype=gedcom&amp;ged=' . $tree->getNameUrl() . '</loc></url>' . PHP_EOL;
             $records = array();
             switch ($rec_type) {
                 case 'i':
@@ -258,7 +259,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
             foreach ($records as $record) {
                 if ($record->canShowName()) {
                     $data .= '<url>';
-                    $data .= '<loc>' . WT_BASE_URL . $record->getHtmlUrl() . '</loc>';
+                    $data .= '<loc>' . Config::get(Config::BASE_URL) . $record->getHtmlUrl() . '</loc>';
                     $chan = $record->getFirstFact('CHAN');
                     if ($chan) {
                         $date = $chan->getDate();
@@ -288,7 +289,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
      */
     private function admin()
     {
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->restrictAccess(Auth::isAdmin())
             ->setPageTitle($this->getTitle())
@@ -339,8 +340,8 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
         '<hr>';
 
         if ($include_any) {
-            $site_map_url1 = WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap.xml';
-            $site_map_url2 = rawurlencode(WT_BASE_URL . 'module.php?mod=' . $this->getName() . '&mod_action=generate&file=sitemap.xml');
+            $site_map_url1 = Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap.xml';
+            $site_map_url2 = rawurlencode(Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&mod_action=generate&file=sitemap.xml');
             echo
             '<p>', I18N::translate('To tell search engines that sitemaps are available, you should add the following line to your robots.txt file.'), '</p>',
             '<pre>Sitemap: ', $site_map_url1, '</pre>',

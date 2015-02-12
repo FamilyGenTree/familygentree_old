@@ -16,9 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('WT_SCRIPT_NAME', 'admin.php');
+use Fgt\Application;
+use Fgt\UrlConstants;
 
-require './includes/session.php';
+define('WT_SCRIPT_NAME', UrlConstants::ADMIN_PHP);
+
+require FGT_ROOT . '/includes/session.php';
 
 // This is a list of old files and directories, from earlier versions of webtrees, that can be deleted.
 // It was generated with the help of a command like this:
@@ -386,7 +389,7 @@ foreach ($old_files as $file) {
     }
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController);
 $controller
     ->restrictAccess(Auth::isManager())
     ->setPageTitle(I18N::translate('Control panel') . ' — ' . /* I18N: A summary of the system status */

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 use HTMLPurifier;
 use HTMLPurifier_Config;
@@ -166,7 +167,7 @@ class Filter
         $text                         = $parser->transform($text);
 
         // HTMLPurifier needs somewhere to write temporary files
-        $HTML_PURIFIER_CACHE_DIR = WT_DATA_DIR . 'html_purifier_cache';
+        $HTML_PURIFIER_CACHE_DIR = Config::get(Config::DATA_DIRECTORY) . 'html_purifier_cache';
 
         if (!is_dir($HTML_PURIFIER_CACHE_DIR)) {
             mkdir($HTML_PURIFIER_CACHE_DIR);

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 use PclZip;
 use Zend_Session;
@@ -237,25 +238,25 @@ class ClippingsCart
                         case 'INDI':
                             $filetext .= $record . "\n";
                             $filetext .= "1 SOUR @WEBTREES@\n";
-                            $filetext .= "2 PAGE " . WT_BASE_URL . $object->getRawUrl() . "\n";
+                            $filetext .= "2 PAGE " . Config::get(Config::BASE_URL) . $object->getRawUrl() . "\n";
                             break;
                         case 'FAM':
                             $filetext .= $record . "\n";
                             $filetext .= "1 SOUR @WEBTREES@\n";
-                            $filetext .= "2 PAGE " . WT_BASE_URL . $object->getRawUrl() . "\n";
+                            $filetext .= "2 PAGE " . Config::get(Config::BASE_URL) . $object->getRawUrl() . "\n";
                             break;
                         case 'SOUR':
                             $filetext .= $record . "\n";
-                            $filetext .= "1 NOTE " . WT_BASE_URL . $object->getRawUrl() . "\n";
+                            $filetext .= "1 NOTE " . Config::get(Config::BASE_URL) . $object->getRawUrl() . "\n";
                             break;
                         default:
                             $ft              = preg_match_all("/\n\d FILE (.+)/", $savedRecord, $match, PREG_SET_ORDER);
                             $MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');
                             for ($k = 0; $k < $ft; $k++) {
                                 // Skip external files and non-existant files
-                                if (file_exists(WT_DATA_DIR . $MEDIA_DIRECTORY . $match[$k][1])) {
+                                if (file_exists(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $match[$k][1])) {
                                     $media[$mediacount] = array(
-                                        PCLZIP_ATT_FILE_NAME          => WT_DATA_DIR . $MEDIA_DIRECTORY . $match[$k][1],
+                                        PCLZIP_ATT_FILE_NAME          => Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $match[$k][1],
                                         PCLZIP_ATT_FILE_NEW_FULL_NAME => $match[$k][1],
                                     );
                                     $mediacount++;
@@ -272,7 +273,7 @@ class ClippingsCart
             } else {
                 $this->media_list = array();
             }
-            $filetext .= "0 @WEBTREES@ SOUR\n1 TITL " . WT_BASE_URL . "\n";
+            $filetext .= "0 @WEBTREES@ SOUR\n1 TITL " . Config::get(Config::BASE_URL) . "\n";
             if ($user_id = Globals::i()->WT_TREE->getPreference('CONTACT_EMAIL')) {
                 $user = User::find($user_id);
                 $filetext .= "1 AUTH " . $user->getRealName() . "\n";
@@ -291,19 +292,19 @@ class ClippingsCart
     function zipCart()
     {
         $tempFileName = 'clipping' . rand() . '.ged';
-        $fp           = fopen(WT_DATA_DIR . $tempFileName, "wb");
+        $fp           = fopen(Config::get(Config::DATA_DIRECTORY) . $tempFileName, "wb");
         if ($fp) {
             flock($fp, LOCK_EX);
             fwrite($fp, $this->download_data);
             flock($fp, LOCK_UN);
             fclose($fp);
             $zipName = "clippings" . rand(0, 1500) . ".zip";
-            $fname   = WT_DATA_DIR . $zipName;
+            $fname   = Config::get(Config::DATA_DIRECTORY) . $zipName;
             $comment = "Created by " . WT_WEBTREES . " " . WT_VERSION . " on " . date("d M Y") . ".";
             $archive = new PclZip($fname);
             // add the ged file to the root of the zip file (strip off the data folder)
             $this->media_list[] = array(
-                PCLZIP_ATT_FILE_NAME          => WT_DATA_DIR . $tempFileName,
+                PCLZIP_ATT_FILE_NAME          => Config::get(Config::DATA_DIRECTORY) . $tempFileName,
                 PCLZIP_ATT_FILE_NEW_FULL_NAME => $tempFileName
             );
             $v_list             = $archive->create($this->media_list, PCLZIP_OPT_COMMENT, $comment);
@@ -315,9 +316,9 @@ class ClippingsCart
                 fclose($openedFile);
                 unlink($fname);
             }
-            unlink(WT_DATA_DIR . $tempFileName);
+            unlink(Config::get(Config::DATA_DIRECTORY) . $tempFileName);
         } else {
-            echo I18N::translate('Cannot create') . " " . WT_DATA_DIR . "$tempFileName " . I18N::translate('Check the access rights on this folder.') . "<br><br>";
+            echo I18N::translate('Cannot create') . " " . Config::get(Config::DATA_DIRECTORY) . "$tempFileName " . I18N::translate('Check the access rights on this folder.') . "<br><br>";
         }
     }
 

@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use PDO;
 use PDOException;
 use Rhumsaa\Uuid\Uuid;
@@ -45,7 +46,9 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function getBlock($block_id, $template = true, $cfg = null)
     {
-        global $ctype, $controller;
+        global $ctype;
+
+        $controller = Application::i()->getActiveController();
 
         self::updateSchema(); // make sure the favorites table has been created
 
@@ -342,7 +345,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
         } catch (PDOException $ex) {
             // The schema update scripts should never fail.  If they do, there is no clean recovery.
             FlashMessages::addMessage($ex->getMessage(), 'danger');
-            header('Location: ' . WT_BASE_URL . 'site-unavailable.php');
+            header('Location: ' . Config::get(Config::BASE_URL) . 'site-unavailable.php');
             throw $ex;
         }
     }

@@ -16,10 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 
-define('WT_SCRIPT_NAME', 'addmedia.php');
-require './includes/session.php';
+define('WT_SCRIPT_NAME', UrlConstants::ADDMEDIA_PHP);
+require FGT_ROOT . '/includes/session.php';
 
 $NO_UPDATE_CHAN  = Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN');
 $MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');
@@ -36,7 +39,7 @@ $glevels  = Filter::postArray('glevels', '[0-9]');
 $folder      = Filter::post('folder');
 $update_CHAN = !Filter::postBool('preserve_last_changed');
 
-$controller = new SimpleController;
+$controller = Application::i()->setActiveController(new SimpleController());
 $controller
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();')
@@ -85,22 +88,22 @@ switch ($action) {
         }
 
         // Make sure the media folder exists
-        if (!is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
-            if (File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
-                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . '</span>'));
+        if (!is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
+            if (File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
+                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . '</span>'));
             } else {
-                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . '</span>'));
+                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . '</span>'));
                 break;
             }
         }
 
         // Managers can create new media paths (subfolders).  Users must use existing folders.
-        if ($folderName && !is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName)) {
+        if ($folderName && !is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName)) {
             if (WT_USER_GEDCOM_ADMIN) {
-                if (File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName)) {
-                    FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName . '</span>'));
+                if (File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName)) {
+                    FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName . '</span>'));
                 } else {
-                    FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName . '</span>'));
+                    FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName . '</span>'));
                     break;
                 }
             } else {
@@ -110,9 +113,9 @@ switch ($action) {
         }
 
         // The media folder exists.  Now create a thumbnail folder to match it.
-        if (!is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
-            if (!File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
-                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . '</span>'));
+        if (!is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
+            if (!File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
+                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . '</span>'));
                 break;
             }
         }
@@ -165,7 +168,7 @@ switch ($action) {
 
         // Now copy the file to the correct location.
         if (!empty($_FILES['mediafile']['name'])) {
-            $serverFileName = WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName . $fileName;
+            $serverFileName = Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName . $fileName;
             if (file_exists($serverFileName)) {
                 FlashMessages::addMessage(I18N::translate('The file %s already exists.  Use another filename.', $folderName . $fileName));
                 $filename = '';
@@ -193,7 +196,7 @@ switch ($action) {
                 } else {
                     $thumbFile = $fileName;
                 }
-                $serverFileName = WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . $thumbFile;
+                $serverFileName = Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . $thumbFile;
                 if (move_uploaded_file($_FILES['thumbnail']['tmp_name'], $serverFileName)) {
                     Log::addMediaLog('Thumbnail file ' . $serverFileName . ' uploaded');
                 }
@@ -246,22 +249,22 @@ switch ($action) {
         }
 
         // Make sure the media folder exists
-        if (!is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
-            if (File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
-                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . '</span>'));
+        if (!is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
+            if (File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
+                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . '</span>'));
             } else {
-                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . '</span>'));
+                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . '</span>'));
                 break;
             }
         }
 
         // Managers can create new media paths (subfolders).  Users must use existing folders.
-        if ($folderName && !is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName)) {
+        if ($folderName && !is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName)) {
             if (WT_USER_GEDCOM_ADMIN) {
-                if (File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName)) {
-                    FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName . '</span>'));
+                if (File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName)) {
+                    FlashMessages::addMessage(I18N::translate('The folder %s has been created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName . '</span>'));
                 } else {
-                    FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . $folderName . '</span>'));
+                    FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $folderName . '</span>'));
                     break;
                 }
             } else {
@@ -271,9 +274,9 @@ switch ($action) {
         }
 
         // The media folder exists.  Now create a thumbnail folder to match it.
-        if (!is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
-            if (!File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
-                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . '</span>'));
+        if (!is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
+            if (!File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName)) {
+                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', '<span class="filename">' . Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $folderName . '</span>'));
                 break;
             }
         }

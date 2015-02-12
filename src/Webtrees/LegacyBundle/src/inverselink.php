@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'inverselink.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new SimpleController;
+$controller = Application::i()->setActiveController(new SimpleController());
 $controller
     ->restrictAccess(Auth::isEditor())
     ->setPageTitle(I18N::translate('Link to an existing media object'))

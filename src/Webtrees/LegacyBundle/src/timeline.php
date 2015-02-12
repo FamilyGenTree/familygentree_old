@@ -25,12 +25,13 @@ namespace Fisharebest\Webtrees;
  */
 global $basexoffset, $baseyoffset;
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'timeline.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new TimelineController;
+$controller = Application::i()->setActiveController(new TimelineController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

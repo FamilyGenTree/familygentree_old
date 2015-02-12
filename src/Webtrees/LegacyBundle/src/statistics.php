@@ -16,18 +16,19 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'statistics.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // check for on demand content loading
 $tab  = Filter::getInteger('tab', 0, 3);
 $ajax = Filter::getBool('ajax');
 
 if (!$ajax) {
-    $controller = new PageController;
+    $controller = Application::i()->setActiveController(new PageController());
     $controller->setPageTitle(I18N::translate('Statistics'))
                ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
                ->addInlineJavascript('
@@ -70,7 +71,7 @@ if (!$ajax) {
     '</div>', // statistics-page
     '<br><br>';
 } else {
-    $controller = new AjaxController;
+    $controller = Application::i()->setActiveController(new AjaxController());
     $controller
         ->pageHeader()
         ->addInlineJavascript('autocomplete();')

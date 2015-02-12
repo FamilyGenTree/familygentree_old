@@ -34,7 +34,6 @@ require 'vendor/autoload.php';
 define('WT_WEBTREES', 'webtrees');
 define('WT_ROOT', '');
 define('WT_GED_ID', 0);
-define('WT_DATA_DIR', realpath('data') . DIRECTORY_SEPARATOR);
 
 Globals::i()->WT_SESSION         = new \stdClass;
 Globals::i()->WT_SESSION->locale = '';

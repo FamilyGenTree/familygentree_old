@@ -17,6 +17,7 @@ namespace Fisharebest\Webtrees;
  */
 
 use Fgt\Globals;
+use Rhumsaa\Uuid\Console\Application;
 use Zend_Session;
 
 /**
@@ -52,7 +53,7 @@ class tree_WT_Module extends Module implements ModuleTabInterface
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = \Fgt\Application::i()->getActiveController();
 
         require_once WT_MODULES_DIR . $this->getName() . '/class_treeview.php';
         $tv = new TreeView('tvTab');
@@ -106,8 +107,7 @@ class tree_WT_Module extends Module implements ModuleTabInterface
         require_once WT_MODULES_DIR . $this->getName() . '/class_treeview.php';
         switch ($mod_action) {
             case 'treeview':
-                global $controller;
-                $controller = new ChartController;
+                $controller = \Fgt\Application::i()->setActiveController(new ChartController());
                 $tv         = new TreeView('tv');
                 ob_start();
 

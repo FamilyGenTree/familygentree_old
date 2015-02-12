@@ -16,10 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('WT_SCRIPT_NAME', 'admin_site_info.php');
-require './includes/session.php';
+use Fgt\Application;
+use Fgt\UrlConstants;
 
-$controller = new PageController;
+define('WT_SCRIPT_NAME', UrlConstants::ADMIN_SITE_INFO_PHP);
+require FGT_ROOT . '/includes/session.php';
+
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(I18N::translate('Server information'))

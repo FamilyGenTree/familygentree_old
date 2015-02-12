@@ -16,11 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'message.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // Some variables are initialised from GET (so we can set initial values in URLs),
 // but are submitted in POST so we can have long body text.
@@ -36,7 +37,7 @@ $url        = Filter::postUrl('url', Filter::getUrl('url'));
 
 $to_user = User::findByIdentifier($to);
 
-$controller = new SimpleController;
+$controller = Application::i()->setActiveController(new SimpleController());
 $controller
     ->restrictAccess($to_user || Auth::isAdmin() && ($to === 'all' || $to === 'last_6mo' || $to === 'never_logged'))
     ->setPageTitle(I18N::translate('webtrees message'));
@@ -55,7 +56,7 @@ if (Auth::check()) {
     }
 
     // Do not allow anonymous visitors to include links to external sites
-    if (preg_match('/(?!' . preg_quote(WT_BASE_URL, '/') . ')(((?:ftp|http|https):\/\/)[a-zA-Z0-9.-]+)/', $subject . $body, $match)) {
+    if (preg_match('/(?!' . preg_quote(Config::get(Config::BASE_URL), '/') . ')(((?:ftp|http|https):\/\/)[a-zA-Z0-9.-]+)/', $subject . $body, $match)) {
         $errors .=
             '<p class="ui-state-error">' . I18N::translate('You are not allowed to send messages that contain external links.') . '</p>' .
             '<p class="ui-state-highlight">' . /* I18N: e.g. ‘You should delete the “http://” from “http://www.example.com” and try again.’ */

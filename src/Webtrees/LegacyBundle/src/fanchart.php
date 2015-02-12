@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'fanchart.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new FanchartController;
+$controller = Application::i()->setActiveController(new FanchartController());
 
 if (Filter::getBool('img')) {
     Zend_Session::writeClose();

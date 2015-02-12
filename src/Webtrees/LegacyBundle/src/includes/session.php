@@ -18,33 +18,6 @@ namespace Fisharebest\Webtrees;
 
 use Fgt\Application;
 
-// WT_SCRIPT_NAME is defined in each script that the user is permitted to load.
-if (!defined('WT_SCRIPT_NAME')) {
-    http_response_code(403);
-
-    return;
-}
-
-// We use some PHP5.5 features, but need to run on older servers
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-    throw new \Exception('PHP version 5.4+ required. You have ' . PHP_VERSION . ' running. Can not run here.');
-}
-
-// We want to know about all PHP errors
-error_reporting(E_ALL | E_STRICT);
-if (strpos(ini_get('disable_functions'), 'ini_set') === false) {
-    ini_set('display_errors', 'on');
-}
-
-
-// To embed webtrees code in other applications, we must explicitly declare any global variables that we create.
-// most pages
-global $controller;
-
-// For performance, it is quicker to refer to files using absolute paths
-define('WT_ROOT', realpath(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
-
-require WT_ROOT . 'vendor/autoload.php';
 
 Application::i()->init()
            ->started();

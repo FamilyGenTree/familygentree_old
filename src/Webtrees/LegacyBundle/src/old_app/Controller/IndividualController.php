@@ -400,7 +400,7 @@ class IndividualController extends GedcomRecordController
      */
     public function getSideBarContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $html   = '';
         $active = 0;

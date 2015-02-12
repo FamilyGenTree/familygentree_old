@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class page_menu_WT_Module
@@ -44,7 +45,7 @@ class page_menu_WT_Module extends Module implements ModuleMenuInterface
     /** {@inheritdoc} */
     public function getMenu()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $menu = null;
         if (empty($controller)) {

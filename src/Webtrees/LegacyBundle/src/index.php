@@ -16,10 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 
-define('WT_SCRIPT_NAME', 'index.php');
-require './includes/session.php';
+define('WT_SCRIPT_NAME', UrlConstants::INDEX_PHP);
+require_once FGT_ROOT .'/includes/session.php';
 
 // The only option for action is "ajax"
 $action = Filter::get('action');
@@ -45,7 +47,7 @@ fetch_latest_version();
 
 // We generate individual blocks using AJAX
 if ($action === 'ajax') {
-    $controller = new AjaxController;
+    $controller = Application::i()->setActiveController(new AjaxController());
     $controller->pageHeader();
 
     // Check we’re displaying an allowable block.
@@ -70,7 +72,7 @@ if ($action === 'ajax') {
     return;
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 if ($ctype === 'user') {
     $controller->restrictAccess(Auth::check());
 }

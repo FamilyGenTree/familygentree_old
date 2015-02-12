@@ -1,3 +1,289 @@
+webtrees_legacy_setup:
+    path:     /setup
+    defaults: { _controller: WebtreesLegacyBundle:Setup:index }
+
 webtrees_legacy_homepage:
-    path:     /hello/{name}
+    path:     /
+    defaults: { _controller: WebtreesLegacyBundle:Default:indexPhp }
+
+webtrees_legacy_admin_media_php_route:
+    path: /admin_media_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminMediaPhp }
+
+webtrees_legacy_admin_media_upload_php_route:
+    path: /admin_media_upload_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminMediaUploadPhp }
+
+webtrees_legacy_admin_module_blocks_php_route:
+    path: /admin_module_blocks_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModuleBlocksPhp }
+
+webtrees_legacy_admin_module_menus_php_route:
+    path: /admin_module_menus_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModuleMenusPhp }
+
+webtrees_legacy_admin_module_reports_php_route:
+    path: /admin_module_reports_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModuleReportsPhp }
+
+webtrees_legacy_admin_module_sidebar_php_route:
+    path: /admin_module_sidebar_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModuleSidebarPhp }
+
+webtrees_legacy_admin_modules_php_route:
+    path: /admin_modules_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModulesPhp }
+
+webtrees_legacy_admin_module_tabs_php_route:
+    path: /admin_module_tabs_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminModuleTabsPhp }
+
+webtrees_legacy_admin_pgv_to_wt_php_route:
+    path: /admin_pgv_to_wt_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminPgvToWtPhp }
+
+webtrees_legacy_admin_php_route:
+    path: /admin_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminPhp }
+
+webtrees_legacy_admin_site_access_php_route:
+    path: /admin_site_access_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteAccessPhp }
+
+webtrees_legacy_admin_site_change_php_route:
+    path: /admin_site_change_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteChangePhp }
+
+webtrees_legacy_admin_site_clean_php_route:
+    path: /admin_site_clean_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteCleanPhp }
+
+webtrees_legacy_admin_site_config_php_route:
+    path: /admin_site_config_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteConfigPhp }
+
+webtrees_legacy_admin_site_info_php_route:
+    path: /admin_site_info_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteInfoPhp }
+
+webtrees_legacy_admin_site_logs_php_route:
+    path: /admin_site_logs_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteLogsPhp }
+
+webtrees_legacy_admin_site_merge_php_route:
+    path: /admin_site_merge_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteMergePhp }
+
+webtrees_legacy_admin_site_readme_php_route:
+    path: /admin_site_readme_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteReadmePhp }
+
+webtrees_legacy_admin_site_upgrade_php_route:
+    path: /admin_site_upgrade_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminSiteUpgradePhp }
+
+webtrees_legacy_admin_trees_check_php_route:
+    path: /admin_trees_check_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesCheckPhp }
+
+webtrees_legacy_admin_trees_config_php_route:
+    path: /admin_trees_config_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesConfigPhp }
+
+webtrees_legacy_admin_trees_download_php_route:
+    path: /admin_trees_download_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesDownloadPhp }
+
+webtrees_legacy_admin_trees_export_php_route:
+    path: /admin_trees_export_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesExportPhp }
+
+webtrees_legacy_admin_trees_manage_php_route:
+    path: /admin_trees_manage_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesManagePhp }
+
+webtrees_legacy_admin_trees_merge_php_route:
+    path: /admin_trees_merge_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesMergePhp }
+
+webtrees_legacy_admin_trees_places_php_route:
+    path: /admin_trees_places_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesPlacesPhp }
+
+webtrees_legacy_admin_trees_renumber_php_route:
+    path: /admin_trees_renumber_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminTreesRenumberPhp }
+
+webtrees_legacy_admin_users_bulk_php_route:
+    path: /admin_users_bulk_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminUsersBulkPhp }
+
+webtrees_legacy_admin_users_php_route:
+    path: /admin_users_php
+    defaults: { _controller: WebtreesLegacyBundle:Admin:adminUsersPhp }
+
+webtrees_legacy_ancestry_php_route:
+    path: /ancestry_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:ancestryPhp }
+webtrees_legacy_autocomplete_php_route:
+    path: /autocomplete_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:autocompletePhp }
+webtrees_legacy_block_edit_php_route:
+    path: /block_edit_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:blockEditPhp }
+webtrees_legacy_branches_php_route:
+    path: /branches_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:branchesPhp }
+webtrees_legacy_calendar_php_route:
+    path: /calendar_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:calendarPhp }
+webtrees_legacy_compact_php_route:
+    path: /compact_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:compactPhp }
+webtrees_legacy_descendancy_php_route:
+    path: /descendancy_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:descendancyPhp }
+webtrees_legacy_edit_changes_php_route:
+    path: /edit_changes_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:editChangesPhp }
+webtrees_legacy_edit_interface_php_route:
+    path: /edit_interface_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:editInterfacePhp }
+webtrees_legacy_editnews_php_route:
+    path: /editnews_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:editNewsPhp }
+webtrees_legacy_edituser_php_route:
+    path: /edituser_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:editUserPhp }
+webtrees_legacy_expand_view_php_route:
+    path: /expand_view_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:expandViewPhp }
+webtrees_legacy_familybook_php_route:
+    path: /familybook_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:familyBookPhp }
+webtrees_legacy_family_php_route:
+    path: /family_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:familyPhp }
+webtrees_legacy_famlist_php_route:
+    path: /famlist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:famlistPhp }
+webtrees_legacy_fanchart_php_route:
+    path: /fanchart_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:fanchartPhp }
+webtrees_legacy_find_php_route:
+    path: /find_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:findPhp }
+webtrees_legacy_gedrecord_php_route:
+    path: /gedrecord_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:gedrecordPhp }
+webtrees_legacy_help_text_php_route:
+    path: /help_text_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:helpTextPhp }
+webtrees_legacy_hourglass_ajax_php_route:
+    path: /hourglass_ajax_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:hourglassAjaxPhp }
+webtrees_legacy_hourglass_php_route:
+    path: /hourglass_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:hourglassPhp }
+webtrees_legacy_import_php_route:
+    path: /import_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:importPhp }
+webtrees_legacy_index_edit_php_route:
+    path: /index_edit_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:indexEditPhp }
+webtrees_legacy_index_php_route:
+    path: /index_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:indexPhp }
+webtrees_legacy_indilist_php_route:
+    path: /indilist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:indilistPhp }
+webtrees_legacy_individual_php_route:
+    path: /individual_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:individualPhp }
+webtrees_legacy_inverselink_php_route:
+    path: /inverselink_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:inverselinkPhp }
+webtrees_legacy_lifespan_php_route:
+    path: /lifespan_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:lifespanPhp }
+webtrees_legacy_login_php_route:
+    path: /login_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:loginPhp }
+webtrees_legacy_logout_php_route:
+    path: /logout_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:logoutPhp }
+webtrees_legacy_mediafirewall_php_route:
+    path: /mediafirewall_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:mediafirewallPhp }
+webtrees_legacy_medialist_php_route:
+    path: /medialist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:medialistPhp }
+webtrees_legacy_mediaviewer_php_route:
+    path: /mediaviewer_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:mediaviewerPhp }
+webtrees_legacy_message_php_route:
+    path: /message_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:messagePhp }
+webtrees_legacy_module_php_route:
+    path: /module_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:modulePhp }
+webtrees_legacy_notelist_php_route:
+    path: /notelist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:notelistPhp }
+webtrees_legacy_note_php_route:
+    path: /note_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:notePhp }
+webtrees_legacy_pedigree_php_route:
+    path: /pedigree_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:pedigreePhp }
+webtrees_legacy_placelist_php_route:
+    path: /placelist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:placelistPhp }
+webtrees_legacy_relationship_php_route:
+    path: /relationship_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:relationshipPhp }
+webtrees_legacy_repolist_php_route:
+    path: /repolist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:repolistPhp }
+webtrees_legacy_repo_php_route:
+    path: /repo_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:repoPhp }
+webtrees_legacy_reportengine_php_route:
+    path: /reportengine_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:reportenginePhp }
+webtrees_legacy_search_advanced_php_route:
+    path: /search_advanced_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:searchAdvancedPhp }
+webtrees_legacy_search_php_route:
+    path: /search_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:searchPhp }
+webtrees_legacy_setup_php_route:
+    path: /setup_php
+    defaults: { _controller: WebtreesLegacyBundle:Setup:index }
+webtrees_legacy_site_offline_php_route:
+    path: /site_offline_php
+    defaults: { _controller: WebtreesLegacyBundle:Maintenance:siteOfflinePhp }
+webtrees_legacy_site_unavailable_php_route:
+    path: /site_unavailable_php
+    defaults: { _controller: WebtreesLegacyBundle:Maintenance:siteUnavailablePhp }
+webtrees_legacy_sourcelist_php_route:
+    path: /sourcelist_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:sourcelistPhp }
+webtrees_legacy_source_php_route:
+    path: /source_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:sourcePhp }
+webtrees_legacy_statistics_php_route:
+    path: /statistics_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:statisticsPhp }
+webtrees_legacy_statisticsplot_php_route:
+    path: /statisticsplot_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:statisticsplotPhp }
+webtrees_legacy_timeline_php_route:
+    path: /timeline_php
+    defaults: { _controller: WebtreesLegacyBundle:Default:timelinePhp }
+
+webtrees_legacy_route:
+    path:     /{file}
     defaults: { _controller: WebtreesLegacyBundle:Default:index }
+    requirements:
+        file: .+

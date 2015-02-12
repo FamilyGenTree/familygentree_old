@@ -16,22 +16,23 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 use Zend_Controller_Request_Http;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'login.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // If we are already logged in, then go to the “Home page”
 if (Auth::check() && WT_GED_ID) {
-    header('Location: ' . WT_BASE_URL);
+    header('Location: ' . Config::get(Config::BASE_URL));
 
     return;
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 
 $REQUIRE_ADMIN_AUTH_REGISTRATION = Site::getPreference('REQUIRE_ADMIN_AUTH_REGISTRATION');
 
@@ -131,7 +132,7 @@ switch ($action) {
             }
 
             // Redirect to the target URL
-            header('Location: ' . WT_BASE_URL . $url);
+            header('Location: ' . Config::get(Config::BASE_URL) . $url);
             // Explicitly write the session data before we exit,
             // as it doesn’t always happen when using APC.
             Zend_Session::writeClose();
@@ -258,7 +259,7 @@ switch ($action) {
                 I18N::translate('Username') . ": " . Filter::escapeHtml($user->getUserName()) . Mail::EOL .
                 I18N::translate('Password') . ": " . $user_new_pw . Mail::EOL . Mail::EOL .
                 I18N::translate('After you have logged in, select the “My account” link under the “My page” menu and fill in the password fields to change your password.') . Mail::EOL . Mail::EOL .
-                '<a href="' . WT_BASE_URL . 'login.php?ged=' . WT_GEDURL . '">' . WT_BASE_URL . 'login.php?ged=' . WT_GEDURL . '</a>'
+                '<a href="' . Config::get(Config::BASE_URL) . 'login.php?ged=' . WT_GEDURL . '">' . Config::get(Config::BASE_URL) . 'login.php?ged=' . WT_GEDURL . '</a>'
             );
         }
         // Show a success message, even if the user account does not exist.
@@ -274,7 +275,7 @@ switch ($action) {
 
     case 'register':
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
-            header('Location: ' . WT_BASE_URL);
+            header('Location: ' . Config::get(Config::BASE_URL));
 
             return;
         }
@@ -289,7 +290,7 @@ switch ($action) {
                 FlashMessages::addMessage(I18N::translate('Duplicate user name.  A user with that user name already exists.  Please choose another user name.'));
             } elseif (User::findByIdentifier($user_email)) {
                 FlashMessages::addMessage(I18N::translate('Duplicate email address.  A user with that email already exists.'));
-            } elseif (preg_match('/(?!' . preg_quote(WT_BASE_URL, '/') . ')(((?:ftp|http|https):\/\/)[a-zA-Z0-9.-]+)/', $user_comments, $match)) {
+            } elseif (preg_match('/(?!' . preg_quote(Config::get(Config::BASE_URL), '/') . ')(((?:ftp|http|https):\/\/)[a-zA-Z0-9.-]+)/', $user_comments, $match)) {
                 FlashMessages::addMessage(
                     I18N::translate('You are not allowed to send messages that contain external links.') . ' ' .
                     I18N::translate('You should delete the “%1$s” from “%2$s” and try again.', $match[2], $match[1])
@@ -321,7 +322,7 @@ switch ($action) {
                 $mail1_body =
                     I18N::translate('Hello administrator…') . Mail::EOL . Mail::EOL .
                     /* I18N: %s is a server name/URL */
-                    I18N::translate('A prospective user has registered with webtrees at %s.', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitleHtml()) . Mail::EOL . Mail::EOL .
+                    I18N::translate('A prospective user has registered with webtrees at %s.', Config::get(Config::BASE_URL) . ' ' . Globals::i()->WT_TREE->getTitleHtml()) . Mail::EOL . Mail::EOL .
                     I18N::translate('Username') . ' ' . Filter::escapeHtml($user->getUserName()) . Mail::EOL .
                     I18N::translate('Real name') . ' ' . Filter::escapeHtml($user->getRealName()) . Mail::EOL .
                     I18N::translate('Email address:') . ' ' . Filter::escapeHtml($user->getEmail()) . Mail::EOL .
@@ -335,7 +336,7 @@ switch ($action) {
                 $mail1_body .= Mail::auditFooter();
 
                 $mail1_subject = /* I18N: %s is a server name/URL */
-                    I18N::translate('New registration at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->title());
+                    I18N::translate('New registration at %s', Config::get(Config::BASE_URL) . ' ' . Globals::i()->WT_TREE->title());
                 I18N::init(WT_LOCALE);
 
                 echo '<div id="login-register-page">';
@@ -344,7 +345,7 @@ switch ($action) {
                 $mail2_body    =
                     I18N::translate('Hello %s…', $user->getRealName()) . Mail::EOL . Mail::EOL .
                     /* I18N: %1$s is the site URL and %2$s is an email address */
-                    I18N::translate('You (or someone claiming to be you) has requested an account at %1$s using the email address %2$s.', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitleHtml(), $user->getEmail()) . '  ' .
+                    I18N::translate('You (or someone claiming to be you) has requested an account at %1$s using the email address %2$s.', Config::get(Config::BASE_URL) . ' ' . Globals::i()->WT_TREE->getTitleHtml(), $user->getEmail()) . '  ' .
                     I18N::translate('Information about the request is shown under the link below.') . Mail::EOL .
                     I18N::translate('Please click on the following link and fill in the requested data to confirm your request and email address.') . Mail::EOL . Mail::EOL .
                     '<a href="' . WT_LOGIN_URL . "?user_name=" . Filter::escapeUrl($user->getUserName()) . "&amp;user_hashcode=" . $user->getPreference('reg_hashcode') . '&amp;action=userverify">' .
@@ -355,7 +356,7 @@ switch ($action) {
                     I18N::translate('Comments') . ": " . $user->getPreference('comment') . Mail::EOL .
                     I18N::translate('If you didn’t request an account, you can just delete this message.') . Mail::EOL;
                 $mail2_subject = /* I18N: %s is a server name/URL */
-                    I18N::translate('Your registration at %s', WT_BASE_URL);
+                    I18N::translate('Your registration at %s', Config::get(Config::BASE_URL));
                 $mail2_to      = $user->getEmail();
                 $mail2_from    = Globals::i()->WT_TREE->getPreference('WEBTREES_EMAIL');
 
@@ -540,7 +541,7 @@ switch ($action) {
 
     case 'userverify':
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
-            header('Location: ' . WT_BASE_URL);
+            header('Location: ' . Config::get(Config::BASE_URL));
 
             return;
         }
@@ -578,7 +579,7 @@ switch ($action) {
 
     case 'verify_hash':
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
-            header('Location: ' . WT_BASE_URL);
+            header('Location: ' . Config::get(Config::BASE_URL));
 
             return;
         }
@@ -604,13 +605,13 @@ switch ($action) {
         }
         $mail1_body .=
             Mail::EOL .
-            '<a href="' . WT_BASE_URL . "admin_users.php?filter=" . Filter::escapeUrl($user->getUserName()) . '">' .
-            WT_BASE_URL . "admin_users.php?filter=" . Filter::escapeUrl($user->getUserName()) .
+            '<a href="' . Config::get(Config::BASE_URL) . "admin_users.php?filter=" . Filter::escapeUrl($user->getUserName()) . '">' .
+            Config::get(Config::BASE_URL) . "admin_users.php?filter=" . Filter::escapeUrl($user->getUserName()) .
             '</a>' .
             Mail::auditFooter();
 
         $mail1_subject = /* I18N: %s is a server name/URL */
-            I18N::translate('New user at %s', WT_BASE_URL . ' ' . Globals::i()->WT_TREE->getTitle());
+            I18N::translate('New user at %s', Config::get(Config::BASE_URL) . ' ' . Globals::i()->WT_TREE->getTitle());
 
         // Change to the new user’s language
         I18N::init($user->getPreference('language'));

@@ -16,10 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('WT_SCRIPT_NAME', 'lifespan.php');
-require './includes/session.php';
+use Fgt\Application;
 
-$controller = new LifespanController;
+define('WT_SCRIPT_NAME', 'lifespan.php');
+require FGT_ROOT . '/includes/session.php';
+
+$controller = Application::i()->setActiveController(new LifespanController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

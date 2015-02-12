@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Constants;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'famlist.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 
 // We show three different lists: initials, surnames and individuals
 // Note that the data may contain special chars, such as surname="<unknown>",

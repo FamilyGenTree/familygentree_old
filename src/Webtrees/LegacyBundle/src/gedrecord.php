@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'gedrecord.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 
 $obj = GedcomRecord::getInstance(Filter::get('pid', WT_REGEX_XREF));
 
@@ -34,7 +35,7 @@ if (
     || $obj instanceof Media
 ) {
     Zend_Session::writeClose();
-    header('Location: ' . WT_BASE_URL . $obj->getRawUrl());
+    header('Location: ' . Config::get(Config::BASE_URL) . $obj->getRawUrl());
 
     return;
 } elseif (!$obj || !$obj->canShow()) {

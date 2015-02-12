@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
@@ -210,7 +211,7 @@ function wiki_help_link($topic)
  */
 function highlight_search_hits($string)
 {
-    global $controller;
+    $controller = Application::i()->getActiveController();
 
     if ($controller instanceof SearchController && $controller->query) {
         // TODO: when a search contains multiple words, we search independently.
@@ -720,7 +721,8 @@ function print_add_new_fact($id, $usedfacts, $type)
  */
 function init_calendar_popup()
 {
-    global $WEEK_START, $controller;
+    global $WEEK_START;
+    $controller = Application::i()->getActiveController();
 
     $controller->addInlineJavascript('
 		cal_setMonthNames(

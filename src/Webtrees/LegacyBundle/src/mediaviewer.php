@@ -17,12 +17,13 @@ namespace Fisharebest\Webtrees;
  */
 
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'mediaviewer.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new MediaController;
+$controller = Application::i()->setActiveController(new MediaController());
 
 if ($controller->record && $controller->record->canShow()) {
     $controller->pageHeader();

@@ -16,11 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_media.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // type of file/object to include
 $files = Filter::get('files', 'local|external|unused', 'local');
@@ -50,18 +52,18 @@ $action     = Filter::get('action');
 ////////////////////////////////////////////////////////////////////////////////
 $delete_file = Filter::post('delete');
 if ($delete_file) {
-    $controller = new AjaxController;
+    $controller = Application::i()->setActiveController(new AjaxController());
     // Only delete valid (i.e. unused) media files
     $media_folder = Filter::post('media_folder', null, ''); // MySQL needs an empty string, not NULL
     $disk_files   = all_disk_files($media_folder, '', 'include', '');
     if (in_array($delete_file, $disk_files)) {
-        $tmp = WT_DATA_DIR . $media_folder . $delete_file;
+        $tmp = Config::get(Config::DATA_DIRECTORY) . $media_folder . $delete_file;
         if (@unlink($tmp)) {
             FlashMessages::addMessage(I18N::translate('The file %s has been deleted.', $tmp));
         } else {
             FlashMessages::addMessage(I18N::translate('The file %s could not be deleted.', $tmp));
         }
-        $tmp = WT_DATA_DIR . $media_folder . 'thumbs/' . $delete_file;
+        $tmp = Config::get(Config::DATA_DIRECTORY) . $media_folder . 'thumbs/' . $delete_file;
         if (file_exists($tmp)) {
             if (@unlink($tmp)) {
                 FlashMessages::addMessage(I18N::translate('The file %s has been deleted.', $tmp));
@@ -290,8 +292,8 @@ switch ($action) {
 
                 $data = array();
                 foreach ($unused_files as $unused_file) {
-                    $full_path  = WT_DATA_DIR . $media_folder . $media_path . $unused_file;
-                    $thumb_path = WT_DATA_DIR . $media_folder . 'thumbs/' . $media_path . $unused_file;
+                    $full_path  = Config::get(Config::DATA_DIRECTORY) . $media_folder . $media_path . $unused_file;
+                    $thumb_path = Config::get(Config::DATA_DIRECTORY) . $media_folder . 'thumbs/' . $media_path . $unused_file;
                     if (!file_exists($thumb_path)) {
                         $thumb_path = $full_path;
                     }
@@ -446,7 +448,7 @@ function scan_dirs($dir, $recursive, $filter)
  */
 function all_disk_files($media_folder, $media_path, $subfolders, $filter)
 {
-    return scan_dirs(WT_DATA_DIR . $media_folder . $media_path, $subfolders == 'include', $filter);
+    return scan_dirs(Config::get(Config::DATA_DIRECTORY) . $media_folder . $media_path, $subfolders == 'include', $filter);
 }
 
 /**
@@ -500,7 +502,7 @@ function mediaFileInfo($media_folder, $media_path, $file)
 {
     $html = '<b>' . Filter::escapeHtml($file) . '</b>';
 
-    $full_path = WT_DATA_DIR . $media_folder . $media_path . $file;
+    $full_path = Config::get(Config::DATA_DIRECTORY) . $media_folder . $media_path . $file;
     if ($file && file_exists($full_path)) {
         $size = @filesize($full_path);
         if ($size !== false) {
@@ -615,7 +617,7 @@ function mediaObjectInfo(Media $media)
 // selected folder.
 $table_id = md5($files . $media_folder . $media_path . $subfolders);
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(I18N::translate('Manage media'))
@@ -626,7 +628,7 @@ $controller
 	jQuery("#media-table-' . $table_id . '").dataTable({
 		processing: true,
 		serverSide: true,
-		ajax: "' . WT_BASE_URL . WT_SCRIPT_NAME . '?action=load_json&files=' . $files . '&media_folder=' . $media_folder . '&media_path=' . $media_path . '&subfolders=' . $subfolders . '",
+		ajax: "' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME . '?action=load_json&files=' . $files . '&media_folder=' . $media_folder . '&media_path=' . $media_path . '&subfolders=' . $subfolders . '",
 		' . I18N::datatablesI18N(array(
                                                                                                                                                                                                                                                                                                                                                                       5,
                                                                                                                                                                                                                                                                                                                                                                       10,
@@ -694,9 +696,9 @@ $controller
 
                     <div dir="ltr">
                         <?php if (count($media_folders) > 1): ?>
-                            <?php echo WT_DATA_DIR, select_edit_control('media_folder', $media_folders, null, $media_folder, 'onchange="this.form.submit();"'); ?>
+                            <?php echo Config::get(Config::DATA_DIRECTORY), select_edit_control('media_folder', $media_folders, null, $media_folder, 'onchange="this.form.submit();"'); ?>
                         <?php else: ?>
-                            <?php echo WT_DATA_DIR, Filter::escapeHtml($media_folder); ?>
+                            <?php echo Config::get(Config::DATA_DIRECTORY), Filter::escapeHtml($media_folder); ?>
                             <input type="hidden" name="media_folder"
                                    value="<?php echo Filter::escapeHtml($media_folder); ?>">
                         <?php endif; ?>

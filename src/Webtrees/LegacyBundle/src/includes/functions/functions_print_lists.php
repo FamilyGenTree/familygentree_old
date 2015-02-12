@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 use Zend_Tag_Cloud;
@@ -30,7 +31,7 @@ use Zend_Tag_Cloud;
  */
 function format_indi_table($datalist, $option = '')
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $table_id            = 'table-indi-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
     $SHOW_EST_LIST_DATES = Globals::i()->WT_TREE->getPreference('SHOW_EST_LIST_DATES');
@@ -523,7 +524,7 @@ function format_indi_table($datalist, $option = '')
  */
 function format_fam_table($datalist)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $table_id = 'table-fam-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
 
@@ -1039,7 +1040,7 @@ function format_fam_table($datalist)
  */
 function format_sour_table($datalist)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
     $html     = '';
     $table_id = 'table-sour-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
     $controller
@@ -1182,7 +1183,7 @@ function format_sour_table($datalist)
  */
 function format_note_table($datalist)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $html     = '';
     $table_id = 'table-note-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1300,7 +1301,7 @@ function format_note_table($datalist)
  */
 function format_repo_table($repositories)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $html     = '';
     $table_id = 'table-repo-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1409,7 +1410,7 @@ function format_repo_table($repositories)
  */
 function format_media_table($media_objects)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $html     = '';
     $table_id = 'table-obje-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1525,7 +1526,8 @@ function format_media_table($media_objects)
  */
 function format_surname_table($surnames, $script)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
+
     $html = '';
     $controller
         ->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)
@@ -1800,7 +1802,7 @@ function print_changes_list($change_ids, $sort)
  */
 function print_changes_table($change_ids, $sort)
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
 
     $n        = 0;
     $table_id = 'table-chan-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
@@ -1924,7 +1926,8 @@ function print_changes_table($change_ids, $sort)
  */
 function print_events_table($startjd, $endjd, $events = 'BIRT MARR DEAT', $only_living = false, $sort_by = 'anniv')
 {
-    global $controller;
+	$controller = Application::i()->getActiveController();
+
     $html     = '';
     $table_id = 'table-even-' . Uuid::uuid4(); // lists requires a unique ID in case there are multiple lists per page
     $controller

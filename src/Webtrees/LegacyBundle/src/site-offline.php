@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'site-offline.php');
@@ -32,15 +33,14 @@ require 'vendor/autoload.php';
 define('WT_WEBTREES', 'webtrees');
 define('WT_ROOT', '');
 define('WT_GED_ID', 0);
-define('WT_DATA_DIR', realpath('data') . DIRECTORY_SEPARATOR);
 
 Globals::i()->WT_SESSION         = new \stdClass;
 Globals::i()->WT_SESSION->locale = '';
 
 define('WT_LOCALE', I18N::init());
 
-if (file_exists(WT_DATA_DIR . 'offline.txt')) {
-    $offline_txt = file_get_contents(WT_DATA_DIR . 'offline.txt');
+if (file_exists(Config::get(Config::DATA_DIRECTORY) . 'offline.txt')) {
+    $offline_txt = file_get_contents(Config::get(Config::DATA_DIRECTORY) . 'offline.txt');
 } else {
     // offline.txt has gone - we're back online!
     header('Location: index.php');

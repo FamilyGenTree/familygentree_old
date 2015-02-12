@@ -16,14 +16,15 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'ancestry.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 
-$controller = new AncestryController;
+$controller = Application::i()->setActiveController(new AncestryController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

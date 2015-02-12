@@ -16,8 +16,11 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
+use Fgt\Globals;
+
 define('WT_SCRIPT_NAME', 'help_text.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $help = Filter::get('help');
 switch ($help) {
@@ -543,7 +546,7 @@ switch ($help) {
             I18N::translate('This option will save the family tree to a GEDCOM file on the server.') .
             '</p><p>' .
             /* I18N: %s is a folder name */
-            I18N::translate('GEDCOM files are stored in the %s folder.', '<b dir="auto">' . WT_DATA_DIR . '</b>') .
+            I18N::translate('GEDCOM files are stored in the %s folder.', '<b dir="auto">' . Config::get(Config::DATA_DIRECTORY) . '</b>') .
             '</p>';
         break;
 
@@ -584,7 +587,7 @@ switch ($help) {
             I18N::translate('This option deletes all the genealogy data in your family tree and replaces it with data from a GEDCOM file on the server.') .
             '</p><p>' .
             /* I18N: %s is a folder name */
-            I18N::translate('GEDCOM files are stored in the %s folder.', '<b dir="auto">' . WT_DATA_DIR . '</b>') .
+            I18N::translate('GEDCOM files are stored in the %s folder.', '<b dir="auto">' . Config::get(Config::DATA_DIRECTORY) . '</b>') .
             '</p>';
         break;
 

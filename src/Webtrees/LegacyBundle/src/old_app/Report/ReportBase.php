@@ -83,7 +83,7 @@ class ReportBase
     public $title = '';
 
     /** @var string Author of the report, the users full name */
-    public $rauthor = WT_BASE_URL;
+    public $rauthor = null;
 
     /** @var string Keywords */
     public $rkeywords = '';

@@ -16,17 +16,19 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use Rhumsaa\Uuid\Uuid;
 
 define('WT_SCRIPT_NAME', 'admin_site_clean.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 
 $to_delete = Filter::postArray('to_delete');
 if ($to_delete && Filter::checkCsrf()) {
     foreach ($to_delete as $path) {
-        $is_dir = is_dir(WT_DATA_DIR . $path);
-        if (File::delete(WT_DATA_DIR . $path)) {
+        $is_dir = is_dir(Config::get(Config::DATA_DIRECTORY) . $path);
+        if (File::delete(Config::get(Config::DATA_DIRECTORY) . $path)) {
             if ($is_dir) {
                 FlashMessages::addMessage(I18N::translate('The folder %s has been deleted.', Filter::escapeHtml($path)), 'success');
             } else {
@@ -41,12 +43,12 @@ if ($to_delete && Filter::checkCsrf()) {
         }
     }
 
-    header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+    header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
     return;
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(/* I18N: The “Data folder” is a configuration setting */
@@ -71,7 +73,7 @@ foreach (Tree::getAll() as $tree) {
 
 $locked_icon = '<i class="fa fa-ban text-danger"></i>';
 
-$dir     = dir(WT_DATA_DIR);
+$dir     = dir(Config::get(Config::DATA_DIRECTORY));
 $entries = array();
 while (false !== ($entry = $dir->read())) {
     if ($entry[0] != '.') {

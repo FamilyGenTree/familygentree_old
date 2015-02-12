@@ -16,10 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('WT_SCRIPT_NAME', 'find.php');
-require './includes/session.php';
+use Fgt\Application;
 
-$controller = new SimpleController;
+define('WT_SCRIPT_NAME', 'find.php');
+require FGT_ROOT . '/includes/session.php';
+
+$controller = Application::i()->setActiveController(new SimpleController());
 
 $type     = Filter::get('type');
 $filter   = Filter::get('filter');

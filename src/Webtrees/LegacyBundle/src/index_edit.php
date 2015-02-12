@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'index_edit.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 
 // Only one of $user_id and $gedcom_id should be set
 $user_id   = Filter::get('user_id', WT_REGEX_INTEGER, Filter::post('user_id', WT_REGEX_INTEGER));
@@ -61,7 +62,7 @@ if ($user_id < 0 || $gedcom_id < 0 || Auth::isAdmin() && $user_id != Auth::id())
 if (
     $gedcom_id < 0 && !Auth::isAdmin() || $gedcom_id > 0 && !Auth::isManager(Tree::get($gedcom_id)) || $user_id && Auth::id() != $user_id && !Auth::isAdmin()
 ) {
-    header('Location: ' . WT_BASE_URL . $return_to);
+    header('Location: ' . Config::get(Config::BASE_URL) . $return_to);
 
     return;
 }
@@ -173,7 +174,7 @@ if ($action === 'update') {
             }
         }
     }
-    header('Location: ' . WT_BASE_URL . $return_to);
+    header('Location: ' . Config::get(Config::BASE_URL) . $return_to);
 
     return;
 }

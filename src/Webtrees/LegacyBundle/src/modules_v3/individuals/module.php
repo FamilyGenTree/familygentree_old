@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Constants;
 use Fgt\Globals;
 use Zend_Session;
@@ -87,7 +88,8 @@ class individuals_WT_Module extends Module implements ModuleSidebarInterface
     /** {@inheritdoc} */
     public function getSidebarContent()
     {
-        global $WT_IMAGES, $controller;
+        global $WT_IMAGES;
+        $controller = Application::i()->getActiveController();
 
         // Fetch a list of the initial letters of all surnames in the database
         $initials = WT_Query_Name::surnameAlpha(true, false, WT_GED_ID, false);

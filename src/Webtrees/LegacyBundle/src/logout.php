@@ -17,7 +17,7 @@ namespace Fisharebest\Webtrees;
  */
 
 define('WT_SCRIPT_NAME', 'logout.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 if (Auth::id()) {
     Log::addAuthenticationLog('Logout: ' . Auth::user()
@@ -26,4 +26,4 @@ if (Auth::id()) {
     Auth::logout();
 }
 
-header('Location: ' . WT_BASE_URL);
+header('Location: ' . Config::get(Config::BASE_URL));

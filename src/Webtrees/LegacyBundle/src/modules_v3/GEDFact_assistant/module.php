@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -61,7 +62,7 @@ class GEDFact_assistant_WT_Module extends Module
      */
     private static function media_3_find()
     {
-        $controller = new SimpleController;
+        $controller = Application::i()->setActiveController(new SimpleController());
         $filter     = Filter::get('filter');
         $multiple   = Filter::getBool('multiple');
 
@@ -174,7 +175,7 @@ class GEDFact_assistant_WT_Module extends Module
     {
         $iid2 = Filter::get('iid', WT_REGEX_XREF);
 
-        $controller = new SimpleController;
+        $controller = Application::i()->setActiveController(new SimpleController());
         $controller
             ->setPageTitle(I18N::translate('Link to an existing media object'))
             ->pageHeader();
@@ -330,7 +331,7 @@ class GEDFact_assistant_WT_Module extends Module
      */
     static function print_addnewnote_assisted_link($element_id, $xref, $action)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         // We do not yet support family records
         if (!GedcomRecord::getInstance($xref) instanceof Individual) {
@@ -375,7 +376,7 @@ class GEDFact_assistant_WT_Module extends Module
      */
     public static function censusDateSelector($action, $tag, $element_id)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if ($action == 'add' && $tag == 'CENS') {
             $controller->addInlineJavascript('

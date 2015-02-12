@@ -23,12 +23,13 @@ namespace Fisharebest\Webtrees;
  */
 global $bwidth;
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'relationship.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 
 $pid1         = Filter::get('pid1', WT_REGEX_XREF);
 $pid2         = Filter::get('pid2', WT_REGEX_XREF);

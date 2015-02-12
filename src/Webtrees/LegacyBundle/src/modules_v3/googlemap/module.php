@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use PDO;
 use PDOException;
@@ -51,7 +52,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         } catch (PDOException $ex) {
             // The schema update scripts should never fail.  If they do, there is no clean recovery.
             FlashMessages::addMessage($ex->getMessage(), 'danger');
-            header('Location: ' . WT_BASE_URL . 'site-unavailable.php');
+            header('Location: ' . Config::get(Config::BASE_URL) . 'site-unavailable.php');
             throw $ex;
         }
 
@@ -159,7 +160,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if ($this->checkMapData()) {
             ob_start();
@@ -245,7 +246,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
     {
         $action = Filter::post('action');
 
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->restrictAccess(Auth::isAdmin())
             ->setPageTitle(I18N::translate('Google Maps™'))
@@ -591,7 +592,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function flags()
     {
-        $controller = new SimpleController;
+        $controller = Application::i()->setActiveController(new SimpleController());
         $controller
             ->setPageTitle(I18N::translate('Select flag'))
             ->pageHeader();
@@ -808,7 +809,6 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function pedigreeMap()
     {
-        global $controller;
 
         $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 
@@ -816,7 +816,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         $hideflags = Filter::getBool('hideflags');
         $hidelines = Filter::getBool('hidelines');
 
-        $controller = new PedigreeController;
+        $controller = Application::i()->setActiveController(new PedigreeController());
 
         // Start of internal configuration variables
         // Limit this to match available number of icons.
@@ -1057,7 +1057,8 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function pedigreeMapJavascript($hideflags, $hidelines)
     {
-        global $controller, $PEDIGREE_GENERATIONS;
+        global $PEDIGREE_GENERATIONS;
+        $controller = Application::i()->getActiveController();
 
         // The HomeControl returns the map to the original position and style
         $js = 'function HomeControl(controlDiv, pm_map) {' .
@@ -1667,7 +1668,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         $state     = Filter::get('state', '.+', 'XYZ');
         $matching  = Filter::getBool('matching');
 
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->restrictAccess(Auth::isAdmin())
             ->setPageTitle(I18N::translate('Google Maps™'))
@@ -1969,7 +1970,8 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function checkMapData()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
+
         $xrefs    = "'" . $controller->record->getXref() . "'";
         $families = $controller->record->getSpouseFamilies();
         foreach ($families as $family) {
@@ -2901,7 +2903,9 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     public function createMap($placelevels)
     {
-        global $level, $levelm, $plzoom, $controller;
+        global $level, $levelm, $plzoom;
+
+        $controller = Application::i()->getActiveController();
 
         $STREETVIEW = $this->getSetting('GM_USE_STREETVIEW');
         $parent     = Filter::getArray('parent');
@@ -3282,7 +3286,9 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     public function mapScripts($numfound, $level, $parent, $linklevels, $placelevels, $place_names)
     {
-        global $plzoom, $controller;
+        global $plzoom;
+
+        $controller = Application::i()->getActiveController();
 
         $controller->addInlineJavascript('
 			jQuery("head").append(\'<link rel="stylesheet" type="text/css" href="' . WT_STATIC_URL . WT_MODULES_DIR . 'googlemap/css/wt_v3_googlemap.css" />\');
@@ -3649,7 +3655,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         $placeid    = Filter::post('placeid', null, Filter::get('placeid'));
         $place_name = Filter::post('place_name', null, Filter::get('place_name'));
 
-        $controller = new SimpleController;
+        $controller = Application::i()->setActiveController(new SimpleController());
         $controller
             ->restrictAccess(Auth::isAdmin())
             ->setPageTitle(I18N::translate('Geographic data'))
@@ -4598,7 +4604,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $parent = 0;
         }
 
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller->restrictAccess(Auth::isAdmin());
 
         if ($action == 'ExportFile' && Auth::isAdmin()) {
@@ -5372,7 +5378,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
                     var imageNum = Math.round(bearing / 22.5) % 16;
 
-                    var image = new google.maps.MarkerImage('<?php echo WT_BASE_URL . WT_MODULES_DIR; ?>googlemap/images/panda-icons/panda-' + imageNum + '.png',
+                    var image = new google.maps.MarkerImage('<?php echo Config::get(Config::BASE_URL) . WT_MODULES_DIR; ?>googlemap/images/panda-icons/panda-' + imageNum + '.png',
                         // This marker is 50 pixels wide by 50 pixels tall.
                         new google.maps.Size(50, 50),
                         // The origin for this image is 0,0.

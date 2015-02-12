@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class batch_update_WT_Module
@@ -73,7 +74,7 @@ class batch_update_WT_Module extends Module implements ModuleConfigInterface
     {
         switch ($mod_action) {
             case 'admin_batch_update':
-                $controller = new PageController;
+                $controller = Application::i()->setActiveController(new PageController());
                 $controller
                     ->setPageTitle(I18N::translate('Batch update'))
                     ->restrictAccess(Auth::isAdmin())

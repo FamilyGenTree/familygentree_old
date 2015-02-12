@@ -16,7 +16,9 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use PDOException;
 use Zend_Controller_Request_Http;
 
@@ -25,29 +27,27 @@ if (strpos(ini_get('disable_functions'), 'ini_set') === false) {
     ini_set('display_errors', 'on');
 }
 
-define('WT_SCRIPT_NAME', 'setup.php');
+define('WT_SCRIPT_NAME', UrlConstants::SETUP_PHP);
 define('WT_CONFIG_FILE', 'config.ini.php');
 
-require 'vendor/autoload.php';
+//require 'vendor/autoload.php';
 
 // This script (uniquely) does not load session.php.
 // session.php won’t run until a configuration file exists…
 // This next block of code is a minimal version of session.php
 define('WT_WEBTREES', 'webtrees');
-define('WT_DATA_DIR', 'data/');
 define('WT_DEBUG_SQL', false);
 define('WT_REQUIRED_MYSQL_VERSION', '5.0.13');
 define('WT_REQUIRED_PHP_VERSION', '5.3.2');
 define('WT_MODULES_DIR', 'modules_v3/');
-define('WT_ROOT', '');
 define('WT_GED_ID', null);
 define('WT_PRIV_PUBLIC', 2);
 define('WT_PRIV_USER', 1);
 define('WT_PRIV_NONE', 0);
 define('WT_PRIV_HIDE', -1);
 
-if (file_exists(WT_DATA_DIR . WT_CONFIG_FILE)) {
-    header('Location: index.php');
+if (file_exists(Config::get(Config::get(Config::CONFIG_PATH)))) {
+    header('Location: ' . UrlConstants::url(UrlConstants::INDEX_PHP));
 
     return;
 }
@@ -62,7 +62,7 @@ if (version_compare(PHP_VERSION, WT_REQUIRED_PHP_VERSION) < 0) {
     return;
 }
 
-Globals::i()->WT_REQUEST          = new Zend_Controller_Request_Http;
+Globals::i()->WT_REQUEST          = new \Zend_Controller_Request_Http;
 Globals::i()->WT_SESSION          = new \stdClass;
 Globals::i()->WT_SESSION->locale  = null; // Needed for I18N
 Globals::i()->WT_SESSION->wt_user = null; // Needed for Auth
@@ -241,12 +241,12 @@ if (!isset($_POST['lang'])) {
 // Step two - The data folder needs to be writable
 ////////////////////////////////////////////////////////////////////////////////
 
-@file_put_contents(WT_DATA_DIR . 'test.txt', 'FAB!');
-$FAB = @file_get_contents(WT_DATA_DIR . 'test.txt');
-@unlink(WT_DATA_DIR . 'test.txt');
+@file_put_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt', 'FAB!');
+$FAB = @file_get_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
+@unlink(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
 
 if ($FAB != 'FAB!') {
-    echo '<h2>', realpath(WT_DATA_DIR), '</h2>';
+    echo '<h2>', realpath(Config::get(Config::DATA_DIRECTORY)), '</h2>';
     echo '<p class="bad">', I18N::translate('Oops!  webtrees was unable to create files in this folder.'), '</p>';
     echo '<p>', I18N::translate('This usually means that you need to change the folder permissions to 777.'), '</p>';
     echo '<p>', I18N::translate('You must change this before you can continue.'), '</p>';
@@ -1002,7 +1002,7 @@ try {
         'dbname="' . addcslashes($_POST['dbname'], '"') . '"' . PHP_EOL .
         'tblpfx="' . addcslashes($_POST['tblpfx'], '"') . '"' . PHP_EOL;
 
-    file_put_contents(WT_DATA_DIR . 'config.ini.php', $config_ini_php);
+    file_put_contents(Config::get(Config::DATA_DIRECTORY) . 'config.ini.php', $config_ini_php);
 
     // Done - start using webtrees
     echo

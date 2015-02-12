@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -59,7 +60,7 @@ class media_WT_Module extends Module implements ModuleTabInterface
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         ob_start();
         echo '<table class="facts_table">';
@@ -110,7 +111,7 @@ class media_WT_Module extends Module implements ModuleTabInterface
      */
     private function getFactsWithMedia()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if ($this->facts === null) {
             $facts = $controller->record->getFacts();

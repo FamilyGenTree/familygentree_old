@@ -23,10 +23,11 @@ namespace Fisharebest\Webtrees;
  */
 global $basexoffset;
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'pedigree.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 $PEDIGREE_GENERATIONS     = Globals::i()->WT_TREE->getPreference('PEDIGREE_GENERATIONS');
@@ -36,7 +37,7 @@ define("MENU_WRAPPER", "<div id='childarrow' style='%s:%spx; top:%spx'><div><a h
 define("MENU_ITEM", "<a href='pedigree.php?rootid=%s&amp;show_full=%s&amp;PEDIGREE_GENERATIONS=%s&amp;talloffset=%s' class='%s'>%s</a>");
 define("BOX_WRAPPER", "<div class='shadow' style='%s:%spx; top:%spx; width:%spx; height:%spx'>");
 
-$controller = new PedigreeController;
+$controller = Application::i()->setActiveController(new PedigreeController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

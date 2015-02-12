@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Config;
 
 /**
  * Class Media - Class that defines a media object
@@ -159,10 +160,10 @@ class Media extends GedcomRecord
             return $this->file;
         } elseif ($which == 'main') {
             // Main image
-            return WT_DATA_DIR . $MEDIA_DIRECTORY . $this->file;
+            return Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $this->file;
         } else {
             // Thumbnail
-            $file = WT_DATA_DIR . $MEDIA_DIRECTORY . 'thumbs/' . $this->file;
+            $file = Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . 'thumbs/' . $this->file;
             // Does the thumbnail exist?
             if (file_exists($file)) {
                 return $file;
@@ -179,7 +180,7 @@ class Media extends GedcomRecord
                 return $file;
             }
             // Is there a corresponding main image?
-            $main_file = WT_DATA_DIR . $MEDIA_DIRECTORY . $this->file;
+            $main_file = Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY . $this->file;
             if (!file_exists($main_file)) {
                 Log::addMediaLog('The file ' . $main_file . ' does not exist for ' . $this->getXref());
 

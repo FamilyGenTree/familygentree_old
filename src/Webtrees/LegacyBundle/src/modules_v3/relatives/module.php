@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -83,8 +84,8 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
      */
     function printFamily(Family $family, $type, $label)
     {
-        global $controller;
         global $SHOW_PRIVATE_RELATIONSHIPS;
+        $controller = Application::i()->getActiveController();
 
         if ($SHOW_PRIVATE_RELATIONSHIPS) {
             $access_level = WT_PRIV_HIDE;
@@ -303,7 +304,9 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $show_full, $controller;
+        global $show_full;
+
+        $controller = Application::i()->getActiveController();
 
         if (isset($show_full)) {
             $saved_show_full = $show_full;

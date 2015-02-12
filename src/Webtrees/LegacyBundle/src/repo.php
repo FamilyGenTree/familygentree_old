@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'repo.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new RepositoryController;
+$controller = Application::i()->setActiveController(new RepositoryController());
 
 if ($controller->record && $controller->record->canShow()) {
     $controller->pageHeader();

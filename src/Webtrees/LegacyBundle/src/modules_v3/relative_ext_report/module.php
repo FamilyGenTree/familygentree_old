@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class relative_ext_report_WT_Module
@@ -46,7 +47,7 @@ class relative_ext_report_WT_Module extends Module implements ModuleReportInterf
     /** {@inheritdoc} */
     public function getReportMenus()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $menus   = array();
         $menu    = new Menu(

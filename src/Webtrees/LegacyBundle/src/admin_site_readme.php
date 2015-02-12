@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Michelf\MarkdownExtra;
 
 define('WT_SCRIPT_NAME', 'admin_site_readme.php');
 
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(I18N::translate('README documentation'))

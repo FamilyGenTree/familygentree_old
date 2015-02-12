@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class login_block_WT_Module
@@ -38,7 +39,8 @@ class login_block_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function getBlock($block_id, $template = true, $cfg = null)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
+
         $id    = $this->getName() . $block_id;
         $class = $this->getName() . '_block';
         $controller->addInlineJavascript('

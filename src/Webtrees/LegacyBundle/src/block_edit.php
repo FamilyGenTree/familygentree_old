@@ -16,8 +16,10 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 define('WT_SCRIPT_NAME', 'block_edit.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $block_id = Filter::getInteger('block_id');
 $block    = Database::prepare(
@@ -40,7 +42,7 @@ if (
 $class_name = __NAMESPACE__ . '\\' . $block->module_name . '_WT_Module';
 $block      = new $class_name;
 
-$controller = new AjaxController;
+$controller = Application::i()->setActiveController(new AjaxController());
 $controller->pageHeader();
 
 if (array_key_exists('ckeditor', Module::getActiveModules())) {

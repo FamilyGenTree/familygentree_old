@@ -16,6 +16,8 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\UrlConstants;
 use Zend_Session_Namespace;
 
 /**
@@ -254,7 +256,7 @@ abstract class BaseTheme
             case 'mailto':
                 return '<a href="mailto:' . Filter::escapeHtml($user->getEmail()) . '">' . Filter::escapeHtml($user->getRealName()) . '</a>';
             default:
-                return "<a href='#' onclick='message(\"" . Filter::escapeHtml($user->getUserName()) . "\", \"" . $method . "\", \"" . WT_BASE_URL . Filter::escapeHtml(get_query_url()) . "\", \"\");return false;'>" . Filter::escapeHtml($user->getRealName()) . '</a>';
+                return "<a href='#' onclick='message(\"" . Filter::escapeHtml($user->getUserName()) . "\", \"" . $method . "\", \"" . Config::get(Config::BASE_URL) . Filter::escapeHtml(get_query_url()) . "\", \"\");return false;'>" . Filter::escapeHtml($user->getRealName()) . '</a>';
         }
     }
 
@@ -1311,7 +1313,7 @@ abstract class BaseTheme
     protected function menuControlPanel()
     {
         if (WT_USER_GEDCOM_ADMIN) {
-            return new Menu(I18N::translate('Control panel'), 'admin.php', 'menu-admin');
+            return new Menu(I18N::translate('Control panel'), UrlConstants::map(UrlConstants::ADMIN_PHP), 'menu-admin');
         } else {
             return null;
         }
@@ -1324,7 +1326,7 @@ abstract class BaseTheme
      */
     protected function menuFavorites()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $show_user_favorites = $this->tree && array_key_exists('user_favorites', Module::getActiveModules()) && Auth::check();
         $show_tree_favorites = $this->tree && array_key_exists('gedcom_favorites', Module::getActiveModules());
@@ -1434,10 +1436,10 @@ abstract class BaseTheme
      */
     protected function menuLists()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         // The top level menu shows the individual list
-        $menu = new Menu(I18N::translate('Lists'), 'indilist.php?' . $this->tree_url, 'menu-list');
+        $menu = new Menu(I18N::translate('Lists'), UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url), 'menu-list');
 
         // Do not show empty lists
         $row = Database::prepare(
@@ -1459,24 +1461,24 @@ abstract class BaseTheme
         $surname_url = '&amp;surname=' . rawurlencode($controller->getSignificantSurname());
 
         $menulist = array(
-            new Menu(I18N::translate('Individuals'), 'indilist.php?' . $this->tree_url . $surname_url, 'menu-list-indi'),
+            new Menu(I18N::translate('Individuals'), UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url . $surname_url), 'menu-list-indi'),
         );
 
         if (!$this->isSearchEngine()) {
-            $menulist[] = new Menu(I18N::translate('Families'), 'famlist.php?' . $this->tree_url . $surname_url, 'menu-list-fam');
-            $menulist[] = new Menu(I18N::translate('Branches'), 'branches.php?' . $this->tree_url . $surname_url, 'menu-branches');
-            $menulist[] = new Menu(I18N::translate('Place hierarchy'), 'placelist.php?' . $this->tree_url, 'menu-list-plac');
+            $menulist[] = new Menu(I18N::translate('Families'), UrlConstants::url(UrlConstants::FAMLIST_PHP, $this->tree_url . $surname_url), 'menu-list-fam');
+            $menulist[] = new Menu(I18N::translate('Branches'), UrlConstants::url(UrlConstants::BRANCHES_PHP, $this->tree_url . $surname_url), 'menu-branches');
+            $menulist[] = new Menu(I18N::translate('Place hierarchy'), UrlConstants::url(UrlConstants::PLACELIST_PHP, $this->tree_url), 'menu-list-plac');
             if ($row->obje) {
-                $menulist[] = new Menu(I18N::translate('Media objects'), 'medialist.php?' . $this->tree_url, 'menu-list-obje');
+                $menulist[] = new Menu(I18N::translate('Media objects'), UrlConstants::url(UrlConstants::MEDIALIST_PHP, $this->tree_url), 'menu-list-obje');
             }
             if ($row->repo) {
-                $menulist[] = new Menu(I18N::translate('Repositories'), 'repolist.php?' . $this->tree_url, 'menu-list-repo');
+                $menulist[] = new Menu(I18N::translate('Repositories'), UrlConstants::url(UrlConstants::REPOLIST_PHP, $this->tree_url), 'menu-list-repo');
             }
             if ($row->sour) {
-                $menulist[] = new Menu(I18N::translate('Sources'), 'sourcelist.php?' . $this->tree_url, 'menu-list-sour');
+                $menulist[] = new Menu(I18N::translate('Sources'), UrlConstants::url(UrlConstants::SOURCELIST_PHP, $this->tree_url), 'menu-list-sour');
             }
             if ($row->note) {
-                $menulist[] = new Menu(I18N::translate('Shared notes'), 'notelist.php?' . $this->tree_url, 'menu-list-note');
+                $menulist[] = new Menu(I18N::translate('Shared notes'), UrlConstants::url(UrlConstants::NOTELIST_PHP, $this->tree_url), 'menu-list-note');
             }
         }
         uasort($menulist, function (Menu $x, Menu $y) {
@@ -1913,7 +1915,7 @@ abstract class BaseTheme
      */
     protected function primaryMenu()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if ($this->tree) {
             $individual = $controller->getSignificantIndividual();

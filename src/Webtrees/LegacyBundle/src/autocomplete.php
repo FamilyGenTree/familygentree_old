@@ -21,7 +21,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'autocomplete.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 header('Content-Type: text/plain; charset=UTF-8');
 

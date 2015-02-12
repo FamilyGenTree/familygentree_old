@@ -16,14 +16,15 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'edituser.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // Need to be logged in
 if (!Auth::check()) {
-    header('Location: ' . WT_BASE_URL);
+    header('Location: ' . Config::get(Config::BASE_URL));
 
     return;
 }
@@ -104,12 +105,12 @@ if ($form_action && Filter::checkCsrf()) {
             break;
     }
 
-    header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+    header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
     return;
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->setPageTitle(I18N::translate('My account'))
     ->pageHeader()

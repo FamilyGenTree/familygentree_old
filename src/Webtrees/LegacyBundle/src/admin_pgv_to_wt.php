@@ -16,21 +16,22 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use PDO;
 use PDOException;
 
 define('WT_SCRIPT_NAME', 'admin_pgv_to_wt.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // We can only import into an empty system, so deny access if we have already created a gedcom or added users.
 if (WT_GED_ID || count(User::all()) > 1) {
-    header('Location: ' . WT_BASE_URL);
+    header('Location: ' . Config::get(Config::BASE_URL));
 
     return;
 }
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(I18N::translate('PhpGedView to webtrees transfer wizard'));

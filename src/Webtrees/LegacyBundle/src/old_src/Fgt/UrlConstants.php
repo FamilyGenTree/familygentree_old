@@ -86,7 +86,7 @@ class UrlConstants
     const REPORTENGINE_PHP         = 'reportengine.php';
     const SEARCH_ADVANCED_PHP      = 'search_advanced.php';
     const SEARCH_PHP               = 'search.php';
-    const SETUP_PHP                = 'setup.php';
+    const SETUP_PHP                = 'setup';
     const SITE_OFFLINE_PHP         = 'site-offline.php';
     const SITE_UNAVAILABLE_PHP     = 'site-unavailable.php';
     const SOURCELIST_PHP           = 'sourcelist.php';
@@ -95,4 +95,121 @@ class UrlConstants
     const STATISTICSPLOT_PHP       = 'statisticsplot.php';
     const TIMELINE_PHP             = 'timeline.php';
 
+    static $map = array(
+        self::ACTION_PHP               => 'action_php',
+        self::ADDMEDIA_PHP             => 'addmedia_php',
+        self::ADMIN_MEDIA_PHP          => 'admin_media_php',
+        self::ADMIN_MEDIA_UPLOAD_PHP   => 'admin_media_upload_php',
+        self::ADMIN_MODULE_BLOCKS_PHP  => 'admin_module_blocks_php',
+        self::ADMIN_MODULE_MENUS_PHP   => 'admin_module_menus_php',
+        self::ADMIN_MODULE_REPORTS_PHP => 'admin_module_reports_php',
+        self::ADMIN_MODULE_SIDEBAR_PHP => 'admin_module_sidebar_php',
+        self::ADMIN_MODULES_PHP        => 'admin_modules_php',
+        self::ADMIN_MODULE_TABS_PHP    => 'admin_module_tabs_php',
+        self::ADMIN_PGV_TO_WT_PHP      => 'admin_pgv_to_wt_php',
+        self::ADMIN_PHP                => 'admin_php',
+        self::ADMIN_SITE_ACCESS_PHP    => 'admin_site_access_php',
+        self::ADMIN_SITE_CHANGE_PHP    => 'admin_site_change_php',
+        self::ADMIN_SITE_CLEAN_PHP     => 'admin_site_clean_php',
+        self::ADMIN_SITE_CONFIG_PHP    => 'admin_site_config_php',
+        self::ADMIN_SITE_INFO_PHP      => 'admin_site_info_php',
+        self::ADMIN_SITE_LOGS_PHP      => 'admin_site_logs_php',
+        self::ADMIN_SITE_MERGE_PHP     => 'admin_site_merge_php',
+        self::ADMIN_SITE_README_PHP    => 'admin_site_readme_php',
+        self::ADMIN_SITE_UPGRADE_PHP   => 'admin_site_upgrade_php',
+        self::ADMIN_TREES_CHECK_PHP    => 'admin_trees_check_php',
+        self::ADMIN_TREES_CONFIG_PHP   => 'admin_trees_config_php',
+        self::ADMIN_TREES_DOWNLOAD_PHP => 'admin_trees_download_php',
+        self::ADMIN_TREES_EXPORT_PHP   => 'admin_trees_export_php',
+        self::ADMIN_TREES_MANAGE_PHP   => 'admin_trees_manage_php',
+        self::ADMIN_TREES_MERGE_PHP    => 'admin_trees_merge_php',
+        self::ADMIN_TREES_PLACES_PHP   => 'admin_trees_places_php',
+        self::ADMIN_TREES_RENUMBER_PHP => 'admin_trees_renumber_php',
+        self::ADMIN_USERS_BULK_PHP     => 'admin_users_bulk_php',
+        self::ADMIN_USERS_PHP          => 'admin_users_php',
+        self::ANCESTRY_PHP             => 'ancestry_php',
+        self::AUTOCOMPLETE_PHP         => 'autocomplete_php',
+        self::BLOCK_EDIT_PHP           => 'block_edit_php',
+        self::BRANCHES_PHP             => 'branches_php',
+        self::CALENDAR_PHP             => 'calendar_php',
+        self::COMPACT_PHP              => 'compact_php',
+        self::DESCENDANCY_PHP          => 'descendancy_php',
+        self::EDIT_CHANGES_PHP         => 'edit_changes_php',
+        self::EDIT_INTERFACE_PHP       => 'edit_interface_php',
+        self::EDITNEWS_PHP             => 'editnews_php',
+        self::EDITUSER_PHP             => 'edituser_php',
+        self::EXPAND_VIEW_PHP          => 'expand_view_php',
+        self::FAMILYBOOK_PHP           => 'familybook_php',
+        self::FAMILY_PHP               => 'family_php',
+        self::FAMLIST_PHP              => 'famlist_php',
+        self::FANCHART_PHP             => 'fanchart_php',
+        self::FIND_PHP                 => 'find_php',
+        self::GEDRECORD_PHP            => 'gedrecord_php',
+        self::HELP_TEXT_PHP            => 'help_text_php',
+        self::HOURGLASS_AJAX_PHP       => 'hourglass_ajax_php',
+        self::HOURGLASS_PHP            => 'hourglass_php',
+        self::IMPORT_PHP               => 'import_php',
+        self::INDEX_EDIT_PHP           => 'index_edit_php',
+        self::INDEX_PHP                => 'index_php',
+        self::INDILIST_PHP             => 'indilist_php',
+        self::INDIVIDUAL_PHP           => 'individual_php',
+        self::INVERSELINK_PHP          => 'inverselink_php',
+        self::LIFESPAN_PHP             => 'lifespan_php',
+        self::LOGIN_PHP                => 'login_php',
+        self::LOGOUT_PHP               => 'logout_php',
+        self::MEDIAFIREWALL_PHP        => 'mediafirewall_php',
+        self::MEDIALIST_PHP            => 'medialist_php',
+        self::MEDIAVIEWER_PHP          => 'mediaviewer_php',
+        self::MESSAGE_PHP              => 'message_php',
+        self::MODULE_PHP               => 'module_php',
+        self::NOTELIST_PHP             => 'notelist_php',
+        self::NOTE_PHP                 => 'note_php',
+        self::PEDIGREE_PHP             => 'pedigree_php',
+        self::PLACELIST_PHP            => 'placelist_php',
+        self::RELATIONSHIP_PHP         => 'relationship_php',
+        self::REPOLIST_PHP             => 'repolist_php',
+        self::REPO_PHP                 => 'repo_php',
+        self::REPORTENGINE_PHP         => 'reportengine_php',
+        self::SEARCH_ADVANCED_PHP      => 'search_advanced_php',
+        self::SEARCH_PHP               => 'search_php',
+        self::SETUP_PHP                => 'setup_php',
+        self::SITE_OFFLINE_PHP         => 'site-offline_php',
+        self::SITE_UNAVAILABLE_PHP     => 'site-unavailable_php',
+        self::SOURCELIST_PHP           => 'sourcelist_php',
+        self::SOURCE_PHP               => 'source_php',
+        self::STATISTICS_PHP           => 'statistics_php',
+        self::STATISTICSPLOT_PHP       => 'statisticsplot_php',
+        self::TIMELINE_PHP             => 'timeline_php'
+    );
+
+    public static function map($fileName)
+    {
+        return isset(static::$map[$fileName]) ? static::$map[$fileName] : null;
+    }
+
+    public static function mapToFile($file)
+    {
+        return $file;
+    }
+
+    public static function url($filename, $options = array())
+    {
+        $url         = Config::get(Config::BASE_URL) . static::map($filename);
+        $queryString = '';
+        if (is_array($options)) {
+            if (!empty($options)) {
+                $queryString = '?';
+                $opts        = array();
+                foreach ($options as $paramKey => $paramValue) {
+                    $opts[] = $paramKey . '=' . urlencode($paramValue);
+                }
+                $queryString .= implode('&', $opts);
+            }
+
+        } else {
+            $queryString = '?' . $options;
+        }
+
+        return $url . $queryString;
+    }
 }

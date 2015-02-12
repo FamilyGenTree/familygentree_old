@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -62,7 +63,7 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface
     /** {@inheritdoc} */
     public function getSidebarContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $controller->addInlineJavascript('
 			jQuery("#sb_family_nav_content")
@@ -112,7 +113,9 @@ class family_nav_WT_Module extends Module implements ModuleSidebarInterface
      */
     private function drawFamily(Family $family, $title)
     {
-        global $controller, $SHOW_PRIVATE_RELATIONSHIPS;
+        global $SHOW_PRIVATE_RELATIONSHIPS;
+
+        $controller = Application::i()->getActiveController();
 
         ?>
         <tr>

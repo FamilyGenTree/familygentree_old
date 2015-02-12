@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fisharebest\ExtCalendar\JewishCalendar;
 use Rhumsaa\Uuid\Uuid;
 
@@ -41,7 +42,9 @@ class yahrzeit_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function getBlock($block_id, $template = true, $cfg = null)
     {
-        global $ctype, $controller;
+        global $ctype;
+
+        $controller = Application::i()->getActiveController();
 
         $days      = get_block_setting($block_id, 'days', '7');
         $infoStyle = get_block_setting($block_id, 'infoStyle', 'table');

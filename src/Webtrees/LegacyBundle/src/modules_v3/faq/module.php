@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -108,7 +109,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             $this->config();
         } else {
             $block_id   = Filter::getInteger('block_id');
-            $controller = new PageController;
+            $controller = Application::i()->setActiveController(new PageController());
             if ($block_id) {
                 $controller->setPageTitle(I18N::translate('Edit FAQ item'));
                 $header      = get_block_setting($block_id, 'header');
@@ -300,8 +301,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
      */
     private function show()
     {
-        global $controller;
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->setPageTitle(I18N::translate('Frequently asked questions'))
             ->pageHeader();
@@ -368,7 +368,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
      */
     private function config()
     {
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->setPageTitle(I18N::translate('Frequently asked questions'))
             ->pageHeader();

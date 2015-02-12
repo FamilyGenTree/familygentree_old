@@ -16,11 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use PclZip;
 
 define('WT_SCRIPT_NAME', 'admin_site_upgrade.php');
 
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 // Check for updates
 $latest_version_txt = fetch_latest_version();
@@ -48,7 +50,7 @@ $continue       = Filter::post('continue', '1') && Filter::checkCsrf();
 $modules_action = Filter::post('modules', 'ignore|disable');
 $themes_action  = Filter::post('themes', 'ignore|disable');
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->setPageTitle(I18N::translate('Upgrade wizard'))
@@ -298,7 +300,7 @@ I18N::translate('Export all family trees to GEDCOM files…');
 
 foreach (Tree::getAll() as $tree) {
     reset_timeout();
-    $filename = WT_DATA_DIR . $tree->getName() . date('-Y-m-d') . '.ged';
+    $filename = Config::get(Config::DATA_DIRECTORY) . $tree->getName() . date('-Y-m-d') . '.ged';
     if ($tree->exportGedcom($filename)) {
         echo '<br>', I18N::translate('Family tree exported to %s.', '<span dir="ltr">' . $filename . '</span>'), $icon_success;
     } else {
@@ -315,8 +317,8 @@ echo '</li>';
 echo '<li>', /* I18N: The system is about to [...]; %s is a URL. */
 I18N::translate('Download %s…', $download_url_html);
 
-$zip_file   = WT_DATA_DIR . basename($download_url);
-$zip_dir    = WT_DATA_DIR . basename($download_url, '.zip');
+$zip_file   = Config::get(Config::DATA_DIRECTORY) . basename($download_url);
+$zip_dir    = Config::get(Config::DATA_DIRECTORY) . basename($download_url, '.zip');
 $zip_stream = fopen($zip_file, 'w');
 reset_timeout();
 $start_time = microtime(true);
@@ -448,8 +450,8 @@ I18N::translate('Copy files…');
 
 // The wiki tells people how to customize webtrees by modifying various files.
 // Create a backup of these, just in case the user forgot!
-@copy('App/Gedcom/Code/Rela.php', WT_DATA_DIR . 'Rela' . date('-Y-m-d') . '.php');
-@copy('App/Gedcom/Tag.php', WT_DATA_DIR . 'Tag' . date('-Y-m-d') . '.php');
+@copy('App/Gedcom/Code/Rela.php', Config::get(Config::DATA_DIRECTORY) . 'Rela' . date('-Y-m-d') . '.php');
+@copy('App/Gedcom/Tag.php', Config::get(Config::DATA_DIRECTORY) . 'Tag' . date('-Y-m-d') . '.php');
 
 reset_timeout();
 $start_time = microtime(true);

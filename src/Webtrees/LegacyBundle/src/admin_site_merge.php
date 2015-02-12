@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_site_merge.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isManager())
     ->setPageTitle(I18N::translate('Merge records') . ' — ' . Globals::i()->WT_TREE->getTitleHtml())
@@ -182,7 +183,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
         $record2_name
     ), 'success');
 
-    header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+    header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
     return;
 }

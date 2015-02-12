@@ -349,7 +349,7 @@ class GedcomRecord
      */
     public function getAbsoluteLinkUrl()
     {
-        return WT_BASE_URL . $this->getHtmlUrl();
+        return Config::get(Config::BASE_URL) . $this->getHtmlUrl();
     }
 
     /**

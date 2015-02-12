@@ -16,17 +16,19 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_trees_manage.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isManager())
     ->setPageTitle(I18N::translate('Manage family trees'));
 
-$gedcom_files = glob(WT_DATA_DIR . '*.{ged,Ged,GED}', GLOB_NOSORT | GLOB_BRACE);
+$gedcom_files = glob(Config::get(Config::DATA_DIRECTORY) . '*.{ged,Ged,GED}', GLOB_NOSORT | GLOB_BRACE);
 
 // Process POST actions
 switch (Filter::post('action')) {
@@ -38,7 +40,7 @@ switch (Filter::post('action')) {
                 I18N::translate('The family tree “%s” has been deleted.', $tree->getTitleHtml()), 'success');
             $tree->delete();
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
     case 'setdefault':
@@ -47,7 +49,7 @@ switch (Filter::post('action')) {
             FlashMessages::addMessage(/* I18N: %s is the name of a family tree */
                 I18N::translate('The family tree “%s” will be shown to visitors when they first arrive at this website.', Globals::i()->WT_TREE->getTitleHtml()), 'success');
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
     case 'new_tree':
@@ -64,7 +66,7 @@ switch (Filter::post('action')) {
                     I18N::translate('The family tree “%s” has been created.', Filter::escapeHtml($basename)), 'success');
             }
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME . '?ged=' . $basename);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME . '?ged=' . $basename);
 
         return;
     case 'replace_upload':
@@ -79,7 +81,7 @@ switch (Filter::post('action')) {
                 }
             }
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
     case 'replace_import':
@@ -89,9 +91,9 @@ switch (Filter::post('action')) {
         $tree       = Tree::get($gedcom_id);
 
         if (Filter::checkCsrf() && $tree && $basename) {
-            $tree->importGedcomFile(WT_DATA_DIR . $basename, $basename, $keep_media);
+            $tree->importGedcomFile(Config::get(Config::DATA_DIRECTORY) . $basename, $basename, $keep_media);
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
 
@@ -121,7 +123,7 @@ switch (Filter::post('action')) {
             }
 
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
 }
@@ -175,11 +177,11 @@ switch (Filter::get('action')) {
             echo '<input type="file" name="tree_name">';
         } else {
             echo '<input type="hidden" name="action" value="replace_import">';
-            $d     = opendir(WT_DATA_DIR);
+            $d     = opendir(Config::get(Config::DATA_DIRECTORY));
             $files = array();
             while (($f = readdir($d)) !== false) {
-                if (!is_dir(WT_DATA_DIR . $f) && is_readable(WT_DATA_DIR . $f)) {
-                    $fp     = fopen(WT_DATA_DIR . $f, 'rb');
+                if (!is_dir(Config::get(Config::DATA_DIRECTORY) . $f) && is_readable(Config::get(Config::DATA_DIRECTORY) . $f)) {
+                    $fp     = fopen(Config::get(Config::DATA_DIRECTORY) . $f, 'rb');
                     $header = fread($fp, 64);
                     fclose($fp);
                     if (preg_match('/^(' . WT_UTF8_BOM . ')?0 *HEAD/', $header)) {
@@ -189,7 +191,7 @@ switch (Filter::get('action')) {
             }
             if ($files) {
                 sort($files);
-                echo WT_DATA_DIR, '<select name="tree_name">';
+                echo Config::get(Config::DATA_DIRECTORY), '<select name="tree_name">';
                 foreach ($files as $gedcom_file) {
                     echo '<option value="', Filter::escapeHtml($gedcom_file), '" ';
                     if ($gedcom_file == $previous_gedcom_filename) {
@@ -200,7 +202,7 @@ switch (Filter::get('action')) {
                 echo '</select>';
             } else {
                 echo '<p>', /* I18N: %s is the name of a folder */
-                I18N::translate('No GEDCOM files found.  You need to copy files to the “%s” folder on your server.', WT_DATA_DIR);
+                I18N::translate('No GEDCOM files found.  You need to copy files to the “%s” folder on your server.', Config::get(Config::DATA_DIRECTORY));
                 echo '</form>';
 
                 return;
@@ -576,7 +578,7 @@ $controller->pageHeader();
                             <div class="col-sm-10">
                                 <div class="input-group">
 								<span class="input-group-addon">
-									<?php echo WT_BASE_URL; ?>?ged=
+									<?php echo Config::get(Config::BASE_URL); ?>?ged=
 								</span>
                                     <input
                                         class="form-control"

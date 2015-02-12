@@ -17,11 +17,13 @@ namespace Fisharebest\Webtrees;
  */
 
 use Fgt\Application;
+use Fgt\Constants;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use \Zend_Session;
 
-define('WT_SCRIPT_NAME', 'action.php');
-require './includes/session.php';
+define('WT_SCRIPT_NAME', UrlConstants::ACTION_PHP);
+require FGT_ROOT . '/includes/session.php';
 
 header('Content-type: text/html; charset=UTF-8');
 

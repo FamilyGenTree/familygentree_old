@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'statisticsplot.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new AjaxController;
+$controller = Application::i()->setActiveController(new AjaxController());
 
 $stats = new Stats(Globals::i()->WT_TREE);
 

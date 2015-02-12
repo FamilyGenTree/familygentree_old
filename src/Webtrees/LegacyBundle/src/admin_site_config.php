@@ -16,10 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('WT_SCRIPT_NAME', 'admin_site_config.php');
-require './includes/session.php';
+use Fgt\Application;
+use Fgt\UrlConstants;
 
-$controller = new PageController;
+define('WT_SCRIPT_NAME', UrlConstants::ADMIN_SITE_CONFIG_PHP);
+require FGT_ROOT . '/includes/session.php';
+
+$controller = Application::i()->setActiveController(new PageController());
 $controller->restrictAccess(Auth::isAdmin());
 
 // Lists of options for <select> controls.
@@ -62,7 +65,7 @@ switch (Filter::post('action')) {
             Site::setPreference('SESSION_TIME', Filter::post('SESSION_TIME'));
             Site::setPreference('SERVER_URL', Filter::post('SERVER_URL'));
         }
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . UrlConstants::ADMIN_PHP);
 
         return;
     case 'email':
@@ -79,7 +82,7 @@ switch (Filter::post('action')) {
                 Site::setPreference('SMTP_AUTH_PASS', Filter::post('SMTP_AUTH_PASS'));
             }
         }
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . UrlConstants::ADMIN_PHP);
 
         return;
     case 'login':
@@ -91,7 +94,7 @@ switch (Filter::post('action')) {
             Site::setPreference('REQUIRE_ADMIN_AUTH_REGISTRATION', Filter::post('REQUIRE_ADMIN_AUTH_REGISTRATION'));
             Site::setPreference('SHOW_REGISTER_CAUTION', Filter::post('SHOW_REGISTER_CAUTION'));
         }
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . UrlConstants::ADMIN_PHP);
 
         return;
     case 'tracking':
@@ -104,7 +107,7 @@ switch (Filter::post('action')) {
             Site::setPreference('STATCOUNTER_PROJECT_ID', Filter::post('STATCOUNTER_PROJECT_ID'));
             Site::setPreference('STATCOUNTER_SECURITY_ID', Filter::post('STATCOUNTER_SECURITY_ID'));
         }
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . UrlConstants::ADMIN_PHP);
 
         return;
 }
@@ -124,7 +127,7 @@ switch (Filter::get('action')) {
             I18N::translate('Tracking and analytics'));
         break;
     default:
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . UrlConstants::url(UrlConstants::ADMIN_PHP));
 
         return;
 }
@@ -301,7 +304,7 @@ $controller->pageHeader();
             </label>
 
             <div class="col-sm-9">
-                <?php echo select_edit_control('SERVER_URL', array(WT_BASE_URL => WT_BASE_URL), '', Site::getPreference('SERVER_URL'), 'class="form-control"'); ?>
+                <?php echo select_edit_control('SERVER_URL', array(Config::get(Config::BASE_URL) => Config::get(Config::BASE_URL)), '', Site::getPreference('SERVER_URL'), 'class="form-control"'); ?>
                 <p class="small text-muted">
                     <?php echo /* I18N: Help text for the "Website URL" site configuration setting */
                     I18N::translate('If your website can be reached using more than one URL, such as <b>http://www.example.com/webtrees/</b> and <b>http://webtrees.example.com/</b>, you can specify the preferred URL.  Requests for the other URLs will be redirected to the preferred one.'); ?>
@@ -597,7 +600,7 @@ $controller->pageHeader();
                 <input
                     type="text" class="form-control"
                     id="BING_WEBMASTER_ID"
-                    name="BING_WEBMASTER_ID" <?php echo dirname(parse_url(WT_BASE_URL, PHP_URL_PATH)) === '/' ? ''
+                    name="BING_WEBMASTER_ID" <?php echo dirname(parse_url(Config::get(Config::BASE_URL), PHP_URL_PATH)) === '/' ? ''
                     : 'disabled'; ?>
                     value="<?php echo Filter::escapeHtml(Site::getPreference('BING_WEBMASTER_ID')); ?>"
                     maxlength="255" pattern="[0-9a-zA-Z+=/_:.!-]*"
@@ -624,7 +627,7 @@ $controller->pageHeader();
                 <input
                     type="text" class="form-control"
                     id="GOOGLE_WEBMASTER_ID"
-                    name="GOOGLE_WEBMASTER_ID" <?php echo dirname(parse_url(WT_BASE_URL, PHP_URL_PATH)) === '/' ? ''
+                    name="GOOGLE_WEBMASTER_ID" <?php echo dirname(parse_url(Config::get(Config::BASE_URL), PHP_URL_PATH)) === '/' ? ''
                     : 'disabled'; ?>
                     value="<?php echo Filter::escapeHtml(Site::getPreference('GOOGLE_WEBMASTER_ID')); ?>"
                     maxlength="255" pattern="[0-9a-zA-Z+=/_:.!-]*"

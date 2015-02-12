@@ -2,3 +2,7 @@ services:
 #    webtrees_legacy.example:
 #        class: Webtrees\LegacyBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+  webtrees.cache:
+    class: %doctrine_cache.file_system.class%
+    arguments: [ %kernel.cache_dir% ]

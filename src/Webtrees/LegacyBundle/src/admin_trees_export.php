@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_trees_export.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 if (Auth::isManager(Globals::i()->WT_TREE) && Filter::checkCsrf()) {
-    $filename = WT_DATA_DIR . Globals::i()->WT_TREE->getName();
+    $filename = Config::get(Config::DATA_DIRECTORY) . Globals::i()->WT_TREE->getName();
     // Force a ".ged" suffix
     if (strtolower(substr($filename, -4)) != '.ged') {
         $filename .= '.ged';
@@ -37,5 +38,5 @@ if (Auth::isManager(Globals::i()->WT_TREE) && Filter::checkCsrf()) {
     }
 }
 
-header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php');
+header('Location: ' . Config::get(Config::BASE_URL) . 'admin_trees_manage.php');
 

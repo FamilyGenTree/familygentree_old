@@ -16,13 +16,14 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use PDO;
 use Zend_Controller_Request_Http;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_site_access.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $rules_display = array(
     'unknown' => I18N::translate('unknown'),
@@ -103,7 +104,7 @@ switch (Filter::post('action')) {
                 }
             }
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
 
@@ -118,7 +119,7 @@ switch (Filter::post('action')) {
                               ));
             FlashMessages::addMessage(I18N::translate('The website access rule has been deleted.'), 'success');
         }
-        header('Location: ' . WT_BASE_URL . WT_SCRIPT_NAME);
+        header('Location: ' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME);
 
         return;
 }
@@ -133,7 +134,7 @@ Database::exec(
     " AND unknown.ip_address_start BETWEEN known.ip_address_start AND known.ip_address_end"
 );
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isAdmin())
     ->addExternalJavascript(WT_JQUERY_DATATABLES_JS_URL)
@@ -353,7 +354,7 @@ switch ($action) {
 			jQuery.fn.dataTableExt.oSort["unicode-asc" ]=function(a,b) {return a.replace(/<[^<]*>/, "").localeCompare(b.replace(/<[^<]*>/, ""))};
 			jQuery.fn.dataTableExt.oSort["unicode-desc"]=function(a,b) {return b.replace(/<[^<]*>/, "").localeCompare(a.replace(/<[^<]*>/, ""))};
 			jQuery(".table-site-access-rules").dataTable({
-				ajax: "' . WT_BASE_URL . WT_SCRIPT_NAME . '?action=load",
+				ajax: "' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME . '?action=load",
 				serverSide: true,
 				' . I18N::datatablesI18N() . ',
 				processing: true,
@@ -372,7 +373,7 @@ switch ($action) {
 			});
 
 			jQuery(".table-unknown-site-visitors").dataTable({
-				ajax: "' . WT_BASE_URL . WT_SCRIPT_NAME . '?action=load_unknown",
+				ajax: "' . Config::get(Config::BASE_URL) . WT_SCRIPT_NAME . '?action=load_unknown",
 				serverSide: true,
 				' . I18N::datatablesI18N() . ',
 				processing: true,

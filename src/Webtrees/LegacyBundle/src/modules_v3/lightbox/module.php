@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -60,7 +61,7 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $html = '<div id="' . $this->getName() . '_content">';
         //Show Lightbox-Album header Links
@@ -183,7 +184,7 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface
      */
     private function get_media()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if ($this->media_list === null) {
             // Use facts from this individual and all their spouses

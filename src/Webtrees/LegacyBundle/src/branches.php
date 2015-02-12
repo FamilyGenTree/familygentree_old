@@ -16,11 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 define('WT_SCRIPT_NAME', 'branches.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 
-$controller = new BranchesController;
+$controller = Application::i()->setActiveController(new BranchesController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

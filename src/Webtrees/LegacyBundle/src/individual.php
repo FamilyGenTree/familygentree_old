@@ -16,9 +16,11 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 define('WT_SCRIPT_NAME', 'individual.php');
-require './includes/session.php';
-$controller = new IndividualController;
+require FGT_ROOT . '/includes/session.php';
+$controller = Application::i()->setActiveController(new IndividualController());
 $controller
     ->addExternalJavascript(WT_JQUERY_COOKIE_JS_URL); // We use this to record the sidebar state
 

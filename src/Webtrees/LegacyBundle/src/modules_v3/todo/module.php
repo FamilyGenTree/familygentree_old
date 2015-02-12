@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
@@ -41,7 +42,9 @@ class todo_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function getBlock($block_id, $template = true, $cfg = null)
     {
-        global $ctype, $controller;
+        global $ctype;
+
+        $controller = Application::i()->getActiveController();
 
         $show_other      = get_block_setting($block_id, 'show_other', '1');
         $show_unassigned = get_block_setting($block_id, 'show_unassigned', '1');

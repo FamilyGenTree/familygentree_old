@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
@@ -56,13 +57,12 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                 echo $html;
                 break;
             case 'index':
-                global $controller;
 
                 $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 
-                $clip_ctrl = new ClippingsCart;
+                $clip_ctrl = new ClippingsCart();
 
-                $controller = new PageController;
+                $controller = Application::i()->setActiveController(new PageController());
                 $controller
                     ->setPageTitle($this->getTitle())
                     ->PageHeader()
@@ -406,7 +406,7 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
     /** {@inheritdoc} */
     public function getMenu()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         if (Globals::i()->SEARCH_SPIDER) {
             return null;
@@ -447,7 +447,7 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
     /** {@inheritdoc} */
     public function getSidebarContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $controller->addInlineJavascript('
 				jQuery("#sb_clippings_content").on("click", ".add_cart, .remove_cart", function() {

@@ -16,10 +16,11 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use PDOException;
 
 define('WT_SCRIPT_NAME', 'import.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 if (!WT_USER_GEDCOM_ADMIN) {
     http_response_code(403);
@@ -27,7 +28,7 @@ if (!WT_USER_GEDCOM_ADMIN) {
     return;
 }
 
-$controller = new AjaxController;
+$controller = Application::i()->setActiveController(new AjaxController());
 $controller
     ->pageHeader();
 

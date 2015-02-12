@@ -19,7 +19,7 @@ namespace Fisharebest\Webtrees;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'expand_view.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 Zend_Session::writeClose();
 

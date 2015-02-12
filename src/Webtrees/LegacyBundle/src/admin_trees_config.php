@@ -16,14 +16,16 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_trees_config.php');
 
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new PageController;
+$controller = Application::i()->setActiveController(new PageController());
 $controller->restrictAccess(Auth::isManager());
 
 $PRIVACY_CONSTANTS = array(
@@ -293,7 +295,7 @@ switch (Filter::post('action')) {
         Globals::i()->WT_TREE->setPreference('SHOW_LIVING_NAMES', Filter::post('SHOW_LIVING_NAMES'));
         Globals::i()->WT_TREE->setPreference('SHOW_PRIVATE_RELATIONSHIPS', Filter::post('SHOW_PRIVATE_RELATIONSHIPS'));
 
-        header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php?ged=' . Globals::i()->WT_TREE->getNameUrl());
+        header('Location: ' . Config::get(Config::BASE_URL) . 'admin_trees_manage.php?ged=' . Globals::i()->WT_TREE->getNameUrl());
 
         return;
 
@@ -403,13 +405,13 @@ switch (Filter::post('action')) {
         }
 
         if ($MEDIA_DIRECTORY) {
-            if (is_dir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
+            if (is_dir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
                 Globals::i()->WT_TREE->setPreference('MEDIA_DIRECTORY', $MEDIA_DIRECTORY);
-            } elseif (File::mkdir(WT_DATA_DIR . $MEDIA_DIRECTORY)) {
+            } elseif (File::mkdir(Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY)) {
                 Globals::i()->WT_TREE->setPreference('MEDIA_DIRECTORY', $MEDIA_DIRECTORY);
-                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', WT_DATA_DIR . $MEDIA_DIRECTORY));
+                FlashMessages::addMessage(I18N::translate('The folder %s has been created.', Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY));
             } else {
-                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', WT_DATA_DIR . $MEDIA_DIRECTORY));
+                FlashMessages::addMessage(I18N::translate('The folder %s does not exist, and it could not be created.', Config::get(Config::DATA_DIRECTORY) . $MEDIA_DIRECTORY));
             }
         }
 
@@ -433,7 +435,7 @@ switch (Filter::post('action')) {
         }
 
         Zend_Session::writeClose();
-        header('Location: ' . WT_BASE_URL . 'admin_trees_manage.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . 'admin_trees_manage.php');
 
         return;
 }
@@ -459,7 +461,7 @@ switch (Filter::get('action')) {
         $controller->setPageTitle(Globals::i()->WT_TREE->getTitleHtml() . ' — ' . I18N::translate('Preferences'));
         break;
     default:
-        header('Location: ' . WT_BASE_URL . 'admin.php');
+        header('Location: ' . Config::get(Config::BASE_URL) . UrlConstants::ADMIN_PHP);
 
         return;
 }
@@ -780,7 +782,7 @@ $controller
             <div class="col-sm-9">
                 <div class="input-group">
 				<span class="input-group-addon">
-					<?php echo WT_BASE_URL; ?>?ged=
+					<?php echo Config::get(Config::BASE_URL); ?>?ged=
 				</span>
                     <input
                         class="form-control"
@@ -1233,7 +1235,7 @@ $controller
             <div class="col-sm-9">
                 <div class="input-group">
 				<span class="input-group-addon">
-					<?php echo WT_DATA_DIR; ?>
+					<?php echo Config::get(Config::DATA_DIRECTORY); ?>
 				</span>
                     <input
                         class="form-control"

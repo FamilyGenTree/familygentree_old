@@ -16,6 +16,7 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 use Patchwork\TurkishUtf8;
 use Zend_Cache;
@@ -454,13 +455,13 @@ class I18N
         // The translation libraries only work with a cache.
         $cache_options = array(
             'automatic_serialization' => true,
-            'cache_id_prefix'         => md5(WT_BASE_URL),
+            'cache_id_prefix'         => md5(Config::get(Config::BASE_URL)),
         );
 
         if (ini_get('apc.enabled')) {
             self::$cache = Zend_Cache::factory('Core', 'Apc', $cache_options, array());
-        } elseif (File::mkdir(WT_DATA_DIR . 'cache')) {
-            self::$cache = Zend_Cache::factory('Core', 'File', $cache_options, array('cache_dir' => WT_DATA_DIR . 'cache'));
+        } elseif (File::mkdir(Config::get(Config::DATA_DIRECTORY) . 'cache')) {
+            self::$cache = Zend_Cache::factory('Core', 'File', $cache_options, array('cache_dir' => Config::get(Config::DATA_DIRECTORY) . 'cache'));
         } else {
             self::$cache = Zend_Cache::factory('Core', 'Zend_Cache_Backend_BlackHole', $cache_options, array(), false, true);
         }
@@ -469,6 +470,9 @@ class I18N
         Zend_Translate::setCache(self::$cache);
 
         $installed_languages = self::installed_languages();
+        if (empty($installed_languages)) {
+            throw new \Exception('No installed languages found');
+        }
         if (is_null($locale) || !array_key_exists($locale, $installed_languages)) {
             // Automatic locale selection.
             if (array_key_exists(Filter::get('lang'), $installed_languages)) {
@@ -526,20 +530,20 @@ class I18N
         Zend_Registry::set('Zend_Translate', self::$translation_adapter);
 
         // Load any local user translations
-        if (is_dir(WT_DATA_DIR . 'language')) {
-            if (file_exists(WT_DATA_DIR . 'language/' . $locale . '.mo')) {
+        if (is_dir(Config::get(Config::DATA_DIRECTORY) . 'language')) {
+            if (file_exists(Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.mo')) {
                 self::addTranslation(
-                    new Zend_Translate('gettext', WT_DATA_DIR . 'language/' . $locale . '.mo', $locale)
+                    new Zend_Translate('gettext', Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.mo', $locale)
                 );
             }
-            if (file_exists(WT_DATA_DIR . 'language/' . $locale . '.php')) {
+            if (file_exists(Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.php')) {
                 self::addTranslation(
-                    new Zend_Translate('array', WT_DATA_DIR . 'language/' . $locale . '.php', $locale)
+                    new Zend_Translate('array', Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.php', $locale)
                 );
             }
-            if (file_exists(WT_DATA_DIR . 'language/' . $locale . '.csv')) {
+            if (file_exists(Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.csv')) {
                 self::addTranslation(
-                    new Zend_Translate('csv', WT_DATA_DIR . 'language/' . $locale . '.csv', $locale)
+                    new Zend_Translate('csv', Config::get(Config::DATA_DIRECTORY) . 'language/' . $locale . '.csv', $locale)
                 );
             }
         }

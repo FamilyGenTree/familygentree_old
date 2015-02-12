@@ -16,11 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'mediafirewall.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 Zend_Session::writeClose();
 
@@ -332,9 +333,9 @@ $generatewatermark = false;
 
 if ($usewatermark) {
     if ($which === 'thumb') {
-        $watermarkfile = WT_DATA_DIR . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/thumb/' . $media->getFilename();
+        $watermarkfile = Config::get(Config::DATA_DIRECTORY) . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/thumb/' . $media->getFilename();
     } else {
-        $watermarkfile = WT_DATA_DIR . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/' . $media->getFilename();
+        $watermarkfile = Config::get(Config::DATA_DIRECTORY) . Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY') . 'watermark/' . WT_GEDCOM . '/' . $media->getFilename();
     }
 
     if (!file_exists($watermarkfile)) {

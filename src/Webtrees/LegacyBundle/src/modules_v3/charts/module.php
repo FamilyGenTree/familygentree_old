@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -39,7 +40,8 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function getBlock($block_id, $template = true, $cfg = null)
     {
-        global $ctype, $show_full, $controller;
+        global $ctype, $show_full;
+        $controller = Application::i()->getActiveController();
 
         $PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 
@@ -175,7 +177,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
     /** {@inheritdoc} */
     public function configureBlock($block_id)
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $PEDIGREE_ROOT_ID = Globals::i()->WT_TREE->getPreference('PEDIGREE_ROOT_ID');
 

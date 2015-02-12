@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -73,7 +74,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
     /** {@inheritdoc} */
     public function getTabContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $block_ids =
             Database::prepare(
@@ -121,7 +122,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
     /** {@inheritdoc} */
     public function isGrayedOut()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $count_of_stories =
             Database::prepare(
@@ -191,7 +192,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
             } else {
                 $block_id = Filter::getInteger('block_id');
 
-                $controller = new PageController;
+                $controller = Application::i()->setActiveController(new PageController());
                 if ($block_id) {
                     $controller->setPageTitle(I18N::translate('Edit story'));
                     $title      = get_block_setting($block_id, 'title');
@@ -267,7 +268,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                 echo '</form>';
             }
         } else {
-            header('Location: ' . WT_BASE_URL);
+            header('Location: ' . Config::get(Config::BASE_URL));
         }
     }
 
@@ -289,7 +290,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
             )
                     ->execute(array($block_id));
         } else {
-            header('Location: ' . WT_BASE_URL);
+            header('Location: ' . Config::get(Config::BASE_URL));
             exit;
         }
     }
@@ -299,7 +300,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
      */
     private function config()
     {
-        $controller = new PageController;
+        $controller = Application::i()->setActiveController(new PageController());
         $controller
             ->restrictAccess(WT_USER_GEDCOM_ADMIN)
             ->setPageTitle($this->getTitle())
@@ -413,9 +414,8 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
      */
     private function showList()
     {
-        global $controller;
+        $controller = Application::i()->setActiveController(new PageController());
 
-        $controller = new PageController;
         $controller
             ->setPageTitle($this->getTitle())
             ->pageHeader()

@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\UrlConstants;
 
 /**
  * Class AdministrationTheme - Theme for the control panel.
@@ -74,23 +75,24 @@ class AdministrationTheme extends BaseTheme
         return new Menu(/* I18N: Menu entry*/
             I18N::translate('Website'), '#', '', '', array(
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Website preferences'), 'admin_site_config.php?action=site'),
+                I18N::translate('Website preferences'), UrlConstants::url(UrlConstants::ADMIN_SITE_CONFIG_PHP,array('action'=>'site'))/* 'admin_site_config.php?action=site'*/),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Sending email'), 'admin_site_config.php?action=email'),
+                I18N::translate('Sending email'), UrlConstants::url(UrlConstants::ADMIN_SITE_CONFIG_PHP,array('action'=>'email'))/*'admin_site_config.php?action=email'*/),
+
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Login and registration'), 'admin_site_config.php?action=login'),
+                I18N::translate('Login and registration'), UrlConstants::url(UrlConstants::ADMIN_SITE_CONFIG_PHP,array('action'=>'login'))/*'admin_site_config.php?action=login'*/),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Tracking and analytics'), 'admin_site_config.php?action=tracking'),
+                I18N::translate('Tracking and analytics'), UrlConstants::url(UrlConstants::ADMIN_SITE_CONFIG_PHP,array('action'=>'tracking'))/*'admin_site_config.php?action=tracking'*/),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Website logs'), 'admin_site_logs.php'),
+                I18N::translate('Website logs'), UrlConstants::url(UrlConstants::ADMIN_SITE_LOGS_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Website access rules'), 'admin_site_access.php'),
+                I18N::translate('Website access rules'), UrlConstants::url(UrlConstants::ADMIN_SITE_ACCESS_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Clean up data folder'), 'admin_site_clean.php'),
+                I18N::translate('Clean up data folder'), UrlConstants::url(UrlConstants::ADMIN_SITE_CLEAN_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Server information'), 'admin_site_info.php'),
+                I18N::translate('Server information'), UrlConstants::url(UrlConstants::ADMIN_SITE_INFO_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('README documentation'), 'admin_site_readme.php'),
+                I18N::translate('README documentation'), UrlConstants::url(UrlConstants::ADMIN_SITE_README_PHP)),
         ));
     }
 
@@ -113,7 +115,7 @@ class AdministrationTheme extends BaseTheme
     protected function menuAdminTreesManage()
     {
         return new Menu(/* I18N: Menu entry */
-            I18N::translate('Manage family trees'), 'admin_trees_manage.php');
+            I18N::translate('Manage family trees'), UrlConstants::url(UrlConstants::ADMIN_TREES_MANAGE_PHP));
     }
 
     /**
@@ -123,7 +125,7 @@ class AdministrationTheme extends BaseTheme
     {
         if (count(Tree::getAll()) > 1) {
             return new Menu(/* I18N: Menu entry */
-                I18N::translate('Merge family trees'), 'admin_trees_merge.php');
+                I18N::translate('Merge family trees'), UrlConstants::url(UrlConstants::ADMIN_TREES_MERGE_PHP));
         } else {
             return null;
         }
@@ -136,7 +138,7 @@ class AdministrationTheme extends BaseTheme
     {
         if (count(Tree::getAll()) > 1) {
             return new Menu(/* I18N: Menu entry */
-                I18N::translate('Set the default blocks for new family trees'), 'index_edit.php?gedcom_id=-1');
+                I18N::translate('Set the default blocks for new family trees'), UrlConstants::url(UrlConstants::INDEX_EDIT_PHP,array('gedcom_id'=>'-1'))/*'index_edit.php?gedcom_id=-1'*/);
         } else {
             return null;
         }
@@ -150,11 +152,11 @@ class AdministrationTheme extends BaseTheme
         return new Menu(/* I18N: Menu entry */
             I18N::translate('Users'), '#', '', '', array(
             new Menu(/* I18N: Menu entry */
-                I18N::translate('User administration'), 'admin_users.php'),
+                I18N::translate('User administration'), UrlConstants::url(UrlConstants::ADMIN_USERS_PHP)),
             new Menu(/* I18N: Menu entry */
                 I18N::translate('Add a new user'), 'admin_users.php?action=edit'),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Send broadcast messages'), 'admin_users_bulk.php'),
+                I18N::translate('Send broadcast messages'), UrlConstants::url(UrlConstants::ADMIN_USERS_BULK_PHP)),
             new Menu(/* I18N: Menu entry */
                 I18N::translate('Delete inactive users'), 'admin_users.php?action=cleanup'),
             new Menu(/* I18N: Menu entry */
@@ -170,9 +172,9 @@ class AdministrationTheme extends BaseTheme
         return new Menu(/* I18N: Menu entry */
             I18N::translate('Media'), '#', '', '', array(
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Manage media'), 'admin_media.php'),
+                I18N::translate('Manage media'), UrlConstants::url(UrlConstants::ADMIN_MEDIA_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Upload media files'), 'admin_media_upload.php'),
+                I18N::translate('Upload media files'), UrlConstants::url(UrlConstants::ADMIN_MEDIA_UPLOAD_PHP)),
         ));
     }
 
@@ -184,17 +186,17 @@ class AdministrationTheme extends BaseTheme
         return new Menu(/* I18N: Menu entry */
             I18N::translate('Modules'), '#', '', '', array(
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Module administration'), 'admin_modules.php'),
+                I18N::translate('Module administration'), UrlConstants::url(UrlConstants::ADMIN_MODULES_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Menus'), 'admin_module_menus.php'),
+                I18N::translate('Menus'), UrlConstants::url(UrlConstants::ADMIN_MODULE_MENUS_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Tabs'), 'admin_module_tabs.php'),
+                I18N::translate('Tabs'), UrlConstants::url(UrlConstants::ADMIN_MODULE_TABS_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Blocks'), 'admin_module_blocks.php'),
+                I18N::translate('Blocks'), UrlConstants::url(UrlConstants::ADMIN_MODULE_BLOCKS_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Sidebars'), 'admin_module_sidebar.php'),
+                I18N::translate('Sidebars'), UrlConstants::url(UrlConstants::ADMIN_MODULE_SIDEBAR_PHP)),
             new Menu(/* I18N: Menu entry */
-                I18N::translate('Reports'), 'admin_module_reports.php'),
+                I18N::translate('Reports'), UrlConstants::url(UrlConstants::ADMIN_MODULE_REPORTS_PHP)),
         ));
     }
 

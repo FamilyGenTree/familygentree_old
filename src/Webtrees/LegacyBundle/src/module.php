@@ -17,7 +17,7 @@ namespace Fisharebest\Webtrees;
  */
 
 define('WT_SCRIPT_NAME', 'module.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
 $all_modules = Module::getActiveModules();
 $mod         = Filter::get('mod');
@@ -27,5 +27,5 @@ if ($mod && array_key_exists($mod, $all_modules)) {
     $module = $all_modules[$mod];
     $module->modAction($mod_action);
 } else {
-    header('Location: ' . WT_BASE_URL);
+    header('Location: ' . Config::get(Config::BASE_URL));
 }

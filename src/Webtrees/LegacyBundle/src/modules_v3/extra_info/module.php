@@ -15,6 +15,7 @@ namespace Fisharebest\Webtrees;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -52,7 +53,7 @@ class extra_info_WT_Module extends Module implements ModuleSidebarInterface
     /** {@inheritdoc} */
     public function getSidebarContent()
     {
-        global $controller;
+        $controller = Application::i()->getActiveController();
 
         $indifacts = array();
         // The individual’s own facts

@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'familybook.php');
-require './includes/session.php';
+require FGT_ROOT . '/includes/session.php';
 
-$controller = new FamilybookController;
+$controller = Application::i()->setActiveController(new FamilybookController());
 $controller
     ->pageHeader()
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
