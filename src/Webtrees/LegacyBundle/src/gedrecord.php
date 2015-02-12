@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'gedrecord.php');

@@ -21,6 +21,7 @@ $xref = Filter::get('xref', WT_REGEX_XREF);
 $person = Individual::getInstance($xref);
 check_record_access($person);
 
+$controller = Application::i()->getActiveController();
 $controller
     ->setPageTitle(I18N::translate('Create a new shared note using assistant'))
     ->addInlineJavascript(

@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 use PDO;
 use Zend_Session;
 

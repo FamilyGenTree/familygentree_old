@@ -16,13 +16,15 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
-use Webtrees\GedcomRecord;
 
 $more_links = Filter::get('more_links');
 $exist_links = Filter::get('exist_links');
 $gid = Filter::get('gid', WT_REGEX_XREF);
 $update_CHAN = Filter::get('preserve_last_changed');
+
+$controller = Application::i()->getActiveController();
 
 $controller
     ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)

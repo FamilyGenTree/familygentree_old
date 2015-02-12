@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', UrlConstants::ADMIN_SITE_CONFIG_PHP);

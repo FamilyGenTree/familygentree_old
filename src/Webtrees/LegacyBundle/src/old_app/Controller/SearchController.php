@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Config;
 use Fgt\Constants;
 use Fgt\Globals;
 use Zend_Session;

@@ -398,7 +398,7 @@ abstract class Module
      * @param integer $tree_id
      * @param integer $access_level
      *
-     * @return oduleSidebarInterface[]
+     * @return ModuleSidebarInterface[]
      */
     public static function getActiveSidebars($tree_id = WT_GED_ID, $access_level = WT_USER_ACCESS_LEVEL)
     {

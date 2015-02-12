@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_site_merge.php');

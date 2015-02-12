@@ -125,6 +125,7 @@ if ($pid_array != '') {
 }
 
 if ($record) {
+    $controller = Application::i()->getActiveController();
     $controller->addInlineJavascript('
 	window.opener.set_pid_array("' . $pid_array . '");
 	openerpasteid("' . $record->getXref() . '");

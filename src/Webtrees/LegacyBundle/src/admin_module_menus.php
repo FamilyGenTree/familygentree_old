@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 
 define('WT_SCRIPT_NAME', 'admin_module_menus.php');
 Application::i()->init()->started();

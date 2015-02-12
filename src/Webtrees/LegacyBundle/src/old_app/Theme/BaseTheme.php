@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Application;
+use Fgt\Config;
 use Fgt\UrlConstants;
 use Zend_Session_Namespace;
 
