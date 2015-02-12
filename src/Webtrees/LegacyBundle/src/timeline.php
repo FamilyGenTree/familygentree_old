@@ -18,7 +18,7 @@ namespace Fisharebest\Webtrees;
 
 
 /**
- * Defined in session.php
+ * Defined in \Fgt\Application
  *
  * @global integer $basexoffset
  * @global integer $baseyoffset
@@ -29,7 +29,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'timeline.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new TimelineController());
 $controller

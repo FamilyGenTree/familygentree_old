@@ -16,12 +16,13 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'mediafirewall.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 Zend_Session::writeClose();
 

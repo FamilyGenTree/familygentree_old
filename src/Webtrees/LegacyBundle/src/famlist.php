@@ -21,7 +21,7 @@ use Fgt\Constants;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'famlist.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 

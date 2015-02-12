@@ -21,7 +21,7 @@ use PDO;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_site_change.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 $controller

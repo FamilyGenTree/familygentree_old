@@ -20,7 +20,7 @@ use Fgt\Application;
 use PDOException;
 
 define('WT_SCRIPT_NAME', 'import.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 if (!WT_USER_GEDCOM_ADMIN) {
     http_response_code(403);

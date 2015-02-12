@@ -22,7 +22,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'edit_interface.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $action = Filter::post('action', null, Filter::get('action'));
 

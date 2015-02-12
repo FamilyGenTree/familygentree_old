@@ -21,7 +21,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'message.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // Some variables are initialised from GET (so we can set initial values in URLs),
 // but are submitted in POST so we can have long body text.

@@ -21,7 +21,7 @@ use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_media_upload.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');
 

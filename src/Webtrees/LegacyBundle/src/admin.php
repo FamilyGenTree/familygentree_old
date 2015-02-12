@@ -21,7 +21,7 @@ use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', UrlConstants::ADMIN_PHP);
 
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // This is a list of old files and directories, from earlier versions of webtrees, that can be deleted.
 // It was generated with the help of a command like this:

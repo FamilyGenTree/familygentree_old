@@ -647,5 +647,26 @@ class Application
             // Remember this setting
             Globals::i()->WT_SESSION->theme_id = $theme_id;
         }
+
+        // These theme globals are horribly abused.
+        global $bwidth,$bheight,$basexoffset,$baseyoffset,$bxspacing,$byspacing,$Dbwidth,$Dbheight;
+
+        $bwidth      = Theme::theme()
+                            ->parameter('chart-box-x');
+        $bheight     = Theme::theme()
+                            ->parameter('chart-box-y');
+        $basexoffset = Theme::theme()
+                            ->parameter('chart-offset-x');
+        $baseyoffset = Theme::theme()
+                            ->parameter('chart-offset-y');
+        $bxspacing   = Theme::theme()
+                            ->parameter('chart-spacing-x');
+        $byspacing   = Theme::theme()
+                            ->parameter('chart-spacing-y');
+        $Dbwidth     = Theme::theme()
+                            ->parameter('chart-descendancy-box-x');
+        $Dbheight    = Theme::theme()
+                            ->parameter('chart-descendancy-box-y');
+
     }
 }

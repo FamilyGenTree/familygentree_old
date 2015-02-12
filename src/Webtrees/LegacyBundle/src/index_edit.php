@@ -21,7 +21,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'index_edit.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 

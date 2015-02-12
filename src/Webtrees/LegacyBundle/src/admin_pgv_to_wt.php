@@ -22,7 +22,7 @@ use PDO;
 use PDOException;
 
 define('WT_SCRIPT_NAME', 'admin_pgv_to_wt.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // We can only import into an empty system, so deny access if we have already created a gedcom or added users.
 if (WT_GED_ID || count(User::all()) > 1) {

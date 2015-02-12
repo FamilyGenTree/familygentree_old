@@ -21,7 +21,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'statistics.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // check for on demand content loading
 $tab  = Filter::getInteger('tab', 0, 3);

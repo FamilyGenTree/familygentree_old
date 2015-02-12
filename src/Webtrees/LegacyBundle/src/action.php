@@ -23,7 +23,7 @@ use Fgt\UrlConstants;
 use \Zend_Session;
 
 define('WT_SCRIPT_NAME', UrlConstants::ACTION_PHP);
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 header('Content-type: text/html; charset=UTF-8');
 

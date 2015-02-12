@@ -23,7 +23,7 @@ use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_trees_config.php');
 
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 $controller->restrictAccess(Auth::isManager());

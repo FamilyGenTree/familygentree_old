@@ -23,7 +23,7 @@ use Zend_Controller_Request_Http;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_site_access.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $rules_display = array(
     'unknown' => I18N::translate('unknown'),

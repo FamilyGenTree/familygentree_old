@@ -21,7 +21,7 @@ use Fgt\Config;
 use Rhumsaa\Uuid\Uuid;
 
 define('WT_SCRIPT_NAME', 'admin_site_clean.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 
 $to_delete = Filter::postArray('to_delete');

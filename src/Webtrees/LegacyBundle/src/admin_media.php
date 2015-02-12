@@ -22,7 +22,7 @@ use Fgt\Globals;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'admin_media.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // type of file/object to include
 $files = Filter::get('files', 'local|external|unused', 'local');

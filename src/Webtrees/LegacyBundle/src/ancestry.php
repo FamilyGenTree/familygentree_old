@@ -20,7 +20,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'ancestry.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 

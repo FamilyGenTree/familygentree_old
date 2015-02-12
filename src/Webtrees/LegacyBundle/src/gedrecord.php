@@ -20,7 +20,7 @@ use Fgt\Application;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'gedrecord.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 

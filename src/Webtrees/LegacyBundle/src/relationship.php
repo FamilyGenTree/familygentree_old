@@ -17,7 +17,7 @@ namespace Fisharebest\Webtrees;
  */
 
 /**
- * Defined in session.php
+ * Defined in \Fgt\Application
  *
  * @global integer $bwidth
  */
@@ -27,7 +27,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'relationship.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 

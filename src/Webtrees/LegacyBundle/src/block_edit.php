@@ -19,7 +19,7 @@ namespace Fisharebest\Webtrees;
 use Fgt\Application;
 
 define('WT_SCRIPT_NAME', 'block_edit.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $block_id = Filter::getInteger('block_id');
 $block    = Database::prepare(

@@ -16,8 +16,10 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
+
 define('WT_SCRIPT_NAME', 'logout.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 if (Auth::id()) {
     Log::addAuthenticationLog('Logout: ' . Auth::user()

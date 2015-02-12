@@ -21,7 +21,7 @@ use Fgt\Globals;
 use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', UrlConstants::INDEX_PHP);
-require_once FGT_ROOT .'/includes/session.php';
+Application::i()->init()->started();
 
 // The only option for action is "ajax"
 $action = Filter::get('action');

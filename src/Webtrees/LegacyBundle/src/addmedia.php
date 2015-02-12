@@ -22,7 +22,7 @@ use Fgt\Globals;
 use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', UrlConstants::ADDMEDIA_PHP);
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $NO_UPDATE_CHAN  = Globals::i()->WT_TREE->getPreference('NO_UPDATE_CHAN');
 $MEDIA_DIRECTORY = Globals::i()->WT_TREE->getPreference('MEDIA_DIRECTORY');

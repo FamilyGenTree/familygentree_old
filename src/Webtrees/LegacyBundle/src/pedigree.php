@@ -17,7 +17,7 @@ namespace Fisharebest\Webtrees;
  */
 
 /**
- * Defined in session.php
+ * Defined in Application
  *
  * @global integer $basexoffset
  */
@@ -27,7 +27,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'pedigree.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_GENERATIONS');
 $PEDIGREE_GENERATIONS     = Globals::i()->WT_TREE->getPreference('PEDIGREE_GENERATIONS');

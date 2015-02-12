@@ -20,7 +20,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'calendar.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $WEEK_START      = Globals::i()->WT_TREE->getPreference('WEEK_START');
 $CALENDAR_FORMAT = Globals::i()->WT_TREE->getPreference('CALENDAR_FORMAT');

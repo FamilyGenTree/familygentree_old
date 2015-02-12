@@ -20,7 +20,7 @@ use Fgt\Application;
 use PDO;
 
 define('WT_SCRIPT_NAME', 'editnews.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new SimpleController());
 $controller

@@ -21,7 +21,7 @@ use Michelf\MarkdownExtra;
 
 define('WT_SCRIPT_NAME', 'admin_site_readme.php');
 
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 $controller

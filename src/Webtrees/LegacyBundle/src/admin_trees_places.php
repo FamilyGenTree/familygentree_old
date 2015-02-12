@@ -20,7 +20,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'admin_trees_places.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $search  = Filter::post('search');
 $replace = Filter::post('replace');

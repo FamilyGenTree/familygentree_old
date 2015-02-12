@@ -19,7 +19,7 @@ namespace Fisharebest\Webtrees;
 use Fgt\Application;
 
 define('WT_SCRIPT_NAME', 'admin_module_sidebar.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 $controller

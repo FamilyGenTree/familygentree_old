@@ -16,11 +16,12 @@ namespace Fisharebest\Webtrees;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'help_text.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $help = Filter::get('help');
 switch ($help) {

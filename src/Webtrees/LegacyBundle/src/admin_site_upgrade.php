@@ -22,7 +22,7 @@ use PclZip;
 
 define('WT_SCRIPT_NAME', 'admin_site_upgrade.php');
 
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // Check for updates
 $latest_version_txt = fetch_latest_version();

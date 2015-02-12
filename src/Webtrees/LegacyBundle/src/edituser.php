@@ -20,7 +20,7 @@ use Fgt\Application;
 use Fgt\Globals;
 
 define('WT_SCRIPT_NAME', 'edituser.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // Need to be logged in
 if (!Auth::check()) {

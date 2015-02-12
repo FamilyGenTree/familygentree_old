@@ -20,7 +20,7 @@ use Fgt\Application;
 use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', UrlConstants::ADMIN_SITE_INFO_PHP);
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new PageController());
 $controller

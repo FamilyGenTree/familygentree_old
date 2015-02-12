@@ -23,7 +23,7 @@ use Zend_Controller_Request_Http;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'login.php');
-require FGT_ROOT . '/includes/session.php';
+Application::i()->init()->started();
 
 // If we are already logged in, then go to the “Home page”
 if (Auth::check() && WT_GED_ID) {
