@@ -194,7 +194,7 @@ class Media extends GedcomRecord
                     Log::addMediaLog('Thumbnail created for ' . $main_file . ' (copy of main image)');
                     @copy($main_file, $file);
                 } else {
-                    if (hasMemoryForImage($main_file)) {
+                    if (FunctionsMediaDb::i()->hasMemoryForImage($main_file)) {
                         switch ($imgsize['mime']) {
                             case 'image/png':
                                 $main_image = @imagecreatefrompng($main_file);

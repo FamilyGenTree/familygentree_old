@@ -323,7 +323,7 @@ if ($type) {
 
 // determine whether we have enough memory to watermark this image
 if ($usewatermark) {
-    if (!hasMemoryForImage($serverFilename)) {
+    if (!FunctionsMediaDb::i()->hasMemoryForImage($serverFilename)) {
         // not enough memory to watermark this file
         $usewatermark = false;
     }

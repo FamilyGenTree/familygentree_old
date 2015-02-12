@@ -33,23 +33,24 @@ class FunctionsMediaDbTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the function return_bytes().
+     * Test the function FunctionsMediaDb::return_bytes().
      *
      * @return void
      */
     public function testFunctionReturnBytes()
     {
-        $this->assertSame(-1, return_bytes(''));
-        $this->assertSame(-1, return_bytes('-1'));
-        $this->assertSame(42, return_bytes('42'));
-        $this->assertSame(42, return_bytes('42b'));
-        $this->assertSame(42, return_bytes('42B'));
-        $this->assertSame(43008, return_bytes('42k'));
-        $this->assertSame(43008, return_bytes('42K'));
-        $this->assertSame(44040192, return_bytes('42m'));
-        $this->assertSame(44040192, return_bytes('42M'));
-        $this->assertSame(45097156608, return_bytes('42g'));
-        $this->assertSame(45097156608, return_bytes('42G'));
+        $sut = FunctionsMediaDb::i();
+        $this->assertSame(-1, $sut->return_bytes(''));
+        $this->assertSame(-1, $sut->return_bytes('-1'));
+        $this->assertSame(42, $sut->return_bytes('42'));
+        $this->assertSame(42, $sut->return_bytes('42b'));
+        $this->assertSame(42, $sut->return_bytes('42B'));
+        $this->assertSame(43008, $sut->return_bytes('42k'));
+        $this->assertSame(43008, $sut->return_bytes('42K'));
+        $this->assertSame(44040192, $sut->return_bytes('42m'));
+        $this->assertSame(44040192, $sut->return_bytes('42M'));
+        $this->assertSame(45097156608, $sut->return_bytes('42g'));
+        $this->assertSame(45097156608, $sut->return_bytes('42G'));
     }
 
 }
