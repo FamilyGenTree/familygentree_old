@@ -307,7 +307,7 @@ class Functions
         if ($person1 === $person2) {
             $label = '<i class="icon-selected" title="' . I18N::translate('self') . '"></i>';
         } else {
-            $label = Functions::i()->get_relationship_name(Functions::i()->get_relationship($person1, $person2, true, 3));
+            $label = $this->get_relationship_name($this->get_relationship($person1, $person2, true, 3));
         }
 
         return $label;
@@ -328,7 +328,7 @@ class Functions
         if ($person1 === $person2) {
             $label = I18N::translate('self');
         } else {
-            $label = Functions::i()->get_relationship_name(Functions::i()->get_relationship($person1, $person2, true, 4));
+            $label = $this->get_relationship_name($this->get_relationship($person1, $person2, true, 4));
         }
 
         return $label;
@@ -568,7 +568,7 @@ class Functions
             $combined_path .= substr($rel, 0, 3);
         }
 
-        return Functions::i()->get_relationship_name_from_path($combined_path, $person1, $person2);
+        return $this->get_relationship_name_from_path($combined_path, $person1, $person2);
     }
 
     /**
@@ -705,7 +705,7 @@ class Functions
     }
 
     /**
-     * A variation on Functions::i()->cousin_name(), for constructs such as “sixth great-nephew”
+     * A variation on $this->cousin_name(), for constructs such as “sixth great-nephew”
      * Currently used only by Spanish relationship names.
      *
      * @param integer $n
@@ -2193,25 +2193,25 @@ class Functions
             // Need to find out which languages use which rules.
             switch (WT_LOCALE) {
                 case 'pl': // Source: Lukasz Wilenski
-                    return Functions::i()->cousin_name($up + $down + 2, $sex2);
+                    return $this->cousin_name($up + $down + 2, $sex2);
                 case 'it':
                     // Source: Michele Locati.  See italian_cousins_names.zip
                     // http://webtrees.net/forums/8-translation/1200-great-xn-grandparent?limit=6&start=6
-                    return Functions::i()->cousin_name($up + $down - 3, $sex2);
+                    return $this->cousin_name($up + $down - 3, $sex2);
                 case 'es':
                     // Source: Wes Groleau.  See http://UniGen.us/Parentesco.html & http://UniGen.us/Parentesco-D.html
                     if ($down == $up) {
-                        return Functions::i()->cousin_name($cousin, $sex2);
+                        return $this->cousin_name($cousin, $sex2);
                     } elseif ($down < $up) {
-                        return Functions::i()->cousin_name2($cousin + 1, $sex2, Functions::i()->get_relationship_name_from_path('sib' . $descent, null, null));
+                        return $this->cousin_name2($cousin + 1, $sex2, $this->get_relationship_name_from_path('sib' . $descent, null, null));
                     } else {
                         switch ($sex2) {
                             case 'M':
-                                return Functions::i()->cousin_name2($cousin + 1, $sex2, Functions::i()->get_relationship_name_from_path('bro' . $descent, null, null));
+                                return $this->cousin_name2($cousin + 1, $sex2, $this->get_relationship_name_from_path('bro' . $descent, null, null));
                             case 'F':
-                                return Functions::i()->cousin_name2($cousin + 1, $sex2, Functions::i()->get_relationship_name_from_path('sis' . $descent, null, null));
+                                return $this->cousin_name2($cousin + 1, $sex2, $this->get_relationship_name_from_path('sis' . $descent, null, null));
                             default:
-                                return Functions::i()->cousin_name2($cousin + 1, $sex2, Functions::i()->get_relationship_name_from_path('sib' . $descent, null, null));
+                                return $this->cousin_name2($cousin + 1, $sex2, $this->get_relationship_name_from_path('sib' . $descent, null, null));
                         }
                     }
                 case 'en_AU': // See: http://en.wikipedia.org/wiki/File:CousinTree.svg
@@ -2220,38 +2220,38 @@ class Functions
                 default:
                     switch ($removed) {
                         case 0:
-                            return Functions::i()->cousin_name($cousin, $sex2);
+                            return $this->cousin_name($cousin, $sex2);
                         case 1:
                             if ($up > $down) {
                                 /* I18N: %s=“fifth cousin”, etc. http://www.ancestry.com/learn/library/article.aspx?article=2856 */
-                                return I18N::translate('%s once removed ascending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s once removed ascending', $this->cousin_name($cousin, $sex2));
                             } else {
                                 /* I18N: %s=“fifth cousin”, etc. http://www.ancestry.com/learn/library/article.aspx?article=2856 */
-                                return I18N::translate('%s once removed descending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s once removed descending', $this->cousin_name($cousin, $sex2));
                             }
                         case 2:
                             if ($up > $down) {
                                 /* I18N: %s=“fifth cousin”, etc. */
-                                return I18N::translate('%s twice removed ascending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s twice removed ascending', $this->cousin_name($cousin, $sex2));
                             } else {
                                 /* I18N: %s=“fifth cousin”, etc. */
-                                return I18N::translate('%s twice removed descending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s twice removed descending', $this->cousin_name($cousin, $sex2));
                             }
                         case 3:
                             if ($up > $down) {
                                 /* I18N: %s=“fifth cousin”, etc. */
-                                return I18N::translate('%s three times removed ascending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s three times removed ascending', $this->cousin_name($cousin, $sex2));
                             } else {
                                 /* I18N: %s=“fifth cousin”, etc. */
-                                return I18N::translate('%s three times removed descending', Functions::i()->cousin_name($cousin, $sex2));
+                                return I18N::translate('%s three times removed descending', $this->cousin_name($cousin, $sex2));
                             }
                         default:
                             if ($up > $down) {
                                 /* I18N: %1$s=“fifth cousin”, etc., %2$d>=4 */
-                                return I18N::translate('%1$s %2$d times removed ascending', Functions::i()->cousin_name($cousin, $sex2), $removed);
+                                return I18N::translate('%1$s %2$d times removed ascending', $this->cousin_name($cousin, $sex2), $removed);
                             } else {
                                 /* I18N: %1$s=“fifth cousin”, etc., %2$d>=4 */
-                                return I18N::translate('%1$s %2$d times removed descending', Functions::i()->cousin_name($cousin, $sex2), $removed);
+                                return I18N::translate('%1$s %2$d times removed descending', $this->cousin_name($cousin, $sex2), $removed);
                             }
                     }
             }
@@ -2267,8 +2267,8 @@ class Functions
             $tmp = I18N::translate(
             // I18N: A complex relationship, such as “third-cousin’s great-uncle”
                 '%1$s’s %2$s',
-                Functions::i()->get_relationship_name_from_path($path1, null, null), // TODO: need the actual people
-                Functions::i()->get_relationship_name_from_path($path2, null, null)
+                $this->get_relationship_name_from_path($path1, null, null), // TODO: need the actual people
+                $this->get_relationship_name_from_path($path2, null, null)
             );
             if (!$relationship || strlen($tmp) < strlen($relationship)) {
                 $relationship = $tmp;
