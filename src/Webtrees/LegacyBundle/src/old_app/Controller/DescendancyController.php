@@ -120,7 +120,7 @@ class DescendancyController extends ChartController
             return;
         }
         foreach ($person->getSpouseFamilies() as $family) {
-            print_sosa_family($family->getXref(), '', -1, $label, $person->getXref(), $gpid);
+            FunctionsCharts::i()->print_sosa_family($family->getXref(), '', -1, $label, $person->getXref(), $gpid);
             $i = 1;
             foreach ($family->getChildren() as $child) {
                 $this->printChildFamily($child, $depth - 1, $label . ($i++) . '.', $person->getXref());
@@ -159,7 +159,7 @@ class DescendancyController extends ChartController
         echo '<td>';
         foreach ($person->getChildFamilies() as $cfamily) {
             foreach ($cfamily->getSpouses() as $parent) {
-                print_url_arrow('?rootid=' . $parent->getXref() . '&amp;generations=' . $this->generations . '&amp;chart_style=' . $this->chart_style . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $this->box_width . '&amp;ged=' . WT_GEDURL, I18N::translate('Start at parents'), 2);
+                FunctionsCharts::i()->print_url_arrow('?rootid=' . $parent->getXref() . '&amp;generations=' . $this->generations . '&amp;chart_style=' . $this->chart_style . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $this->box_width . '&amp;ged=' . WT_GEDURL, I18N::translate('Start at parents'), 2);
                 // only show the arrow for one of the parents
                 break;
             }
@@ -241,7 +241,7 @@ class DescendancyController extends ChartController
         if ($spouse) {
             foreach ($spouse->getChildFamilies() as $cfamily) {
                 foreach ($cfamily->getSpouses() as $parent) {
-                    print_url_arrow('?rootid=' . $parent->getXref() . '&amp;generations=' . $this->generations . '&amp;chart_style=' . $this->chart_style . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $this->box_width . '&amp;ged=' . WT_GEDURL, I18N::translate('Start at parents'), 2);
+                    FunctionsCharts::i()->print_url_arrow('?rootid=' . $parent->getXref() . '&amp;generations=' . $this->generations . '&amp;chart_style=' . $this->chart_style . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $this->box_width . '&amp;ged=' . WT_GEDURL, I18N::translate('Start at parents'), 2);
                     // only show the arrow for one of the parents
                     break;
                 }

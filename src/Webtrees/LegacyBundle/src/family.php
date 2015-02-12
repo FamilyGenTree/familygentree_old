@@ -84,7 +84,7 @@ if ($controller->record && $controller->record->canShow()) {
     <table id="family-table" align="center" width="95%">
         <tr valign="top">
             <td valign="top" style="width: <?php echo $pbwidth + 30; ?>px;"><!--//List of children//-->
-                <?php print_family_children($controller->record); ?>
+                <?php FunctionsCharts::i()->print_family_children($controller->record); ?>
             </td>
             <td> <!--//parents pedigree chart and Family Details//-->
                 <table width="100%">
@@ -95,7 +95,7 @@ if ($controller->record && $controller->record->canShow()) {
                     <tr>
                         <td colspan="2">
                             <?php
-                            print_family_parents($controller->record);
+                            FunctionsCharts::i()->print_family_parents($controller->record);
                             if (WT_USER_CAN_EDIT) {
                                 $husb = $controller->record->getHusband();
                                 if (!$husb) {

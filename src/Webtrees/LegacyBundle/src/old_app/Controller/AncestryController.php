@@ -123,7 +123,7 @@ class AncestryController extends ChartController
         echo '</td>';
         echo '<td>';
         if ($sosa > 1) {
-            print_url_arrow('?rootid=' . $pid . '&amp;PEDIGREE_GENERATIONS=' . $OLD_PGENS . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $box_width . '&amp;chart_style=' . $this->chart_style . '&amp;ged=' . WT_GEDURL, $label, 3);
+            FunctionsCharts::i()->print_url_arrow('?rootid=' . $pid . '&amp;PEDIGREE_GENERATIONS=' . $OLD_PGENS . '&amp;show_full=' . $this->show_full . '&amp;box_width=' . $box_width . '&amp;chart_style=' . $this->chart_style . '&amp;ged=' . WT_GEDURL, $label, 3);
         }
         echo '</td>';
         echo '<td class="details1">&nbsp;<span dir="ltr" class="person_box' . (($sosa == 1) ? 'NN'
@@ -132,11 +132,11 @@ class AncestryController extends ChartController
         $relation = '';
         $new      = ($pid == '' || !isset($pidarr[$pid]));
         if (!$new) {
-            $relation = '<br>[=<a href="#sosa' . $pidarr[$pid] . '">' . $pidarr[$pid] . '</a> - ' . get_sosa_name($pidarr[$pid]) . ']';
+            $relation = '<br>[=<a href="#sosa' . $pidarr[$pid] . '">' . $pidarr[$pid] . '</a> - ' . FunctionsCharts::i()->get_sosa_name($pidarr[$pid]) . ']';
         } else {
             $pidarr[$pid] = $sosa;
         }
-        echo get_sosa_name($sosa) . $relation;
+        echo FunctionsCharts::i()->get_sosa_name($sosa) . $relation;
         echo '</td>';
         echo '</tr></table>';
 
