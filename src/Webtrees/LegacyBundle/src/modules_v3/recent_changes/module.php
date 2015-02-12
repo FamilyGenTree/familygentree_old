@@ -88,11 +88,11 @@ class recent_changes_WT_Module extends Module implements ModuleBlockInterface
             ob_start();
             switch ($infoStyle) {
                 case 'list':
-                    $content .= print_changes_list($found_facts, $sortStyle);
+                    $content .= FunctionsPrintLists::i()->print_changes_list($found_facts, $sortStyle);
                     break;
                 case 'table':
                     // sortable table
-                    $content .= print_changes_table($found_facts, $sortStyle);
+                    $content .= FunctionsPrintLists::i()->print_changes_table($found_facts, $sortStyle);
                     break;
             }
             $content .= ob_get_clean();

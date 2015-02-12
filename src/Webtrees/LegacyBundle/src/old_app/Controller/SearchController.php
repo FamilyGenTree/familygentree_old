@@ -667,7 +667,7 @@ class SearchController extends PageController
                         usort($datalist, __NAMESPACE__ . '\GedcomRecord::compare');
                         echo '<h3 class="indi-acc-header"><a href="#"><span class="search_item" dir="auto">', $this->myquery, '</span> @ <span>', $search_tree->getTitleHtml(), '</span></a></h3>
 							<div class="indi-acc_content">',
-                        format_indi_table($datalist);
+                        FunctionsPrintLists::i()->format_indi_table($datalist);
                         echo '</div>'; //indi-acc_content
                     }
                 }
@@ -688,7 +688,7 @@ class SearchController extends PageController
                         usort($datalist, __NAMESPACE__ . '\GedcomRecord::compare');
                         echo '<h3 class="fam-acc-header"><a href="#"><span class="search_item" dir="auto">', $this->myquery, '</span> @ <span>', $search_tree->getTitleHtml(), '</span></a></h3>
 							<div class="fam-acc_content">',
-                        format_fam_table($datalist);
+                        FunctionsPrintLists::i()->format_fam_table($datalist);
                         echo '</div>'; //fam-acc_content
                     }
                 }
@@ -708,7 +708,7 @@ class SearchController extends PageController
                         usort($datalist, __NAMESPACE__ . '\GedcomRecord::compare');
                         echo '<h3 class="source-acc-header"><a href="#"><span class="search_item" dir="auto">', $this->myquery, '</span> @ <span>', $search_tree->getTitleHtml(), '</span></a></h3>
 							<div class="source-acc_content">',
-                        format_sour_table($datalist);
+                        FunctionsPrintLists::i()->format_sour_table($datalist);
                         echo '</div>'; //fam-acc_content
                     }
                 }
@@ -729,7 +729,7 @@ class SearchController extends PageController
                         usort($datalist, 'Webtrees\GedcomRecord::compare');
                         echo '<h3 class="note-acc-header"><a href="#"><span class="search_item" dir="auto">', $this->myquery, '</span> @ <span>', $search_tree->getTitleHtml(), '</span></a></h3>
 							<div class="note-acc_content">',
-                        format_note_table($datalist);
+                        FunctionsPrintLists::i()->format_note_table($datalist);
                         echo '</div>'; //note-acc_content
                     }
                 }

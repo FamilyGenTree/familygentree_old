@@ -114,11 +114,11 @@ $controller
                                 break;
                             case 2: // Individual list
                                 $descendants = $controller->individualDescendancy($controller->root, $controller->generations, array());
-                                echo '<div id="descendancy-list">', format_indi_table($descendants), '</div>';
+                                echo '<div id="descendancy-list">', FunctionsPrintLists::i()->format_indi_table($descendants), '</div>';
                                 break;
                             case 3: // Family list
                                 $descendants = $controller->familyDescendancy($controller->root, $controller->generations, array());
-                                echo '<div id="descendancy-list">', format_fam_table($descendants), '</div>';
+                                echo '<div id="descendancy-list">', FunctionsPrintLists::i()->format_fam_table($descendants), '</div>';
                                 break;
                         }
                     }

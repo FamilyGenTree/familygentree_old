@@ -148,27 +148,27 @@ echo '</ul>';
 
 // Individuals linked to this media object
 if ($linked_indi) {
-    echo '<div id="indi-media">', format_indi_table($linked_indi), '</div>';
+    echo '<div id="indi-media">', FunctionsPrintLists::i()->format_indi_table($linked_indi), '</div>';
 }
 
 // Families linked to this media object
 if ($linked_fam) {
-    echo '<div id="fam-media">', format_fam_table($linked_fam), '</div>';
+    echo '<div id="fam-media">', FunctionsPrintLists::i()->format_fam_table($linked_fam), '</div>';
 }
 
 // Sources linked to this media object
 if ($linked_sour) {
-    echo '<div id="sources-media">', format_sour_table($linked_sour), '</div>';
+    echo '<div id="sources-media">', FunctionsPrintLists::i()->format_sour_table($linked_sour), '</div>';
 }
 
 // Repositories linked to this media object
 if ($linked_repo) {
-    echo '<div id="repo-media">', format_repo_table($linked_repo), '</div>';
+    echo '<div id="repo-media">', FunctionsPrintLists::i()->format_repo_table($linked_repo), '</div>';
 }
 
 // medias linked to this media object
 if ($linked_note) {
-    echo '<div id="notes-media">', format_note_table($linked_note), '</div>';
+    echo '<div id="notes-media">', FunctionsPrintLists::i()->format_note_table($linked_note), '</div>';
 }
 echo '</div>';
 echo '</div>';

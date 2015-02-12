@@ -163,19 +163,19 @@ echo '</table>
 
 // Individuals linked to this source
 if ($linked_indi) {
-    echo '<div id="indi-sources">', format_indi_table($linked_indi), '</div>';
+    echo '<div id="indi-sources">', FunctionsPrintLists::i()->format_indi_table($linked_indi), '</div>';
 }
 // Families linked to this source
 if ($linked_fam) {
-    echo '<div id="fam-sources">', format_fam_table($linked_fam), '</div>';
+    echo '<div id="fam-sources">', FunctionsPrintLists::i()->format_fam_table($linked_fam), '</div>';
 }
 // Media Items linked to this source
 if ($linked_obje) {
-    echo '<div id="media-sources">', format_media_table($linked_obje), '</div>';
+    echo '<div id="media-sources">', FunctionsPrintLists::i()->format_media_table($linked_obje), '</div>';
 }
 // Shared Notes linked to this source
 if ($linked_note) {
-    echo '<div id="note-sources">', format_note_table($linked_note), '</div>';
+    echo '<div id="note-sources">', FunctionsPrintLists::i()->format_note_table($linked_note), '</div>';
 }
 echo '</div>'; //close div "source-tabs"
 echo '</div>'; //close div "source-details"

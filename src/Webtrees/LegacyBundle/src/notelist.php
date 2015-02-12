@@ -27,5 +27,5 @@ $controller->pageHeader();
 
 echo '<div id="notelist-page">',
 '<h2>', I18N::translate('Shared notes'), '</h2>',
-format_note_table(FunctionsDbPhp::i()->get_note_list(WT_GED_ID));
+FunctionsPrintLists::i()->format_note_table(FunctionsDbPhp::i()->get_note_list(WT_GED_ID));
 echo '</div>';

@@ -180,16 +180,16 @@ if (array_key_exists('GEDFact_assistant', Module::getActiveModules())) {
         </div>
         <?php
         if ($linked_indi) {
-            echo '<div id="indi-note">', format_indi_table($linked_indi), '</div>';
+            echo '<div id="indi-note">', FunctionsPrintLists::i()->format_indi_table($linked_indi), '</div>';
         }
         if ($linked_fam) {
-            echo '<div id="fam-note">', format_fam_table($linked_fam), '</div>';
+            echo '<div id="fam-note">', FunctionsPrintLists::i()->format_fam_table($linked_fam), '</div>';
         }
         if ($linked_obje) {
-            echo '<div id="media-note">', format_media_table($linked_obje), '</div>';
+            echo '<div id="media-note">', FunctionsPrintLists::i()->format_media_table($linked_obje), '</div>';
         }
         if ($linked_sour) {
-            echo '<div id="source-note">', format_sour_table($linked_sour), '</div>';
+            echo '<div id="source-note">', FunctionsPrintLists::i()->format_sour_table($linked_sour), '</div>';
         }
         ?>
     </div>

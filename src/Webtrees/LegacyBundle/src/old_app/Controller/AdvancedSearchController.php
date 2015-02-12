@@ -685,7 +685,7 @@ class AdvancedSearchController extends SearchController
     {
         if ($this->myindilist) {
             uasort($this->myindilist, __NAMESPACE__ . '\GedcomRecord::compare');
-            echo format_indi_table($this->myindilist);
+            echo FunctionsPrintLists::i()->format_indi_table($this->myindilist);
 
             return true;
         } else {

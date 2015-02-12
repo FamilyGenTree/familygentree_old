@@ -5318,7 +5318,7 @@ class Stats
             $surnames = array_merge($surnames, WT_Query_Name::surnames($surname, '', false, false, WT_GED_ID));
         }
 
-        return format_surname_list($surnames, ($type == 'list' ? 1 : 2), $show_tot, 'indilist.php');
+        return FunctionsPrintLists::i()->format_surname_list($surnames, ($type == 'list' ? 1 : 2), $show_tot, 'indilist.php');
     }
 
     /**

@@ -27,5 +27,5 @@ $controller->pageHeader();
 
 echo '<div id="sourcelist-page">',
 '<h2>', I18N::translate('Sources'), '</h2>';
-echo format_sour_table(FunctionsDbPhp::i()->get_source_list(WT_GED_ID));
+echo FunctionsPrintLists::i()->format_sour_table(FunctionsDbPhp::i()->get_source_list(WT_GED_ID));
 echo '</div>';

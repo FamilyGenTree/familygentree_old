@@ -229,13 +229,13 @@ switch ($display) {
             }
             echo '</ul>';
             if ($myindilist) {
-                echo '<div id="places-indi">', format_indi_table($myindilist), '</div>';
+                echo '<div id="places-indi">', FunctionsPrintLists::i()->format_indi_table($myindilist), '</div>';
             }
             if ($myfamlist) {
-                echo '<div id="places-fam">', format_fam_table($myfamlist), '</div>';
+                echo '<div id="places-fam">', FunctionsPrintLists::i()->format_fam_table($myfamlist), '</div>';
             }
             if (!$myindilist && !$myfamlist) {
-                echo '<div id="places-indi">', format_indi_table(array()), '</div>';
+                echo '<div id="places-indi">', FunctionsPrintLists::i()->format_indi_table(array()), '</div>';
             }
             echo '</div>'; // <div id="places-tabs">
         }

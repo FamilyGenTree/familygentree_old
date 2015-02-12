@@ -173,7 +173,7 @@ switch ($controller->chart_style) {
         // Individual list
         $ancestors = $controller->sosaAncestors($PEDIGREE_GENERATIONS);
         $ancestors = array_filter($ancestors); // The SOSA array includes empty placeholders
-        echo '<div id="ancestry-list">', format_indi_table($ancestors, 'sosa'), '</div>';
+        echo '<div id="ancestry-list">', FunctionsPrintLists::i()->format_indi_table($ancestors, 'sosa'), '</div>';
         break;
     case 3:
         // Family list
@@ -185,7 +185,7 @@ switch ($controller->chart_style) {
                 $families[$family->getXref()] = $family;
             }
         }
-        echo '<div id="ancestry-list">', format_fam_table($families), '</div>';
+        echo '<div id="ancestry-list">', FunctionsPrintLists::i()->format_fam_table($families), '</div>';
         break;
 }
 echo '</div>';

@@ -186,14 +186,14 @@ if ($show === 'indi' || $show === 'surn') {
         // Show the surname list
         switch (Globals::i()->WT_TREE->getPreference('SURNAME_LIST_STYLE')) {
             case 'style1';
-                echo format_surname_list($surns, 3, true, WT_SCRIPT_NAME);
+                echo FunctionsPrintLists::i()->format_surname_list($surns, 3, true, WT_SCRIPT_NAME);
                 break;
             case 'style3':
-                echo format_surname_tagcloud($surns, WT_SCRIPT_NAME, true);
+                echo FunctionsPrintLists::i()->format_surname_tagcloud($surns, WT_SCRIPT_NAME, true);
                 break;
             case 'style2':
             default:
-                echo format_surname_table($surns, WT_SCRIPT_NAME);
+                echo FunctionsPrintLists::i()->format_surname_table($surns, WT_SCRIPT_NAME);
                 break;
         }
     } else {
@@ -249,7 +249,7 @@ if ($show === 'indi' || $show === 'surn') {
             }
         }
         if ($show === 'indi') {
-            echo format_indi_table(WT_Query_Name::individuals($surname, $alpha, $falpha, $show_marnm === 'yes', false, WT_GED_ID));
+            echo FunctionsPrintLists::i()->format_indi_table(WT_Query_Name::individuals($surname, $alpha, $falpha, $show_marnm === 'yes', false, WT_GED_ID));
         }
     }
 }

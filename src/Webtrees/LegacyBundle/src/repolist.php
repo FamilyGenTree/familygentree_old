@@ -27,5 +27,5 @@ $controller->pageHeader();
 
 echo '<div id="repolist-page">',
 '<h2>', I18N::translate('Repositories'), '</h2>';
-echo format_repo_table(FunctionsDbPhp::i()->get_repo_list(WT_GED_ID));
+echo FunctionsPrintLists::i()->format_repo_table(FunctionsDbPhp::i()->get_repo_list(WT_GED_ID));
 echo '</div>';

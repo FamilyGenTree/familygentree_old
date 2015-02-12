@@ -78,12 +78,12 @@ class upcoming_events_WT_Module extends Module implements ModuleBlockInterface
         switch ($infoStyle) {
             case 'list':
                 // Output style 1:  Old format, no visible tables, much smaller text.  Better suited to right side of page.
-                $content .= print_events_list($startjd, $endjd, $onlyBDM ? 'BIRT MARR DEAT' : '', $filter, $sortStyle);
+                $content .= FunctionsPrintLists::i()->print_events_list($startjd, $endjd, $onlyBDM ? 'BIRT MARR DEAT' : '', $filter, $sortStyle);
                 break;
             case 'table':
                 // Style 2: New format, tables, big text, etc.  Not too good on right side of page
                 ob_start();
-                $content .= print_events_table($startjd, $endjd, $onlyBDM ? 'BIRT MARR DEAT' : '', $filter, $sortStyle);
+                $content .= FunctionsPrintLists::i()->print_events_table($startjd, $endjd, $onlyBDM ? 'BIRT MARR DEAT' : '', $filter, $sortStyle);
                 $content .= ob_get_clean();
                 break;
         }

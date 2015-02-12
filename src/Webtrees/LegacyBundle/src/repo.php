@@ -148,7 +148,7 @@ echo '</table>
 // Sources linked to this repository
 if ($linked_sour) {
     echo '<div id="source-repo">';
-    echo format_sour_table($linked_sour);
+    echo FunctionsPrintLists::i()->format_sour_table($linked_sour);
     echo '</div>';
 }
 
