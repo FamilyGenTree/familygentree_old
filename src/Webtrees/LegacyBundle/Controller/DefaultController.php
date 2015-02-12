@@ -3,11 +3,45 @@
 namespace Webtrees\LegacyBundle\Controller;
 
 use Fgt\UrlConstants;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Webtrees\LegacyBundle\Legacy\IndexPHP;
 
 class DefaultController extends AbstractController
 {
+
+    public function themesAssetAction($themeName,$file) {
+        $explode = explode('.',$file);
+
+        $contentType = null;
+        switch(strtolower(array_reverse($explode)[0])) {
+            case 'css':
+                $contentType = 'text/css';
+                break;
+            case 'js':
+                $contentType = 'application/javascript';
+                break;
+            case 'png':
+                $contentType = 'image/png';
+                break;
+            case 'jpg':
+                $contentType = 'image/jpeg';
+                break;
+            case 'gif':
+                $contentType = 'image/gif';
+                break;
+
+            default:
+            $contentType = 'text/plain';
+        }
+        return new BinaryFileResponse(
+            $this->getLegacyRoot()."/themes/{$themeName}/{$file}",
+            BinaryFileResponse::HTTP_OK,
+            array(
+                'Content-Type' => $contentType
+            )
+        );
+    }
 
     public function indexAction(Request $request, $file)
     {

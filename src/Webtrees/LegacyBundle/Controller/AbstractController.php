@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 abstract class AbstractController extends Controller {
+
     protected function setConfig()
     {
         define('FGT_ROOT', dirname(__DIR__) . '/src');
@@ -24,4 +25,7 @@ abstract class AbstractController extends Controller {
         Config::set(Config::MODULES_DIR, WT_ROOT . 'modules_v3/');
     }
 
+    protected function getLegacyRoot() {
+        return dirname(__DIR__) . '/src';
+    }
 }
