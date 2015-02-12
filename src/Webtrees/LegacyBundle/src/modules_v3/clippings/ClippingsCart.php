@@ -163,7 +163,7 @@ class ClippingsCart
         } elseif ($this->action === 'download') {
             $media      = array();
             $mediacount = 0;
-            $filetext   = gedcom_header(WT_GEDCOM);
+            $filetext   = FunctionsExport::i()->gedcom_header(WT_GEDCOM);
             // Include SUBM/SUBN records, if they exist
             $subn =
                 Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_type=? AND o_file=?")
@@ -229,7 +229,7 @@ class ClippingsCart
                             $record = str_replace($match[0], '', $record);
                         }
                     }
-                    $record      = convert_media_path($record, $this->conv_path);
+                    $record      = FunctionsExport::i()->convert_media_path($record, $this->conv_path);
                     $savedRecord = $record; // Save this for the "does this file exist" check
                     if ($convert === 'yes') {
                         $record = utf8_decode($record);

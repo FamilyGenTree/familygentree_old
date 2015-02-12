@@ -750,7 +750,7 @@ class Tree
             return false;
         }
 
-        $buffer = reformat_record_export(gedcom_header($this->name));
+        $buffer = FunctionsExport::i()->reformat_record_export(FunctionsExport::i()->gedcom_header($this->name));
 
         $stmt = Database::prepare(
             "SELECT i_gedcom AS gedcom FROM `##individuals` WHERE i_file = ?" .
@@ -772,7 +772,7 @@ class Tree
                                   ));
 
         while ($row = $stmt->fetch()) {
-            $buffer .= reformat_record_export($row->gedcom);
+            $buffer .= FunctionsExport::i()->reformat_record_export($row->gedcom);
             if (strlen($buffer) > 65535) {
                 fwrite($file_pointer, $buffer);
                 $buffer = '';

@@ -61,7 +61,7 @@ if ($action === 'download') {
 
         // Create the unzipped GEDCOM on disk, so we can ZIP it.
         $stream = fopen($temp_dir . $download_filename, "w");
-        export_gedcom(WT_GEDCOM, $stream, $exportOptions);
+        FunctionsExport::i()->export_gedcom(WT_GEDCOM, $stream, $exportOptions);
         fclose($stream);
 
         // Create a ZIP file containing the GEDCOM file.
@@ -84,7 +84,7 @@ if ($action === 'download') {
         // Stream the GEDCOM file straight to the browser.
         // We could open "php://compress.zlib" to create a .gz file or "php://compress.bzip2" to create a .bz2 file
         $stream = fopen('php://output', 'w');
-        export_gedcom(WT_GEDCOM, $stream, $exportOptions);
+        FunctionsExport::i()->export_gedcom(WT_GEDCOM, $stream, $exportOptions);
         fclose($stream);
     }
 
