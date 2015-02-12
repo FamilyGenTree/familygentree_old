@@ -78,7 +78,7 @@ switch ($type) {
             Auth::user()
                 ->setPreference('default_language_filter', $language_filter);
         }
-        require WT_ROOT . 'includes/specialchars.php';
+        list($lcspecialchars, $ucspecialchars, $otherspecialchars, $specialchar_languages) = SpecialChars::special_char_translation($language_filter);
         $action = "filter";
         break;
     case "facts":
