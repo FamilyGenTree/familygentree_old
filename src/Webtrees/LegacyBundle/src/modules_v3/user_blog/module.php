@@ -87,7 +87,7 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
         foreach ($usernews as $news) {
             $content .= '<div class="journal_box">';
             $content .= '<div class="news_title">' . $news->subject . '</div>';
-            $content .= '<div class="news_date">' . format_timestamp($news->updated) . '</div>';
+            $content .= '<div class="news_date">' . FunctionsDate::i()->format_timestamp($news->updated) . '</div>';
             if ($news->body == strip_tags($news->body)) {
                 // No HTML?
                 $news->body = nl2br($news->body, false);

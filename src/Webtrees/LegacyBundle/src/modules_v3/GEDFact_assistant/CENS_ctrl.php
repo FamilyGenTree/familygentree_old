@@ -63,7 +63,7 @@ echo '</h3>';
             $bdate = $person->getBirthDate();
             $age   = Date::GetAgeGedcom($bdate);
             if ($age != "") {
-                $summary .= "<span class=\"label\">" . I18N::translate('Age') . ":</span><span class=\"field\"> " . get_age_at_event($age, true) . "</span>";
+                $summary .= "<span class=\"label\">" . I18N::translate('Age') . ":</span><span class=\"field\"> " . FunctionsDate::i()->get_age_at_event($age, true) . "</span>";
             }
         }
         $summary .= $person->format_first_major_fact(WT_EVENTS_DEAT, 2);

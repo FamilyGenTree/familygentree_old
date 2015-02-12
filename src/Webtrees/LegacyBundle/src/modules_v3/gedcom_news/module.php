@@ -119,7 +119,7 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
             }
             $content .= '<div class="news_box" id="article' . $news->news_id . '">';
             $content .= '<div class="news_title">' . Filter::escapeHtml($news->subject) . '</div>';
-            $content .= '<div class="news_date">' . format_timestamp($news->updated) . '</div>';
+            $content .= '<div class="news_date">' . FunctionsDate::i()->format_timestamp($news->updated) . '</div>';
             if ($news->body == strip_tags($news->body)) {
                 $news->body = nl2br($news->body, false);
             }

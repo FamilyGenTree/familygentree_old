@@ -105,8 +105,8 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                 $content .= "<a href=\"#\" onclick=\"window.open('edit_changes.php','_blank', chan_window_specs); return false;\">" . I18N::translate('There are pending changes for you to moderate.') . "</a><br>";
             }
             if ($sendmail == "yes") {
-                $content .= I18N::translate('Last email reminder was sent ') . format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL')) . "<br>";
-                $content .= I18N::translate('Next email reminder will be sent after ') . format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL') + (60 * 60 * 24 * $days)) . "<br><br>";
+                $content .= I18N::translate('Last email reminder was sent ') . FunctionsDate::i()->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL')) . "<br>";
+                $content .= I18N::translate('Next email reminder will be sent after ') . FunctionsDate::i()->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL') + (60 * 60 * 24 * $days)) . "<br><br>";
             }
             $changes = Database::prepare(
                 "SELECT xref" .

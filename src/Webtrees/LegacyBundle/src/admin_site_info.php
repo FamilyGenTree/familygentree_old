@@ -60,13 +60,13 @@ $html  = $matches[2];
             <div class="panel-body">
                 <?php echo /* I18N: The local time on the server */
                 I18N::translate('Server time'); ?> —
-                <?php echo format_timestamp(WT_SERVER_TIMESTAMP); ?><br>
+                <?php echo FunctionsDate::i()->format_timestamp(WT_SERVER_TIMESTAMP); ?><br>
                 <?php echo /* I18N: The local time on the client/browser */
                 I18N::translate('Client time'); ?> —
-                <?php echo format_timestamp(WT_CLIENT_TIMESTAMP); ?><br>
+                <?php echo FunctionsDate::i()->format_timestamp(WT_CLIENT_TIMESTAMP); ?><br>
                 <?php echo /* I18N: Timezone - http://en.wikipedia.org/wiki/UTC */
                 I18N::translate('UTC'); ?> —
-                <?php echo format_timestamp(WT_TIMESTAMP); ?>
+                <?php echo FunctionsDate::i()->format_timestamp(WT_TIMESTAMP); ?>
             </div>
         </div>
     </div>

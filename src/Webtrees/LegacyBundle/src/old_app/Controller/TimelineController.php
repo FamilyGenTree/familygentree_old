@@ -241,7 +241,7 @@ class TimelineController extends PageController
                           ->getBirthDate()
                           ->isOK()
             ) {
-                $ageh = get_age_at_event(Date::GetAgeGedcom($record->getHusband()
+                $ageh = FunctionsDate::i()->get_age_at_event(Date::GetAgeGedcom($record->getHusband()
                                                                    ->getBirthDate(), $gdate), false);
             } else {
                 $ageh = null;
@@ -251,7 +251,7 @@ class TimelineController extends PageController
                           ->getBirthDate()
                           ->isOK()
             ) {
-                $agew = get_age_at_event(Date::GetAgeGedcom($record->getWife()
+                $agew = FunctionsDate::i()->get_age_at_event(Date::GetAgeGedcom($record->getWife()
                                                                    ->getBirthDate(), $gdate), false);
             } else {
                 $agew = null;

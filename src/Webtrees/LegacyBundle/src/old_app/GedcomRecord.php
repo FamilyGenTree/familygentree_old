@@ -1183,7 +1183,7 @@ class GedcomRecord
             if ($sorting) {
                 return $t;
             } else {
-                return strip_tags(format_timestamp($t));
+                return strip_tags(FunctionsDate::i()->format_timestamp($t));
             }
         } else {
             // The record does not have a CHAN event

@@ -2325,7 +2325,7 @@ class Stats
             } else {
                 $age = $age . 'd';
             }
-            $age = get_age_at_event($age, true);
+            $age = FunctionsDate::i()->get_age_at_event($age, true);
             if ($person->canShow()) {
                 if ($type == 'list') {
                     $top10[] = "<li><a href=\"" . $person->getHtmlUrl() . "\">" . $person->getFullName() . "</a> (" . $age . ")" . "</li>";
@@ -2415,7 +2415,7 @@ class Stats
             } else {
                 $age = $age . 'd';
             }
-            $age = get_age_at_event($age, true);
+            $age = FunctionsDate::i()->get_age_at_event($age, true);
             if ($type == 'list') {
                 $top10[] = "<li><a href=\"" . $person->getHtmlUrl() . "\">" . $person->getFullName() . "</a> (" . $age . ")" . "</li>";
             } else {
@@ -2497,7 +2497,7 @@ class Stats
                 $age = $age . 'd';
             }
 
-            return get_age_at_event($age, true);
+            return FunctionsDate::i()->get_age_at_event($age, true);
         } else {
             return I18N::number($age / 365.25);
         }
@@ -3113,7 +3113,7 @@ class Stats
                     } else {
                         $age = $age . 'd';
                     }
-                    $result = get_age_at_event($age, true);
+                    $result = FunctionsDate::i()->get_age_at_event($age, true);
                 } else {
                     $result = I18N::number((int)($age / 365.25));
                 }
@@ -3223,7 +3223,7 @@ class Stats
             } else {
                 $age = $age . 'd';
             }
-            $age = get_age_at_event($age, true);
+            $age = FunctionsDate::i()->get_age_at_event($age, true);
             if ($type == 'age') {
                 return $age;
             }
@@ -3322,7 +3322,7 @@ class Stats
             } else {
                 $age = $age . 'd';
             }
-            $age = get_age_at_event($age, true);
+            $age = FunctionsDate::i()->get_age_at_event($age, true);
             if ($family->canShow()) {
                 if ($type == 'list') {
                     $top10[] = "<li><a href=\"" . $family->getHtmlUrl() . "\">" . $family->getFullName() . "</a> (" . $age . ")" . "</li>";
@@ -3426,7 +3426,7 @@ class Stats
                     } else {
                         $age = $age . 'd';
                     }
-                    $result = get_age_at_event($age, true);
+                    $result = FunctionsDate::i()->get_age_at_event($age, true);
                 } else {
                     $result = (int)($age / 365.25);
                 }
@@ -4497,7 +4497,7 @@ class Stats
             } else {
                 $age = $age . 'd';
             }
-            $age = get_age_at_event($age, true);
+            $age = FunctionsDate::i()->get_age_at_event($age, true);
             if ($type == 'age') {
                 return $age;
             }
@@ -6154,7 +6154,7 @@ class Stats
                     $datestamp = Globals::i()->DATE_FORMAT;
                 }
 
-                return timestamp_to_gedcom_date($user->getPreference('reg_timestamp'))->display(false, $datestamp);
+                return FunctionsDate::i()->timestamp_to_gedcom_date($user->getPreference('reg_timestamp'))->display(false, $datestamp);
             case 'regtime':
                 if (is_array($params) && isset($params[0]) && $params[0] != '') {
                     $datestamp = $params[0];
@@ -6270,7 +6270,7 @@ class Stats
      */
     public function serverDate()
     {
-        return timestamp_to_gedcom_date(WT_TIMESTAMP)->display();
+        return FunctionsDate::i()->timestamp_to_gedcom_date(WT_TIMESTAMP)->display();
     }
 
     /**
@@ -6305,7 +6305,7 @@ class Stats
      */
     public function browserDate()
     {
-        return timestamp_to_gedcom_date(WT_CLIENT_TIMESTAMP)->display();
+        return FunctionsDate::i()->timestamp_to_gedcom_date(WT_CLIENT_TIMESTAMP)->display();
     }
 
     /**

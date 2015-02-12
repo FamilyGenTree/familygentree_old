@@ -97,7 +97,7 @@ class html_WT_Module extends Module implements ModuleBlockInterface
         $content = $html;
 
         if ($show_timestamp) {
-            $content .= '<br>' . format_timestamp(FunctionsDbPhp::i()->get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
+            $content .= '<br>' . FunctionsDate::i()->format_timestamp(FunctionsDbPhp::i()->get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
         }
 
         if ($template) {

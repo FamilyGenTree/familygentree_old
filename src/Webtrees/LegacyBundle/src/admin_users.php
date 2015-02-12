@@ -227,13 +227,13 @@ switch (Filter::get('action')) {
                 $datum[5] = $installed_languages[$datum[5]];
             }
             // $datum[6] is the sortable registration timestamp
-            $datum[7] = $datum[7] ? format_timestamp($datum[7]) : '';
+            $datum[7] = $datum[7] ? FunctionsDate::i()->format_timestamp($datum[7]) : '';
             if (date("U") - $datum[6] > 604800 && !$datum[10]) {
                 $datum[7] = '<span class="red">' . $datum[7] . '</span>';
             }
             // $datum[8] is the sortable last-login timestamp
             if ($datum[8]) {
-                $datum[9] = format_timestamp($datum[8]) . '<br>' . I18N::timeAgo(WT_TIMESTAMP - $datum[8]);
+                $datum[9] = FunctionsDate::i()->format_timestamp($datum[8]) . '<br>' . I18N::timeAgo(WT_TIMESTAMP - $datum[8]);
             } else {
                 $datum[9] = I18N::translate('Never');
             }
@@ -760,7 +760,7 @@ switch (Filter::get('action')) {
                                 </a>
                             </td>
                             <td>
-                                <?php echo I18N::translate('User’s account has been inactive too long: ') . timestamp_to_gedcom_date($datelogin)->display(); ?>
+                                <?php echo I18N::translate('User’s account has been inactive too long: ') . FunctionsDate::i()->timestamp_to_gedcom_date($datelogin)->display(); ?>
                             </td>
                             <td>
                                 <input type="checkbox" name="del_<?php echo $user->getUserId(); ?>" value="1">

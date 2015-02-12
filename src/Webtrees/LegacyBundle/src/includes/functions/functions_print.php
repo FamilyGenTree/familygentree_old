@@ -425,14 +425,14 @@ function format_fact_date(Fact $event, GedcomRecord $record, $anchor, $time)
                             $fact_age != '' && $fact_age != $age || $fact_age == '' && $husb_age == '' && $wife_age == '' || $husb_age != '' && $record->getSex() == 'M' && $husb_age != $age || $wife_age != '' && $record->getSex() == 'F' && $wife_age != $age
                         ) {
                             if ($age != "0d") {
-                                $ageText = '(' . I18N::translate('Age') . ' ' . get_age_at_event($age, false) . ')';
+                                $ageText = '(' . I18N::translate('Age') . ' ' . FunctionsDate::i()->get_age_at_event($age, false) . ')';
                             }
                         }
                     }
                 }
                 if ($fact != 'DEAT' && Date::Compare($date, $death_date) >= 0) {
                     // After death, print time since death
-                    $age = get_age_at_event(Date::GetAgeGedcom($death_date, $date), true);
+                    $age = FunctionsDate::i()->get_age_at_event(Date::GetAgeGedcom($death_date, $date), true);
                     if ($age != '') {
                         if (Date::GetAgeGedcom($death_date, $date) == "0d") {
                             $ageText = '(' . I18N::translate('on the date of death') . ')';
@@ -462,7 +462,7 @@ function format_fact_date(Fact $event, GedcomRecord $record, $anchor, $time)
                         if (
                             $fact_age != '' && $fact_age != $age || $fact_age == '' && $husb_age == '' && $wife_age == '' || $husb_age != '' && $indi->getSex() == 'M' && $husb_age != $age || $wife_age != '' && $indi->getSex() == 'F' && $wife_age != $age
                         ) {
-                            $ageText = '(' . I18N::translate('Age') . ' ' . get_age_at_event($age, false) . ')';
+                            $ageText = '(' . I18N::translate('Age') . ' ' . FunctionsDate::i()->get_age_at_event($age, false) . ')';
                         }
                     }
                 }
@@ -488,7 +488,7 @@ function format_fact_date(Fact $event, GedcomRecord $record, $anchor, $time)
                  WT_Gedcom_Tag::getLabel('WIFE') => $wife_age
              ) as $label => $age) {
         if ($age != '') {
-            $html .= ' <span class="label">' . $label . ':</span> <span class="age">' . get_age_at_event($age, false) . '</span>';
+            $html .= ' <span class="label">' . $label . ':</span> <span class="age">' . FunctionsDate::i()->get_age_at_event($age, false) . '</span>';
         }
     }
 

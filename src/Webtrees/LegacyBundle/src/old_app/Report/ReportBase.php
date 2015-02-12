@@ -1183,7 +1183,7 @@ function nowStartHandler()
 {
     global $currentElement;
 
-    $g = timestamp_to_gedcom_date(WT_CLIENT_TIMESTAMP);
+    $g = FunctionsDate::i()->timestamp_to_gedcom_date(WT_CLIENT_TIMESTAMP);
     $currentElement->addText($g->display());
 }
 
@@ -2264,7 +2264,7 @@ function ageAtDeathStartHandler()
             if ($age != '' && $age != "0d") {
                 if ($fact_age != '' && $fact_age != $age || $fact_age == '' && $husb_age == '' && $wife_age == '' || $husb_age != '' && $person->getSex() == 'M' && $husb_age != $age || $wife_age != '' && $person->getSex() == 'F' && $wife_age != $age
                 ) {
-                    $value  = get_age_at_event($age, false);
+                    $value  = FunctionsDate::i()->get_age_at_event($age, false);
                     $abbrev = substr($value, 0, strpos($value, ' ') + 5);
                     if ($value !== $abbrev) {
                         $value = $abbrev . '.';
