@@ -709,7 +709,7 @@ class ReportHtml extends ReportBase
         $lfct     = count($lines);
         $wraptext = '';
         foreach ($lines as $line) {
-            $wtext = utf8_wordwrap($line, $lw, "\n", true);
+            $wtext = FunctionsRtl::i()->utf8_wordwrap($line, $lw, "\n", true);
             $wraptext .= $wtext;
             // Add a new line as long as it’s not the last line
             if ($lfct > 1) {

@@ -54,7 +54,7 @@ class ReportPdfText extends ReportBaseText
         } else {
             $renderer->SetTextColor(0, 0, 0);
         }
-        $temptext = spanLTRRTL($temptext, "BOTH");
+        $temptext = FunctionsRtl::i()->spanLTRRTL($temptext, "BOTH");
         $temptext = str_replace(
             array(
                 '<br><span dir="rtl" >',
