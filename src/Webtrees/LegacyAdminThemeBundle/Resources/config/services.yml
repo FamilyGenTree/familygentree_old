@@ -1,0 +1,4 @@
+services:
+#    webtrees_legacy_admin_theme.example:
+#        class: Webtrees\LegacyAdminThemeBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

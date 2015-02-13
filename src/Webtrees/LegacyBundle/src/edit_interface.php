@@ -30,7 +30,7 @@ $action = Filter::post('action', null, Filter::get('action'));
 $controller = Application::i()->setActiveController(new SimpleController());
 $controller
     ->restrictAccess(Auth::isEditor())
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();')
     ->addInlineJavascript('
 	var locale_date_format="' . preg_replace('/[^DMY]/', '', str_replace(array(

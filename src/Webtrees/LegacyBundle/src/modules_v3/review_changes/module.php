@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use Fgt\Config;
+use Fgt\UrlConstants;
 
 /**
  * Class review_changes_WT_Module
@@ -80,7 +81,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                                     I18N::translate('Pending changes'),
                                     I18N::translate('There are pending changes for you to moderate.') .
                                     Mail::EOL . Mail::EOL .
-                                    '<a href="' . Config::get(Config::BASE_URL) . 'index.php?ged=' . WT_GEDURL . '">' . Config::get(Config::BASE_URL) . 'index.php?ged=' . WT_GEDURL . '</a>'
+                                    '<a href="' . UrlConstants::url(UrlConstants::INDEX_PHP, ['ged' => WT_GEDURL]) . '">' . UrlConstants::url(UrlConstants::INDEX_PHP, ['ged' => WT_GEDURL]) . '</a>'
                                 );
                                 I18N::init(WT_LOCALE);
                             }
@@ -91,7 +92,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
             }
         }
         if (WT_USER_CAN_EDIT) {
-            $id = $this->getName() . $block_id;
+            $id    = $this->getName() . $block_id;
             $class = $this->getName() . '_block';
             if ($ctype === 'gedcom' && WT_USER_GEDCOM_ADMIN || $ctype === 'user' && Auth::check()) {
                 $title = '<i class="icon-admin" title="' . I18N::translate('Configure') . '" onclick="modalDialog(\'block_edit.php?block_id=' . $block_id . '\', \'' . $this->getTitle() . '\');"></i>';
@@ -105,8 +106,10 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                 $content .= "<a href=\"#\" onclick=\"window.open('edit_changes.php','_blank', chan_window_specs); return false;\">" . I18N::translate('There are pending changes for you to moderate.') . "</a><br>";
             }
             if ($sendmail == "yes") {
-                $content .= I18N::translate('Last email reminder was sent ') . FunctionsDate::i()->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL')) . "<br>";
-                $content .= I18N::translate('Next email reminder will be sent after ') . FunctionsDate::i()->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL') + (60 * 60 * 24 * $days)) . "<br><br>";
+                $content .= I18N::translate('Last email reminder was sent ') . FunctionsDate::i()
+                                                                                            ->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL')) . "<br>";
+                $content .= I18N::translate('Next email reminder will be sent after ') . FunctionsDate::i()
+                                                                                                      ->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL') + (60 * 60 * 24 * $days)) . "<br><br>";
             }
             $changes = Database::prepare(
                 "SELECT xref" .

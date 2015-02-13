@@ -192,7 +192,7 @@ class UrlConstants
         return $file;
     }
 
-    public static function url($filename, $options = array())
+    protected static function _url($filename, $options = array(), $escape = false)
     {
         $url         = Config::get(Config::BASE_URL) . static::map($filename);
         $queryString = '';
@@ -211,5 +211,15 @@ class UrlConstants
         }
 
         return $url . $queryString;
+    }
+
+    public static function url($filename, $options = array())
+    {
+        return static::_url($filename, $options, false);
+    }
+
+    public static function urlEscape($filename, $options = array())
+    {
+        return static::_url($filename, $options, true);
     }
 }

@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Config;
+use Fgt\UrlConstants;
 use PDOException;
 
 // Create tables, if not already present
@@ -94,7 +95,10 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
             }
             $content .= $news->body . '<br><br>';
             $content .= '<a href="#" onclick="window.open(\'editnews.php?news_id=\'+' . $news->news_id . ', \'_blank\', indx_window_specs); return false;">' . I18N::translate('Edit') . '</a> | ';
-            $content .= '<a href="index.php?action=deletenews&amp;news_id=' . $news->news_id . '&amp;ctype=' . $ctype . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this journal entry?') . "');\">" . I18N::translate('Delete') . '</a><br>';
+            $content .= '<a href="' . UrlConstants::urlEscape(UrlConstants::INDEX_PHP, ['action'  => 'deletenews',
+                                                                                        'news_id' => $news->news_id,
+                                                                                        'ctype'   => $ctype
+                ]) . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this journal entry?') . "');\">" . I18N::translate('Delete') . '</a><br>';
             $content .= "</div><br>";
         }
         $content .= '<br><a href="#" onclick="window.open(\'editnews.php?user_id=' . Auth::id() . '\', \'_blank\', indx_window_specs); return false;">' . I18N::translate('Add a new journal entry') . '</a>';

@@ -8,6 +8,10 @@
 namespace Fgt;
 
 
+use FamGeneTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
+use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig as FgtConfig;
+use FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
 use Webtrees\LegacyBundle\Legacy\Auth;
 use Webtrees\LegacyBundle\Legacy\BaseController;
@@ -48,6 +52,18 @@ class Application
      * @var \Zend_Controller_Request_Http
      */
     protected $request;
+    /**
+     * @var FgtConfig
+     */
+    protected $configObject;
+    /**
+     * @var ContainerInterface
+     */
+    protected $diContainer;
+    /**
+     * @var \Webtrees\LegacyBundle\Context\Application\Service\Theme
+     */
+    protected $themeObject;
 
     /**
      * Singleton protected
@@ -82,13 +98,35 @@ class Application
     public function cache() {
         return Config::get(Config::CACHE);
     }
+
+    /**
+     * @return FgtConfig
+     */
+    public function getConfig()
+    {
+        if (null === $this->configObject) {
+            $this->configObject = $this->diContainer->get('fam_gene_tree_app.configuration');
+        }
+        return $this->configObject;
+    }
+
+    /**
+     * @return \Webtrees\LegacyBundle\Context\Application\Service\Theme
+     */
+    public function getTheme() {
+        if (null === $this->themeObject) {
+            $this->themeObject = $this->diContainer->get('webtrees.theme');
+        }
+        return $this->themeObject;
+    }
+
     /**
      *
      * @return $this
      */
     public function init()
     {
-        Constants::defineCommonConstants();
+        $this->initConfig();
         // PHP requires a time zone to be set
         date_default_timezone_set(date_default_timezone_get());
         $this->initPatchworkUtf8();
@@ -224,6 +262,11 @@ class Application
     {
         BaseController::$activeController = $param;
         return $this->getActiveController();
+    }
+
+    public function setDiController(ContainerInterface $container)
+    {
+        $this->diContainer = $container;
     }
 
     protected function initErrorHandler()
@@ -417,16 +460,16 @@ class Application
 
         if (Globals::i()->SEARCH_SPIDER
             && !in_array(WT_SCRIPT_NAME, array(
-                'index.php',
-                'indilist.php',
-                'module.php',
-                'mediafirewall.php',
-                'individual.php',
-                'family.php',
-                'mediaviewer.php',
-                'note.php',
-                'repo.php',
-                'source.php',
+                UrlConstants::INDEX_PHP,
+                UrlConstants::INDILIST_PHP,
+                UrlConstants::MODULE_PHP,
+                UrlConstants::MEDIAFIREWALL_PHP,
+                UrlConstants::INDIVIDUAL_PHP,
+                UrlConstants::FAMILY_PHP,
+                UrlConstants::MEDIAVIEWER_PHP,
+                UrlConstants::NOTE_PHP,
+                UrlConstants::REPO_PHP,
+                UrlConstants::SOURCE_PHP,
             ))
         ) {
             http_response_code(403);
@@ -669,5 +712,17 @@ class Application
         $Dbheight    = Theme::theme()
                             ->parameter('chart-descendancy-box-y');
 
+    }
+
+    private function initConfig()
+    {
+        $config = $this->getConfig();
+        $config->set(ConfigKeys::SYSTEM_PATH_DATA,Config::get(Config::DATA_DIRECTORY), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_PATH_CONFIG,Config::get(Config::CONFIG_PATH), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_CACHE_DIR,Config::get(Config::CACHE_DIR), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_CACHE,Config::get(Config::CACHE), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_MODULES_PATH,Config::get(Config::MODULES_DIR), FgtConfig::SCOPE_RUNTIME);
+
+        Constants::defineCommonConstants($this->getConfig());
     }
 }

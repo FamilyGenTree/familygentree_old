@@ -24,14 +24,14 @@ class Theme
     /** @var BaseTheme The current theme */
     private static $theme;
 
-    /** @var BaseTheme[] All currently installed themes */
+    /** @var string[] All currently installed themes */
     private static $installed_themes;
 
     /**
      * Create a list of all themes available on the system, including
      * any custom themes.
      *
-     * @return BaseTheme[]
+     * @return string[]
      */
     public static function installedThemes()
     {

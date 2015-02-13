@@ -19,6 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', 'admin_trees_manage.php');
 Application::i()->init()->started();
@@ -276,7 +277,7 @@ $controller->pageHeader();
                              id="actions<?php echo $tree->getTreeId(); ?>">
                             <div class="col-sm-6 col-md-3">
                                 <h3>
-                                    <a href="index.php?ctype=gedcom&ged=<?php echo $tree->getNameUrl(); ?>">
+                                    <a href="<?php UrlConstants::url(UrlConstants::INDEX_PHP,['ctype'=>'gedcom','ged'=> $tree->getNameUrl()]); ?>">
                                         <?php echo I18N::translate('Family tree'); ?>
                                     </a>
                                 </h3>

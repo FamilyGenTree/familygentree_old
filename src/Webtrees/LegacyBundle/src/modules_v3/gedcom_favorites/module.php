@@ -18,6 +18,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 use Fgt\Application;
 use Fgt\Config;
+use Fgt\UrlConstants;
 use PDO;
 use PDOException;
 use Rhumsaa\Uuid\Uuid;
@@ -115,7 +116,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
 
         if (Auth::check()) {
             $controller
-                ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+                ->addExternalJavascript(WT_STATIC_URL . WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
                 ->addInlineJavascript('autocomplete();');
         }
 
@@ -125,7 +126,14 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
                 if (isset($favorite['id'])) {
                     $key = $favorite['id'];
                 }
-                $removeFavourite = '<a class="font9" href="index.php?ctype=' . $ctype . '&amp;action=deletefav&amp;favorite_id=' . $key . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to remove this item from your list of favorites?') . '\');">' . I18N::translate('Remove') . '</a> ';
+
+                $removeFavourite = '<a class="font9" href="'
+                                   . UrlConstants::url(UrlConstants::INDEX_PHP, array(
+                        'ctype'       => $ctype,
+                        'action'      => 'deletefav',
+                        'favorite_id' => $key
+                    ))
+                                   . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to remove this item from your list of favorites?') . '\');">' . I18N::translate('Remove') . '</a> ';
                 if ($favorite['type'] == 'URL') {
                     $content .= '<div id="boxurl' . $key . '.0" class="person_box">';
                     if ($ctype == 'user' || WT_USER_GEDCOM_ADMIN) {
@@ -176,7 +184,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
             $content .= '<a href="#" onclick="return expand_layer(\'add_fav' . $uniqueID . '\');">' . I18N::translate('Add a new favorite') . '<i id="add_fav' . $uniqueID . '_img" class="icon-plus"></i></a>';
             $content .= '</div>';
             $content .= '<div id="add_fav' . $uniqueID . '" style="display: none;">';
-            $content .= '<form name="addfavform" method="get" action="index.php">';
+            $content .= sprintf('<form name="addfavform" method="get" action="%s">', UrlConstants::url(UrlConstants::INDEX_PHP));
             $content .= '<input type="hidden" name="action" value="addfav">';
             $content .= '<input type="hidden" name="ctype" value="' . $ctype . '">';
             $content .= '<input type="hidden" name="ged" value="' . WT_GEDCOM . '">';

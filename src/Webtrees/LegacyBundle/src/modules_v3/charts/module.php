@@ -193,7 +193,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
             : $PEDIGREE_ROOT_ID) : $PEDIGREE_ROOT_ID);
 
         $controller
-            ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
             ->addInlineJavascript('autocomplete();');
         ?>
         <tr>

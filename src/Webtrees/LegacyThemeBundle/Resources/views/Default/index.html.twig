@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html {{ html_markup | raw }} >
+<head>
+    {{ head_contents | raw }}
+    {{ hook_header_extra_content | raw }}
+    {{ analytics | raw }}
+    {{ inline_javascript | raw }}
+</head>
+{{ body_header | raw }}
+<h1>{{ page_title}}</h1>

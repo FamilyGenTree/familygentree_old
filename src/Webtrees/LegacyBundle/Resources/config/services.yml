@@ -6,3 +6,7 @@ services:
   webtrees.cache:
     class: %doctrine_cache.file_system.class%
     arguments: [ %kernel.cache_dir% ]
+
+  webtrees.theme:
+    class: Webtrees\LegacyBundle\Context\Application\Service\Theme
+    arguments: [ "@fam_gene_tree_app.configuration" ]

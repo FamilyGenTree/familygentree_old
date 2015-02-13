@@ -18,6 +18,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 
 define('WT_SCRIPT_NAME', 'site-offline.php');
 
@@ -40,7 +41,7 @@ if (file_exists(Config::get(Config::DATA_DIRECTORY) . 'offline.txt')) {
     $offline_txt = file_get_contents(Config::get(Config::DATA_DIRECTORY) . 'offline.txt');
 } else {
     // offline.txt has gone - we're back online!
-    header('Location: index.php');
+    header('Location: '.UrlConstants::url(UrlConstants::INDEX_PHP));
 
     return;
 }
@@ -72,7 +73,7 @@ echo
 if ($offline_txt) {
     echo $offline_txt;
 } else {
-    echo I18N::translate('This website is down for maintenance.  You should <a href="index.php">try again</a> in a few minutes.');
+    echo sprintf(I18N::translate('This website is down for maintenance.  You should <a href="%s">try again</a> in a few minutes.'),UrlConstants::url(UrlConstants::INDEX_PHP));
 }
 echo '</p>';
 echo '</div>';

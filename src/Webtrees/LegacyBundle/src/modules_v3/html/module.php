@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 use Fgt\Globals;
+use Fgt\UrlConstants;
 
 /**
  * Class html_WT_Module
@@ -97,7 +98,8 @@ class html_WT_Module extends Module implements ModuleBlockInterface
         $content = $html;
 
         if ($show_timestamp) {
-            $content .= '<br>' . FunctionsDate::i()->format_timestamp(FunctionsDbPhp::i()->get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
+            $content .= '<br>' . FunctionsDate::i()->format_timestamp(FunctionsDbPhp::i()
+                                                                                    ->get_block_setting($block_id, 'timestamp', WT_TIMESTAMP));
         }
 
         if ($template) {
@@ -149,7 +151,7 @@ class html_WT_Module extends Module implements ModuleBlockInterface
 
             I18N::translate('Statistics')            =>
                 '<div class="gedcom_stats">
-				<span style="font-weight: bold;"><a href="index.php?command=gedcom">#gedcomTitle#</a></span><br>
+				<span style="font-weight: bold;"><a href="' . UrlConstants::url(UrlConstants::INDEX_PHP, ['command' => 'gedcom']) . '">#gedcomTitle#</a></span><br>
 				' . I18N::translate('This family tree was last updated on %s.', '#gedcomUpdated#') . '
 				<table id="keywords">
 					<tr>

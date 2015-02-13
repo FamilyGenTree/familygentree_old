@@ -6,6 +6,7 @@
  */
 
 namespace Webtrees\LegacyBundle\Controller;
+use Fgt\Application;
 use Fgt\Config;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -14,10 +15,10 @@ abstract class AbstractController extends Controller {
 
     protected function setConfig()
     {
+        Application::i()->setDiController($this->container);
         define('FGT_ROOT', dirname(__DIR__) . '/src');
 // For performance, it is quicker to refer to files using absolute paths
         define('WT_ROOT', realpath(FGT_ROOT) . DIRECTORY_SEPARATOR);
-
         Config::set(Config::DATA_DIRECTORY, dirname(dirname(dirname(dirname(__DIR__)))) . '/data');
         Config::set(Config::CONFIG_PATH, Config::get(Config::DATA_DIRECTORY) . '/config.ini.php');
         Config::set(Config::CACHE, $this->get('webtrees.cache'));

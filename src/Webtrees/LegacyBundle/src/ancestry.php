@@ -27,7 +27,7 @@ $MAX_PEDIGREE_GENERATIONS = Globals::i()->WT_TREE->getPreference('MAX_PEDIGREE_G
 $controller = Application::i()->setActiveController(new AncestryController());
 $controller
     ->pageHeader()
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 ?>

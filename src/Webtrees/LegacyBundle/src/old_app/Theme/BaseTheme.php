@@ -70,7 +70,7 @@ abstract class BaseTheme
      *
      * @return string
      */
-    protected function analytics()
+    public function analytics()
     {
         if ($this->themeId() === '_administration') {
             return '';
@@ -103,7 +103,7 @@ abstract class BaseTheme
     protected function analyticsBingWebmaster($verification_id)
     {
         // Only need to add this to the home page.
-        if (WT_SCRIPT_NAME === 'index.php' && $verification_id) {
+        if (WT_SCRIPT_NAME === UrlConstants::INDEX_PHP && $verification_id) {
             return '<meta name="msvalidate.01" content="' . $verification_id . '">';
         } else {
             return '';
@@ -120,7 +120,7 @@ abstract class BaseTheme
     protected function analyticsGoogleWebmaster($verification_id)
     {
         // Only need to add this to the home page.
-        if (WT_SCRIPT_NAME === 'index.php' && $verification_id) {
+        if (WT_SCRIPT_NAME === UrlConstants::INDEX_PHP && $verification_id) {
             return '<meta name="google-site-verification" content="' . $verification_id . '">';
         } else {
             return '';
@@ -257,7 +257,8 @@ abstract class BaseTheme
             case 'mailto':
                 return '<a href="mailto:' . Filter::escapeHtml($user->getEmail()) . '">' . Filter::escapeHtml($user->getRealName()) . '</a>';
             default:
-                return "<a href='#' onclick='message(\"" . Filter::escapeHtml($user->getUserName()) . "\", \"" . $method . "\", \"" . Config::get(Config::BASE_URL) . Filter::escapeHtml(Functions::i()->get_query_url()) . "\", \"\");return false;'>" . Filter::escapeHtml($user->getRealName()) . '</a>';
+                return "<a href='#' onclick='message(\"" . Filter::escapeHtml($user->getUserName()) . "\", \"" . $method . "\", \"" . Config::get(Config::BASE_URL) . Filter::escapeHtml(Functions::i()
+                                                                                                                                                                                                  ->get_query_url()) . "\", \"\");return false;'>" . Filter::escapeHtml($user->getRealName()) . '</a>';
         }
     }
 
@@ -539,11 +540,11 @@ abstract class BaseTheme
     /**
      * Create the contents of the <head> tag.
      *
-     * @param PageController $controller The current controller
+     * @param PageControllerInterface $controller The current controller
      *
      * @return string
      */
-    protected function headContents(PageController $controller)
+    public function headContents(PageControllerInterface $controller)
     {
         // The title often includes the names of records, which may include HTML markup.
         $title = Filter::unescapeHtml($controller->getPageTitle());
@@ -1390,7 +1391,10 @@ abstract class BaseTheme
             if ($tree->getTreeId() === WT_GED_ID || $ALLOW_CHANGE_GEDCOM) {
                 $submenu    = new Menu(
                     $tree->getTitleHtml(),
-                    'index.php?ctype=gedcom&amp;ged=' . $tree->getNameUrl(),
+                    UrlConstants::url(UrlConstants::INDEX_PHP, [
+                        'ctype' => 'gedcom',
+                        'ged'   => $tree->getNameUrl()
+                    ]),
                     'menu-tree-' . $tree->getTreeId()
                 );
                 $submenus[] = $submenu;
@@ -1403,7 +1407,7 @@ abstract class BaseTheme
             $label = I18N::translate('Family trees');
         }
 
-        return new Menu($label, 'index.php?ctype=gedcom&amp;' . $this->tree_url, 'menu-tree', null, $submenus);
+        return new Menu($label, UrlConstants::url(UrlConstants::INDEX_PHP, ['ctype' => 'gedcom']) . $this->tree_url, 'menu-tree', null, $submenus);
     }
 
     /**
@@ -1416,7 +1420,8 @@ abstract class BaseTheme
         $menu = new Menu(I18N::translate('Language'), '#', 'menu-language');
 
         foreach (I18N::installed_languages() as $lang => $name) {
-            $submenu = new Menu($name, Functions::i()->get_query_url(array('lang' => $lang), '&amp;'), 'menu-language-' . $lang);
+            $submenu = new Menu($name, Functions::i()
+                                                ->get_query_url(array('lang' => $lang), '&amp;'), 'menu-language-' . $lang);
             if (WT_LOCALE === $lang) {
                 $submenu->addClass('', '', 'active');
             }
@@ -1501,7 +1506,8 @@ abstract class BaseTheme
         if (Auth::check() || $this->isSearchEngine() || WT_SCRIPT_NAME === 'login.php') {
             return null;
         } else {
-            return new Menu(I18N::translate('Login'), WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()->get_query_url()));
+            return new Menu(I18N::translate('Login'), WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()
+                                                                                                     ->get_query_url()));
         }
     }
 
@@ -1700,7 +1706,8 @@ abstract class BaseTheme
         if ($this->tree && !$this->isSearchEngine() && Site::getPreference('ALLOW_USER_THEMES') && $this->tree->getPreference('ALLOW_THEME_DROPDOWN')) {
             $submenus = array();
             foreach (Theme::installedThemes() as $theme) {
-                $submenu = new Menu($theme->themeName(), Functions::i()->get_query_url(array('theme' => $theme->themeId()), '&amp;'), 'menu-theme-' . $theme->themeId());
+                $submenu = new Menu($theme->themeName(), Functions::i()
+                                                                  ->get_query_url(array('theme' => $theme->themeId()), '&amp;'), 'menu-theme-' . $theme->themeId());
                 if ($theme === $this) {
                     $submenu->addClass('', '', 'active');
                 }

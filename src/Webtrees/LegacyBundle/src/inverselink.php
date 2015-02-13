@@ -26,7 +26,7 @@ $controller = Application::i()->setActiveController(new SimpleController());
 $controller
     ->restrictAccess(Auth::isEditor())
     ->setPageTitle(I18N::translate('Link to an existing media object'))
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();')
     ->pageHeader();
 

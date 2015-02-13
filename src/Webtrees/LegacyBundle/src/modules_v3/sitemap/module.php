@@ -18,6 +18,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 use Fgt\Application;
 use Fgt\Config;
+use Fgt\UrlConstants;
 use Zend_Session;
 
 /**
@@ -163,7 +164,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
             $data = $this->getSetting('sitemap-' . $ged_id . '-' . $rec_type . '-' . $volume . '.xml');
         } else {
             $tree    = Tree::get($ged_id);
-            $data    = '<url><loc>' . Config::get(Config::BASE_URL) . 'index.php?ctype=gedcom&amp;ged=' . $tree->getNameUrl() . '</loc></url>' . PHP_EOL;
+            $data    = '<url><loc>' . UrlConstants::url(UrlConstants::INDEX_PHP, ['ctype'=>'gedcom','ged'=> $tree->getNameUrl()]) . '</loc></url>' . PHP_EOL;
             $records = array();
             switch ($rec_type) {
                 case 'i':

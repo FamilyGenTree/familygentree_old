@@ -10,11 +10,12 @@ use Webtrees\LegacyBundle\Legacy\IndexPHP;
 class DefaultController extends AbstractController
 {
 
-    public function themesAssetAction($themeName,$file) {
-        $explode = explode('.',$file);
+    public function themesAssetAction($themeName, $file)
+    {
+        $explode = explode('.', $file);
 
         $contentType = null;
-        switch(strtolower(array_reverse($explode)[0])) {
+        switch (strtolower(array_reverse($explode)[0])) {
             case 'css':
                 $contentType = 'text/css';
                 break;
@@ -32,10 +33,11 @@ class DefaultController extends AbstractController
                 break;
 
             default:
-            $contentType = 'text/plain';
+                $contentType = 'text/plain';
         }
+
         return new BinaryFileResponse(
-            $this->getLegacyRoot()."/themes/{$themeName}/{$file}",
+            $this->getLegacyRoot() . "/themes/{$themeName}/{$file}",
             BinaryFileResponse::HTTP_OK,
             array(
                 'Content-Type' => $contentType
@@ -43,25 +45,32 @@ class DefaultController extends AbstractController
         );
     }
 
-    public function indexAction(Request $request, $file)
-    {
-        try {
-            $this->setConfig();
-            require_once FGT_ROOT . '/' . $file;
-        } catch (\Exception $e) {
-            echo "$e";
-        }
+//    public function indexAction(Request $request, $file)
+//    {
+//        try {
+//            $this->setConfig();
+//            require_once FGT_ROOT . '/' . $file;
+//        } catch (\Exception $e) {
+//            echo "$e";
+//        }
+//
+//        return $this->render('WebtreesLegacyBundle:Default:index.html.twig', array('name' => $file));
+//    }
 
-        return $this->render('WebtreesLegacyBundle:Default:index.html.twig', array('name' => $file));
-    }
-
-    public function indexPhpAction()
+    public function indexPhpAction(Request $request)
     {
         $this->setConfig();
-        $class = new IndexPHP();
+        $class = new IndexPHP($this->container, $request);
         $class->run();
+
         //require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
-        return $this->render('WebtreesLegacyBundle:Default:index.html.twig', array('name' => 'index'));
+        return $this->render(
+            'WebtreesLegacyBundle:Default:output.html.twig',
+            array(
+                'output' => $class->getOutput(),
+                'menus' => $class->getOutputMenus()
+            )
+        );
     }
 
     public function indexEditPhpAction()

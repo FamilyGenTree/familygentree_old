@@ -66,7 +66,7 @@ class clippings_WT_Module extends Module implements ModuleMenuInterface, ModuleS
                 $controller
                     ->setPageTitle($this->getTitle())
                     ->PageHeader()
-                    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+                    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
                     ->addInlineJavascript('autocomplete();');
 
                 echo '<script>';

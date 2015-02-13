@@ -22,7 +22,7 @@ use Zend_Session;
 /**
  * Class PageController Controller for full-page, themed HTML responses
  */
-class PageController extends BaseController
+class PageController extends BaseController implements PageControllerInterface
 {
     // Page header information
     private $canonical_url = '';
@@ -39,7 +39,7 @@ class PageController extends BaseController
         $this
             ->addExternalJavascript(WT_JQUERY_JS_URL)
             ->addExternalJavascript(WT_JQUERYUI_JS_URL)
-            ->addExternalJavascript(WT_WEBTREES_JS_URL);
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_WEBTREES_JS_URL);
     }
 
     /**

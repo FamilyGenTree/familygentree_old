@@ -2,3 +2,10 @@ services:
 #    fam_gene_tree_app.example:
 #        class: FamGeneTree\AppBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+
+  fam_gene_tree_app.configuration.factory:
+    class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
+
+  fam_gene_tree_app.configuration:
+    class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
+    factory: ["@fam_gene_tree_app.configuration.factory", load]

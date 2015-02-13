@@ -211,7 +211,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                 }
                 $controller
                     ->pageHeader()
-                    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+                    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
                     ->addInlineJavascript('autocomplete();');
                 if (array_key_exists('ckeditor', Module::getActiveModules())) {
                     ckeditor_WT_Module::enableEditor($controller);

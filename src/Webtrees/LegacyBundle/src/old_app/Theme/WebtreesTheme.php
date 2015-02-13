@@ -1,26 +1,37 @@
 <?php
 namespace Webtrees\LegacyBundle\Legacy;
 
-/**
- * webtrees: online genealogy
- * Copyright (C) 2015 webtrees development team
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+    /**
+     * webtrees: online genealogy
+     * Copyright (C) 2015 webtrees development team
+     * This program is free software: you can redistribute it and/or modify
+     * it under the terms of the GNU General Public License as published by
+     * the Free Software Foundation, either version 3 of the License, or
+     * (at your option) any later version.
+     * This program is distributed in the hope that it will be useful,
+     * but WITHOUT ANY WARRANTY; without even the implied warranty of
+     * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+     * GNU General Public License for more details.
+     * You should have received a copy of the GNU General Public License
+     * along with this program. If not, see <http://www.gnu.org/licenses/>.
+     */
 
 /**
  * Class WebtreesTheme - The webtrees (default) theme.
  */
 class WebtreesTheme extends BaseTheme
 {
+    // We can't load these from a CDN, as these have been patched.
+    const WT_JQUERY_COLORBOX_URL  = 'assets/js-1.7.0/jquery.colorbox-1.5.14.js';
+    const WT_JQUERY_WHEELZOOM_URL = 'assets/js-1.7.0/jquery.wheelzoom-2.0.0.js';
+    const WT_CKEDITOR_BASE_URL    = 'packages/ckeditor-4.4.7-custom/';
+
+// Location of our own scripts
+    const WT_ADMIN_JS_URL        = 'assets/js-1.7.0/admin.js';
+    const WT_AUTOCOMPLETE_JS_URL = 'assets/js-1.7.0/autocomplete.js';
+    const WT_WEBTREES_JS_URL     = 'assets/js-1.7.0/webtrees.js';
+
+
     /** {@inheritdoc} */
     public function assetUrl()
     {
@@ -53,8 +64,8 @@ class WebtreesTheme extends BaseTheme
     public function hookFooterExtraJavascript()
     {
         return
-            '<script src="' . WT_JQUERY_COLORBOX_URL . '"></script>' .
-            '<script src="' . WT_JQUERY_WHEELZOOM_URL . '"></script>' .
+            '<script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_COLORBOX_URL . '"></script>' .
+            '<script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_WHEELZOOM_URL . '"></script>' .
             '<script>' .
             'activate_colorbox();' .
             'jQuery.extend(jQuery.colorbox.settings, {' .

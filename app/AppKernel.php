@@ -19,6 +19,8 @@ class AppKernel extends Kernel
             new Webtrees\LegacyBundle\WebtreesLegacyBundle(),
             new FamGeneTree\AppBundle\FamGeneTreeAppBundle(),
             new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle(),
+            new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle(),
+            new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

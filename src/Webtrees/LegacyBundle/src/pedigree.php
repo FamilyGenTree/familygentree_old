@@ -40,7 +40,7 @@ define("BOX_WRAPPER", "<div class='shadow' style='%s:%spx; top:%spx; width:%spx;
 $controller = Application::i()->setActiveController(new PedigreeController());
 $controller
     ->pageHeader()
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 ?>

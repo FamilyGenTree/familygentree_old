@@ -151,7 +151,7 @@ switch ($action) {
         $controller
             ->setPageTitle($report_array['title'])
             ->pageHeader()
-            ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
             ->addInlineJavascript('autocomplete();');
 
         FunctionsPrint::i()->init_calendar_popup();

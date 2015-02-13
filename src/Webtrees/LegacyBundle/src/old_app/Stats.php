@@ -18,6 +18,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 use Fgt\Application;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use PDO;
 use PDOException;
 use Rhumsaa\Uuid\Uuid;
@@ -6358,9 +6359,9 @@ class Stats
 
         if ($page_name === null) {
             // index.php?ctype=gedcom
-            $page_name      = 'index.php';
+            $page_name      = UrlConstants::INDEX_PHP;
             $page_parameter = 'gedcom:' . FunctionsDbPhp::i()->get_id_from_gedcom($page_parameter ? $page_parameter : WT_GEDCOM);
-        } elseif ($page_name == 'index.php') {
+        } elseif ($page_name == UrlConstants::INDEX_PHP) {
             // index.php?ctype=user
             $user           = User::findByIdentifier($page_parameter);
             $page_parameter = 'user:' . ($user ? $user->getUserId() : Auth::id());
@@ -6399,7 +6400,7 @@ class Stats
      */
     public function hitCountUser($params = array())
     {
-        return $this->hitCountQuery('index.php', $params);
+        return $this->hitCountQuery(UrlConstants::INDEX_PHP, $params);
     }
 
     /**

@@ -276,7 +276,7 @@ switch (Filter::get('action')) {
 
         $controller
             ->pageHeader()
-            ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
             ->addInlineJavascript('autocomplete();')
             ->addInlineJavascript('
 			jQuery(".relpath").change(function() {

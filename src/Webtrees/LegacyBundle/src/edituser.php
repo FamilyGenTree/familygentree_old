@@ -115,7 +115,7 @@ $controller = Application::i()->setActiveController(new PageController());
 $controller
     ->setPageTitle(I18N::translate('My account'))
     ->pageHeader()
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 $my_individual_record = Individual::getInstance(WT_USER_GEDCOM_ID);

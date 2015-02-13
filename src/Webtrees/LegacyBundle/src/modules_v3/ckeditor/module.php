@@ -48,11 +48,11 @@ class ckeditor_WT_Module extends Module
     public static function enableEditor($controller)
     {
         $controller
-            ->addExternalJavascript(WT_CKEDITOR_BASE_URL . 'ckeditor.js')
-            ->addExternalJavascript(WT_CKEDITOR_BASE_URL . 'adapters/jquery.js')
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_JQUERY_COLORBOX_URL . 'ckeditor.js')
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_JQUERY_COLORBOX_URL . 'adapters/jquery.js')
             // Need to specify the path before we load the libary
             ->addInlineJavascript(
-                'var CKEDITOR_BASEPATH="' . WT_CKEDITOR_BASE_URL . '";',
+                'var CKEDITOR_BASEPATH="' . WT_STATIC_URL.WebtreesTheme::WT_JQUERY_COLORBOX_URL . '";',
                 BaseController::JS_PRIORITY_HIGH
             )
             // Activate the editor

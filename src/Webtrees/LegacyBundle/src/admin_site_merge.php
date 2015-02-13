@@ -27,7 +27,7 @@ $controller = Application::i()->setActiveController(new PageController());
 $controller
     ->restrictAccess(Auth::isManager())
     ->setPageTitle(I18N::translate('Merge records') . ' — ' . Globals::i()->WT_TREE->getTitleHtml())
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 $gid1 = Filter::post('gid1', WT_REGEX_XREF, Filter::get('gid1', WT_REGEX_XREF));

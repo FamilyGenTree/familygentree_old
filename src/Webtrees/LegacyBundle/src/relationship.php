@@ -59,7 +59,7 @@ $person1 = Individual::getInstance($pid1);
 $person2 = Individual::getInstance($pid2);
 
 $controller
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 if ($person1 && $person1->canShowName() && $person2 && $person2->canShowName()) {

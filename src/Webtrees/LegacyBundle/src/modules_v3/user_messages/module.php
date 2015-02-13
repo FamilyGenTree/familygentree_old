@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\UrlConstants;
 
 /**
  * Class user_messages_WT_Module
@@ -90,7 +91,8 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
                 $content .= '<tr>';
                 $content .= '<td class="list_value_wrap"><input type="checkbox" id="cb_message' . $message->message_id . '" name="message_id[]" value="' . $message->message_id . '"></td>';
                 $content .= '<td class="list_value_wrap"><a href="#" onclick="return expand_layer(\'message' . $message->message_id . '\');"><i id="message' . $message->message_id . '_img" class="icon-plus"></i> <b dir="auto">' . Filter::escapeHtml($message->subject) . '</b></a></td>';
-                $content .= '<td class="list_value_wrap">' . FunctionsDate::i()->format_timestamp($message->created) . '</td>';
+                $content .= '<td class="list_value_wrap">' . FunctionsDate::i()
+                                                                          ->format_timestamp($message->created) . '</td>';
                 $content .= '<td class="list_value_wrap">';
                 $user = User::findByIdentifier($message->sender);
                 if ($user) {
@@ -111,7 +113,11 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
                 if ($user) {
                     $content .= '<a href="#" onclick="reply(\'' . Filter::escapeJs($message->sender) . '\', \'' . Filter::escapeJs($message->subject) . '\'); return false;">' . I18N::translate('Reply') . '</a> | ';
                 }
-                $content .= '<a href="index.php?action=deletemessage&amp;message_id%5B%5D=' . $message->message_id . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this message?  It cannot be retrieved later.') . '\');">' . I18N::translate('Delete') . '</a></div></td></tr>';
+                $content .= '<a href="' . UrlConstants::urlEscape(UrlConstants::INDEX_PHP, [
+                        'action'           => 'deletemessage',
+                        'message_id%5B%5D' => $message->message_id
+                    ]) . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this message?  It cannot be retrieved later.') . '\');">'
+                            . I18N::translate('Delete') . '</a></div></td></tr>';
             }
             $content .= '</table>';
             $content .= '<input type="submit" value="' . I18N::translate('Delete selected messages') . '"><br>';

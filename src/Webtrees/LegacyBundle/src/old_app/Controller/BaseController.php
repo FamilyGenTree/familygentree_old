@@ -39,6 +39,9 @@ class BaseController
 
     protected $page_header = false; // Have we printed a page header?
 
+    protected $collectOutput = false;
+    protected $output        = [];
+
     /**
      * Startup activity
      */
@@ -54,7 +57,16 @@ class BaseController
     {
         // If we printed a header, automatically print a footer
         if ($this->page_header) {
+            $this->flushOutput();
             echo $this->pageFooter();
+        }
+    }
+
+    public function flushOutput()
+    {
+        if ($this->collectOutput) {
+            echo implode('', $this->output);
+            $this->collectOutput = [];
         }
     }
 
@@ -160,9 +172,11 @@ class BaseController
      */
     protected function pageFooter()
     {
+        $ret = $this->getJavascript();
         if (WT_DEBUG_SQL) {
-            echo Database::getQueryLog();
+            $ret = Database::getQueryLog() . $ret;
         }
-        echo $this->getJavascript();
+
+        return $ret;
     }
 }

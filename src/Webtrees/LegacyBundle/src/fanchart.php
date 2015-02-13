@@ -34,7 +34,7 @@ if (Filter::getBool('img')) {
 
 $controller
     ->pageHeader()
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('
 		autocomplete();
 		var WT_FANCHART = (function() {

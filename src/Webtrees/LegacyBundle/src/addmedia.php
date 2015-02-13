@@ -41,7 +41,7 @@ $update_CHAN = !Filter::postBool('preserve_last_changed');
 
 $controller = Application::i()->setActiveController(new SimpleController());
 $controller
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();')
     ->restrictAccess(Auth::isMember());
 

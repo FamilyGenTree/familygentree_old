@@ -30,7 +30,7 @@ $ajax = Filter::getBool('ajax');
 if (!$ajax) {
     $controller = Application::i()->setActiveController(new PageController());
     $controller->setPageTitle(I18N::translate('Statistics'))
-               ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+               ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
                ->addInlineJavascript('
 			jQuery("#statistics_chart").css("visibility", "visible");
 			jQuery("#statistics_chart").tabs({

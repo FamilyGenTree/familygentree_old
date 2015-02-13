@@ -19,128 +19,37 @@ namespace Webtrees\LegacyBundle\Legacy;
 use Fgt\Application;
 use Fgt\Globals;
 use Fgt\UrlConstants;
+use Webtrees\LegacyBundle\Context\Application\Controller\AbstractSymfonyConnectorController;
+use Webtrees\LegacyBundle\Context\Application\View\LegacyPageController;
 
 define('WT_SCRIPT_NAME', UrlConstants::INDEX_PHP);
 Application::i()->init()->started();
 
-class IndexPHP {
-
-
+class IndexPHP extends AbstractSymfonyConnectorController
+{
 
     public function run()
     {
+        $this->getRequest()->get('action');
 // The only option for action is "ajax"
         $action = Filter::get('action');
-
-// The default view depends on whether we are logged in
-        if (Auth::check()) {
-            $ctype = Filter::get('ctype', 'gedcom|user', 'user');
-        } else {
-            $ctype = 'gedcom';
+        switch ($action) {
+            case 'ajax':
+                // We generate individual blocks using AJAX
+                $this->actionAjax();
+                break;
+            default:
+                $this->actionHtml();
+                break;
         }
-
-// Get the blocks list
-        if ($ctype === 'user') {
-            $blocks = FunctionsDbPhp::i()->get_user_blocks(Auth::id());
-        } else {
-            $blocks = FunctionsDbPhp::i()->get_gedcom_blocks(WT_GED_ID);
-        }
-
-        $all_blocks = Module::getActiveBlocks();
-
-// The latest version is shown on the administration page.  This updates it every day.
-        Functions::i()->fetch_latest_version();
-
-// We generate individual blocks using AJAX
-        if ($action === 'ajax') {
-            $this->actionAjax($blocks, $all_blocks);
-            return;
-        }
-
-        $controller = Application::i()->setActiveController(new PageController());
-        if ($ctype === 'user') {
-            $controller->restrictAccess(Auth::check());
-        }
-        $controller
-            ->setPageTitle($ctype === 'user' ? I18N::translate('My page') : WT_TREE_TITLE)
-            ->setMetaRobots('index,follow')
-            ->setCanonicalUrl(WT_SCRIPT_NAME . '?ctype=' . $ctype . '&amp;ged=' . WT_GEDCOM)
-            ->pageHeader()
-            // By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
-            ->addInlineJavascript('jQuery.ajaxSetup({cache:true});');
-
-        if ($ctype === 'user') {
-            echo '<div id="my-page">';
-            echo '<h1 class="center">', I18N::translate('My page'), '</h1>';
-        } else {
-            echo '<div id="home-page">';
-        }
-        if ($blocks['main']) {
-            if ($blocks['side']) {
-                echo '<div id="index_main_blocks">';
-            } else {
-                echo '<div id="index_full_blocks">';
-            }
-            foreach ($blocks['main'] as $block_id => $module_name) {
-                $class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
-                $module     = new $class_name;
-                if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
-                    // Load the block directly
-                    echo $module->getBlock($block_id);
-                } else {
-                    // Load the block asynchronously
-                    echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-                    $controller->addInlineJavascript(
-                        'jQuery("#block_' . $block_id . '").load("index.php?ctype=' . $ctype . '&action=ajax&block_id=' . $block_id . '");'
-                    );
-                }
-            }
-            echo '</div>';
-        }
-        if ($blocks['side']) {
-            if ($blocks['main']) {
-                echo '<div id="index_small_blocks">';
-            } else {
-                echo '<div id="index_full_blocks">';
-            }
-            foreach ($blocks['side'] as $block_id => $module_name) {
-                $class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
-                $module     = new $class_name;
-                if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
-                    // Load the block directly
-                    echo $module->getBlock($block_id);
-                } else {
-                    // Load the block asynchronously
-                    echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
-                    $controller->addInlineJavascript(
-                        'jQuery("#block_' . $block_id . '").load("index.php?ctype=' . $ctype . '&action=ajax&block_id=' . $block_id . '");'
-                    );
-                }
-            }
-            echo '</div>';
-        }
-
-        echo '<div id="link_change_blocks">';
-
-        if ($ctype === 'user') {
-            echo '<a href="index_edit.php?user_id=' . Auth::id() . '">', I18N::translate('Change the blocks on this page'), '</a>';
-        } elseif ($ctype === 'gedcom' && WT_USER_GEDCOM_ADMIN) {
-            echo '<a href="index_edit.php?gedcom_id=' . WT_GED_ID . '">', I18N::translate('Change the blocks on this page'), '</a>';
-        }
-
-        if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
-            echo '<span>' . I18N::translate('Hit count:') . ' ' . Globals::i()->hitCount . '</span>';
-        }
-
-        echo '</div></div>';
     }
 
     /**
-     * @param $blocks
-     * @param $all_blocks
      */
-    protected function actionAjax($blocks, $all_blocks)
+    protected function actionAjax()
     {
+        list($ctype, $blocks, $all_blocks) = $this->commonAction();
+
         $controller = Application::i()->setActiveController(new AjaxController());
         $controller->pageHeader();
 
@@ -165,4 +74,156 @@ class IndexPHP {
 
         return;
     }
+
+    /**
+     * @param $blocks
+     * @param $controller
+     * @param $ctype
+     *
+     * @return array
+     */
+    protected function renderMainBlocks($blocks, $controller, $ctype)
+    {
+        if ($blocks['side']) {
+            echo '<div id="index_main_blocks">';
+        } else {
+            echo '<div id="index_full_blocks">';
+        }
+        foreach ($blocks['main'] as $block_id => $module_name) {
+            $class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
+            $module     = new $class_name;
+            if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
+                // Load the block directly
+                echo $module->getBlock($block_id);
+            } else {
+                // Load the block asynchronously
+                echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
+                $controller->addInlineJavascript(
+                    'jQuery("#block_' . $block_id . '").load("'
+                    . UrlConstants::url(UrlConstants::INDEX_PHP, array(
+                        'ctype'    => $ctype,
+                        'action'   => 'ajax',
+                        'block_id' => $block_id
+                    )) . '");'
+                );
+            }
+        }
+        echo '</div>';
+    }
+
+    /**
+     * @param $blocks
+     * @param $controller
+     * @param $ctype
+     */
+    protected function renderSideBlocks($blocks, $controller, $ctype)
+    {
+        if ($blocks['main']) {
+            echo '<div id="index_small_blocks">';
+        } else {
+            echo '<div id="index_full_blocks">';
+        }
+        foreach ($blocks['side'] as $block_id => $module_name) {
+            $class_name = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
+            $module     = new $class_name;
+            if (Globals::i()->SEARCH_SPIDER || !$module->loadAjax()) {
+                // Load the block directly
+                echo $module->getBlock($block_id);
+            } else {
+                // Load the block asynchronously
+                echo '<div id="block_', $block_id, '"><div class="loading-image">&nbsp;</div></div>';
+                $controller->addInlineJavascript(
+                    'jQuery("#block_' . $block_id . '").load("'
+                    . UrlConstants::url(UrlConstants::INDEX_PHP, array(
+                        'ctype'    => $ctype,
+                        'action'   => 'ajax',
+                        'block_id' => $block_id
+                    )) . '");'
+                );
+            }
+        }
+        echo '</div>';
+    }
+
+    /**
+     * @return array
+     */
+    protected function commonAction()
+    {
+// The default view depends on whether we are logged in
+        if (Auth::check()) {
+            $ctype = Filter::get('ctype', 'gedcom|user', 'user');
+        } else {
+            $ctype = 'gedcom';
+        }
+
+// Get the blocks list
+        if ($ctype === 'user') {
+            $blocks = FunctionsDbPhp::i()->get_user_blocks(Auth::id());
+        } else {
+            $blocks = FunctionsDbPhp::i()->get_gedcom_blocks(WT_GED_ID);
+        }
+
+        $all_blocks = Module::getActiveBlocks();
+
+// The latest version is shown on the administration page.  This updates it every day.
+        Functions::i()->fetch_latest_version();
+
+        return array(
+            $ctype,
+            $blocks,
+            $all_blocks
+        );
+    }
+
+    protected function actionHtml()
+    {
+        list($ctype, $blocks, $all_blocks) = $this->commonAction();
+
+        $this->getTheme();
+
+        /** @var PageController $controller */
+        $controller = Application::i()->setActiveController(new LegacyPageController($this->getTemplating()));
+        if ($ctype === 'user') {
+            $controller->restrictAccess(Auth::check());
+        }
+        $controller
+            ->setPageTitle($ctype === 'user' ? I18N::translate('My page') : WT_TREE_TITLE)
+            ->setMetaRobots('index,follow')
+            ->setCanonicalUrl(UrlConstants::url(WT_SCRIPT_NAME, array(
+                'ctype' => $ctype,
+                'ged'   => WT_GEDCOM
+            )))
+            ->pageHeader()
+            // By default jQuery modifies AJAX URLs to disable caching, causing JS libraries to be loaded many times.
+            ->addInlineJavascript('jQuery.ajaxSetup({cache:true});');
+        if ($ctype === 'user') {
+            echo '<div id="my-page">';
+            echo '<h1 class="center">', I18N::translate('My page'), '</h1>';
+        } else {
+            echo '<div id="home-page">';
+        }
+        if ($blocks['main']) {
+            $this->renderMainBlocks($blocks, $controller, $ctype);
+        }
+        if ($blocks['side']) {
+            $this->renderSideBlocks($blocks, $controller, $ctype);
+        }
+
+        echo '<div id="link_change_blocks">';
+
+        if ($ctype === 'user') {
+            echo '<a href="index_edit.php?user_id=' . Auth::id() . '">', I18N::translate('Change the blocks on this page'), '</a>';
+        } elseif ($ctype === 'gedcom' && WT_USER_GEDCOM_ADMIN) {
+            echo '<a href="index_edit.php?gedcom_id=' . WT_GED_ID . '">', I18N::translate('Change the blocks on this page'), '</a>';
+        }
+
+        if (Globals::i()->WT_TREE->getPreference('SHOW_COUNTER')) {
+            echo '<span>' . I18N::translate('Hit count:') . ' ' . Globals::i()->hitCount . '</span>';
+        }
+
+        echo '</div></div>';
+    }
+
+
 }

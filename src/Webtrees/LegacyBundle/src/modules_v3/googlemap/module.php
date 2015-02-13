@@ -829,7 +829,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             ->setPageTitle(/* I18N: %s is an individual’s name */
                 I18N::translate('Pedigree map of %s', $controller->getPersonName()))
             ->pageHeader()
-            ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
             ->addInlineJavascript('autocomplete();');
 
         echo '<link type="text/css" href="', WT_STATIC_URL, WT_MODULES_DIR, 'googlemap/css/wt_v3_googlemap.css" rel="stylesheet">';

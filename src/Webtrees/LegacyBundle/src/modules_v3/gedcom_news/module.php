@@ -17,6 +17,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  */
 
 use Fgt\Config;
+use Fgt\UrlConstants;
 use PDOException;
 
 // Create tables, if not already present
@@ -91,7 +92,7 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
                             ->execute(array(WT_GED_ID))
                             ->fetchAll();
 
-        $id = $this->getName() . $block_id;
+        $id    = $this->getName() . $block_id;
         $class = $this->getName() . '_block';
         if ($ctype === 'gedcom' && WT_USER_GEDCOM_ADMIN || $ctype === 'user' && Auth::check()) {
             $title = '<i class="icon-admin" title="' . I18N::translate('Configure') . '" onclick="modalDialog(\'block_edit.php?block_id=' . $block_id . '\', \'' . $this->getTitle() . '\');"></i>';
@@ -126,7 +127,15 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
             $content .= $news->body;
             // Print Admin options for this News item
             if (WT_USER_GEDCOM_ADMIN) {
-                $content .= '<hr>' . '<a href="#" onclick="window.open(\'editnews.php?news_id=\'+' . $news->news_id . ', \'_blank\', news_window_specs); return false;">' . I18N::translate('Edit') . '</a> | ' . '<a href="index.php?action=deletenews&amp;news_id=' . $news->news_id . '&amp;ctype=' . $ctype . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this news article?') . "');\">" . I18N::translate('Delete') . '</a><br>';
+                $content .= '<hr>' . '<a href="#" onclick="window.open(\'editnews.php?news_id=\'+' . $news->news_id . ', \'_blank\', news_window_specs); return false;">'
+                            . I18N::translate('Edit') . '</a> | '
+                            . '<a href="'
+                            . UrlConstants::url(UrlConstants::INDEX_PHP, [
+                        'action'  => 'deletenews',
+                        'news_id' => $news->news_id,
+                        'ctype'   => $ctype
+                    ])
+                            . '" onclick="return confirm(\'' . I18N::translate('Are you sure you want to delete this news article?') . "');\">" . I18N::translate('Delete') . '</a><br>';
             }
             $content .= '</div>';
         }
@@ -139,7 +148,10 @@ class gedcom_news_WT_Module extends Module implements ModuleBlockInterface
             if ($printedAddLink) {
                 $content .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
             }
-            $content .= '<a href="index.php?gedcom_news_archive=yes&amp;ctype=' . $ctype . '">' . I18N::translate('View archive') . "</a>";
+            $content .= sprintf('<a href="%s">', UrlConstants::url(UrlConstants::INDEX_PHP, [
+                    'gedcom_news_archive' => 'yes',
+                    'ctype'               => $ctype
+                ])) . I18N::translate('View archive') . "</a>";
             $content .= FunctionsPrint::i()->help_link('gedcom_news_archive') . '<br>';
         }
 

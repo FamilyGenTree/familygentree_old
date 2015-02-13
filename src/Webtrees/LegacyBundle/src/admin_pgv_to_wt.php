@@ -19,6 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use PDO;
 use PDOException;
 
@@ -1678,4 +1679,4 @@ Database::commit();
 
 echo '<hr>';
 echo '<p>', I18N::translate('You need to login again, using your PhpGedView username and password.'), '</p>';
-echo '<a href="index.php"><button class="btn btn-primary">', I18N::translate('continue'), '</button></a>';
+echo '<a href="' . UrlConstants::url(UrlConstants::INDEX_PHP) . '"><button class="btn btn-primary">', I18N::translate('continue'), '</button></a>';

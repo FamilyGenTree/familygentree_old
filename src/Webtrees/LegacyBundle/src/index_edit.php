@@ -19,6 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use Zend_Session;
 
 define('WT_SCRIPT_NAME', 'index_edit.php');
@@ -52,9 +53,9 @@ if ($user_id < 0 || $gedcom_id < 0 || Auth::isAdmin() && $user_id != Auth::id())
     // We're doing this from an admin page.  Use the admin theme, and return there afterwards.
     Theme::theme(new AdministrationTheme)
          ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-    $return_to = 'admin_trees_manage.php?ged=';
+    $return_to = UrlConstants::url(UrlConstants::ADMIN_TREES_MANAGE_PHP, ['ged' => '']);
 } else {
-    $return_to = 'index.php';
+    $return_to = UrlConstants::url(UrlConstants::INDEX_PHP);
 }
 
 // Only an admin can edit the "default" page
@@ -311,7 +312,7 @@ $controller->addInlineJavascript(
 );
 ?>
 
-<?php if ($return_to !== 'index.php'): ?>
+<?php if ($return_to !== UrlConstants::url(UrlConstants::INDEX_PHP)): ?>
     <ol class="breadcrumb small">
         <li><a href="admin.php"><?php echo I18N::translate('Control panel'); ?></a></li>
         <?php if ($user_id): ?>

@@ -660,7 +660,7 @@ $changes      = Database::prepare(
                     <?php foreach (Tree::getAll() as $tree): ?>
                         <tr class="<?php echo $changes[$tree->getTreeId()] ? 'danger' : ''; ?>">
                             <td>
-                                <a href="index.php?ctype=gedcom&amp;ged=<?php echo $tree->getNameUrl(); ?>">
+                                <a href="<?php echo UrlConstants::urlEscape(UrlConstants::INDEX_PHP,['ctype'=>'gedcom','ged'=>$tree->getNameUrl()]); ?>">
                                     <?php echo $tree->getTitleHtml(); ?>
                                 </a>
                             </td>

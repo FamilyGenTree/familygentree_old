@@ -23,7 +23,7 @@ Application::i()->init()->started();
 
 $controller = Application::i()->setActiveController(new AdvancedSearchController());
 $controller
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();')
     ->pageHeader();
 

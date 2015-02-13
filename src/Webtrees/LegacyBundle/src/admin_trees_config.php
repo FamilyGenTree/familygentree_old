@@ -469,8 +469,8 @@ switch (Filter::get('action')) {
 
 $controller
     ->pageHeader()
-    ->addExternalJavascript(WT_ADMIN_JS_URL)
-    ->addExternalJavascript(WT_AUTOCOMPLETE_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_ADMIN_JS_URL)
+    ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_AUTOCOMPLETE_JS_URL)
     ->addInlineJavascript('autocomplete();');
 
 ?>
