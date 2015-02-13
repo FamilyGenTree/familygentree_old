@@ -14,6 +14,7 @@ use Webtrees\LegacyBundle\Legacy\BaseController;
 use Webtrees\LegacyBundle\Legacy\Database;
 use Webtrees\LegacyBundle\Legacy\Filter;
 use Webtrees\LegacyBundle\Legacy\FlashMessages;
+use Webtrees\LegacyBundle\Legacy\HitCounter;
 use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Log;
 use Webtrees\LegacyBundle\Legacy\Site;
@@ -144,13 +145,13 @@ class Application
 
 // If there is no current tree and we need one, then redirect somewhere
         if (!in_array(WT_SCRIPT_NAME, array(
-            'admin_trees_manage.php',
-            'admin_pgv_to_wt.php',
-            'login.php',
-            'logout.php',
-            'import.php',
-            'help_text.php',
-            'message.php'
+            UrlConstants::ADMIN_TREES_MERGE_PHP,
+            UrlConstants::ADMIN_PGV_TO_WT_PHP,
+            UrlConstants::LOGIN_PHP,
+            UrlConstants::LOGOUT_PHP,
+            UrlConstants::IMPORT_PHP,
+            UrlConstants::HELP_TEXT_PHP,
+            UrlConstants::MESSAGE_PHP
         ))
         ) {
             if (!isset(Globals::i()->WT_TREE) || !Globals::i()->WT_TREE->getPreference('imported')) {
@@ -177,7 +178,7 @@ class Application
 
 // Page hit counter - load after theme, as we need theme formatting
         if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
-            require WT_ROOT . 'includes/hitcount.php';
+            HitCounter::setup();
         } else {
             Globals::i()->hitCount = '';
         }
