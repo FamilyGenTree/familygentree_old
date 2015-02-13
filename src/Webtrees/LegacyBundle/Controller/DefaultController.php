@@ -6,6 +6,7 @@ use Fgt\UrlConstants;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Webtrees\LegacyBundle\Legacy\IndexPHP;
+use Webtrees\LegacyBundle\Legacy\LoginPhp;
 
 class DefaultController extends AbstractController
 {
@@ -96,8 +97,34 @@ class DefaultController extends AbstractController
     {
     }
 
-    public function loginPhpAction()
+    public function loginPhpAction(Request $request)
     {
+        $this->setConfig();
+        require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::LOGIN_PHP);
+        $class = new LoginPhp($this->container, $request);
+        $class->run();
+
+        //require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
+        return $this->render(
+            'WebtreesLegacyBundle:Default:output.html.twig',
+            array(
+                'output' => $class->getOutput(),
+                'menus' => $class->getOutputMenus()
+            )
+        );
+//        $class = new IndexPHP($this->container, $request);
+//        $class->run();
+//
+//        //require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
+//        return $this->render(
+//            'WebtreesLegacyBundle:Default:output.html.twig',
+//            array(
+//                'output' => $class->getOutput(),
+//                'menus' => $class->getOutputMenus()
+//            )
+//        );
+        return $this->render(
+            'WebtreesLegacyBundle:Default:index.html.twig',array());
     }
 
     public function logoutPhpAction()

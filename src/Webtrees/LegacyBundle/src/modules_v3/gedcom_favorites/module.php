@@ -267,7 +267,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
     public static function deleteFavorite($favorite_id)
     {
         return (bool)
-        Database::prepare("DELETE FROM `##favorite` WHERE favorite_id=?")
+        Database::i()->prepare("DELETE FROM `##favorite` WHERE favorite_id=?")
                 ->execute(array($favorite_id));
     }
 
@@ -303,7 +303,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
             $sql .= " AND user_id IS NULL";
         }
 
-        if (Database::prepare($sql)
+        if (Database::i()->prepare($sql)
                     ->execute($vars)
                     ->fetchOne()
         ) {
@@ -312,7 +312,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
 
         //-- add the favorite to the database
         return (bool)
-        Database::prepare("INSERT INTO `##favorite` (user_id, gedcom_id, xref, favorite_type, url, title, note) VALUES (? ,? ,? ,? ,? ,? ,?)")
+        Database::i()->prepare("INSERT INTO `##favorite` (user_id, gedcom_id, xref, favorite_type, url, title, note) VALUES (? ,? ,? ,? ,? ,? ,?)")
                 ->execute(array(
                               $favorite['user_id'],
                               $favorite['gedcom_id'],
@@ -336,7 +336,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
         self::updateSchema(); // make sure the favorites table has been created
 
         return
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE favorite_id AS id, user_id, gedcom_id, xref AS gid, favorite_type AS type, title, note, url" .
                 " FROM `##favorite` WHERE gedcom_id=? AND user_id IS NULL")
                     ->execute(array($gedcom_id))
@@ -350,7 +350,7 @@ class gedcom_favorites_WT_Module extends Module implements ModuleBlockInterface
     {
         // Create tables, if not already present
         try {
-            Database::updateSchema(WT_ROOT . WT_MODULES_DIR . 'gedcom_favorites/db_schema/', 'FV_SCHEMA_VERSION', 4);
+            Database::i()->updateSchema(WT_ROOT . WT_MODULES_DIR . 'gedcom_favorites/db_schema/', 'FV_SCHEMA_VERSION', 4);
         } catch (PDOException $ex) {
             // The schema update scripts should never fail.  If they do, there is no clean recovery.
             FlashMessages::addMessage($ex->getMessage(), 'danger');

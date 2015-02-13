@@ -222,7 +222,7 @@ class Individual extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT i_gedcom FROM `##individuals` WHERE i_id=? AND i_file=?");
+            $statement = Database::i()->prepare("SELECT i_gedcom FROM `##individuals` WHERE i_id=? AND i_file=?");
         }
 
         return $statement->execute(array(

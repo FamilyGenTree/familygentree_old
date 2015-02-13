@@ -96,6 +96,13 @@ class FgtConfig
         }
     }
 
+    public function getValue($key, $scope = null, $default = null)
+    {
+        $ret = $this->get($key, $scope);
+
+        return $ret != null ? $ret->getValue() : $default;
+    }
+
     public function getConfigTheme($key)
     {
         return $this->getSectionForSection(static::SCOPE_THEME)->getValue($key);

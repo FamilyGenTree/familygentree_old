@@ -24,22 +24,22 @@ use PDOException;
 // Also clean out some old/unused values and files.
 
 try {
-    Database::exec("ALTER TABLE `##gedcom` ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0");
+    Database::i()->exec("ALTER TABLE `##gedcom` ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0");
 } catch (PDOException $ex) {
     // If this fails, it has probably already been done.
 }
 
 try {
-    Database::exec("ALTER TABLE `##gedcom` ADD INDEX ix1 (sort_order)");
+    Database::i()->exec("ALTER TABLE `##gedcom` ADD INDEX ix1 (sort_order)");
 } catch (PDOException $ex) {
     // If this fails, it has probably already been done.
 }
 
 // No longer used
-Database::exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('PAGE_AFTER_LOGIN')");
+Database::i()->exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('PAGE_AFTER_LOGIN')");
 
 // Change of defaults - do not add ASSO, etc. to NOTE objects
-Database::exec("UPDATE `##gedcom_setting` SET setting_value='SOUR' WHERE setting_value='ASSO,SOUR,NOTE,REPO' AND setting_name='NOTE_FACTS_ADD'");
+Database::i()->exec("UPDATE `##gedcom_setting` SET setting_value='SOUR' WHERE setting_value='ASSO,SOUR,NOTE,REPO' AND setting_name='NOTE_FACTS_ADD'");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

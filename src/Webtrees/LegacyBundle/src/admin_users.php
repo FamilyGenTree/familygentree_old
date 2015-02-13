@@ -193,7 +193,7 @@ switch (Filter::get('action')) {
             $WHERE . $ORDER_BY . $LIMIT;
 
         // This becomes a JSON list, not array, so need to fetch with numeric keys.
-        $data = Database::prepare($sql)
+        $data = Database::i()->prepare($sql)
                         ->execute($ARGS)
                         ->fetchAll(PDO::FETCH_NUM);
 
@@ -242,7 +242,7 @@ switch (Filter::get('action')) {
         }
 
         // Total filtered/unfiltered rows
-        $recordsFiltered = (int)Database::prepare("SELECT FOUND_ROWS()")
+        $recordsFiltered = (int)Database::i()->prepare("SELECT FOUND_ROWS()")
                                         ->fetchOne();
         $recordsTotal    = User::count();
 

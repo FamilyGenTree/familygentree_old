@@ -31,7 +31,6 @@ define('WT_SCRIPT_NAME', UrlConstants::SETUP_PHP);
 define('WT_CONFIG_FILE', 'config.ini.php');
 
 define('WT_WEBTREES', 'webtrees');
-define('WT_DEBUG_SQL', false);
 define('WT_REQUIRED_MYSQL_VERSION', '5.0.13');
 define('WT_REQUIRED_PHP_VERSION', '5.3.2');
 define('WT_MODULES_DIR', 'modules_v3/');
@@ -274,18 +273,18 @@ if (!isset($_POST['tblpfx'])) {
     $_POST['tblpfx'] = 'wt_';
 }
 
-define('WT_TBLPREFIX', $_POST['tblpfx']);
 try {
     $db_version_ok = false;
-    Database::createInstance(
+    Database::i()->createInstance(
         $_POST['dbhost'],
         $_POST['dbport'],
         '', // No DBNAME - we will connect to it explicitly
         $_POST['dbuser'],
-        $_POST['dbpass']
+        $_POST['dbpass'],
+        $_POST['tblpfx']
     );
-    Database::exec("SET NAMES 'utf8'");
-    $row = Database::prepare("SHOW VARIABLES LIKE 'VERSION'")
+    Database::i()->exec("SET NAMES 'utf8'");
+    $row = Database::i()->prepare("SHOW VARIABLES LIKE 'VERSION'")
                    ->fetchOneRow();
     if (version_compare($row->value, WT_REQUIRED_MYSQL_VERSION, '<')) {
         echo '<p class="bad">', I18N::translate('This database is only running MySQL version %s.  You cannot install webtrees here.', $row->value), '</p>';
@@ -293,7 +292,7 @@ try {
         $db_version_ok = true;
     }
 } catch (PDOException $ex) {
-    Database::disconnect();
+    Database::i()->disconnect();
     if ($_POST['dbuser']) {
         // If we’ve supplied a login, then show the error
         echo
@@ -303,7 +302,7 @@ try {
     }
 }
 
-if (empty($_POST['dbuser']) || !Database::isConnected() || !$db_version_ok) {
+if (empty($_POST['dbuser']) || !Database::i()->isConnected() || !$db_version_ok) {
     echo
     '<h2>', I18N::translate('Connection to database server'), '</h2>',
     '<p>', I18N::translate('webtrees needs a MySQL database, version %s or later.', WT_REQUIRED_MYSQL_VERSION), '</p>',
@@ -381,13 +380,13 @@ $dbname_ok = false;
 if ($DBNAME && $DBNAME == $_POST['dbname'] && $TBLPREFIX == $_POST['tblpfx']) {
     try {
         // Try to create the database, if it does not exist.
-        Database::exec("CREATE DATABASE IF NOT EXISTS `{$DBNAME}` COLLATE utf8_unicode_ci");
+        Database::i()->exec("CREATE DATABASE IF NOT EXISTS `{$DBNAME}` COLLATE utf8_unicode_ci");
     } catch (PDOException $ex) {
         // If we have no permission to do this, there’s nothing helpful we can say.
         // We’ll get a more helpful error message from the next test.
     }
     try {
-        Database::exec("USE `{$DBNAME}`");
+        Database::i()->exec("USE `{$DBNAME}`");
         $dbname_ok = true;
     } catch (PDOException $ex) {
         echo
@@ -402,7 +401,7 @@ if ($dbname_ok) {
     try {
         // PhpGedView (4.2.3 and earlier) and many other applications have a USERS table.
         // webtrees has a USER table
-        $dummy = Database::prepare("SELECT COUNT(*) FROM `##users`")
+        $dummy = Database::i()->prepare("SELECT COUNT(*) FROM `##users`")
                          ->fetchOne();
         echo '<p class="bad">', I18N::translate('This database and table-prefix appear to be used by another application.  If you have an existing PhpGedView system, you should create a new webtrees system.  You can import your PhpGedView data and settings later.'), '</p>';
         $dbname_ok = false;
@@ -414,7 +413,7 @@ if ($dbname_ok) {
     try {
         // PhpGedView (4.2.4 and later) has a site_setting.site_setting_name column.
         // [We changed the column name in webtrees, so we can tell the difference!]
-        $dummy = Database::prepare("SELECT site_setting_value FROM `##site_setting` WHERE site_setting_name='PGV_SCHEMA_VERSION'")
+        $dummy = Database::i()->prepare("SELECT site_setting_value FROM `##site_setting` WHERE site_setting_name='PGV_SCHEMA_VERSION'")
                          ->fetchOne();
         echo '<p class="bad">', I18N::translate('This database and table-prefix appear to be used by another application.  If you have an existing PhpGedView system, you should create a new webtrees system.  You can import your PhpGedView data and settings later.'), '</p>';
         $dbname_ok = false;
@@ -525,7 +524,7 @@ if (empty($_POST['wtname']) || empty($_POST['wtuser']) || strlen($_POST['wtpass'
 
 try {
     // These shouldn’t fail.
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##gedcom` (" .
         " gedcom_id     INTEGER AUTO_INCREMENT NOT NULL," .
         " gedcom_name   VARCHAR(255)           NOT NULL," .
@@ -535,14 +534,14 @@ try {
         "         KEY `##gedcom_ix2` (sort_order)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##site_setting` (" .
         " setting_name  VARCHAR(32)  NOT NULL," .
         " setting_value VARCHAR(255) NOT NULL," .
         " PRIMARY KEY (setting_name)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##gedcom_setting` (" .
         " gedcom_id     INTEGER      NOT NULL," .
         " setting_name  VARCHAR(32)  NOT NULL," .
@@ -551,7 +550,7 @@ try {
         " FOREIGN KEY `##gedcom_setting_fk1` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##user` (" .
         " user_id   INTEGER AUTO_INCREMENT NOT NULL," .
         " user_name VARCHAR(32)            NOT NULL," .
@@ -563,7 +562,7 @@ try {
         " UNIQUE  KEY `##user_ix2` (email)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##user_setting` (" .
         " user_id       INTEGER      NOT NULL," .
         " setting_name  VARCHAR(32)  NOT NULL," .
@@ -572,7 +571,7 @@ try {
         " FOREIGN KEY `##user_setting_fk1` (user_id) REFERENCES `##user` (user_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##user_gedcom_setting` (" .
         " user_id       INTEGER      NOT NULL," .
         " gedcom_id     INTEGER      NOT NULL," .
@@ -583,7 +582,7 @@ try {
         " FOREIGN KEY `##user_gedcom_setting_fk2` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##log` (" .
         " log_id      INTEGER AUTO_INCREMENT NOT NULL," .
         " log_time    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP," .
@@ -600,7 +599,7 @@ try {
         " FOREIGN KEY `##log_fk2` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE SET NULL */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##change` (" .
         " change_id      INTEGER AUTO_INCREMENT                  NOT NULL," .
         " change_time    TIMESTAMP                               NOT NULL DEFAULT CURRENT_TIMESTAMP," .
@@ -616,7 +615,7 @@ try {
         " FOREIGN KEY `##change_fk2` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##message` (" .
         " message_id INTEGER AUTO_INCREMENT NOT NULL," .
         " sender     VARCHAR(64)            NOT NULL," . // username or email address
@@ -629,7 +628,7 @@ try {
         " FOREIGN KEY `##message_fk1` (user_id)   REFERENCES `##user` (user_id) /* ON DELETE RESTRICT */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##default_resn` (" .
         " default_resn_id INTEGER AUTO_INCREMENT                             NOT NULL," .
         " gedcom_id       INTEGER                                            NOT NULL," .
@@ -643,7 +642,7 @@ try {
         " FOREIGN KEY `##default_resn_fk1` (gedcom_id)  REFERENCES `##gedcom` (gedcom_id)" .
         ") ENGINE=InnoDB COLLATE=utf8_unicode_ci"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##individuals` (" .
         " i_id     VARCHAR(20)         NOT NULL," .
         " i_file   INTEGER             NOT NULL," .
@@ -654,7 +653,7 @@ try {
         " UNIQUE  KEY `##individuals_ix1` (i_file, i_id)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##families` (" .
         " f_id      VARCHAR(20)  NOT NULL," .
         " f_file    INTEGER      NOT NULL," .
@@ -668,7 +667,7 @@ try {
         "         KEY `##families_ix3` (f_wife)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##places` (" .
         " p_id          INTEGER AUTO_INCREMENT NOT NULL," .
         " p_place       VARCHAR(150)               NULL," .
@@ -681,7 +680,7 @@ try {
         " UNIQUE  KEY `##places_ix2` (p_parent_id, p_file, p_place)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##placelinks` (" .
         " pl_p_id INTEGER NOT NULL," .
         " pl_gid  VARCHAR(20)  NOT NULL," .
@@ -692,7 +691,7 @@ try {
         "         KEY `##placelinks_ix3` (pl_file)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##dates` (" .
         " d_day        TINYINT     NOT NULL," .
         " d_month      CHAR(5)         NULL," .
@@ -716,7 +715,7 @@ try {
         " KEY `##dates_ix10` (d_fact, d_gid)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##media` (" .
         " m_id       VARCHAR(20)            NOT NULL," .
         " m_ext      VARCHAR(6)                 NULL," .
@@ -731,7 +730,7 @@ try {
         "         KEY `##media_ix3` (m_titl)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##next_id` (" .
         " gedcom_id   INTEGER     NOT NULL," .
         " record_type VARCHAR(15) NOT NULL," .
@@ -740,7 +739,7 @@ try {
         " FOREIGN KEY `##next_id_fk1` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##other` (" .
         " o_id     VARCHAR(20) NOT NULL," .
         " o_file   INTEGER     NOT NULL," .
@@ -750,7 +749,7 @@ try {
         " UNIQUE  KEY `##other_ix1` (o_file, o_id)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##sources` (" .
         " s_id     VARCHAR(20)    NOT NULL," .
         " s_file   INTEGER        NOT NULL," .
@@ -761,7 +760,7 @@ try {
         "         KEY `##sources_ix2` (s_name)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##link` (" .
         " l_file    INTEGER     NOT NULL," .
         " l_from    VARCHAR(20) NOT NULL," .
@@ -771,7 +770,7 @@ try {
         " UNIQUE  KEY `##link_ix1` (l_to, l_file, l_type, l_from)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##name` (" .
         " n_file             INTEGER      NOT NULL," .
         " n_id               VARCHAR(20)  NOT NULL," .
@@ -793,7 +792,7 @@ try {
         "         KEY `##name_ix3` (n_givn, n_file, n_type, n_id)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##module` (" .
         " module_name   VARCHAR(32)                 NOT NULL," .
         " status        ENUM('enabled', 'disabled') NOT NULL DEFAULT 'enabled'," .
@@ -803,7 +802,7 @@ try {
         " PRIMARY KEY (module_name)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##module_setting` (" .
         " module_name   VARCHAR(32) NOT NULL," .
         " setting_name  VARCHAR(32) NOT NULL," .
@@ -812,7 +811,7 @@ try {
         " FOREIGN KEY `##module_setting_fk1` (module_name) REFERENCES `##module` (module_name) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##module_privacy` (" .
         " module_name   VARCHAR(32) NOT NULL," .
         " gedcom_id     INTEGER     NOT NULL," .
@@ -823,7 +822,7 @@ try {
         " FOREIGN KEY `##module_privacy_fk2` (gedcom_id)   REFERENCES `##gedcom` (gedcom_id)   /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##block` (" .
         " block_id    INTEGER AUTO_INCREMENT NOT NULL," .
         " gedcom_id   INTEGER                    NULL," .
@@ -838,7 +837,7 @@ try {
         " FOREIGN KEY `##block_fk3` (module_name) REFERENCES `##module` (module_name) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##block_setting` (" .
         " block_id      INTEGER     NOT NULL," .
         " setting_name  VARCHAR(32) NOT NULL," .
@@ -847,7 +846,7 @@ try {
         " FOREIGN KEY `##block_setting_fk1` (block_id) REFERENCES `##block` (block_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##hit_counter` (" .
         " gedcom_id      INTEGER     NOT NULL," .
         " page_name      VARCHAR(32) NOT NULL," .
@@ -857,7 +856,7 @@ try {
         " FOREIGN KEY `##hit_counter_fk1` (gedcom_id) REFERENCES `##gedcom` (gedcom_id) /* ON DELETE CASCADE */" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##session` (" .
         " session_id   CHAR(128)   NOT NULL," .
         " session_time TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," .
@@ -869,7 +868,7 @@ try {
         "         KEY `##session_ix2` (user_id, ip_address)" .
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##gedcom_chunk` (" .
         " gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL," .
         " gedcom_id       INTEGER                NOT NULL," .
@@ -881,7 +880,7 @@ try {
         ") COLLATE utf8_unicode_ci ENGINE=InnoDB"
     );
 
-    Database::exec(
+    Database::i()->exec(
         "CREATE TABLE IF NOT EXISTS `##site_access_rule` (" .
         " site_access_rule_id INTEGER          NOT NULL AUTO_INCREMENT," .
         " ip_address_start     INTEGER UNSIGNED NOT NULL DEFAULT 0," .
@@ -896,7 +895,7 @@ try {
         ") ENGINE=InnoDB COLLATE=utf8_unicode_ci"
     );
 
-    Database::exec(
+    Database::i()->exec(
         "INSERT IGNORE INTO `##site_access_rule` (user_agent_pattern, rule, comment) VALUES" .
         " ('Mozilla/5.0 (%) Gecko/% %/%', 'allow', 'Gecko-based browsers')," .
         " ('Mozilla/5.0 (%) AppleWebKit/% (KHTML, like Gecko)%', 'allow', 'WebKit-based browsers')," .
@@ -906,13 +905,13 @@ try {
         " ('Mozilla/5.0 (% Konqueror/%', 'allow', 'Konqueror browser')"
     );
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT IGNORE INTO `##gedcom` (gedcom_id, gedcom_name) VALUES " .
         " (-1, 'DEFAULT_TREE')"
     )
             ->execute();
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT IGNORE INTO `##user` (user_id, user_name, real_name, email, password) VALUES " .
         " (-1, 'DEFAULT_USER', 'DEFAULT_USER', 'DEFAULT_USER', 'DEFAULT_USER'), (1, ?, ?, ?, ?)"
     )
@@ -923,7 +922,7 @@ try {
                           password_hash($_POST['wtpass'], PASSWORD_DEFAULT)
                       ));
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT IGNORE INTO `##user_setting` (user_id, setting_name, setting_value) VALUES " .
         " (1, 'canadmin',          ?)," .
         " (1, 'language',          ?)," .
@@ -941,7 +940,7 @@ try {
                           1
                       ));
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT IGNORE INTO `##site_setting` (setting_name, setting_value) VALUES " .
         "('WT_SCHEMA_VERSION',               '-2')," .
         "('INDEX_DIRECTORY',                 'data/')," .
@@ -969,16 +968,16 @@ try {
     Module::getInstalledModules('enabled');
 
     // Create the default settings for new users/family trees
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##block` (user_id, location, block_order, module_name) VALUES (-1, 'main', 1, 'todays_events'), (-1, 'main', 2, 'user_messages'), (-1, 'main', 3, 'user_favorites'), (-1, 'side', 1, 'user_welcome'), (-1, 'side', 2, 'random_media'), (-1, 'side', 3, 'upcoming_events'), (-1, 'side', 4, 'logged_in')"
     )
             ->execute();
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##block` (gedcom_id, location, block_order, module_name) VALUES (-1, 'main', 1, 'gedcom_stats'), (-1, 'main', 2, 'gedcom_news'), (-1, 'main', 3, 'gedcom_favorites'), (-1, 'main', 4, 'review_changes'), (-1, 'side', 1, 'gedcom_block'), (-1, 'side', 2, 'random_media'), (-1, 'side', 3, 'todays_events'), (-1, 'side', 4, 'logged_in')"
     )
             ->execute();
     // Create the blocks for the admin user
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##block` (user_id, location, block_order, module_name)" .
         " SELECT 1, location, block_order, module_name" .
         " FROM `##block`" .

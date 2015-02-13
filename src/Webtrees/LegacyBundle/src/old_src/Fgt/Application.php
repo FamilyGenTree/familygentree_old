@@ -95,7 +95,8 @@ class Application
     /**
      * @return \Doctrine\Common\Cache\CacheProvider
      */
-    public function cache() {
+    public function cache()
+    {
         return Config::get(Config::CACHE);
     }
 
@@ -107,16 +108,19 @@ class Application
         if (null === $this->configObject) {
             $this->configObject = $this->diContainer->get('fam_gene_tree_app.configuration');
         }
+
         return $this->configObject;
     }
 
     /**
      * @return \Webtrees\LegacyBundle\Context\Application\Service\Theme
      */
-    public function getTheme() {
+    public function getTheme()
+    {
         if (null === $this->themeObject) {
             $this->themeObject = $this->diContainer->get('webtrees.theme');
         }
+
         return $this->themeObject;
     }
 
@@ -160,7 +164,7 @@ class Application
         Globals::i()->WT_SESSION->locale = I18N::$locale;
 
 // Note that the database/webservers may not be synchronised, so use DB time throughout.
-        define('WT_TIMESTAMP', (int)Database::prepare("SELECT UNIX_TIMESTAMP()")
+        define('WT_TIMESTAMP', (int)Database::i()->prepare("SELECT UNIX_TIMESTAMP()")
                                             ->fetchOne());
 
 // Server timezone is defined in php.ini
@@ -178,8 +182,10 @@ class Application
         if (Site::getPreference('LOGIN_URL')) {
             define('WT_LOGIN_URL', Site::getPreference('LOGIN_URL'));
         } else {
-            define('WT_LOGIN_URL', Config::get(Config::BASE_URL) . 'login.php');
+            define('WT_LOGIN_URL', UrlConstants::url(UrlConstants::LOGIN_PHP));
+            $this->getConfig()->set('WT_LOGIN_URL', UrlConstants::url(UrlConstants::LOGIN_PHP), FgtConfig::SCOPE_SITE);
         }
+
 
 // If there is no current tree and we need one, then redirect somewhere
         if (!in_array(WT_SCRIPT_NAME, array(
@@ -261,6 +267,7 @@ class Application
     public function setActiveController(BaseController $param)
     {
         BaseController::$activeController = $param;
+
         return $this->getActiveController();
     }
 
@@ -354,34 +361,22 @@ class Application
 
     private function initDatabase()
     {
-        $dbConfig = null;
-        // Load our configuration file, so we can connect to the database
-        if (file_exists(Config::get(Config::CONFIG_PATH))) {
-            $dbConfig = parse_ini_file(Config::get(Config::CONFIG_PATH));
-            // Invalid/unreadable config file?
-            if (!is_array($dbConfig)) {
-                header('Location: ' . UrlConstants::url(UrlConstants::SITE_UNAVAILABLE_PHP));
-                exit;
-            }
-            // Down for maintenance?
-            if (file_exists(WT_ROOT . 'data/offline.txt')) {
-                header('Location: ' . UrlConstants::url(UrlConstants::SITE_OFFLINE_PHP));
-                exit;
-            }
-        } else {
-            // No config file. Set one up.
-            header('Location: ' . UrlConstants::url(UrlConstants::SETUP_PHP));
-            exit;
-        }
-
 // Connect to the database
         try {
-            Database::createInstance($dbConfig['dbhost'], $dbConfig['dbport'], $dbConfig['dbname'], $dbConfig['dbuser'], $dbConfig['dbpass']);
-            define('WT_TBLPREFIX', $dbConfig['tblpfx']);
+            if (!Database::i()->isConnected()) {
+                Database::i()->createInstance(
+                    $this->container->getParameter('database_host'),
+                    $this->container->getParameter('database_port'),
+                    $this->container->getParameter('database_name'),
+                    $this->container->getParameter('database_user'),
+                    $this->container->getParameter('database_password'),
+                    $this->container->getParameter('database_prefix')
+                );
+            }
             unset($dbConfig);
             // Some of the FAMILY JOIN HUSBAND JOIN WIFE queries can excede the MAX_JOIN_SIZE setting
-            Database::exec("SET NAMES 'utf8' COLLATE 'utf8_unicode_ci', SQL_BIG_SELECTS=1");
-            Database::updateSchema(WT_ROOT . 'includes/db_schema/', 'WT_SCHEMA_VERSION', WT_SCHEMA_VERSION);
+            Database::i()->exec("SET NAMES 'utf8' COLLATE 'utf8_unicode_ci', SQL_BIG_SELECTS=1");
+            Database::i()->updateSchema(WT_ROOT . 'includes/db_schema/', 'WT_SCHEMA_VERSION', WT_SCHEMA_VERSION);
         } catch (\PDOException $ex) {
             FlashMessages::addMessage($ex->getMessage(), 'danger');
             header('Location: ' . UrlConstants::url(UrlConstants::SITE_UNAVAILABLE_PHP));
@@ -411,15 +406,15 @@ class Application
         $SERVER_URL = Site::getPreference('SERVER_URL');
         if ($SERVER_URL && $SERVER_URL != Config::get(Config::BASE_URL)) {
             header('Location: ' . $SERVER_URL . WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
-                                                                        ? '?' . $_SERVER['QUERY_STRING']
-                                                                        : ''), true, 301);
+                                                                                 ? '?' . $_SERVER['QUERY_STRING']
+                                                                                 : ''), true, 301);
             exit;
         }
     }
 
     private function initRobot()
     {
-        $rule = Database::prepare(
+        $rule = Database::i()->prepare(
             "SELECT SQL_CACHE rule FROM `##site_access_rule`" .
             " WHERE IFNULL(INET_ATON(?), 0) BETWEEN ip_address_start AND ip_address_end" .
             " AND ? LIKE user_agent_pattern" .
@@ -446,7 +441,7 @@ class Application
                 Globals::i()->SEARCH_SPIDER = true;
                 break;
             case '':
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT INTO `##site_access_rule` (ip_address_start, ip_address_end, user_agent_pattern, comment) VALUES (IFNULL(INET_ATON(?), 0), IFNULL(INET_ATON(?), 4294967295), ?, '')"
                 )
                         ->execute(array(
@@ -493,14 +488,14 @@ class Application
             },
             // read
             function ($id) {
-                return Database::prepare("SELECT session_data FROM `##session` WHERE session_id=?")
+                return Database::i()->prepare("SELECT session_data FROM `##session` WHERE session_id=?")
                                ->execute(array($id))
                                ->fetchOne();
             },
             // write
             function ($id, $data) {
                 // Only update the session table once per minute, unless the session data has actually changed.
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT INTO `##session` (session_id, user_id, ip_address, session_data, session_time)" .
                     " VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP - SECOND(CURRENT_TIMESTAMP))" .
                     " ON DUPLICATE KEY UPDATE" .
@@ -520,14 +515,15 @@ class Application
             },
             // destroy
             function ($id) {
-                Database::prepare("DELETE FROM `##session` WHERE session_id=?")
+                Database::i()->prepare("DELETE FROM `##session` WHERE session_id=?")
                         ->execute(array($id));
 
                 return true;
             },
             // gc
             function ($maxlifetime) {
-                Database::prepare("DELETE FROM `##session` WHERE session_time < DATE_SUB(NOW(), INTERVAL ? SECOND)")
+                Database::i()
+                        ->prepare("DELETE FROM `##session` WHERE session_time < DATE_SUB(NOW(), INTERVAL ? SECOND)")
                         ->execute(array($maxlifetime));
 
                 return true;
@@ -693,7 +689,7 @@ class Application
         }
 
         // These theme globals are horribly abused.
-        global $bwidth,$bheight,$basexoffset,$baseyoffset,$bxspacing,$byspacing,$Dbwidth,$Dbheight;
+        global $bwidth, $bheight, $basexoffset, $baseyoffset, $bxspacing, $byspacing, $Dbwidth, $Dbheight;
 
         $bwidth      = Theme::theme()
                             ->parameter('chart-box-x');
@@ -717,11 +713,11 @@ class Application
     private function initConfig()
     {
         $config = $this->getConfig();
-        $config->set(ConfigKeys::SYSTEM_PATH_DATA,Config::get(Config::DATA_DIRECTORY), FgtConfig::SCOPE_RUNTIME);
-        $config->set(ConfigKeys::SYSTEM_PATH_CONFIG,Config::get(Config::CONFIG_PATH), FgtConfig::SCOPE_RUNTIME);
-        $config->set(ConfigKeys::SYSTEM_CACHE_DIR,Config::get(Config::CACHE_DIR), FgtConfig::SCOPE_RUNTIME);
-        $config->set(ConfigKeys::SYSTEM_CACHE,Config::get(Config::CACHE), FgtConfig::SCOPE_RUNTIME);
-        $config->set(ConfigKeys::SYSTEM_MODULES_PATH,Config::get(Config::MODULES_DIR), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_PATH_DATA, Config::get(Config::DATA_DIRECTORY), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_PATH_CONFIG, Config::get(Config::CONFIG_PATH), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_CACHE_DIR, Config::get(Config::CACHE_DIR), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_CACHE, Config::get(Config::CACHE), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SYSTEM_MODULES_PATH, Config::get(Config::MODULES_DIR), FgtConfig::SCOPE_RUNTIME);
 
         Constants::defineCommonConstants($this->getConfig());
     }

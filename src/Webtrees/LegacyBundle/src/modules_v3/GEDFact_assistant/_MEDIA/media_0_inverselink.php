@@ -74,7 +74,7 @@ if ($action == 'choose' && $paramok) {
     if (!empty($mediaid)) {
         //-- Get the title of this existing Media item
         $title =
-            Database::prepare("SELECT m_titl FROM `##media` where m_id=? AND m_file=?")
+            Database::i()->prepare("SELECT m_titl FROM `##media` where m_id=? AND m_file=?")
                     ->execute(array(
                                   $mediaid,
                                   WT_GED_ID
@@ -88,7 +88,7 @@ if ($action == 'choose' && $paramok) {
         echo '<table><tr><td>';
         //-- Get the filename of this existing Media item
         $filename =
-            Database::prepare("SELECT m_filename FROM `##media` where m_id=? AND m_file=?")
+            Database::i()->prepare("SELECT m_filename FROM `##media` where m_id=? AND m_file=?")
                     ->execute(array(
                                   $mediaid,
                                   WT_GED_ID

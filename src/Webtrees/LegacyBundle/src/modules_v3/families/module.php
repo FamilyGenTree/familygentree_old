@@ -239,7 +239,7 @@ class families_WT_Module extends Module implements ModuleSidebarInterface
         }
 
         //-- search for INDI names
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT i_id AS xref" .
             " FROM `##individuals`, `##name`" .
             " WHERE (i_id LIKE ? OR n_sort LIKE ?)" .
@@ -270,7 +270,7 @@ class families_WT_Module extends Module implements ModuleSidebarInterface
         }
 
         $vars[] = WT_GED_ID;
-        $rows   = Database::prepare("SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom FROM `##families` WHERE {$where} AND f_file=?")
+        $rows   = Database::i()->prepare("SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom FROM `##families` WHERE {$where} AND f_file=?")
                           ->execute($vars)
                           ->fetchAll();
 

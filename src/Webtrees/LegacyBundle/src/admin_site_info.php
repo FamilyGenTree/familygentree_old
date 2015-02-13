@@ -28,7 +28,7 @@ $controller
     ->setPageTitle(I18N::translate('Server information'))
     ->pageHeader();
 
-$variables = Database::prepare("SHOW VARIABLES")
+$variables = Database::i()->prepare("SHOW VARIABLES")
                      ->fetchAssoc();
 array_walk($variables, function (&$x) {
     $x = str_replace(',', ', ', $x);

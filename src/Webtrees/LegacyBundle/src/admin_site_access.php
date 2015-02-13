@@ -62,7 +62,7 @@ switch (Filter::post('action')) {
             if ($ip_address_start !== null && $ip_address_end !== null && $user_agent_pattern !== null && $rule !== null) {
                 // This doesn't work with named placeholders.  The :user_agent_string parameter is not recognised...
                 $oops = $rule !== 'allow'
-                        && Database::prepare(
+                        && Database::i()->prepare(
                         "SELECT INET_ATON(:ip_address) BETWEEN INET_ATON(:ip_address_start) AND INET_ATON(:ip_address_end)" .
                         " AND :user_agent_string LIKE :user_agent_pattern"
                     )
@@ -78,7 +78,7 @@ switch (Filter::post('action')) {
                 if ($oops) {
                     FlashMessages::addMessage(I18N::translate('You cannot create a rule which would prevent yourself from accessing the website.'), 'danger');
                 } elseif ($site_access_rule_id === null) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT INTO `##site_access_rule` (ip_address_start, ip_address_end, user_agent_pattern, rule, comment) VALUES (INET_ATON(:ip_address_start), INET_ATON(:ip_address_end), :user_agent_pattern, :rule, :comment)"
                     )
                             ->execute(array(
@@ -90,7 +90,7 @@ switch (Filter::post('action')) {
                                       ));
                     FlashMessages::addMessage(I18N::translate('The website access rule has been created.'), 'success');
                 } else {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "UPDATE `##site_access_rule` SET ip_address_start = INET_ATON(:ip_address_start), ip_address_end = INET_ATON(:ip_address_end), user_agent_pattern = :user_agent_pattern, rule = :rule, comment = :comment WHERE site_access_rule_id = :site_access_rule_id"
                     )
                             ->execute(array(
@@ -112,7 +112,7 @@ switch (Filter::post('action')) {
     case 'delete':
         if (Filter::checkCsrf()) {
             $site_access_rule_id = Filter::postInteger('site_access_rule_id');
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##site_access_rule` WHERE site_access_rule_id = :site_access_rule_id"
             )
                     ->execute(array(
@@ -127,7 +127,7 @@ switch (Filter::post('action')) {
 
 // Delete any "unknown" visitors that are now "known".
 // This could happen every time we create/update a rule.
-Database::exec(
+Database::i()->exec(
     "DELETE unknown" .
     " FROM `##site_access_rule` AS unknown" .
     " JOIN `##site_access_rule` AS known ON (unknown.user_agent_pattern LIKE known.user_agent_pattern)" .
@@ -202,7 +202,7 @@ switch ($action) {
         }
 
         // This becomes a JSON list, not a JSON array, so we need numeric keys.
-        $data = Database::prepare($sql)
+        $data = Database::i()->prepare($sql)
                         ->execute($args)
                         ->fetchAll(PDO::FETCH_NUM);
         // Reformat the data for display
@@ -215,9 +215,9 @@ switch ($action) {
         }
 
         // Total filtered/unfiltered rows
-        $recordsFiltered = Database::prepare("SELECT FOUND_ROWS()")
+        $recordsFiltered = Database::i()->prepare("SELECT FOUND_ROWS()")
                                    ->fetchOne();
-        $recordsTotal    = Database::prepare("SELECT COUNT(*) FROM `##site_access_rule` WHERE rule <> 'unknown'")
+        $recordsTotal    = Database::i()->prepare("SELECT COUNT(*) FROM `##site_access_rule` WHERE rule <> 'unknown'")
                                    ->fetchOne();
 
         header('Content-type: application/json');
@@ -240,7 +240,7 @@ switch ($action) {
 
         $controller->pageHeader();
 
-        $site_access_rule = Database::prepare(
+        $site_access_rule = Database::i()->prepare(
             "SELECT site_access_rule_id, INET_NTOA(ip_address_start) AS ip_address_start, INET_NTOA(ip_address_end) AS ip_address_end, user_agent_pattern, rule, comment" .
             " FROM `##site_access_rule` WHERE site_access_rule_id = :site_access_rule_id"
         )

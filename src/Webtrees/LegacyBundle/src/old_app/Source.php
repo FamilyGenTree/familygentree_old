@@ -74,7 +74,7 @@ class Source extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT s_gedcom FROM `##sources` WHERE s_id=? AND s_file=?");
+            $statement = Database::i()->prepare("SELECT s_gedcom FROM `##sources` WHERE s_id=? AND s_file=?");
         }
 
         return $statement->execute(array(

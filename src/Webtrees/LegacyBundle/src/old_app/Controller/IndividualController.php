@@ -117,8 +117,8 @@ class IndividualController extends GedcomRecordController
 
         echo $mod->getTabContent();
 
-        if (WT_DEBUG_SQL) {
-            echo Database::getQueryLog();
+        if (Database::i()->isDebugSql()) {
+            echo Database::i()->getQueryLog();
         }
     }
 

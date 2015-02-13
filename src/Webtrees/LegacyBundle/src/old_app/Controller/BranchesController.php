@@ -128,7 +128,7 @@ class BranchesController extends PageController
             }
         }
         $sql .= ')';
-        $rows              = Database::prepare($sql)
+        $rows              = Database::i()->prepare($sql)
                                      ->execute($args)
                                      ->fetchAll();
         $this->individuals = array();

@@ -255,7 +255,7 @@ $controller->pageHeader();
                         <?php
 
                         // The third row shows an optional progress bar and a list of maintenance options
-                        $importing = Database::prepare(
+                        $importing = Database::i()->prepare(
                             "SELECT 1 FROM `##gedcom_chunk` WHERE gedcom_id = ? AND imported = '0' LIMIT 1"
                         )
                                              ->execute(array($tree->getTreeId()))

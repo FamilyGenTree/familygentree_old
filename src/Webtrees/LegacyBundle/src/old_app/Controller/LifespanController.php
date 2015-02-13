@@ -321,7 +321,7 @@ class LifespanController extends PageController
         } elseif ($place) {
             // All records found in a place
             $wt_place    = new Place($place, WT_GED_ID);
-            $this->pids  = Database::prepare(
+            $this->pids  = Database::i()->prepare(
                 "SELECT DISTINCT pl_gid FROM `##placelinks` WHERE pl_p_id = ? AND pl_file = ?"
             )
                                    ->execute(array(
@@ -807,7 +807,7 @@ class LifespanController extends PageController
         $startjd = $gregorian_calendar->ymdToJd($startyear, 1, 1);
         $endjd   = $gregorian_calendar->ymdToJd($endyear, 12, 31);
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT DISTINCT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
             " FROM `##individuals`" .
             " JOIN `##dates` ON i_id=d_gid AND i_file=d_file" .

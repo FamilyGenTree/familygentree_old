@@ -315,7 +315,7 @@ class FunctionsEdit
      */
     function edit_field_username($name, $selected = '', $extra = '')
     {
-        $all_users = Database::prepare(
+        $all_users = Database::i()->prepare(
             "SELECT user_name, CONCAT_WS(' ', real_name, '-', user_name) FROM `##user` ORDER BY real_name"
         )
                              ->fetchAssoc();

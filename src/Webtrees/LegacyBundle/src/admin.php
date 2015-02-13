@@ -411,13 +411,13 @@ $update_available = Auth::isAdmin() && $latest_version && version_compare(WT_VER
 $total_users = User::count();
 
 // Administrators
-$administrators = Database::prepare(
+$administrators = Database::i()->prepare(
     "SELECT SQL_CACHE user_id, real_name FROM `##user` JOIN `##user_setting` USING (user_id) WHERE setting_name='canadmin' AND setting_value='1'"
 )
                           ->fetchAll();
 
 // Managers
-$managers = Database::prepare(
+$managers = Database::i()->prepare(
     "SELECT SQL_CACHE user_id, real_name FROM `##user` JOIN `##user_gedcom_setting` USING (user_id)" .
     " WHERE setting_name = 'canedit' AND setting_value='admin'" .
     " GROUP BY user_id, real_name" .
@@ -426,7 +426,7 @@ $managers = Database::prepare(
                     ->fetchAll();
 
 // Moderators
-$moderators = Database::prepare(
+$moderators = Database::i()->prepare(
     "SELECT SQL_CACHE user_id, real_name FROM `##user` JOIN `##user_gedcom_setting` USING (user_id)" .
     " WHERE setting_name = 'canedit' AND setting_value='accept'" .
     " GROUP BY user_id, real_name" .
@@ -435,7 +435,7 @@ $moderators = Database::prepare(
                       ->fetchAll();
 
 // Number of users who have not verified their email address
-$unverified = Database::prepare(
+$unverified = Database::i()->prepare(
     "SELECT SQL_CACHE user_id, real_name FROM `##user` JOIN `##user_setting` USING (user_id)" .
     " WHERE setting_name = 'verified' AND setting_value = '0'" .
     " ORDER BY real_name"
@@ -443,7 +443,7 @@ $unverified = Database::prepare(
                       ->fetchAll();
 
 // Number of users whose accounts are not approved by an administrator
-$unapproved = Database::prepare(
+$unapproved = Database::i()->prepare(
     "SELECT SQL_CACHE user_id, real_name FROM `##user` JOIN `##user_setting` USING (user_id)" .
     " WHERE setting_name = 'verified_by_admin' AND setting_value = '0'" .
     " ORDER BY real_name"
@@ -451,34 +451,34 @@ $unapproved = Database::prepare(
                       ->fetchAll();
 
 // Users currently logged in
-$logged_in = Database::prepare(
+$logged_in = Database::i()->prepare(
     "SELECT SQL_NO_CACHE DISTINCT user_id, real_name FROM `##user` JOIN `##session` USING (user_id)" .
     " ORDER BY real_name"
 )
                      ->fetchAll();
 
 // Count of records
-$individuals  = Database::prepare(
+$individuals  = Database::i()->prepare(
     "SELECT SQL_CACHE gedcom_id, COUNT(i_id) AS count FROM `##gedcom` LEFT JOIN `##individuals` ON gedcom_id = i_file GROUP BY gedcom_id"
 )
                         ->fetchAssoc();
-$families     = Database::prepare(
+$families     = Database::i()->prepare(
     "SELECT SQL_CACHE gedcom_id, COUNT(f_id) AS count FROM `##gedcom` LEFT JOIN `##families` ON gedcom_id = f_file GROUP BY gedcom_id"
 )
                         ->fetchAssoc();
-$sources      = Database::prepare(
+$sources      = Database::i()->prepare(
     "SELECT SQL_CACHE gedcom_id, COUNT(s_id) AS count FROM `##gedcom` LEFT JOIN `##sources` ON gedcom_id = s_file GROUP BY gedcom_id"
 )
                         ->fetchAssoc();
-$media        = Database::prepare(
+$media        = Database::i()->prepare(
     "SELECT SQL_CACHE gedcom_id, COUNT(m_id) AS count FROM `##gedcom` LEFT JOIN `##media` ON gedcom_id = m_file GROUP BY gedcom_id"
 )
                         ->fetchAssoc();
-$repositories = Database::prepare(
+$repositories = Database::i()->prepare(
     "SELECT SQL_CACHE gedcom_id, COUNT(o_id) AS count FROM `##gedcom` LEFT JOIN `##other` ON gedcom_id = o_file AND o_type = 'REPO' GROUP BY gedcom_id"
 )
                         ->fetchAssoc();
-$changes      = Database::prepare(
+$changes      = Database::i()->prepare(
     "SELECT SQL_CACHE g.gedcom_id, COUNT(change_id) AS count FROM `##gedcom` AS g LEFT JOIN `##change` AS c ON g.gedcom_id = c.gedcom_id AND status = 'pending' GROUP BY g.gedcom_id"
 )
                         ->fetchAssoc();

@@ -28,7 +28,7 @@ $controller
     ->setPageTitle(I18N::translate('Module administration'));
 
 $modules = Module::getInstalledModules('disabled');
-$module_status = Database::prepare("SELECT module_name, status FROM `##module`")
+$module_status = Database::i()->prepare("SELECT module_name, status FROM `##module`")
                          ->fetchAssoc();
 
 if (Filter::post('action') === 'update_mods' && Filter::checkCsrf()) {
@@ -38,7 +38,7 @@ if (Filter::post('action') === 'update_mods' && Filter::checkCsrf()) {
             $new_status = $new_status ? 'enabled' : 'disabled';
             $old_status = $module_status[$module->getName()];
             if ($new_status !== $old_status) {
-                Database::prepare("UPDATE `##module` SET status=? WHERE module_name=?")
+                Database::i()->prepare("UPDATE `##module` SET status=? WHERE module_name=?")
                         ->execute(array(
                                       $new_status,
                                       $module->getName()
@@ -59,7 +59,7 @@ if (Filter::post('action') === 'update_mods' && Filter::checkCsrf()) {
 
 if (Filter::post('action') === 'delete' && Filter::checkCsrf()) {
     $module_name = Filter::post('module_name');
-    Database::prepare(
+    Database::i()->prepare(
         "DELETE `##block_setting`" .
         " FROM `##block_setting`" .
         " JOIN `##block` USING (block_id)" .
@@ -67,18 +67,18 @@ if (Filter::post('action') === 'delete' && Filter::checkCsrf()) {
         " WHERE module_name=?"
     )
             ->execute(array($module_name));
-    Database::prepare(
+    Database::i()->prepare(
         "DELETE `##block`" .
         " FROM `##block`" .
         " JOIN `##module` USING (module_name)" .
         " WHERE module_name=?"
     )
             ->execute(array($module_name));
-    Database::prepare("DELETE FROM `##module_setting` WHERE module_name=?")
+    Database::i()->prepare("DELETE FROM `##module_setting` WHERE module_name=?")
             ->execute(array($module_name));
-    Database::prepare("DELETE FROM `##module_privacy` WHERE module_name=?")
+    Database::i()->prepare("DELETE FROM `##module_privacy` WHERE module_name=?")
             ->execute(array($module_name));
-    Database::prepare("DELETE FROM `##module`         WHERE module_name=?")
+    Database::i()->prepare("DELETE FROM `##module`         WHERE module_name=?")
             ->execute(array($module_name));
 
     FlashMessages::addMessage(I18N::translate('The preferences for the module “%s” have been deleted.', $module_name), 'success');

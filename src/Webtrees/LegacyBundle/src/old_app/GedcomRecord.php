@@ -148,7 +148,7 @@ class GedcomRecord
             if (!isset(self::$pending_record_cache[$gedcom_id])) {
                 // Fetch all pending records in one database query
                 self::$pending_record_cache[$gedcom_id] = array();
-                $rows                                   = Database::prepare(
+                $rows                                   = Database::i()->prepare(
                     "SELECT xref, new_gedcom FROM `##change` WHERE status='pending' AND gedcom_id=?"
                 )
                                                                   ->execute(array($gedcom_id))
@@ -257,7 +257,7 @@ class GedcomRecord
         }
         // Some other type of record...
         if (is_null($statement)) {
-            $statement = Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=?");
+            $statement = Database::i()->prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=?");
         }
 
         return $statement->execute(array(
@@ -867,7 +867,7 @@ class GedcomRecord
      */
     public function linkedIndividuals($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
             " FROM `##individuals`" .
             " JOIN `##link` ON (i_file=l_file AND i_id=l_from)" .
@@ -902,7 +902,7 @@ class GedcomRecord
      */
     public function linkedFamilies($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
             " FROM `##families`" .
             " JOIN `##link` ON (f_file=l_file AND f_id=l_from)" .
@@ -936,7 +936,7 @@ class GedcomRecord
      */
     public function linkedSources($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom" .
             " FROM `##sources`" .
             " JOIN `##link` ON (s_file=l_file AND s_id=l_from)" .
@@ -970,7 +970,7 @@ class GedcomRecord
      */
     public function linkedMedia($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom" .
             " FROM `##media`" .
             " JOIN `##link` ON (m_file=l_file AND m_id=l_from)" .
@@ -1004,7 +1004,7 @@ class GedcomRecord
      */
     public function linkedNotes($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
             " FROM `##other`" .
             " JOIN `##link` ON (o_file=l_file AND o_id=l_from)" .
@@ -1039,7 +1039,7 @@ class GedcomRecord
      */
     public function linkedRepositories($link)
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
             " FROM `##other`" .
             " JOIN `##link` ON (o_file=l_file AND o_id=l_from)" .
@@ -1294,7 +1294,7 @@ class GedcomRecord
 
         if ($new_gedcom != $old_gedcom) {
             // Save the changes
-            Database::prepare(
+            Database::i()->prepare(
                 "INSERT INTO `##change` (gedcom_id, xref, old_gedcom, new_gedcom, user_id) VALUES (?, ?, ?, ?, ?)"
             )
                     ->execute(array(
@@ -1353,7 +1353,7 @@ class GedcomRecord
         }
 
         // Create a pending change
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##change` (gedcom_id, xref, old_gedcom, new_gedcom, user_id) VALUES (?, ?, '', ?, ?)"
         )
                 ->execute(array(
@@ -1399,7 +1399,7 @@ class GedcomRecord
         }
 
         // Create a pending change
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##change` (gedcom_id, xref, old_gedcom, new_gedcom, user_id) VALUES (?, ?, ?, ?, ?)"
         )
                 ->execute(array(
@@ -1433,7 +1433,7 @@ class GedcomRecord
     public function deleteRecord()
     {
         // Create a pending change
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##change` (gedcom_id, xref, old_gedcom, new_gedcom, user_id) VALUES (?, ?, ?, '', ?)"
         )
                 ->execute(array(

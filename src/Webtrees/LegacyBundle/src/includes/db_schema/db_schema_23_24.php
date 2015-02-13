@@ -20,7 +20,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // - media table columns should be not null, so we can find
 // media objects with missing files
 
-Database::exec(
+Database::i()->exec(
     "ALTER IGNORE TABLE `##media`" .
     " CHANGE m_ext      m_ext      VARCHAR(6)   COLLATE utf8_unicode_ci NOT NULL," .
     " CHANGE m_type     m_type     VARCHAR(20)  COLLATE utf8_unicode_ci NOT NULL," .

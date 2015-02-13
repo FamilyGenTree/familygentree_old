@@ -22,7 +22,7 @@ use PDOException;
 // - add foreign key constraints
 // Delete any data that might violate the new constraints
 
-Database::exec(
+Database::i()->exec(
     "DELETE FROM `##favorite`" .
     " WHERE user_id   NOT IN (SELECT user_id   FROM `##user`  )" .
     " OR    gedcom_id NOT IN (SELECT gedcom_id FROM `##gedcom`)"
@@ -30,7 +30,7 @@ Database::exec(
 
 // Add the new constraints
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##favorite`" .
         " ADD FOREIGN KEY favorite_fk1 (user_id  ) REFERENCES `##user`   (user_id) ON DELETE CASCADE," .
         " ADD FOREIGN KEY favorite_fk2 (gedcom_id) REFERENCES `##gedcom` (gedcom_id) ON DELETE CASCADE"

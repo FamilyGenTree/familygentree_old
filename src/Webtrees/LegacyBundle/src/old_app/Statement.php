@@ -91,7 +91,7 @@ class Statement
         // If it was a SELECT statement, we cannot run it again.
         $this->executed = strpos($this->pdo_statement->queryString, 'SELECT') === 0;
 
-        Database::logQuery($this->pdo_statement->queryString, $this->pdo_statement->rowCount(), $end - $start, $bind_variables);
+        Database::i()->logQuery($this->pdo_statement->queryString, $this->pdo_statement->rowCount(), $end - $start, $bind_variables);
 
         return $this;
     }

@@ -134,13 +134,13 @@ if ($action === 'update') {
         foreach ($new_blocks as $order => $block_name) {
             if (is_numeric($block_name)) {
                 // existing block
-                Database::prepare("UPDATE `##block` SET block_order=? WHERE block_id=?")
+                Database::i()->prepare("UPDATE `##block` SET block_order=? WHERE block_id=?")
                         ->execute(array(
                                       $order,
                                       $block_name
                                   ));
                 // existing block moved location
-                Database::prepare("UPDATE `##block` SET location=? WHERE block_id=?")
+                Database::i()->prepare("UPDATE `##block` SET location=? WHERE block_id=?")
                         ->execute(array(
                                       $location,
                                       $block_name
@@ -148,7 +148,7 @@ if ($action === 'update') {
             } else {
                 // new block
                 if ($user_id) {
-                    Database::prepare("INSERT INTO `##block` (user_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
+                    Database::i()->prepare("INSERT INTO `##block` (user_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
                             ->execute(array(
                                           $user_id,
                                           $location,
@@ -156,7 +156,7 @@ if ($action === 'update') {
                                           $block_name
                                       ));
                 } else {
-                    Database::prepare("INSERT INTO `##block` (gedcom_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
+                    Database::i()->prepare("INSERT INTO `##block` (gedcom_id, location, block_order, module_name) VALUES (?, ?, ?, ?)")
                             ->execute(array(
                                           $gedcom_id,
                                           $location,
@@ -169,9 +169,9 @@ if ($action === 'update') {
         // deleted blocks
         foreach ($blocks[$location] as $block_id => $block_name) {
             if (!in_array($block_id, $main) && !in_array($block_id, $right)) {
-                Database::prepare("DELETE FROM `##block_setting` WHERE block_id=?")
+                Database::i()->prepare("DELETE FROM `##block_setting` WHERE block_id=?")
                         ->execute(array($block_id));
-                Database::prepare("DELETE FROM `##block`         WHERE block_id=?")
+                Database::i()->prepare("DELETE FROM `##block`         WHERE block_id=?")
                         ->execute(array($block_id));
             }
         }

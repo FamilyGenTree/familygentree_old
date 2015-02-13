@@ -186,7 +186,7 @@ class descendancy_WT_Module extends Module implements ModuleSidebarInterface
         if (strlen($query) < 2) {
             return '';
         }
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT i_id AS xref" .
             " FROM `##individuals`, `##name`" .
             " WHERE (i_id LIKE ? OR n_sort LIKE ?)" .

@@ -49,7 +49,7 @@ class User
     public static function find($user_id)
     {
         if (!array_key_exists($user_id, self::$cache)) {
-            $row = Database::prepare(
+            $row = Database::i()->prepare(
                 "SELECT SQL_CACHE user_id, user_name, real_name, email FROM `##user` WHERE user_id = ?"
             )
                            ->execute(array($user_id))
@@ -73,7 +73,7 @@ class User
      */
     public static function findByIdentifier($identifier)
     {
-        $user_id = Database::prepare(
+        $user_id = Database::i()->prepare(
             "SELECT SQL_CACHE user_id FROM `##user` WHERE ? IN (user_name, email)"
         )
                            ->execute(array($identifier))
@@ -92,7 +92,7 @@ class User
      */
     public static function findByGenealogyRecord(Tree $tree, Individual $individual)
     {
-        $user_id = Database::prepare(
+        $user_id = Database::i()->prepare(
             "SELECT SQL_CACHE user_id" .
             " FROM `##user_gedcom_setting`" .
             " WHERE gedcom_id = ? AND setting_name = 'gedcomid' AND setting_value = ?"
@@ -113,7 +113,7 @@ class User
      */
     public static function findLatestToRegister()
     {
-        $user_id = Database::prepare(
+        $user_id = Database::i()->prepare(
             "SELECT SQL_CACHE u.user_id" .
             " FROM `##user` u" .
             " LEFT JOIN `##user_setting` us ON (u.user_id=us.user_id AND us.setting_name='reg_timestamp') " .
@@ -140,7 +140,7 @@ class User
      */
     public static function create($user_name, $real_name, $email, $password)
     {
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##user` (user_name, real_name, email, password) VALUES (:user_name, :real_name, :email, :password)"
         )
                 ->execute(array(
@@ -152,7 +152,7 @@ class User
 
         // Set default blocks for this user
         $user = User::findByIdentifier($user_name);
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##block` (`user_id`, `location`, `block_order`, `module_name`)" .
             " SELECT :user_id , `location`, `block_order`, `module_name` FROM `##block` WHERE `user_id` = -1"
         )
@@ -168,7 +168,7 @@ class User
      */
     public static function count()
     {
-        return (int)Database::prepare(
+        return (int)Database::i()->prepare(
             "SELECT SQL_CACHE COUNT(*)" .
             " FROM `##user`" .
             " WHERE user_id > 0"
@@ -185,7 +185,7 @@ class User
     {
         $users = array();
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT SQL_CACHE user_id, user_name, real_name, email" .
             " FROM `##user`" .
             " WHERE user_id > 0" .
@@ -207,7 +207,7 @@ class User
      */
     public static function allAdmins()
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT SQL_CACHE user_id, user_name, real_name, email" .
             " FROM `##user`" .
             " JOIN `##user_setting` USING (user_id)" .
@@ -232,7 +232,7 @@ class User
      */
     public static function allVerified()
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT SQL_CACHE user_id, user_name, real_name, email" .
             " FROM `##user`" .
             " JOIN `##user_setting` USING (user_id)" .
@@ -257,7 +257,7 @@ class User
      */
     public static function allLoggedIn()
     {
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT SQL_NO_CACHE DISTINCT user_id, user_name, real_name, email" .
             " FROM `##user`" .
             " JOIN `##session` USING (user_id)"
@@ -291,29 +291,29 @@ class User
     function delete()
     {
         // Don't delete the logs.
-        Database::prepare("UPDATE `##log` SET user_id=NULL WHERE user_id =?")
+        Database::i()->prepare("UPDATE `##log` SET user_id=NULL WHERE user_id =?")
                 ->execute(array($this->user_id));
         // Take over the user’s pending changes. (What else could we do with them?)
-        Database::prepare("DELETE FROM `##change` WHERE user_id=? AND status='accepted'")
+        Database::i()->prepare("DELETE FROM `##change` WHERE user_id=? AND status='accepted'")
                 ->execute(array($this->user_id));
-        Database::prepare("UPDATE `##change` SET user_id=? WHERE user_id=?")
+        Database::i()->prepare("UPDATE `##change` SET user_id=? WHERE user_id=?")
                 ->execute(array(
                               $this->user_id,
                               $this->user_id
                           ));
-        Database::prepare("DELETE `##block_setting` FROM `##block_setting` JOIN `##block` USING (block_id) WHERE user_id=?")
+        Database::i()->prepare("DELETE `##block_setting` FROM `##block_setting` JOIN `##block` USING (block_id) WHERE user_id=?")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##block` WHERE user_id=?")
+        Database::i()->prepare("DELETE FROM `##block` WHERE user_id=?")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##user_gedcom_setting` WHERE user_id=?")
+        Database::i()->prepare("DELETE FROM `##user_gedcom_setting` WHERE user_id=?")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##gedcom_setting` WHERE setting_value=? AND setting_name in ('CONTACT_USER_ID', 'WEBMASTER_USER_ID')")
+        Database::i()->prepare("DELETE FROM `##gedcom_setting` WHERE setting_value=? AND setting_name in ('CONTACT_USER_ID', 'WEBMASTER_USER_ID')")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##user_setting` WHERE user_id=?")
+        Database::i()->prepare("DELETE FROM `##user_setting` WHERE user_id=?")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##message` WHERE user_id=?")
+        Database::i()->prepare("DELETE FROM `##message` WHERE user_id=?")
                 ->execute(array($this->user_id));
-        Database::prepare("DELETE FROM `##user` WHERE user_id=?")
+        Database::i()->prepare("DELETE FROM `##user` WHERE user_id=?")
                 ->execute(array($this->user_id));
     }
 
@@ -325,7 +325,7 @@ class User
      */
     public function checkPassword($password)
     {
-        $password_hash = Database::prepare(
+        $password_hash = Database::i()->prepare(
             "SELECT password FROM `##user` WHERE user_id = ?"
         )
                                  ->execute(array($this->user_id))
@@ -373,7 +373,7 @@ class User
     {
         if ($this->user_name !== $user_name) {
             $this->user_name = $user_name;
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##user` SET user_name = ? WHERE user_id = ?"
             )
                     ->execute(array(
@@ -406,7 +406,7 @@ class User
     {
         if ($this->real_name !== $real_name) {
             $this->real_name = $real_name;
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##user` SET real_name = ? WHERE user_id = ?"
             )
                     ->execute(array(
@@ -439,7 +439,7 @@ class User
     {
         if ($this->email !== $email) {
             $this->email = $email;
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##user` SET email = ? WHERE user_id = ?"
             )
                     ->execute(array(
@@ -460,7 +460,7 @@ class User
      */
     public function setPassword($password)
     {
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##user` SET password = ? WHERE user_id = ?"
         )
                 ->execute(array(
@@ -486,7 +486,7 @@ class User
     {
         if ($this->preferences === null) {
             if ($this->user_id) {
-                $this->preferences = Database::prepare(
+                $this->preferences = Database::i()->prepare(
                     "SELECT SQL_CACHE setting_name, setting_value FROM `##user_setting` WHERE user_id = ?"
                 )
                                              ->execute(array($this->user_id))
@@ -515,7 +515,7 @@ class User
     public function setPreference($setting_name, $setting_value)
     {
         if ($this->user_id && $this->getPreference($setting_name) !== $setting_value) {
-            Database::prepare("REPLACE INTO `##user_setting` (user_id, setting_name, setting_value) VALUES (?, ?, LEFT(?, 255))")
+            Database::i()->prepare("REPLACE INTO `##user_setting` (user_id, setting_name, setting_value) VALUES (?, ?, LEFT(?, 255))")
                     ->execute(array(
                                   $this->user_id,
                                   $setting_name,
@@ -537,7 +537,7 @@ class User
     public function deletePreference($setting_name)
     {
         if ($this->user_id && $this->getPreference($setting_name) !== null) {
-            Database::prepare("DELETE FROM `##user_setting` WHERE user_id = ? AND setting_name = ?")
+            Database::i()->prepare("DELETE FROM `##user_setting` WHERE user_id = ? AND setting_name = ?")
                     ->execute(array(
                                   $this->user_id,
                                   $setting_name

@@ -41,14 +41,14 @@ $gedcom_id = Filter::getInteger('gedcom_id');
 ignore_user_abort(true);
 
 // Run in a transaction
-Database::beginTransaction();
+Database::i()->beginTransaction();
 
 // Only allow one process to import each gedcom at a time
-Database::prepare("SELECT * FROM `##gedcom_chunk` WHERE gedcom_id=? FOR UPDATE")
+Database::i()->prepare("SELECT * FROM `##gedcom_chunk` WHERE gedcom_id=? FOR UPDATE")
         ->execute(array($gedcom_id));
 
 // What is the current import status?
-$row = Database::prepare(
+$row = Database::i()->prepare(
     "SELECT" .
     " SUM(IF(imported, LENGTH(chunk_data), 0)) AS import_offset," .
     " SUM(LENGTH(chunk_data))                  AS import_total" .
@@ -61,7 +61,7 @@ if ($row->import_offset == $row->import_total) {
     Tree::get($gedcom_id)
         ->setPreference('imported', '1');
     // Finished?  Show the maintenance links, similar to admin_trees_manage.php
-    Database::commit();
+    Database::i()->commit();
     $controller->addInlineJavascript(
         'jQuery("#import' . $gedcom_id . '").addClass("hidden");' .
         'jQuery("#actions' . $gedcom_id . '").removeClass("hidden");'
@@ -91,7 +91,7 @@ $progress = $row->import_offset / $row->import_total;
 $first_time = ($row->import_offset == 0);
 // Run for one second.  This keeps the resource requirements low.
 for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
-    $data = Database::prepare(
+    $data = Database::i()->prepare(
         "SELECT gedcom_chunk_id, REPLACE(chunk_data, '\r', '\n') AS chunk_data" .
         " FROM `##gedcom_chunk`" .
         " WHERE gedcom_id=? AND NOT imported" .
@@ -103,7 +103,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
     // If we are loading the first (header) record, make sure the encoding is UTF-8.
     if ($first_time) {
         // Remove any byte-order-mark
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##gedcom_chunk`" .
             " SET chunk_data=TRIM(LEADING ? FROM chunk_data)" .
             " WHERE gedcom_chunk_id=?"
@@ -113,7 +113,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
                               $data->gedcom_chunk_id
                           ));
         // Re-fetch the data, now that we have removed the BOM
-        $data = Database::prepare(
+        $data = Database::i()->prepare(
             "SELECT gedcom_chunk_id, REPLACE(chunk_data, '\r', '\n') AS chunk_data" .
             " FROM `##gedcom_chunk`" .
             " WHERE gedcom_chunk_id=?"
@@ -121,7 +121,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
                         ->execute(array($data->gedcom_chunk_id))
                         ->fetchOneRow();
         if (substr($data->chunk_data, 0, 6) != '0 HEAD') {
-            Database::rollBack();
+            Database::i()->rollBack();
             echo I18N::translate('Invalid GEDCOM file - no header record found.');
             $controller->addInlineJavascript('jQuery("#actions' . $gedcom_id . '").removeClass("hidden");');
 
@@ -137,7 +137,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
         // have been encountered "in the wild".
         switch ($charset) {
             case 'ASCII':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##gedcom_chunk`" .
                     " SET chunk_data=CONVERT(CONVERT(chunk_data USING ascii) USING utf8)" .
                     " WHERE gedcom_id=?"
@@ -150,7 +150,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
             case 'CP437':
             case 'CP850':
                 // CP850 has extra letters with diacritics to replace box-drawing chars in CP437.
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##gedcom_chunk`" .
                     " SET chunk_data=CONVERT(CONVERT(chunk_data USING cp850) USING utf8)" .
                     " WHERE gedcom_id=?"
@@ -170,7 +170,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
             case 'LATIN1':
             case 'LATIN-1':
                 // Convert from ISO-8859-1 (western european) to UTF8.
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##gedcom_chunk`" .
                     " SET chunk_data=CONVERT(CONVERT(chunk_data USING latin1) USING utf8)" .
                     " WHERE gedcom_id=?"
@@ -183,7 +183,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
             case 'LATIN2':
             case 'LATIN-2':
                 // Convert from ISO-8859-2 (eastern european) to UTF8.
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##gedcom_chunk`" .
                     " SET chunk_data=CONVERT(CONVERT(chunk_data USING latin2) USING utf8)" .
                     " WHERE gedcom_id=?"
@@ -192,7 +192,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
                 break;
             case 'MACINTOSH':
                 // Convert from MAC Roman to UTF8.
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##gedcom_chunk`" .
                     " SET chunk_data=CONVERT(CONVERT(chunk_data USING macroman) USING utf8)" .
                     " WHERE gedcom_id=?"
@@ -206,7 +206,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
             case 'ANSEL':
                 // TODO: fisharebest has written a mysql stored procedure that converts ANSEL to UTF-8
             default:
-                Database::rollBack();
+                Database::i()->rollBack();
                 echo '<span class="error">', I18N::translate('Error: converting GEDCOM files from %s encoding to UTF-8 encoding not currently supported.', $charset), '</span>';
                 $controller->addInlineJavascript('jQuery("#actions' . $gedcom_id . '").removeClass("hidden");');
 
@@ -215,7 +215,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
         $first_time = false;
 
         // Re-fetch the data, now that we have performed character set conversion.
-        $data = Database::prepare(
+        $data = Database::i()->prepare(
             "SELECT gedcom_chunk_id, REPLACE(chunk_data, '\r', '\n') AS chunk_data" .
             " FROM `##gedcom_chunk`" .
             " WHERE gedcom_chunk_id=?"
@@ -233,12 +233,12 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
             FunctionsImport::i()->import_record($rec, $gedcom_id, false);
         }
         // Mark the chunk as imported
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##gedcom_chunk` SET imported=TRUE WHERE gedcom_chunk_id=?"
         )
                 ->execute(array($data->gedcom_chunk_id));
     } catch (PDOException $ex) {
-        Database::rollBack();
+        Database::i()->rollBack();
         if ($ex->getCode() === '40001') {
             // "SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock; try restarting transaction"
             // The documentation says that if you get this error, wait and try again.....
@@ -253,7 +253,7 @@ for ($end_time = microtime(true) + 1.0; microtime(true) < $end_time;) {
     }
 }
 
-Database::commit();
+Database::i()->commit();
 
 // Reload.....
 // Use uniqid() to prevent jQuery caching the previous response.

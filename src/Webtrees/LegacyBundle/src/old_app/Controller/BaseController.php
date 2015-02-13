@@ -173,8 +173,8 @@ class BaseController
     protected function pageFooter()
     {
         $ret = $this->getJavascript();
-        if (WT_DEBUG_SQL) {
-            $ret = Database::getQueryLog() . $ret;
+        if (Database::i()->isDebugSql()) {
+            $ret = Database::i()->getQueryLog() . $ret;
         }
 
         return $ret;

@@ -49,7 +49,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         // Create GM tables, if not already present
         try {
-            Database::updateSchema(WT_ROOT . WT_MODULES_DIR . '/googlemap/db_schema/', 'GM_SCHEMA_VERSION', 5);
+            Database::i()->updateSchema(WT_ROOT . WT_MODULES_DIR . '/googlemap/db_schema/', 'GM_SCHEMA_VERSION', 5);
         } catch (PDOException $ex) {
             // The schema update scripts should never fail.  If they do, there is no clean recovery.
             FlashMessages::addMessage($ex->getMessage(), 'danger');
@@ -1707,7 +1707,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 						<option value="XYZ" selected>', /* I18N: first/default option in a drop-down listbox */
         I18N::translate('&lt;select&gt;'), '</option>
 						<option value="XYZ">', I18N::translate('All'), '</option>';
-        $rows = Database::prepare("SELECT pl_id, pl_place FROM `##placelocation` WHERE pl_level=0 ORDER BY pl_place")
+        $rows = Database::i()->prepare("SELECT pl_id, pl_place FROM `##placelocation` WHERE pl_level=0 ORDER BY pl_place")
                         ->fetchAssoc();
         foreach ($rows as $id => $place) {
             echo '<option value="', Filter::escapeHtml($place), '" ';
@@ -1724,7 +1724,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 							<select name="state" onchange="this.form.submit();">
 								<option value="XYZ" selected>', I18N::translate('&lt;select&gt;'), '</option>
 								<option value="XYZ">', I18N::translate('All'), '</option>';
-            $places = Database::prepare("SELECT pl_place FROM `##placelocation` WHERE pl_parent_id=? ORDER BY pl_place")
+            $places = Database::i()->prepare("SELECT pl_place FROM `##placelocation` WHERE pl_parent_id=? ORDER BY pl_place")
                               ->execute(array($par_id))
                               ->fetchOneColumn();
             foreach ($places as $place) {
@@ -1749,7 +1749,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                 echo '<div id="gm_check_title">', $trees[$gedcom_id]->getTitleHtml(), '</div>';
                 //Select all '2 PLAC ' tags in the file and create array
                 $place_list = array();
-                $ged_data   = Database::prepare("SELECT i_gedcom FROM `##individuals` WHERE i_gedcom LIKE ? AND i_file=?")
+                $ged_data   = Database::i()->prepare("SELECT i_gedcom FROM `##individuals` WHERE i_gedcom LIKE ? AND i_file=?")
                                       ->execute(array(
                                                     "%\n2 PLAC %",
                                                     $gedcom_id
@@ -1761,7 +1761,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         $place_list[$match] = true;
                     }
                 }
-                $ged_data = Database::prepare("SELECT f_gedcom FROM `##families` WHERE f_gedcom LIKE ? AND f_file=?")
+                $ged_data = Database::i()->prepare("SELECT f_gedcom FROM `##families` WHERE f_gedcom LIKE ? AND f_file=?")
                                     ->execute(array(
                                                   "%\n2 PLAC %",
                                                   $gedcom_id
@@ -1881,7 +1881,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         $placelist = $this->createPossiblePlaceNames($levels[$z], $z + 1); // add the necessary prefix/postfix values to the place name
                         foreach ($placelist as $key => $placename) {
                             $row =
-                                Database::prepare("SELECT pl_id, pl_place, pl_long, pl_lati, pl_zoom FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ? ORDER BY pl_place")
+                                Database::i()->prepare("SELECT pl_id, pl_place, pl_long, pl_lati, pl_zoom FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ? ORDER BY pl_place")
                                         ->execute(array(
                                                       $z,
                                                       $id,
@@ -1979,7 +1979,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $xrefs .= ", '" . $family->getXref() . "'";
         }
 
-        return Database::prepare(
+        return Database::i()->prepare(
             "SELECT COUNT(*) AS tot FROM `##placelinks` WHERE pl_gid IN (" . $xrefs . ") AND pl_file=?"
         )
                        ->execute(array(WT_GED_ID))
@@ -2085,7 +2085,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             }
             $placelist = $this->createPossiblePlaceNames($parent[$i], $i + 1);
             foreach ($placelist as $placename) {
-                $pl_id = Database::prepare(
+                $pl_id = Database::i()->prepare(
                     "SELECT pl_id FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ? ORDER BY pl_place"
                 )
                                  ->execute(array(
@@ -2104,7 +2104,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $place_id = $pl_id;
         }
 
-        return Database::prepare(
+        return Database::i()->prepare(
             "SELECT sv_lati, sv_long, sv_bearing, sv_elevation, sv_zoom, pl_lati, pl_long, pl_zoom, pl_icon, pl_level" .
             " FROM `##placelocation`" .
             " WHERE pl_id = ?" .
@@ -2791,7 +2791,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             }
             $placelist = $this->createPossiblePlaceNames($par[$i], $i + 1);
             foreach ($placelist as $key => $placename) {
-                $pl_id = (int)Database::prepare(
+                $pl_id = (int)Database::i()->prepare(
                     "SELECT pl_id FROM `##placelocation` WHERE pl_level = :level AND pl_parent_id = :parent_id AND pl_place LIKE :placename"
                 )
                                       ->execute(array(
@@ -2829,7 +2829,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $par[$i]   = trim($par[$i]);
             $placelist = $this->createPossiblePlaceNames($par[$i], $i + 1);
             foreach ($placelist as $placename) {
-                $pl_id = (int)Database::prepare(
+                $pl_id = (int)Database::i()->prepare(
                     "SELECT p_id FROM `##places` WHERE p_parent_id = :place_id AND p_file = :tree_id AND p_place = :placename"
                 )
                                       ->execute(array(
@@ -2919,7 +2919,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         $levelm = $this->setLevelMap($level, $parent);
         $latlng =
-            Database::prepare("SELECT pl_place, pl_id, pl_lati, pl_long, pl_zoom, sv_long, sv_lati, sv_bearing, sv_elevation, sv_zoom FROM `##placelocation` WHERE pl_id=?")
+            Database::i()->prepare("SELECT pl_place, pl_id, pl_lati, pl_long, pl_zoom, sv_long, sv_lati, sv_bearing, sv_elevation, sv_zoom FROM `##placelocation` WHERE pl_id=?")
                     ->execute(array($levelm))
                     ->fetch(PDO::FETCH_ASSOC);
         if ($STREETVIEW && $level != 0) {
@@ -3433,7 +3433,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             if (isset($levelo[($level - 1)])) {  // ** BH not sure yet what this if statement is for ... TODO **
                 // show the current place on the map
 
-                $place = Database::prepare("SELECT pl_id as place_id, pl_place as place, pl_lati as lati, pl_long as `long`, pl_zoom as zoom, pl_icon as icon FROM `##placelocation` WHERE pl_id=?")
+                $place = Database::i()->prepare("SELECT pl_id as place_id, pl_place as place, pl_lati as lati, pl_long as `long`, pl_zoom as zoom, pl_icon as icon FROM `##placelocation` WHERE pl_id=?")
                                  ->execute(array($levelm))
                                  ->fetch(PDO::FETCH_ASSOC);
 
@@ -3477,7 +3477,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $placeidlist = array_keys($placeidlist);
             // note: this implode/array_fill code generates one '?' for each entry in the $placeidlist array
             $placelist =
-                Database::prepare(
+                Database::i()->prepare(
                     "SELECT pl_id as place_id, pl_place as place, pl_lati as lati, pl_long as `long`, pl_zoom as zoom, pl_icon as icon" .
                     " FROM `##placelocation` WHERE pl_id IN (" . implode(',', array_fill(0, count($placeidlist), '?')) . ')'
                 )
@@ -3504,7 +3504,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function placeIdToHierarchy($id)
     {
-        $statement = Database::prepare("SELECT pl_parent_id, pl_place FROM `##placelocation` WHERE pl_id=?");
+        $statement = Database::i()->prepare("SELECT pl_parent_id, pl_place FROM `##placelocation` WHERE pl_id=?");
         $arr       = array();
         while ($id != 0) {
             $row = $statement->execute(array($id))
@@ -3521,7 +3521,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function getHighestIndex()
     {
-        return (int)Database::prepare("SELECT MAX(pl_id) FROM `##placelocation`")
+        return (int)Database::i()->prepare("SELECT MAX(pl_id) FROM `##placelocation`")
                             ->fetchOne();
     }
 
@@ -3530,7 +3530,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
      */
     private function getHighestLevel()
     {
-        return (int)Database::prepare("SELECT MAX(pl_level) FROM `##placelocation`")
+        return (int)Database::i()->prepare("SELECT MAX(pl_level) FROM `##placelocation`")
                             ->fetchOne();
     }
 
@@ -3545,7 +3545,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
     private function getPlaceListLocation($parent_id, $inactive = false)
     {
         if ($inactive) {
-            $rows = Database::prepare(
+            $rows = Database::i()->prepare(
                 "SELECT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon" .
                 " FROM `##placelocation`" .
                 " WHERE pl_parent_id = :parent_id" .
@@ -3557,7 +3557,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                       ))
                             ->fetchAll();
         } else {
-            $rows = Database::prepare(
+            $rows = Database::i()->prepare(
                 "SELECT DISTINCT pl_id, pl_place, pl_lati, pl_long, pl_zoom, pl_icon" .
                 " FROM `##placelocation`" .
                 " INNER JOIN `##places` ON `##placelocation`.pl_place=`##places`.p_place" .
@@ -3603,7 +3603,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         $suffix = str_repeat(';', $maxLevel - count($tmp));
         $level  = count($tmp);
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT pl_id, pl_place, pl_long, pl_lati, pl_zoom, pl_icon FROM `##placelocation` WHERE pl_parent_id=? ORDER BY pl_place"
         )
                         ->execute(array($parent_id))
@@ -3668,7 +3668,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         if ($action == 'addrecord' && Auth::isAdmin()) {
             $statement =
-                Database::prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                Database::i()->prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
             if (($_POST['LONG_CONTROL'] == '') || ($_POST['NEW_PLACE_LONG'] == '') || ($_POST['NEW_PLACE_LATI'] == '')) {
                 $statement->execute(array(
@@ -3704,7 +3704,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         if ($action == 'updaterecord' && Auth::isAdmin()) {
             $statement =
-                Database::prepare("UPDATE `##placelocation` SET pl_place=?, pl_lati=?, pl_long=?, pl_zoom=?, pl_icon=? WHERE pl_id=?");
+                Database::i()->prepare("UPDATE `##placelocation` SET pl_place=?, pl_lati=?, pl_long=?, pl_zoom=?, pl_icon=? WHERE pl_id=?");
 
             if (($_POST['LONG_CONTROL'] == '') || ($_POST['NEW_PLACE_LONG'] == '') || ($_POST['NEW_PLACE_LATI'] == '')) {
                 $statement->execute(array(
@@ -3737,7 +3737,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         // Update placelocation STREETVIEW fields
         // TODO: This ought to be a POST request, rather than a GET request
         if ($action == 'update_sv_params' && Auth::isAdmin()) {
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##placelocation` SET sv_lati=?, sv_long=?, sv_bearing=?, sv_elevation=?, sv_zoom=? WHERE pl_id=?"
             )
                     ->execute(array(
@@ -3755,7 +3755,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
         if ($action == "update") {
             // --- find the place in the file
             $row              =
-                Database::prepare("SELECT pl_place, pl_lati, pl_long, pl_icon, pl_parent_id, pl_level, pl_zoom FROM `##placelocation` WHERE pl_id=?")
+                Database::i()->prepare("SELECT pl_place, pl_lati, pl_long, pl_icon, pl_parent_id, pl_level, pl_zoom FROM `##placelocation` WHERE pl_id=?")
                         ->execute(array($placeid))
                         ->fetchOneRow();
             $place_name       = $row->pl_place;
@@ -3798,7 +3798,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
             do {
                 $row =
-                    Database::prepare("SELECT pl_lati, pl_long, pl_parent_id, pl_zoom FROM `##placelocation` WHERE pl_id=?")
+                    Database::i()->prepare("SELECT pl_lati, pl_long, pl_parent_id, pl_zoom FROM `##placelocation` WHERE pl_id=?")
                             ->execute(array($parent_id))
                             ->fetchOneRow();
                 if (!$row) {
@@ -3848,7 +3848,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                 $parent_id   = $placeid;
                 do {
                     $row =
-                        Database::prepare("SELECT pl_lati, pl_long, pl_parent_id, pl_zoom, pl_level FROM `##placelocation` WHERE pl_id=?")
+                        Database::i()->prepare("SELECT pl_lati, pl_long, pl_parent_id, pl_zoom, pl_level FROM `##placelocation` WHERE pl_id=?")
                                 ->execute(array($parent_id))
                                 ->fetchOneRow();
                     if ($row->pl_lati !== null && $row->pl_long !== null) {
@@ -4680,7 +4680,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             $placelist      = array();
             $j              = 0;
             $gedcom_records =
-                Database::prepare("SELECT i_gedcom FROM `##individuals` WHERE i_file=? UNION ALL SELECT f_gedcom FROM `##families` WHERE f_file=?")
+                Database::i()->prepare("SELECT i_gedcom FROM `##individuals` WHERE i_file=? UNION ALL SELECT f_gedcom FROM `##families` WHERE f_file=?")
                         ->execute(array(
                                       WT_GED_ID,
                                       WT_GED_ID
@@ -4771,7 +4771,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         $escparent = 'Unknown';
                     }
                     $row =
-                        Database::prepare("SELECT pl_id, pl_long, pl_lati, pl_zoom FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ?")
+                        Database::i()->prepare("SELECT pl_id, pl_long, pl_lati, pl_zoom FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ?")
                                 ->execute(array(
                                               $i,
                                               $parent_id,
@@ -4782,7 +4782,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         // Create higher-level places, if necessary
                         if (empty($row)) {
                             $highestIndex++;
-                            Database::prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_zoom) VALUES (?, ?, ?, ?, ?)")
+                            Database::i()->prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_zoom) VALUES (?, ?, ?, ?, ?)")
                                     ->execute(array(
                                                   $highestIndex,
                                                   $parent_id,
@@ -4799,7 +4799,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         // Create lowest-level place, if necessary
                         if (empty($row->pl_id)) {
                             $highestIndex++;
-                            Database::prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom) VALUES (?, ?, ?, ?, ?, ?, ?)")
+                            Database::i()->prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom) VALUES (?, ?, ?, ?, ?, ?, ?)")
                                     ->execute(array(
                                                   $highestIndex,
                                                   $parent_id,
@@ -4812,7 +4812,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                             echo Filter::escapeHtml($escparent), '<br>';
                         } else {
                             if (empty($row->pl_long) && empty($row->pl_lati) && $place['lati'] != '0' && $place['long'] != '0') {
-                                Database::prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=? WHERE pl_id=?")
+                                Database::i()->prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=? WHERE pl_id=?")
                                         ->execute(array(
                                                       $place['lati'],
                                                       $place['long'],
@@ -4888,7 +4888,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                 $country_names[$key] = I18N::translate($key);
             }
             if (isset($_POST['cleardatabase'])) {
-                Database::exec("DELETE FROM `##placelocation` WHERE 1=1");
+                Database::i()->exec("DELETE FROM `##placelocation` WHERE 1=1");
             }
             if (!empty($_FILES['placesfile']['tmp_name'])) {
                 $lines = file($_FILES['placesfile']['tmp_name']);
@@ -4988,7 +4988,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         $escparent = 'Unknown';
                     }
                     $row =
-                        Database::prepare("SELECT pl_id, pl_long, pl_lati, pl_zoom, pl_icon FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ? ORDER BY pl_place")
+                        Database::i()->prepare("SELECT pl_id, pl_long, pl_lati, pl_zoom, pl_icon FROM `##placelocation` WHERE pl_level=? AND pl_parent_id=? AND pl_place LIKE ? ORDER BY pl_place")
                                 ->execute(array(
                                               $i,
                                               $parent_id,
@@ -5006,7 +5006,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                 $zoomlevel = $this->getSetting('GM_MAX_ZOOM');
                             }
                             if (($place['lati'] == '0') || ($place['long'] == '0') || (($i + 1) < count($parent))) {
-                                Database::prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?)")
+                                Database::i()->prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?)")
                                         ->execute(array(
                                                       $highestIndex,
                                                       $parent_id,
@@ -5045,7 +5045,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                 } elseif ($pl_long < 0) {
                                     $place['long'] = 'W' . abs($pl_long);
                                 }
-                                Database::prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+                                Database::i()->prepare("INSERT INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
                                         ->execute(array(
                                                       $highestIndex,
                                                       $parent_id,
@@ -5062,7 +5062,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                     } else {
                         $parent_id = $row->pl_id;
                         if ((isset($_POST['overwritedata'])) && ($i + 1 == count($parent))) {
-                            Database::prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=?, pl_zoom=?, pl_icon=? WHERE pl_id=?")
+                            Database::i()->prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=?, pl_zoom=?, pl_icon=? WHERE pl_id=?")
                                     ->execute(array(
                                                   $place['lati'],
                                                   $place['long'],
@@ -5072,7 +5072,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                               ));
                         } else {
                             if ((($row->pl_long == '0') || ($row->pl_long == null)) && (($row->pl_lati == '0') || ($row->pl_lati == null))) {
-                                Database::prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=? WHERE pl_id=?")
+                                Database::i()->prepare("UPDATE `##placelocation` SET pl_lati=?, pl_long=? WHERE pl_id=?")
                                         ->execute(array(
                                                       $place['lati'],
                                                       $place['long'],
@@ -5080,7 +5080,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                                                   ));
                             }
                             if (empty($row->pl_icon) && !empty($place['icon'])) {
-                                Database::prepare("UPDATE `##placelocation` SET pl_icon=? WHERE pl_id=?")
+                                Database::i()->prepare("UPDATE `##placelocation` SET pl_icon=? WHERE pl_id=?")
                                         ->execute(array(
                                                       $place['icon'],
                                                       $parent_id
@@ -5095,12 +5095,12 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
 
         if ($action == 'DeleteRecord') {
             $exists =
-                Database::prepare("SELECT 1 FROM `##placelocation` WHERE pl_parent_id=?")
+                Database::i()->prepare("SELECT 1 FROM `##placelocation` WHERE pl_parent_id=?")
                         ->execute(array($deleteRecord))
                         ->fetchOne();
 
             if (!$exists) {
-                Database::prepare("DELETE FROM `##placelocation` WHERE pl_id=?")
+                Database::i()->prepare("DELETE FROM `##placelocation` WHERE pl_id=?")
                         ->execute(array($deleteRecord));
             } else {
                 echo '<table class="facts_table"><tr><td>', I18N::translate('Location not removed: this location contains sub-locations'), '</td></tr></table>';
@@ -5205,7 +5205,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             echo '</td>';
             echo '<td class="narrow"><a href="#" onclick="edit_place_location(', $place['place_id'], ');return false;" class="icon-edit" title="', I18N::translate('Edit'), '"></a></td>';
             $noRows =
-                Database::prepare("SELECT COUNT(pl_id) FROM `##placelocation` WHERE pl_parent_id=?")
+                Database::i()->prepare("SELECT COUNT(pl_id) FROM `##placelocation` WHERE pl_parent_id=?")
                         ->execute(array($place['place_id']))
                         ->fetchOne();
             if ($noRows == 0) { ?>

@@ -23,7 +23,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 // Create all of the tables needed for this module
 
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##placelocation` (" .
     " pl_id        INTEGER      NOT NULL," .
     " pl_parent_id INTEGER          NULL," .

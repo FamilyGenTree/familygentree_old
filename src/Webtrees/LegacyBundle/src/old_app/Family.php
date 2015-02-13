@@ -99,7 +99,7 @@ class Family extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT f_gedcom FROM `##families` WHERE f_id=? AND f_file=?");
+            $statement = Database::i()->prepare("SELECT f_gedcom FROM `##families` WHERE f_id=? AND f_file=?");
         }
 
         return $statement->execute(array(

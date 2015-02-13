@@ -2610,7 +2610,7 @@ function listStartHandler($attrs)
     // Some filters/sorts can be applied using SQL, while others require PHP
     switch ($listname) {
         case "pending":
-            $rows = Database::prepare(
+            $rows = Database::i()->prepare(
                 "SELECT xref, gedcom_id, CASE new_gedcom WHEN '' THEN old_gedcom ELSE new_gedcom END AS gedcom" . " FROM `##change`" . " WHERE (xref, change_id) IN (" . "  SELECT xref, MAX(change_id)" . "   FROM `##change`" . "   WHERE status='pending' AND gedcom_id=?" . "   GROUP BY xref" . " )"
             )
                             ->execute(array(WT_GED_ID))
@@ -2659,7 +2659,7 @@ function listStartHandler($attrs)
                             if ($match[1] != "") {
                                 $names = explode(" ", $match[1]);
                                 foreach ($names as $name) {
-                                    $sql_where[] = "{$attr}.n_full LIKE " . Database::quote("%{$name}%");
+                                    $sql_where[] = "{$attr}.n_full LIKE " . Database::i()->quote("%{$name}%");
                                 }
                             }
                             // Let the DB do the name sorting even when no name was entered
@@ -2680,7 +2680,7 @@ function listStartHandler($attrs)
                         $sql_join[]  = "JOIN `##link` AS {$attr}a ON ({$attr}a.l_file={$sql_col_prefix}file AND {$attr}a.l_from={$sql_col_prefix}id)";
                         $sql_join[]  = "JOIN `##name` AS {$attr}b ON ({$attr}b.n_file={$sql_col_prefix}file AND n_id={$sql_col_prefix}id)";
                         $sql_where[] = "{$attr}a.l_type=IN ('HUSB, 'WIFE')";
-                        $sql_where[] = "{$attr}.n_full LIKE " . Database::quote("%{$match[1]}%");
+                        $sql_where[] = "{$attr}.n_full LIKE " . Database::i()->quote("%{$match[1]}%");
                         if ($sortby == "NAME") {
                             $sortby         = "";
                             $sql_order_by[] = "{$attr}.n_sort";
@@ -2689,7 +2689,7 @@ function listStartHandler($attrs)
                     } elseif (preg_match('/^(?:\w+):PLAC CONTAINS (.+)$/', $value, $match)) {
                         $sql_join[]  = "JOIN `##places` AS {$attr}a ON ({$attr}a.p_file={$sql_col_prefix}file)";
                         $sql_join[]  = "JOIN `##placelinks` AS {$attr}b ON ({$attr}a.p_file={$attr}b.pl_file AND {$attr}b.pl_p_id={$attr}a.p_id AND {$attr}b.pl_gid={$sql_col_prefix}id)";
-                        $sql_where[] = "{$attr}a.p_place LIKE " . Database::quote("%{$match[1]}%");
+                        $sql_where[] = "{$attr}a.p_place LIKE " . Database::i()->quote("%{$match[1]}%");
                         // Don't unset this filter. This is just the first primary PLAC filter to reduce the returned list from the DB
                     } /**
                      * General Purpose DB Filter for Individual and Family Lists
@@ -2709,7 +2709,7 @@ function listStartHandler($attrs)
                         if ($match[3] != "") {
                             $query .= "%{$match[3]}%";
                         }
-                        $sql_where[] = "i_gedcom LIKE " . Database::quote($query);
+                        $sql_where[] = "i_gedcom LIKE " . Database::i()->quote($query);
                     } elseif ($listname == "family" && preg_match('/^(\w*):*(\w*) CONTAINS (.+)$/', $value, $match)) {
                         $query = "";
                         // Level 1 tag
@@ -2724,7 +2724,7 @@ function listStartHandler($attrs)
                         if ($match[3] != "") {
                             $query .= "%{$match[3]}%";
                         }
-                        $sql_where[] = "f_gedcom LIKE " . Database::quote($query);
+                        $sql_where[] = "f_gedcom LIKE " . Database::i()->quote($query);
                     } else {
                         // What other filters can we apply in SQL?
                     }

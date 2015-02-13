@@ -34,7 +34,7 @@ if ($action === 'update_mods' && Filter::checkCsrf()) {
     foreach ($modules as $module) {
         foreach (Tree::getAll() as $tree) {
             $access_level = Filter::post('access-' . $module->getName() . '-' . $tree->getTreeId(), WT_REGEX_INTEGER, $module->defaultAccessLevel());
-            Database::prepare(
+            Database::i()->prepare(
                 "REPLACE INTO `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'report', ?)"
             )
                     ->execute(array(

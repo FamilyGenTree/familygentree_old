@@ -20,7 +20,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 //
 // Version 0: empty database
 // Version 1: create the tables, as per PGV 4.2.1
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##favorites` (" .
     " fv_id       INTEGER AUTO_INCREMENT NOT NULL," .
     " fv_username VARCHAR(32)            NOT NULL," .

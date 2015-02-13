@@ -22,7 +22,7 @@ use PDOException;
 // - create the wt_gedcom_chunk table to import gedcoms in
 // blocks of data smaller than the max_allowed_packet restriction.
 
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##gedcom_chunk` (" .
     " gedcom_chunk_id INTEGER AUTO_INCREMENT NOT NULL," .
     " gedcom_id       INTEGER                NOT NULL," .
@@ -35,7 +35,7 @@ Database::exec(
 );
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##gedcom` DROP import_gedcom, DROP import_offset"
     );
 } catch (PDOException $ex) {

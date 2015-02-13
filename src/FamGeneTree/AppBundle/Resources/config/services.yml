@@ -5,6 +5,7 @@ services:
 
   fam_gene_tree_app.configuration.factory:
     class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
+    arguments: [@service_container]
 
   fam_gene_tree_app.configuration:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig

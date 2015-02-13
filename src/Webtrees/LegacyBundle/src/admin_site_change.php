@@ -29,10 +29,10 @@ $controller
     ->restrictAccess(Auth::isManager())
     ->setPageTitle(I18N::translate('Changes'));
 
-$earliest = Database::prepare("SELECT DATE(MIN(change_time)) FROM `##change`")
+$earliest = Database::i()->prepare("SELECT DATE(MIN(change_time)) FROM `##change`")
                     ->execute(array())
                     ->fetchOne();
-$latest   = Database::prepare("SELECT DATE(MAX(change_time)) FROM `##change`")
+$latest   = Database::i()->prepare("SELECT DATE(MAX(change_time)) FROM `##change`")
                     ->execute(array())
                     ->fetchOne();
 
@@ -129,14 +129,14 @@ switch ($action) {
             " LEFT JOIN `##user`   USING (user_id)" . // user may be deleted
             " LEFT JOIN `##gedcom` USING (gedcom_id)" . // gedcom may be deleted
             $WHERE;
-        Database::prepare($DELETE)
+        Database::i()->prepare($DELETE)
                 ->execute($args);
         break;
     case 'export':
         Zend_Session::writeClose();
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="webtrees-changes.csv"');
-        $rows = Database::prepare($SELECT1 . $WHERE . ' ORDER BY change_id')
+        $rows = Database::i()->prepare($SELECT1 . $WHERE . ' ORDER BY change_id')
                         ->execute($args)
                         ->fetchAll();
         foreach ($rows as $row) {
@@ -201,7 +201,7 @@ switch ($action) {
         }
 
         // This becomes a JSON list, not array, so need to fetch with numeric keys.
-        $data = Database::prepare($SELECT1 . $WHERE . $ORDER_BY . $LIMIT)
+        $data = Database::i()->prepare($SELECT1 . $WHERE . $ORDER_BY . $LIMIT)
                         ->execute($args)
                         ->fetchAll(PDO::FETCH_NUM);
         foreach ($data as &$datum) {
@@ -214,9 +214,9 @@ switch ($action) {
         }
 
         // Total filtered/unfiltered rows
-        $recordsFiltered = Database::prepare("SELECT FOUND_ROWS()")
+        $recordsFiltered = Database::i()->prepare("SELECT FOUND_ROWS()")
                                    ->fetchOne();
-        $recordsTotal    = Database::prepare($SELECT2 . $WHERE)
+        $recordsTotal    = Database::i()->prepare($SELECT2 . $WHERE)
                                    ->execute($args)
                                    ->fetchOne();
 

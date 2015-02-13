@@ -166,7 +166,7 @@ class ClippingsCart
             $filetext   = FunctionsExport::i()->gedcom_header(WT_GEDCOM);
             // Include SUBM/SUBN records, if they exist
             $subn =
-                Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_type=? AND o_file=?")
+                Database::i()->prepare("SELECT o_gedcom FROM `##other` WHERE o_type=? AND o_file=?")
                         ->execute(array(
                                       'SUBN',
                                       WT_GED_ID
@@ -176,7 +176,7 @@ class ClippingsCart
                 $filetext .= $subn . "\n";
             }
             $subm =
-                Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_type=? AND o_file=?")
+                Database::i()->prepare("SELECT o_gedcom FROM `##other` WHERE o_type=? AND o_file=?")
                         ->execute(array(
                                       'SUBM',
                                       WT_GED_ID

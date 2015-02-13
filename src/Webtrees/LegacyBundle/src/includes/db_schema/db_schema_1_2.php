@@ -20,7 +20,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // - create the wt_session table to store session data in the database,
 // rather than in the filesystem.
 
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##session` (" .
     " session_id   CHAR(32)    NOT NULL," .
     " session_time TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," .

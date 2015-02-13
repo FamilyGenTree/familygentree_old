@@ -22,14 +22,14 @@ namespace Webtrees\LegacyBundle\Legacy;
 
 use PDOException;
 
-Database::exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('MEDIA_EXTERNAL')");
+Database::i()->exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('MEDIA_EXTERNAL')");
 
 // Delete old table
-Database::exec("DROP TABLE IF EXISTS `##media_mapping`");
+Database::i()->exec("DROP TABLE IF EXISTS `##media_mapping`");
 
 // Make this table look like all the others
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##media`" .
         " DROP   m_id," .
         " CHANGE m_media   m_id       VARCHAR(20)  COLLATE utf8_unicode_ci NOT NULL," .
@@ -46,7 +46,7 @@ try {
 }
 
 // Populate the new column
-Database::exec("UPDATE `##media` SET m_type = SUBSTRING_INDEX(SUBSTRING_INDEX(m_gedcom, '\n3 TYPE ', -1), '\n', 1) WHERE m_gedcom like '%\n3 TYPE %'");
+Database::i()->exec("UPDATE `##media` SET m_type = SUBSTRING_INDEX(SUBSTRING_INDEX(m_gedcom, '\n3 TYPE ', -1), '\n', 1) WHERE m_gedcom like '%\n3 TYPE %'");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

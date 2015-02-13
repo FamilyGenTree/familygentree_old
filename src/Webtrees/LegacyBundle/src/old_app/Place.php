@@ -48,7 +48,7 @@ class Place
     {
         $place_id = 0;
         foreach (array_reverse($this->gedcom_place) as $place) {
-            $place_id = Database::prepare(
+            $place_id = Database::i()->prepare(
                 "SELECT SQL_CACHE p_id FROM `##places` WHERE p_parent_id = :parent_id AND p_place = :place AND p_file = :tree_id"
             )
                                 ->execute(array(
@@ -82,7 +82,7 @@ class Place
             $parent_text = '';
         }
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT SQL_CACHE p_place FROM `##places`" .
             " WHERE p_parent_id = :parent_id AND p_file = :tree_id" .
             " ORDER BY p_place COLLATE :collation"
@@ -211,7 +211,7 @@ class Place
     {
         $places = array();
         $rows   =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE CONCAT_WS(', ', p1.p_place, p2.p_place, p3.p_place, p4.p_place, p5.p_place, p6.p_place, p7.p_place, p8.p_place, p9.p_place)" .
                 " FROM      `##places` AS p1" .
                 " LEFT JOIN `##places` AS p2 ON (p1.p_parent_id=p2.p_id)" .
@@ -244,7 +244,7 @@ class Place
     {
         $places = array();
         $rows   =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE CONCAT_WS(', ', p1.p_place, p2.p_place, p3.p_place, p4.p_place, p5.p_place, p6.p_place, p7.p_place, p8.p_place, p9.p_place)" .
                 " FROM      `##places` AS p1" .
                 " LEFT JOIN `##places` AS p2 ON (p1.p_parent_id=p2.p_id)" .

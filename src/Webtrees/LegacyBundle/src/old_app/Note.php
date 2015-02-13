@@ -65,7 +65,7 @@ class Note extends GedcomRecord
     protected function canShowByType($access_level)
     {
         // Hide notes if they are attached to private records
-        $linked_ids = Database::prepare(
+        $linked_ids = Database::i()->prepare(
             "SELECT l_from FROM `##link` WHERE l_to=? AND l_file=?"
         )
                               ->execute(array(
@@ -96,7 +96,7 @@ class Note extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=? AND o_type='NOTE'");
+            $statement = Database::i()->prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=? AND o_type='NOTE'");
         }
 
         return $statement->execute(array(

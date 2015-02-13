@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bombayworks/zendframework1",
-            "version": "v1.12.10",
+            "version": "v1.12.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bombayworks/zendframework1.git",
-                "reference": "8d28b59c8fe820f6ed2683cc4fad6551a4576432"
+                "reference": "64447e39d4c7a08ba17d2087a89caab713804d27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bombayworks/zendframework1/zipball/8d28b59c8fe820f6ed2683cc4fad6551a4576432",
-                "reference": "8d28b59c8fe820f6ed2683cc4fad6551a4576432",
+                "url": "https://api.github.com/repos/bombayworks/zendframework1/zipball/64447e39d4c7a08ba17d2087a89caab713804d27",
+                "reference": "64447e39d4c7a08ba17d2087a89caab713804d27",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "ZF1",
                 "framework"
             ],
-            "time": "2015-01-14 20:01:12"
+            "time": "2015-02-11 16:00:41"
         },
         {
             "name": "doctrine/annotations",
@@ -3079,17 +3079,17 @@
         },
         {
             "name": "sensio/generator-bundle",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "target-dir": "Sensio/Bundle/GeneratorBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "9e23fc3de265ae013690d84aab98e7a84f46edcd"
+                "reference": "4b09746520a826a7bf34a466ba31c7d8740fef7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/9e23fc3de265ae013690d84aab98e7a84f46edcd",
-                "reference": "9e23fc3de265ae013690d84aab98e7a84f46edcd",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/4b09746520a826a7bf34a466ba31c7d8740fef7e",
+                "reference": "4b09746520a826a7bf34a466ba31c7d8740fef7e",
                 "shasum": ""
             },
             "require": {
@@ -3123,7 +3123,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2015-01-13 07:33:46"
+            "time": "2015-02-11 07:21:23"
         }
     ],
     "aliases": [],

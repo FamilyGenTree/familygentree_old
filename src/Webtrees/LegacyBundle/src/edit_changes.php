@@ -42,14 +42,14 @@ echo '<div id="pending"><h2>', I18N::translate('Pending changes'), '</h2>';
 
 switch ($action) {
     case 'undo':
-        $gedcom_id = Database::prepare("SELECT gedcom_id FROM `##change` WHERE change_id=?")
+        $gedcom_id = Database::i()->prepare("SELECT gedcom_id FROM `##change` WHERE change_id=?")
                              ->execute(array($change_id))
                              ->fetchOne();
-        $xref      = Database::prepare("SELECT xref      FROM `##change` WHERE change_id=?")
+        $xref      = Database::i()->prepare("SELECT xref      FROM `##change` WHERE change_id=?")
                              ->execute(array($change_id))
                              ->fetchOne();
         // Undo a change, and subsequent changes to the same record
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##change`" .
             " SET   status     = 'rejected'" .
             " WHERE status     = 'pending'" .
@@ -64,14 +64,14 @@ switch ($action) {
                           ));
         break;
     case 'accept':
-        $gedcom_id = Database::prepare("SELECT gedcom_id FROM `##change` WHERE change_id=?")
+        $gedcom_id = Database::i()->prepare("SELECT gedcom_id FROM `##change` WHERE change_id=?")
                              ->execute(array($change_id))
                              ->fetchOne();
-        $xref      = Database::prepare("SELECT xref      FROM `##change` WHERE change_id=?")
+        $xref      = Database::i()->prepare("SELECT xref      FROM `##change` WHERE change_id=?")
                              ->execute(array($change_id))
                              ->fetchOne();
         // Accept a change, and all previous changes to the same record
-        $changes = Database::prepare(
+        $changes = Database::i()->prepare(
             "SELECT change_id, gedcom_id, gedcom_name, xref, old_gedcom, new_gedcom" .
             " FROM  `##change` c" .
             " JOIN  `##gedcom` g USING (gedcom_id)" .
@@ -95,13 +95,13 @@ switch ($action) {
                 // add/update
                 FunctionsImport::i()->update_record($change->new_gedcom, $gedcom_id, false);
             }
-            Database::prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
+            Database::i()->prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
                     ->execute(array($change->change_id));
             Log::addEditLog("Accepted change {$change->change_id} for {$change->xref} / {$change->gedcom_name} into database");
         }
         break;
     case 'undoall':
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##change`" .
             " SET status='rejected'" .
             " WHERE status='pending' AND gedcom_id=?"
@@ -109,7 +109,7 @@ switch ($action) {
                 ->execute(array(WT_GED_ID));
         break;
     case 'acceptall':
-        $changes = Database::prepare(
+        $changes = Database::i()->prepare(
             "SELECT change_id, gedcom_id, gedcom_name, xref, old_gedcom, new_gedcom" .
             " FROM `##change` c" .
             " JOIN `##gedcom` g USING (gedcom_id)" .
@@ -126,14 +126,14 @@ switch ($action) {
                 // add/update
                 FunctionsImport::i()->update_record($change->new_gedcom, $change->gedcom_id, false);
             }
-            Database::prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
+            Database::i()->prepare("UPDATE `##change` SET status='accepted' WHERE change_id=?")
                     ->execute(array($change->change_id));
             Log::addEditLog("Accepted change {$change->change_id} for {$change->xref} / {$change->gedcom_name} into database");
         }
         break;
 }
 
-$changed_gedcoms = Database::prepare(
+$changed_gedcoms = Database::i()->prepare(
     "SELECT g.gedcom_name" .
     " FROM `##change` c" .
     " JOIN `##gedcom` g USING (gedcom_id)" .
@@ -143,7 +143,7 @@ $changed_gedcoms = Database::prepare(
                            ->fetchOneColumn();
 
 if ($changed_gedcoms) {
-    $changes = Database::prepare(
+    $changes = Database::i()->prepare(
         "SELECT c.*, u.user_name, u.real_name, g.gedcom_name, new_gedcom, old_gedcom" .
         " FROM `##change` c" .
         " JOIN `##user`   u USING (user_id)" .

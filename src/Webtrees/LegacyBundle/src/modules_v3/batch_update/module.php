@@ -311,7 +311,7 @@ class batch_update_WT_Module extends Module implements ModuleConfigInterface
             }
         }
         $this->all_xrefs =
-            Database::prepare(implode(' UNION ', $sql) . ' ORDER BY 1 ASC')
+            Database::i()->prepare(implode(' UNION ', $sql) . ' ORDER BY 1 ASC')
                     ->execute($vars)
                     ->fetchAssoc();
     }

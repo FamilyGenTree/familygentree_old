@@ -22,7 +22,7 @@ use PDOException;
 
 // Create tables, if not already present
 try {
-    Database::updateSchema(WT_MODULES_DIR . 'user_blog/db_schema/', 'NB_SCHEMA_VERSION', 3);
+    Database::i()->updateSchema(WT_MODULES_DIR . 'user_blog/db_schema/', 'NB_SCHEMA_VERSION', 3);
 } catch (PDOException $ex) {
     // The schema update scripts should never fail.  If they do, there is no clean recovery.
     FlashMessages::addMessage($ex->getMessage(), 'danger');
@@ -58,7 +58,7 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
             case 'deletenews':
                 $news_id = Filter::getInteger('news_id');
                 if ($news_id) {
-                    Database::prepare("DELETE FROM `##news` WHERE news_id = ?")
+                    Database::i()->prepare("DELETE FROM `##news` WHERE news_id = ?")
                             ->execute(array($news_id));
                 }
                 break;
@@ -71,7 +71,7 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
                 }
             }
         }
-        $usernews = Database::prepare(
+        $usernews = Database::i()->prepare(
             "SELECT SQL_CACHE news_id, user_id, gedcom_id, UNIX_TIMESTAMP(updated) AS updated, subject, body FROM `##news` WHERE user_id = ? ORDER BY updated DESC"
         )
                             ->execute(array(Auth::id()))

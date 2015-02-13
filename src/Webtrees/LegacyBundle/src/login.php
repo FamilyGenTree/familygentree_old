@@ -19,132 +19,166 @@ namespace Webtrees\LegacyBundle\Legacy;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
+use Fgt\UrlConstants;
 use Rhumsaa\Uuid\Uuid;
-use Zend_Controller_Request_Http;
+use Webtrees\LegacyBundle\Context\Application\Controller\AbstractSymfonyConnectorController;
+use Webtrees\LegacyBundle\Context\Application\View\LegacyPageController;
 use Zend_Session;
 
-define('WT_SCRIPT_NAME', 'login.php');
+define('WT_SCRIPT_NAME', UrlConstants::LOGIN_PHP);
 Application::i()->init()->started();
 
+class LoginPhp extends AbstractSymfonyConnectorController
+{
+
+    public function run()
+    {
+
 // If we are already logged in, then go to the “Home page”
-if (Auth::check() && WT_GED_ID) {
-    header('Location: ' . Config::get(Config::BASE_URL));
-
-    return;
-}
-
-$controller = Application::i()->setActiveController(new PageController());
-
-$REQUIRE_ADMIN_AUTH_REGISTRATION = Site::getPreference('REQUIRE_ADMIN_AUTH_REGISTRATION');
-
-$action          = Filter::post('action');
-$user_realname   = Filter::post('user_realname');
-$user_name       = Filter::post('user_name');
-$user_email      = Filter::postEmail('user_email');
-$user_password01 = Filter::post('user_password01', WT_REGEX_PASSWORD);
-$user_password02 = Filter::post('user_password02', WT_REGEX_PASSWORD);
-$user_comments   = Filter::post('user_comments');
-$user_password   = Filter::post('user_password');
-$user_hashcode   = Filter::post('user_hashcode');
-$url             = Filter::post('url'); // Not actually a URL - just a path
-$username        = Filter::post('username');
-$password        = Filter::post('password');
-$timediff        = Filter::postInteger('timediff', -43200, 50400, 0); // Same range as date('Z')
-
-// These parameters may come from the URL which is emailed to users.
-if (!$action) {
-    $action = Filter::get('action');
-}
-if (!$user_name) {
-    $user_name = Filter::get('user_name', WT_REGEX_USERNAME);
-}
-if (!$user_hashcode) {
-    $user_hashcode = Filter::get('user_hashcode');
-}
-if (!$url) {
-    $url = Filter::get('url');
-}
-
-$message = '';
-
-switch ($action) {
-    case 'login':
-        try {
-            if (!$_COOKIE) {
-                Log::addAuthenticationLog('Login failed (no session cookies): ' . $username);
-                throw new \Exception(I18N::translate('You cannot login because your browser does not accept cookies.'));
-            }
-
-            $user = User::findByIdentifier($username);
-
-            if (!$user) {
-                Log::addAuthenticationLog('Login failed (no such user/email): ' . $username);
-                throw new \Exception(I18N::translate('The username or password is incorrect.'));
-            }
-
-            if (!$user->checkPassword($password)) {
-                Log::addAuthenticationLog('Login failed (incorrect password): ' . $username);
-                throw new \Exception(I18N::translate('The username or password is incorrect.'));
-            }
-
-            if (!$user->getPreference('verified')) {
-                Log::addAuthenticationLog('Login failed (not verified by user): ' . $username);
-                throw new \Exception(I18N::translate('This account has not been verified.  Please check your email for a verification message.'));
-            }
-
-            if (!$user->getPreference('verified_by_admin')) {
-                Log::addAuthenticationLog('Login failed (not approved by admin): ' . $username);
-                throw new \Exception(I18N::translate('This account has not been approved.  Please wait for an administrator to approve it.'));
-            }
-
-            Auth::login($user);
-            Log::addAuthenticationLog('Login: ' . Auth::user()
-                                                      ->getUserName() . '/' . Auth::user()
-                                                                                  ->getRealName());
-
-            Globals::i()->WT_SESSION->timediff      = $timediff;
-            Globals::i()->WT_SESSION->locale        = Auth::user()
-                                                          ->getPreference('language');
-            Globals::i()->WT_SESSION->theme_id      = Auth::user()
-                                                          ->getPreference('theme');
-            Globals::i()->WT_SESSION->activity_time = WT_TIMESTAMP;
-
-            Auth::user()
-                ->setPreference('sessiontime', WT_TIMESTAMP);
-
-            // If we’ve clicked login from the login page, we don’t want to go back there.
-            if (strpos($url, WT_SCRIPT_NAME) === 0) {
-                $url = '';
-            }
-
-            // We're logging in as an administrator
-            if (Auth::isAdmin()) {
-                // Check for updates
-                $latest_version_txt = Functions::i()->fetch_latest_version();
-                if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
-                    list($latest_version, $earliest_version, $download_url) = explode('|', $latest_version_txt);
-                    if (version_compare(WT_VERSION, $latest_version) < 0) {
-                        // An upgrade is available.  Let the admin know, by redirecting to the upgrade wizard
-                        $url = 'admin_site_upgrade.php';
-                    }
-                } else {
-                    // Cannot determine the latest version
-                }
-            }
-
-            // Redirect to the target URL
-            header('Location: ' . Config::get(Config::BASE_URL) . $url);
-            // Explicitly write the session data before we exit,
-            // as it doesn’t always happen when using APC.
-            Zend_Session::writeClose();
+        if (Auth::check() && WT_GED_ID) {
+            header('Location: ' . $this->getConfig()->getValue(Config::BASE_URL));
 
             return;
-        } catch (\Exception $ex) {
-            $message = $ex->getMessage();
         }
-    // No break;
 
-    default:
+        $controller = Application::i()->setActiveController(new LegacyPageController($this->getTemplating()));
+
+        $REQUIRE_ADMIN_AUTH_REGISTRATION = $this->getConfig()->getValue('REQUIRE_ADMIN_AUTH_REGISTRATION');
+
+        $action        = Filter::post('action');
+        $user_name     = Filter::post('user_name');
+        $user_password = Filter::post('user_password');
+        $user_hashcode = Filter::post('user_hashcode');
+        $url           = Filter::post('url'); // Not actually a URL - just a path
+        $username      = Filter::post('username');
+        $password      = Filter::post('password');
+        $timediff      = Filter::postInteger('timediff', -43200, 50400, 0); // Same range as date('Z')
+
+// These parameters may come from the URL which is emailed to users.
+        if (!$action) {
+            $action = Filter::get('action');
+        }
+        if (!$user_name) {
+            $user_name = Filter::get('user_name', WT_REGEX_USERNAME);
+        }
+        if (!$user_hashcode) {
+            $user_hashcode = Filter::get('user_hashcode');
+        }
+        if (!$url) {
+            $url = Filter::get('url');
+        }
+
+        $message = '';
+
+        switch ($action) {
+            case 'requestpw':
+                $this->requestPw($controller);
+                break;
+
+            case 'register':
+                $this->registerAction($controller, $user_name, $REQUIRE_ADMIN_AUTH_REGISTRATION);
+                break;
+
+            case 'userverify':
+                $this->userVerifyAction($controller, $user_name, $user_hashcode);
+                break;
+
+            case 'verify_hash':
+                $this->verifyHashAction($controller, $user_name, $user_password, $user_hashcode, $REQUIRE_ADMIN_AUTH_REGISTRATION);
+                break;
+            case 'login':
+                try {
+                    $this->loginAction($username, $password, $timediff, $url);
+                } catch (\Exception $ex) {
+                    $message = $ex->getMessage();
+                }
+
+            // No break;
+
+            default:
+                $this->defaultAction($controller, $username, $url, $message);
+                break;
+        }
+    }
+
+    private function loginAction($username, $password, $timediff, $url)
+    {
+        if (!$_COOKIE) {
+            Log::addAuthenticationLog('Login failed (no session cookies): ' . $username);
+            throw new \Exception(I18N::translate('You cannot login because your browser does not accept cookies.'));
+        }
+
+        $user = User::findByIdentifier($username);
+
+        if (!$user) {
+            Log::addAuthenticationLog('Login failed (no such user/email): ' . $username);
+            throw new \Exception(I18N::translate('The username or password is incorrect.'));
+        }
+
+        if (!$user->checkPassword($password)) {
+            Log::addAuthenticationLog('Login failed (incorrect password): ' . $username);
+            throw new \Exception(I18N::translate('The username or password is incorrect.'));
+        }
+
+        if (!$user->getPreference('verified')) {
+            Log::addAuthenticationLog('Login failed (not verified by user): ' . $username);
+            throw new \Exception(I18N::translate('This account has not been verified.  Please check your email for a verification message.'));
+        }
+
+        if (!$user->getPreference('verified_by_admin')) {
+            Log::addAuthenticationLog('Login failed (not approved by admin): ' . $username);
+            throw new \Exception(I18N::translate('This account has not been approved.  Please wait for an administrator to approve it.'));
+        }
+
+        Auth::login($user);
+        Log::addAuthenticationLog('Login: ' . Auth::user()
+                                                  ->getUserName() . '/' . Auth::user()
+                                                                              ->getRealName());
+
+        Globals::i()->WT_SESSION->timediff      = $timediff;
+        Globals::i()->WT_SESSION->locale        = Auth::user()
+                                                      ->getPreference('language');
+        Globals::i()->WT_SESSION->theme_id      = Auth::user()
+                                                      ->getPreference('theme');
+        Globals::i()->WT_SESSION->activity_time = WT_TIMESTAMP;
+
+        Auth::user()
+            ->setPreference('sessiontime', WT_TIMESTAMP);
+
+        // If we’ve clicked login from the login page, we don’t want to go back there.
+        if (strpos($url, WT_SCRIPT_NAME) === 0) {
+            $url = '';
+        }
+
+        // We're logging in as an administrator
+        if (Auth::isAdmin()) {
+            // Check for updates
+            $latest_version_txt = Functions::i()->fetch_latest_version();
+            if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
+                list($latest_version, $earliest_version, $download_url) = explode('|', $latest_version_txt);
+                if (version_compare(WT_VERSION, $latest_version) < 0) {
+                    // An upgrade is available.  Let the admin know, by redirecting to the upgrade wizard
+                    $url = 'admin_site_upgrade.php';
+                }
+            } else {
+                // Cannot determine the latest version
+            }
+        }
+
+        // Redirect to the target URL
+        header('Location: ' . Config::get(Config::BASE_URL) . $url);
+        // Explicitly write the session data before we exit,
+        // as it doesn’t always happen when using APC.
+        Zend_Session::writeClose();
+
+        return;
+
+    }
+
+
+    private
+    function defaultAction($controller, $username, $url, $message)
+    {
         $controller
             ->setPageTitle(I18N::translate('Login'))
             ->pageHeader()
@@ -229,9 +263,13 @@ switch ($action) {
         echo '</div>';
 
         echo '</div>';
-        break;
+    }
 
-    case 'requestpw':
+    /**
+     * @param $controller
+     */
+    protected function requestPw($controller)
+    {
         $controller
             ->setPageTitle(I18N::translate('Lost password request'))
             ->pageHeader();
@@ -260,7 +298,7 @@ switch ($action) {
                 I18N::translate('Username') . ": " . Filter::escapeHtml($user->getUserName()) . Mail::EOL .
                 I18N::translate('Password') . ": " . $user_new_pw . Mail::EOL . Mail::EOL .
                 I18N::translate('After you have logged in, select the “My account” link under the “My page” menu and fill in the password fields to change your password.') . Mail::EOL . Mail::EOL .
-                '<a href="' . Config::get(Config::BASE_URL) . 'login.php?ged=' . WT_GEDURL . '">' . Config::get(Config::BASE_URL) . 'login.php?ged=' . WT_GEDURL . '</a>'
+                '<a href="' . UrlConstants::url(UrlConstants::LOGIN_PHP, ['ged' => WT_GEDURL]) . '">' . UrlConstants::url(UrlConstants::LOGIN_PHP, ['ged' => WT_GEDURL]) . '</a>'
             );
         }
         // Show a success message, even if the user account does not exist.
@@ -272,14 +310,21 @@ switch ($action) {
         I18N::translate('A new password has been created and emailed to %s.  You can change this password after you login.', $user_name),
         '</p></div>';
         echo '</div>';
-        break;
+    }
 
-    case 'register':
+    private function registerAction($controller, $user_name, $REQUIRE_ADMIN_AUTH_REGISTRATION)
+    {
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
             header('Location: ' . Config::get(Config::BASE_URL));
 
             return;
         }
+
+        $user_realname   = Filter::post('user_realname');
+        $user_email      = Filter::postEmail('user_email');
+        $user_password01 = Filter::post('user_password01', WT_REGEX_PASSWORD);
+        $user_password02 = Filter::post('user_password02', WT_REGEX_PASSWORD);
+        $user_comments   = Filter::post('user_comments');
 
         $controller->setPageTitle(I18N::translate('Request new user account'));
 
@@ -392,7 +437,8 @@ switch ($action) {
                 );
                 $mail1_method = $webmaster->getPreference('contact_method');
                 if ($mail1_method != 'messaging3' && $mail1_method != 'mailto' && $mail1_method != 'none') {
-                    Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
+                    Database::i()
+                            ->prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
                             ->execute(array(
                                           $user->getEmail(),
                                           Globals::i()->WT_REQUEST->getClientIp(),
@@ -537,10 +583,11 @@ switch ($action) {
                 </form>
             </div>
         </div>
-        <?php
-        break;
+    <?php
+    }
 
-    case 'userverify':
+    private function userVerifyAction($controller, $user_name, $user_hashcode)
+    {
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
             header('Location: ' . Config::get(Config::BASE_URL));
 
@@ -576,9 +623,10 @@ switch ($action) {
 			</div>
 		</form>
 	</div>';
-        break;
+    }
 
-    case 'verify_hash':
+    private function verifyHashAction($controller, $user_name, $user_password, $user_hashcode, $REQUIRE_ADMIN_AUTH_REGISTRATION)
+    {
         if (!Site::getPreference('USE_REGISTRATION_MODULE')) {
             header('Location: ' . Config::get(Config::BASE_URL));
 
@@ -641,7 +689,8 @@ switch ($action) {
                 );
                 $mail1_method = $webmaster->getPreference('CONTACT_METHOD');
                 if ($mail1_method != 'messaging3' && $mail1_method != 'mailto' && $mail1_method != 'none') {
-                    Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
+                    Database::i()
+                            ->prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
                             ->execute(array(
                                           $user_name,
                                           Globals::i()->WT_REQUEST->getClientIp(),
@@ -683,5 +732,5 @@ switch ($action) {
         }
         echo '</div>';
         echo '</div>';
-        break;
+    }
 }

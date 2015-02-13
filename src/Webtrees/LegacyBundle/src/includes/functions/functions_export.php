@@ -141,7 +141,7 @@ class FunctionsExport
         }
         // Link to actual SUBM/SUBN records, if they exist
         $subn =
-            Database::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+            Database::i()->prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
                     ->execute(array(
                                   'SUBN',
                                   $ged_id
@@ -151,7 +151,7 @@ class FunctionsExport
             $SUBN = "\n1 SUBN @{$subn}@";
         }
         $subm =
-            Database::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+            Database::i()->prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
                     ->execute(array(
                                   'SUBM',
                                   $ged_id
@@ -245,7 +245,7 @@ class FunctionsExport
         // Generate the OBJE/SOUR/REPO/NOTE records first, as their privacy calcualations involve
         // database queries, and we wish to avoid large gaps between queries due to MySQL connection timeouts.
         $tmp_gedcom = '';
-        $rows       = Database::prepare(
+        $rows       = Database::i()->prepare(
             "SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom" .
             " FROM `##media` WHERE m_file=? ORDER BY m_id"
         )
@@ -261,7 +261,7 @@ class FunctionsExport
             $tmp_gedcom .= $this->reformat_record_export($rec);
         }
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom" .
             " FROM `##sources` WHERE s_file=? ORDER BY s_id"
         )
@@ -276,7 +276,7 @@ class FunctionsExport
             $tmp_gedcom .= $this->reformat_record_export($rec);
         }
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT o_type AS type, o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
             " FROM `##other` WHERE o_file=? AND o_type!='HEAD' AND o_type!='TRLR' ORDER BY o_id"
         )
@@ -302,7 +302,7 @@ class FunctionsExport
             $tmp_gedcom .= $this->reformat_record_export($rec);
         }
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
             " FROM `##individuals` WHERE i_file=? ORDER BY i_id"
         )
@@ -321,7 +321,7 @@ class FunctionsExport
             }
         }
 
-        $rows = Database::prepare(
+        $rows = Database::i()->prepare(
             "SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
             " FROM `##families` WHERE f_file=? ORDER BY f_id"
         )

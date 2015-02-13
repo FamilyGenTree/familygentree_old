@@ -47,7 +47,7 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
 
         // We can apply the filters using SQL
         // Do not use "ORDER BY RAND()" - it is very slow on large tables.  Use PHP::array_rand() instead.
-        $all_media = Database::prepare(
+        $all_media = Database::i()->prepare(
             "SELECT m_id FROM `##media`" .
             " WHERE m_file = ?" .
             " AND m_ext  IN (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')" .

@@ -19,8 +19,8 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Update the database schema from version 19 to 20
 // - fix some broken data caused by a bug
 
-Database::exec("UPDATE `##default_resn` SET xref    =NULL WHERE xref    =''");
-Database::exec("UPDATE `##default_resn` SET tag_type=NULL WHERE tag_type=''");
+Database::i()->exec("UPDATE `##default_resn` SET xref    =NULL WHERE xref    =''");
+Database::i()->exec("UPDATE `##default_resn` SET tag_type=NULL WHERE tag_type=''");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

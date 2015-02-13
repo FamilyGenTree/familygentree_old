@@ -26,10 +26,10 @@ use PDOException;
 // gedcom with the name from the table.
 // Remove slashes from INDI names
 
-Database::exec("UPDATE `##name` SET n_full=REPLACE(n_full, '/', '') WHERE n_surn IS NOT NULL");
+Database::i()->exec("UPDATE `##name` SET n_full=REPLACE(n_full, '/', '') WHERE n_surn IS NOT NULL");
 
 try {
-    Database::exec("ALTER TABLE `##name` DROP n_list");
+    Database::i()->exec("ALTER TABLE `##name` DROP n_list");
 } catch (PDOException $x) {
     // Already done?
 }

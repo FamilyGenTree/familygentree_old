@@ -30,7 +30,7 @@ $controller
 // We need to work with raw GEDCOM data, as we are looking for errors
 // which may prevent the GedcomRecord objects from working...
 
-$rows = Database::prepare(
+$rows = Database::i()->prepare(
     "SELECT i_id AS xref, 'INDI' AS type, i_gedcom AS gedrec FROM `##individuals` WHERE i_file=?" .
     " UNION " .
     "SELECT f_id AS xref, 'FAM'  AS type, f_gedcom AS gedrec FROM `##families`    WHERE f_file=?" .
@@ -57,7 +57,7 @@ foreach ($rows as $row) {
 
 // Need to merge pending new/changed/deleted records
 
-$rows = Database::prepare(
+$rows = Database::i()->prepare(
     "SELECT xref, SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(CASE WHEN old_gedcom='' THEN new_gedcom ELSE old_gedcom END, '\n', 1), ' ', 3), ' ', -1) AS type, new_gedcom AS gedrec" .
     " FROM (" .
     "  SELECT MAX(change_id) AS change_id" .

@@ -502,7 +502,6 @@ class Constants
 
 // Enable debugging output?
         define('WT_DEBUG', false);
-        define('WT_DEBUG_SQL', false);
 
 // Required version of database tables/columns/indexes/etc.
         define('WT_SCHEMA_VERSION', 29);

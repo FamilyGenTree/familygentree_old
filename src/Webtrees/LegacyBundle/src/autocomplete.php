@@ -37,7 +37,7 @@ switch ($type) {
         $data = array();
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT 'INDI' AS type, i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom, n_full" .
                 " FROM `##individuals`" .
                 " JOIN `##name` ON (i_id=n_id AND i_file=n_file)" .
@@ -97,7 +97,7 @@ switch ($type) {
         $data = array();
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
                 " FROM `##individuals`" .
                 " WHERE i_gedcom LIKE '%\n2 CEME %' AND i_file=?" .
@@ -147,7 +147,7 @@ switch ($type) {
     case 'GIVN': // Given names, that start with the search term
         // Do not filter by privacy.  Given names on their own do not identify individuals.
         echo json_encode(
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE DISTINCT n_givn" .
                 " FROM `##name`" .
                 " WHERE n_givn LIKE CONCAT(?, '%') AND n_file=?" .
@@ -166,7 +166,7 @@ switch ($type) {
         $data = array();
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom, n_full" .
                 " FROM `##individuals`" .
                 " JOIN `##name` ON (i_id=n_id AND i_file=n_file)" .
@@ -275,7 +275,7 @@ switch ($type) {
     case 'PLAC2': // Place names (without hierarchy), that include the search term
         // Do not filter by privacy.  Place names on their own do not identify individuals.
         echo json_encode(
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE p_place" .
                 " FROM `##places`" .
                 " WHERE p_place LIKE CONCAT('%', ?, '%') AND p_file=?" .
@@ -350,7 +350,7 @@ switch ($type) {
         $sid  = Filter::get('extra', WT_REGEX_XREF);
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
                 " FROM `##individuals`" .
                 " WHERE i_gedcom LIKE CONCAT('%\n_ SOUR @', ?, '@%', REPLACE(?, ' ', '%'), '%') AND i_file=?"
@@ -373,7 +373,7 @@ switch ($type) {
         }
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
                 " FROM `##families`" .
                 " WHERE f_gedcom LIKE CONCAT('%\n_ SOUR @', ?, '@%', REPLACE(?, ' ', '%'), '%') AND f_file=?"
@@ -406,7 +406,7 @@ switch ($type) {
         $data = array();
         // Fetch all data, regardless of privacy
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom, s_name" .
                 " FROM `##sources`" .
                 " WHERE s_name LIKE CONCAT('%', REPLACE(?, ' ', '%'), '%') AND s_file=? ORDER BY s_name COLLATE '" . I18N::$collation . "'"
@@ -430,7 +430,7 @@ switch ($type) {
     case 'SURN': // Surnames, that start with the search term
         // Do not filter by privacy.  Surnames on their own do not identify individuals.
         echo json_encode(
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT SQL_CACHE DISTINCT n_surname" .
                 " FROM `##name`" .
                 " WHERE n_surname LIKE CONCAT(?, '%') AND n_file=?" .
@@ -602,7 +602,7 @@ switch ($type) {
 function get_FAM_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT DISTINCT 'FAM' AS type, f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
             " FROM `##families`" .
             " JOIN `##name` AS husb_name ON (f_husb=husb_name.n_id AND f_file=husb_name.n_file)" .
@@ -626,7 +626,7 @@ function get_FAM_rows($term)
 function get_INDI_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT 'INDI' AS type, i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom, n_full" .
             " FROM `##individuals`" .
             " JOIN `##name` ON (i_id=n_id AND i_file=n_file)" .
@@ -647,7 +647,7 @@ function get_INDI_rows($term)
 function get_NOTE_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
             " FROM `##other`" .
             " JOIN `##name` ON (o_id=n_id AND o_file=n_file)" .
@@ -669,7 +669,7 @@ function get_NOTE_rows($term)
 function get_OBJE_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom" .
             " FROM `##media`" .
             " WHERE (m_titl LIKE CONCAT('%', REPLACE(?, ' ', '%'), '%') OR m_id LIKE CONCAT('%', REPLACE(?, ' ', '%'), '%')) AND m_file=?"
@@ -690,7 +690,7 @@ function get_OBJE_rows($term)
 function get_REPO_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
             " FROM `##other`" .
             " JOIN `##name` ON (o_id=n_id AND o_file=n_file)" .
@@ -712,7 +712,7 @@ function get_REPO_rows($term)
 function get_SOUR_rows($term)
 {
     return
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom" .
             " FROM `##sources`" .
             " WHERE s_name LIKE CONCAT('%', REPLACE(?, ' ', '%'), '%') AND s_file=? ORDER BY s_name COLLATE '" . I18N::$collation . "'"

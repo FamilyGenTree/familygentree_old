@@ -661,7 +661,7 @@ class AdvancedSearchController extends SearchController
                 $bind[] = $value;
             }
         }
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->execute($bind)
                         ->fetchAll();
         foreach ($rows as $row) {

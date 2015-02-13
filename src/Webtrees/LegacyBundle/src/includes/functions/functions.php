@@ -57,7 +57,7 @@ class Functions
     {
         $last_update_timestamp = Site::getPreference('LATEST_WT_VERSION_TIMESTAMP');
         if ($last_update_timestamp < WT_TIMESTAMP - 24 * 60 * 60) {
-            $row                = Database::prepare("SHOW VARIABLES LIKE 'version'")
+            $row                = Database::i()->prepare("SHOW VARIABLES LIKE 'version'")
                                           ->fetchOneRow();
             $params             = '?w=' . WT_VERSION . '&p=' . PHP_VERSION . '&m=' . $row->value . '&o=' . (DIRECTORY_SEPARATOR === '/'
                     ? 'u' : 'w');
@@ -2388,7 +2388,7 @@ class Functions
         do {
             // Use LAST_INSERT_ID(expr) to provide a transaction-safe sequence.  See
             // http://dev.mysql.com/doc/refman/5.6/en/information-functions.html#function_last-insert-id
-            $statement = Database::prepare(
+            $statement = Database::i()->prepare(
                 "UPDATE `##next_id` SET next_id = LAST_INSERT_ID(next_id + 1) WHERE record_type = :record_type AND gedcom_id = :gedcom_id"
             );
             $statement->execute(array(
@@ -2398,7 +2398,7 @@ class Functions
 
             if ($statement->rowCount() === 0) {
                 // First time we've used this record type.
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT INTO `##next_id` (gedcom_id, record_type, next_id) VALUES(:gedcom_id, :record_type, 1)"
                 )
                         ->execute(array(
@@ -2407,12 +2407,12 @@ class Functions
                                   ));
                 $num = 1;
             } else {
-                $num = Database::prepare("SELECT LAST_INSERT_ID()")
+                $num = Database::i()->prepare("SELECT LAST_INSERT_ID()")
                                ->fetchOne();
             }
 
             // Records may already exist with this sequence number.
-            $already_used = Database::prepare(
+            $already_used = Database::i()->prepare(
                 "SELECT i_id FROM `##individuals` WHERE i_id = :i_id" .
                 " UNION ALL " .
                 "SELECT f_id FROM `##families` WHERE f_id = :f_id" .

@@ -52,7 +52,7 @@ class Repository extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=?");
+            $statement = Database::i()->prepare("SELECT o_gedcom FROM `##other` WHERE o_id=? AND o_file=?");
         }
 
         return $statement->execute(array(

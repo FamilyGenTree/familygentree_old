@@ -68,8 +68,8 @@ class IndexPHP extends AbstractSymfonyConnectorController
             $module     = new $class_name;
             echo $module->getBlock($block_id);
         }
-        if (WT_DEBUG_SQL) {
-            echo Database::getQueryLog();
+        if (Database::i()->isDebugSql()) {
+            echo Database::i()->getQueryLog();
         }
 
         return;

@@ -160,7 +160,7 @@ class PageController extends BaseController implements PageControllerInterface
             '<!-- webtrees: ' . WT_VERSION . ' -->' .
             '<!-- Execution time: ' . I18N::number(microtime(true) - WT_START_TIME, 3) . ' seconds -->' .
             '<!-- Memory: ' . I18N::number(memory_get_peak_usage(true) / 1024) . ' KB -->' .
-            '<!-- SQL queries: ' . I18N::number(Database::getQueryCount()) . ' -->';
+            '<!-- SQL queries: ' . I18N::number(Database::i()->getQueryCount()) . ' -->';
     }
 
     /**
@@ -248,7 +248,7 @@ class PageController extends BaseController implements PageControllerInterface
         }
         if (!$individual) {
             $individual = Individual::getInstance(
-                Database::prepare(
+                Database::i()->prepare(
                     "SELECT MIN(i_id) FROM `##individuals` WHERE i_file=?"
                 )
                         ->execute(array(WT_GED_ID))

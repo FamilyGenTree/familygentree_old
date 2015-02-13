@@ -30,7 +30,7 @@ $controller
     ->pageHeader();
 
 // Every XREF used by this tree and also used by some other tree
-$xrefs = Database::prepare(
+$xrefs = Database::i()->prepare(
     "SELECT xref, type FROM (" .
     " SELECT i_id AS xref, 'INDI' AS type FROM `##individuals` WHERE i_file = ?" .
     "  UNION " .
@@ -74,8 +74,8 @@ echo '<h1>', $controller->getPageTitle(), '</h1>';
 
 if (Filter::get('go')) {
     foreach ($xrefs as $old_xref => $type) {
-        Database::beginTransaction();
-        Database::exec(
+        Database::i()->beginTransaction();
+        Database::i()->exec(
             "LOCK TABLE `##individuals` WRITE," .
             " `##families` WRITE," .
             " `##sources` WRITE," .
@@ -94,7 +94,7 @@ if (Filter::get('go')) {
         $new_xref = Functions::i()->get_new_xref($type);
         switch ($type) {
             case 'INDI':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` SET i_id = ?, i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_id = ? AND i_file = ?"
                 )
                         ->execute(array(
@@ -104,7 +104,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'HUSB') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -113,7 +113,7 @@ if (Filter::get('go')) {
                                       " HUSB @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'WIFE') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -122,7 +122,7 @@ if (Filter::get('go')) {
                                       " WIFE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'CHIL') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -131,7 +131,7 @@ if (Filter::get('go')) {
                                       " CHIL @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'ASSO') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -140,7 +140,7 @@ if (Filter::get('go')) {
                                       " ASSO @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = '_ASSO') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -149,7 +149,7 @@ if (Filter::get('go')) {
                                       " _ASSO @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'ASSO') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -158,7 +158,7 @@ if (Filter::get('go')) {
                                       " ASSO @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = '_ASSO') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -167,7 +167,7 @@ if (Filter::get('go')) {
                                       " _ASSO @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##placelinks` SET pl_gid = ? WHERE pl_gid = ? AND pl_file = ?"
                 )
                         ->execute(array(
@@ -175,7 +175,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##dates` SET d_gid = ? WHERE d_gid = ? AND d_file = ?"
                 )
                         ->execute(array(
@@ -183,7 +183,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##user_gedcom_setting` SET setting_value = ? WHERE setting_value = ? AND gedcom_id = ? AND setting_name IN ('gedcomid', 'rootid')"
                 )
                         ->execute(array(
@@ -193,7 +193,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             case 'FAM':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` SET f_id = ?, f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_id = ? AND f_file = ?"
                 )
                         ->execute(array(
@@ -203,7 +203,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'FAMC') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -212,7 +212,7 @@ if (Filter::get('go')) {
                                       " FAMC @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'FAMS') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -221,7 +221,7 @@ if (Filter::get('go')) {
                                       " FAMS @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##placelinks` SET pl_gid = ? WHERE pl_gid = ? AND pl_file = ?"
                 )
                         ->execute(array(
@@ -229,7 +229,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##dates` SET d_gid = ? WHERE d_gid = ? AND d_file = ?"
                 )
                         ->execute(array(
@@ -239,7 +239,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             case 'SOUR':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##sources` SET s_id = ?, s_gedcom = REPLACE(s_gedcom, ?, ?) WHERE s_id = ? AND s_file = ?"
                 )
                         ->execute(array(
@@ -249,7 +249,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'SOUR') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -258,7 +258,7 @@ if (Filter::get('go')) {
                                       " SOUR @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'SOUR') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -267,7 +267,7 @@ if (Filter::get('go')) {
                                       " SOUR @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##media` JOIN `##link` ON (l_file = m_file AND l_to = ? AND l_type = 'SOUR') SET m_gedcom = REPLACE(m_gedcom, ?, ?) WHERE m_file = ?"
                 )
                         ->execute(array(
@@ -276,7 +276,7 @@ if (Filter::get('go')) {
                                       " SOUR @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` JOIN `##link` ON (l_file = o_file AND l_to = ? AND l_type = 'SOUR') SET o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_file = ?"
                 )
                         ->execute(array(
@@ -287,7 +287,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             case 'REPO':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` SET o_id = ?, o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_id = ? AND o_file = ?"
                 )
                         ->execute(array(
@@ -297,7 +297,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##sources` JOIN `##link` ON (l_file = s_file AND l_to = ? AND l_type = 'REPO') SET s_gedcom = REPLACE(s_gedcom, ?, ?) WHERE s_file = ?"
                 )
                         ->execute(array(
@@ -308,7 +308,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             case 'NOTE':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` SET o_id = ?, o_gedcom = REPLACE(REPLACE(o_gedcom, ?, ?), ?, ?) WHERE o_id = ? AND o_file = ?"
                 )
                         ->execute(array(
@@ -320,7 +320,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'NOTE') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -329,7 +329,7 @@ if (Filter::get('go')) {
                                       " NOTE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'NOTE') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -338,7 +338,7 @@ if (Filter::get('go')) {
                                       " NOTE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##media` JOIN `##link` ON (l_file = m_file AND l_to = ? AND l_type = 'NOTE') SET m_gedcom = REPLACE(m_gedcom, ?, ?) WHERE m_file = ?"
                 )
                         ->execute(array(
@@ -347,7 +347,7 @@ if (Filter::get('go')) {
                                       " NOTE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##sources` JOIN `##link` ON (l_file = s_file AND l_to = ? AND l_type = 'NOTE') SET s_gedcom = REPLACE(s_gedcom, ?, ?) WHERE s_file = ?"
                 )
                         ->execute(array(
@@ -356,7 +356,7 @@ if (Filter::get('go')) {
                                       " NOTE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` JOIN `##link` ON (l_file = o_file AND l_to = ? AND l_type = 'NOTE') SET o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_file = ?"
                 )
                         ->execute(array(
@@ -367,7 +367,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             case 'OBJE':
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##media` SET m_id = ?, m_gedcom = REPLACE(m_gedcom, ?, ?) WHERE m_id = ? AND m_file = ?"
                 )
                         ->execute(array(
@@ -377,7 +377,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ? AND l_type = 'OBJE') SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -386,7 +386,7 @@ if (Filter::get('go')) {
                                       " OBJE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ? AND l_type = 'OBJE') SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -395,7 +395,7 @@ if (Filter::get('go')) {
                                       " OBJE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##media` JOIN `##link` ON (l_file = m_file AND l_to = ? AND l_type = 'OBJE') SET m_gedcom = REPLACE(m_gedcom, ?, ?) WHERE m_file = ?"
                 )
                         ->execute(array(
@@ -404,7 +404,7 @@ if (Filter::get('go')) {
                                       " OBJE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##sources` JOIN `##link` ON (l_file = s_file AND l_to = ? AND l_type = 'OBJE') SET s_gedcom = REPLACE(s_gedcom, ?, ?) WHERE s_file = ?"
                 )
                         ->execute(array(
@@ -413,7 +413,7 @@ if (Filter::get('go')) {
                                       " OBJE @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` JOIN `##link` ON (l_file = o_file AND l_to = ? AND l_type = 'OBJE') SET o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_file = ?"
                 )
                         ->execute(array(
@@ -424,7 +424,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
             default:
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` SET o_id = ?, o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_id = ? AND o_file = ?"
                 )
                         ->execute(array(
@@ -434,7 +434,7 @@ if (Filter::get('go')) {
                                       $old_xref,
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##individuals` JOIN `##link` ON (l_file = i_file AND l_to = ?) SET i_gedcom = REPLACE(i_gedcom, ?, ?) WHERE i_file = ?"
                 )
                         ->execute(array(
@@ -443,7 +443,7 @@ if (Filter::get('go')) {
                                       " @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##families` JOIN `##link` ON (l_file = f_file AND l_to = ?) SET f_gedcom = REPLACE(f_gedcom, ?, ?) WHERE f_file = ?"
                 )
                         ->execute(array(
@@ -452,7 +452,7 @@ if (Filter::get('go')) {
                                       " @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##media` JOIN `##link` ON (l_file = m_file AND l_to = ?) SET m_gedcom = REPLACE(m_gedcom, ?, ?) WHERE m_file = ?"
                 )
                         ->execute(array(
@@ -461,7 +461,7 @@ if (Filter::get('go')) {
                                       " @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##sources` JOIN `##link` ON (l_file = s_file AND l_to = ?) SET s_gedcom = REPLACE(s_gedcom, ?, ?) WHERE s_file = ?"
                 )
                         ->execute(array(
@@ -470,7 +470,7 @@ if (Filter::get('go')) {
                                       " @$new_xref@",
                                       WT_GED_ID
                                   ));
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##other` JOIN `##link` ON (l_file = o_file AND l_to = ?) SET o_gedcom = REPLACE(o_gedcom, ?, ?) WHERE o_file = ?"
                 )
                         ->execute(array(
@@ -481,7 +481,7 @@ if (Filter::get('go')) {
                                   ));
                 break;
         }
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##name` SET n_id = ? WHERE n_id = ? AND n_file = ?"
         )
                 ->execute(array(
@@ -489,7 +489,7 @@ if (Filter::get('go')) {
                               $old_xref,
                               WT_GED_ID
                           ));
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##default_resn` SET xref = ? WHERE xref = ? AND gedcom_id = ?"
         )
                 ->execute(array(
@@ -497,7 +497,7 @@ if (Filter::get('go')) {
                               $old_xref,
                               WT_GED_ID
                           ));
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##hit_counter` SET page_parameter = ? WHERE page_parameter = ? AND gedcom_id = ?"
         )
                 ->execute(array(
@@ -505,7 +505,7 @@ if (Filter::get('go')) {
                               $old_xref,
                               WT_GED_ID
                           ));
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##link` SET l_from = ? WHERE l_from = ? AND l_file = ?"
         )
                 ->execute(array(
@@ -513,7 +513,7 @@ if (Filter::get('go')) {
                               $old_xref,
                               WT_GED_ID
                           ));
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##link` SET l_to = ? WHERE l_to = ? AND l_file = ?"
         )
                 ->execute(array(
@@ -523,11 +523,11 @@ if (Filter::get('go')) {
                           ));
         echo '<p>', I18N::translate('The record %1$s has been renamed to %2$s.', $old_xref, $new_xref), '</p>';
         unset($xrefs[$old_xref]);
-        Database::exec("UNLOCK TABLES");
-        Database::commit();
+        Database::i()->exec("UNLOCK TABLES");
+        Database::i()->commit();
 
         try {
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##favorite` SET xref = ? WHERE xref = ? AND gedcom_id = ?"
             )
                     ->execute(array(

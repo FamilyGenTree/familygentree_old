@@ -22,7 +22,7 @@ use PDOException;
 // - remove tables/columns relating to remote linking
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "DROP TABLE `##remotelinks`"
     );
 } catch (PDOException $ex) {
@@ -30,7 +30,7 @@ try {
 }
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##sources` DROP INDEX ix2"
     );
 } catch (PDOException $ex) {
@@ -38,7 +38,7 @@ try {
 }
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##sources` DROP COLUMN s_dbid"
     );
 } catch (PDOException $ex) {

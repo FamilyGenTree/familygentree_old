@@ -29,17 +29,30 @@ class Database
     private static $instance;
 
     /** @var PDO Native PHP database driver */
-    private static $pdo;
+    private $pdo;
 
     /** @var array Keep a log of all the SQL statements that we execute */
-    private static $log;
+    private $log;
+
+    private $prefix;
+
+    private $debugSql = false;
+
+    public static function i()
+    {
+        if (null === static::$instance) {
+            static::$instance = new self();
+        }
+
+        return static::$instance;
+    }
 
     /**
      * Prevent instantiation via new Database
      */
     private final function __construct()
     {
-        self::$log = array();
+        $this->log = array();
     }
 
     /**
@@ -49,7 +62,7 @@ class Database
      */
     public final function __clone()
     {
-        throw new \Exception('Database::clone() is not allowed.');
+        throw new \Exception('Database::i()->clone() is not allowed.');
     }
 
     /**
@@ -59,7 +72,7 @@ class Database
      */
     public final function __wakeup()
     {
-        throw new \Exception('Database::unserialize() is not allowed.');
+        throw new \Exception('Database::i()->unserialize() is not allowed.');
     }
 
     /**
@@ -67,9 +80,9 @@ class Database
      *
      * @return bool
      */
-    public static function beginTransaction()
+    public function beginTransaction()
     {
-        return self::$pdo->beginTransaction();
+        return $this->pdo->beginTransaction();
     }
 
     /**
@@ -77,9 +90,9 @@ class Database
      *
      * @return bool
      */
-    public static function commit()
+    public function commit()
     {
-        return self::$pdo->commit();
+        return $this->pdo->commit();
     }
 
     /**
@@ -87,9 +100,9 @@ class Database
      *
      * @return void
      */
-    public static function disconnect()
+    public function disconnect()
     {
-        self::$pdo = null;
+        $this->pdo = null;
     }
 
     /**
@@ -103,13 +116,14 @@ class Database
      *
      * @throws \Exception
      */
-    public static function createInstance($DBHOST, $DBPORT, $DBNAME, $DBUSER, $DBPASS)
+    public function createInstance($DBHOST, $DBPORT, $DBNAME, $DBUSER, $DBPASS, $dbPrefix)
     {
-        if (self::$pdo instanceof PDO) {
-            throw new \Exception('Database::createInstance() can only be called once.');
+        if ($this->pdo instanceof PDO) {
+            throw new \Exception('Database::i()->createInstance() can only be called once.');
         }
+        $this->prefix = $dbPrefix;
         // Create the underlying PDO object
-        self::$pdo = new PDO(
+        $this->pdo = new PDO(
             (substr($DBHOST, 0, 1) === '/'
                 ?
                 "mysql:unix_socket={$DBHOST};dbname={$DBNAME}"
@@ -124,9 +138,7 @@ class Database
                 PDO::ATTR_AUTOCOMMIT         => true
             )
         );
-        self::$pdo->exec("SET NAMES UTF8");
-
-        self::$instance = new self;
+        $this->pdo->exec("SET NAMES UTF8");
     }
 
     /**
@@ -136,9 +148,9 @@ class Database
      *
      * @throws \Exception
      */
-    public static function getInstance()
+    public function getInstance()
     {
-        if (self::$pdo instanceof PDO) {
+        if ($this->pdo instanceof PDO) {
             return self::$instance;
         } else {
             throw new \Exception('createInstance() must be called before getInstance().');
@@ -150,9 +162,9 @@ class Database
      *
      * @return boolean
      */
-    public static function isConnected()
+    public function isConnected()
     {
-        return self::$pdo instanceof PDO;
+        return $this->pdo instanceof PDO;
     }
 
     /**
@@ -165,9 +177,9 @@ class Database
      *
      * @return void
      */
-    public static function logQuery($query, $rows, $microtime, $bind_variables)
+    public function logQuery($query, $rows, $microtime, $bind_variables)
     {
-        if (WT_DEBUG_SQL) {
+        if ($this->isDebugSql()) {
             // Full logging
             // Trace
             $trace = debug_backtrace();
@@ -180,7 +192,7 @@ class Database
                     unset($trace[$n]);
                 }
             }
-            $stack = '<abbr title="' . Filter::escapeHtml(implode(" / ", $trace)) . '">' . (count(self::$log) + 1) . '</abbr>';
+            $stack = '<abbr title="' . Filter::escapeHtml(implode(" / ", $trace)) . '">' . (count($this->log) + 1) . '</abbr>';
             // Bind variables
             $query2 = '';
             foreach ($bind_variables as $key => $value) {
@@ -210,10 +222,10 @@ class Database
             } else {
                 $microtime = sprintf('%.3f', $microtime);
             }
-            self::$log[] = "<tr><td>{$stack}</td><td>{$query2}</td><td>{$rows}</td><td>{$microtime}</td></tr>";
+            $this->log[] = "<tr><td>{$stack}</td><td>{$query2}</td><td>{$rows}</td><td>{$microtime}</td></tr>";
         } else {
             // Just log query count for statistics
-            self::$log[] = true;
+            $this->log[] = true;
         }
     }
 
@@ -222,9 +234,9 @@ class Database
      *
      * @return integer
      */
-    public static function getQueryCount()
+    public function getQueryCount()
     {
-        return count(self::$log);
+        return count($this->log);
     }
 
     /**
@@ -232,10 +244,10 @@ class Database
      *
      * @return string
      */
-    public static function getQueryLog()
+    public function getQueryLog()
     {
-        $html      = '<table border="1"><col span="3"><col align="char"><thead><tr><th>#</th><th>Query</th><th>Rows</th><th>Time (ms)</th></tr></thead><tbody>' . implode('', self::$log) . '</tbody></table>';
-        self::$log = array();
+        $html      = '<table border="1"><col span="3"><col align="char"><thead><tr><th>#</th><th>Query</th><th>Rows</th><th>Time (ms)</th></tr></thead><tbody>' . implode('', $this->log) . '</tbody></table>';
+        $this->log = array();
 
         return $html;
     }
@@ -245,9 +257,9 @@ class Database
      *
      * @return string
      */
-    public static function lastInsertId()
+    public function lastInsertId()
     {
-        return self::$pdo->lastInsertId();
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -261,12 +273,12 @@ class Database
      *
      * @deprecated We should use bind-variables instead.
      */
-    public static function quote($string)
+    public function quote($string)
     {
         if (is_null($string)) {
             return 'NULL';
         } else {
-            return self::$pdo->quote($string, PDO::PARAM_STR);
+            return $this->pdo->quote($string, PDO::PARAM_STR);
         }
     }
 
@@ -277,11 +289,11 @@ class Database
      *
      * @return integer The number of rows affected by this SQL query
      */
-    public static function exec($sql)
+    public function exec($sql)
     {
-        $sql   = str_replace('##', WT_TBLPREFIX, $sql);
+        $sql   = str_replace('##', $this->prefix, $sql);
         $start = microtime(true);
-        $rows  = self::$pdo->exec($sql);
+        $rows  = $this->pdo->exec($sql);
         $end   = microtime(true);
         self::logQuery($sql, $rows, $end - $start, array());
 
@@ -296,14 +308,14 @@ class Database
      * @return Statement
      * @throws \Exception
      */
-    public static function prepare($sql)
+    public function prepare($sql)
     {
-        if (!self::$pdo instanceof PDO) {
+        if (!$this->pdo instanceof PDO) {
             throw new \Exception("No Connection Established");
         }
-        $sql = str_replace('##', WT_TBLPREFIX, $sql);
+        $sql = str_replace('##', $this->prefix, $sql);
 
-        return new Statement(self::$pdo->prepare($sql));
+        return new Statement($this->pdo->prepare($sql));
     }
 
     /**
@@ -311,9 +323,9 @@ class Database
      *
      * @return bool
      */
-    public static function rollBack()
+    public function rollBack()
     {
-        return self::$pdo->rollBack();
+        return $this->pdo->rollBack();
     }
 
     /**
@@ -326,7 +338,7 @@ class Database
      * @return void
      * @throws \Exception
      */
-    public static function updateSchema($schema_dir, $schema_name, $target_version)
+    public function updateSchema($schema_dir, $schema_name, $target_version)
     {
         try {
             $current_version = (int)Site::getPreference($schema_name);
@@ -364,4 +376,21 @@ class Database
             }
         }
     }
+
+    /**
+     * @return boolean
+     */
+    public function isDebugSql()
+    {
+        return $this->debugSql;
+    }
+
+    /**
+     * @param boolean $debugSql
+     */
+    public function setDebugSql($debugSql)
+    {
+        $this->debugSql = $debugSql;
+    }
+
 }

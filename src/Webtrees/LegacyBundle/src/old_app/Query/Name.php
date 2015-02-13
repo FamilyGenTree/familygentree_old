@@ -796,7 +796,7 @@ class WT_Query_Name
         }
 
         // Easy cases: the MySQL collation rules take care of it
-        return "$field LIKE CONCAT('@'," . Database::quote($letter) . ",'%') COLLATE " . I18N::$collation . " ESCAPE '@'";
+        return "$field LIKE CONCAT('@'," . Database::i()->quote($letter) . ",'%') COLLATE " . I18N::$collation . " ESCAPE '@'";
     }
 
     /**
@@ -826,7 +826,7 @@ class WT_Query_Name
         foreach (self::getAlphabetForLocale(WT_LOCALE) as $letter) {
             $count = 1;
             if ($totals) {
-                $count = Database::prepare($sql . " AND " . self::getInitialSql('n_surn', $letter))
+                $count = Database::i()->prepare($sql . " AND " . self::getInitialSql('n_surn', $letter))
                                  ->fetchOne();
             }
             $alphas[$letter] = $count;
@@ -845,7 +845,7 @@ class WT_Query_Name
             $sql .= " AND n_surn NOT LIKE '" . $letter . "%' COLLATE " . I18N::$collation;
         }
         $sql .= " GROUP BY LEFT(n_surn, 1) ORDER BY LEFT(n_surn, 1)='', LEFT(n_surn, 1)='@', LEFT(n_surn, 1)";
-        foreach (Database::prepare($sql)
+        foreach (Database::i()->prepare($sql)
                          ->fetchAssoc() as $alpha => $count) {
             $alphas[$alpha] = $count;
         }
@@ -857,7 +857,7 @@ class WT_Query_Name
             ($fams ? " JOIN `##link` ON (n_id=l_from AND n_file=l_file AND l_type='FAMS') " : "") .
             " WHERE n_file={$ged_id} AND n_surn=''" .
             ($marnm ? "" : " AND n_type!='_MARNM'");
-        $num_none = Database::prepare($sql)
+        $num_none = Database::i()->prepare($sql)
                             ->fetchOne();
         if ($num_none) {
             // Special code to indicate "no surname"
@@ -890,7 +890,7 @@ class WT_Query_Name
             ($marnm ? "" : " AND n_type!='_MARNM'");
 
         if ($surn) {
-            $sql .= " AND n_surn=" . Database::quote($surn) . " COLLATE '" . I18N::$collation . "'";
+            $sql .= " AND n_surn=" . Database::i()->quote($surn) . " COLLATE '" . I18N::$collation . "'";
         } elseif ($salpha == ',') {
             $sql .= " AND n_surn=''";
         } elseif ($salpha == '@') {
@@ -906,7 +906,7 @@ class WT_Query_Name
         // are any names beginning with that letter.  It looks better to
         // show the full alphabet, rather than omitting rare letters such as X
         foreach (self::getAlphabetForLocale(WT_LOCALE) as $letter) {
-            $count           = Database::prepare($sql . " AND " . self::getInitialSql('n_givn', $letter))
+            $count           = Database::i()->prepare($sql . " AND " . self::getInitialSql('n_givn', $letter))
                                        ->fetchOne();
             $alphas[$letter] = $count;
         }
@@ -921,7 +921,7 @@ class WT_Query_Name
             ($marnm ? "" : " AND n_type!='_MARNM'");
 
         if ($surn) {
-            $sql .= " AND n_surn=" . Database::quote($surn) . " COLLATE '" . I18N::$collation . "'";
+            $sql .= " AND n_surn=" . Database::i()->quote($surn) . " COLLATE '" . I18N::$collation . "'";
         } elseif ($salpha == ',') {
             $sql .= " AND n_surn=''";
         } elseif ($salpha == '@') {
@@ -937,7 +937,7 @@ class WT_Query_Name
             $sql .= " AND n_givn NOT LIKE '" . $letter . "%' COLLATE " . I18N::$collation;
         }
         $sql .= " GROUP BY LEFT(n_givn, 1) ORDER BY LEFT(n_givn, 1)='@', LEFT(n_givn, 1)='', LEFT(n_givn, 1)";
-        foreach (Database::prepare($sql)
+        foreach (Database::i()->prepare($sql)
                          ->fetchAssoc() as $alpha => $count) {
             $alphas[$alpha] = $count;
         }
@@ -967,7 +967,7 @@ class WT_Query_Name
             ($marnm ? "" : " AND n_type!='_MARNM'");
 
         if ($surn) {
-            $sql .= " AND n_surn COLLATE '" . I18N::$collation . "' =" . Database::quote($surn);
+            $sql .= " AND n_surn COLLATE '" . I18N::$collation . "' =" . Database::i()->quote($surn);
         } elseif ($salpha == ',') {
             $sql .= " AND n_surn=''";
         } elseif ($salpha == '@') {
@@ -984,7 +984,7 @@ class WT_Query_Name
         }
 
         $list = array();
-        foreach (Database::prepare($sql)
+        foreach (Database::i()->prepare($sql)
                          ->fetchAll() as $row) {
             $list[I18N::strtoupper($row->n_surn)][$row->n_surname][$row->n_id] = true;
         }
@@ -1018,7 +1018,7 @@ class WT_Query_Name
             ($marnm ? "" : "AND n_type!='_MARNM'");
 
         if ($surn) {
-            $sql .= " AND n_surn COLLATE '" . I18N::$collation . "'=" . Database::quote($surn);
+            $sql .= " AND n_surn COLLATE '" . I18N::$collation . "'=" . Database::i()->quote($surn);
         } elseif ($salpha == ',') {
             $sql .= " AND n_surn=''";
         } elseif ($salpha == '@') {
@@ -1036,7 +1036,7 @@ class WT_Query_Name
         $sql .= " ORDER BY CASE n_surn WHEN '@N.N.' THEN 1 ELSE 0 END, n_surn COLLATE '" . I18N::$collation . "', CASE n_givn WHEN '@P.N.' THEN 1 ELSE 0 END, n_givn COLLATE '" . I18N::$collation . "'";
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             $person = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);

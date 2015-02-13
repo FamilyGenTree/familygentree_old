@@ -88,7 +88,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
             $lastmod = '<lastmod>' . date('Y-m-d') . '</lastmod>';
             foreach (Tree::getAll() as $tree) {
                 if ($tree->getPreference('include_in_sitemap')) {
-                    $n = Database::prepare(
+                    $n = Database::i()->prepare(
                         "SELECT COUNT(*) FROM `##individuals` WHERE i_file = :tree_id"
                     )
                                  ->execute(array('tree_id' => $tree->getTreeId()))
@@ -96,7 +96,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                     for ($i = 0; $i <= $n / self::RECORDS_PER_VOLUME; ++$i) {
                         $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-i-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                     }
-                    $n = Database::prepare(
+                    $n = Database::i()->prepare(
                         "SELECT COUNT(*) FROM `##sources` WHERE s_file = :tree_id"
                     )
                                  ->execute(array('tree_id' => $tree->getTreeId()))
@@ -106,7 +106,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                             $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-s-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
-                    $n = Database::prepare(
+                    $n = Database::i()->prepare(
                         "SELECT COUNT(*) FROM `##other` WHERE o_file = :tree_id AND o_type = 'REPO'"
                     )
                                  ->execute(array('tree_id' => $tree->getTreeId()))
@@ -116,7 +116,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                             $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-r-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
-                    $n = Database::prepare(
+                    $n = Database::i()->prepare(
                         "SELECT COUNT(*) FROM `##other` WHERE o_file = :tree_id AND o_type = 'NOTE'"
                     )
                                  ->execute(array('tree_id' => $tree->getTreeId()))
@@ -126,7 +126,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                             $data .= '<sitemap><loc>' . Config::get(Config::BASE_URL) . 'module.php?mod=' . $this->getName() . '&amp;mod_action=generate&amp;file=sitemap-' . $tree->getTreeId() . '-n-' . $i . '.xml</loc>' . $lastmod . '</sitemap>' . PHP_EOL;
                         }
                     }
-                    $n = Database::prepare(
+                    $n = Database::i()->prepare(
                         "SELECT COUNT(*) FROM `##media` WHERE m_file = :tree_id"
                     )
                                  ->execute(array('tree_id' => $tree->getTreeId()))
@@ -168,7 +168,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
             $records = array();
             switch ($rec_type) {
                 case 'i':
-                    $rows = Database::prepare(
+                    $rows = Database::i()->prepare(
                         "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
                         " FROM `##individuals`" .
                         " WHERE i_file = :tree_id" .
@@ -186,7 +186,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                     }
                     break;
                 case 's':
-                    $rows = Database::prepare(
+                    $rows = Database::i()->prepare(
                         "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom" .
                         " FROM `##sources`" .
                         " WHERE s_file = :tree_id" .
@@ -204,7 +204,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                     }
                     break;
                 case 'r':
-                    $rows = Database::prepare(
+                    $rows = Database::i()->prepare(
                         "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
                         " FROM `##other`" .
                         " WHERE o_file = :tree_id AND o_type = 'REPO'" .
@@ -222,7 +222,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                     }
                     break;
                 case 'n':
-                    $rows = Database::prepare(
+                    $rows = Database::i()->prepare(
                         "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom" .
                         " FROM `##other`" .
                         " WHERE o_file = :tree_id AND o_type = 'NOTE'" .
@@ -240,7 +240,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                     }
                     break;
                 case 'm':
-                    $rows = Database::prepare(
+                    $rows = Database::i()->prepare(
                         "SELECT m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom" .
                         " FROM `##media`" .
                         " WHERE m_file = :tree_id" .
@@ -303,7 +303,7 @@ class sitemap_WT_Module extends Module implements ModuleConfigInterface
                 $tree->setPreference('include_in_sitemap', Filter::postBool('include' . $tree->getTreeId()));
             }
             // Clear cache and force files to be regenerated
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##module_setting` WHERE setting_name LIKE 'sitemap%'"
             )
                     ->execute();

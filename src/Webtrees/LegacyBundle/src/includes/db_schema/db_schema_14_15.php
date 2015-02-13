@@ -20,11 +20,11 @@ namespace Webtrees\LegacyBundle\Legacy;
 // - delete old config settings
 // - update existing ones - we changed the default, but there is no GUI to edit it
 
-Database::exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN('GEDCOM_DEFAULT_TAB', 'LINK_ICONS', 'ZOOM_BOXES')");
-Database::exec("DELETE FROM `##user_setting` WHERE setting_name='default'");
+Database::i()->exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN('GEDCOM_DEFAULT_TAB', 'LINK_ICONS', 'ZOOM_BOXES')");
+Database::i()->exec("DELETE FROM `##user_setting` WHERE setting_name='default'");
 
 // There is no way to add a RESN tag to NOTE objects
-Database::exec("UPDATE `##gedcom_setting` SET setting_value='SOUR,RESN' WHERE setting_name='NOTE_FACTS_ADD' AND setting_value='SOUR'");
+Database::i()->exec("UPDATE `##gedcom_setting` SET setting_value='SOUR,RESN' WHERE setting_name='NOTE_FACTS_ADD' AND setting_value='SOUR'");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

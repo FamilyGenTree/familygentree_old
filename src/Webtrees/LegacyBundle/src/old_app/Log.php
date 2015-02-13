@@ -46,7 +46,7 @@ class Log
             $tree = isset(Globals::i()->WT_TREE) ? Globals::i()->WT_TREE : null;
         }
 
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##log` (log_type, log_message, ip_address, user_id, gedcom_id) VALUES (?, ?, ?, ?, ?)"
         )
                 ->execute(array(

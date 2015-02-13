@@ -40,7 +40,7 @@ class Site
         // There are lots of settings, and we need to fetch lots of them on every page
         // so it is quicker to fetch them all in one go.
         if (self::$setting === null) {
-            self::$setting = Database::prepare(
+            self::$setting = Database::i()->prepare(
                 "SELECT SQL_CACHE setting_name, setting_value FROM `##site_setting`"
             )
                                      ->fetchAssoc();
@@ -67,14 +67,14 @@ class Site
         // Only need to update the database if the setting has actually changed.
         if (self::getPreference($setting_name) != $setting_value) {
             if ($setting_value === null) {
-                Database::prepare(
+                Database::i()->prepare(
                     "DELETE FROM `##site_setting` WHERE setting_name = :setting_name"
                 )
                         ->execute(array(
                                       'setting_name' => $setting_name
                                   ));
             } else {
-                Database::prepare(
+                Database::i()->prepare(
                     "REPLACE INTO `##site_setting` (setting_name, setting_value)" .
                     " VALUES (:setting_name, LEFT(:setting_value, 255))"
                 )

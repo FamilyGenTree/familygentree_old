@@ -8,4 +8,4 @@ install:
   - composer install
 git:
   submodules: false
-script: phpunit --configuration Webtrees/LegacyBundle/src/phpunit.xml --coverage-text
+script: phpunit --configuration src/Webtrees/LegacyBundle/src/phpunit.xml --coverage-text

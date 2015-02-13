@@ -22,7 +22,7 @@ use PDOException;
 // - update some indexes, based on analysis of slow-query-logs
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##places`" .
         " DROP       KEY ix1," .
         " DROP       KEY ix2," .

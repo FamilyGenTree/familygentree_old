@@ -96,7 +96,7 @@ echo '<ul>';
 echo '<li>', /* I18N: The system is about to [...] */
 I18N::translate('Check for pending changes…');
 
-$changes = Database::prepare("SELECT 1 FROM `##change` WHERE status='pending' LIMIT 1")
+$changes = Database::i()->prepare("SELECT 1 FROM `##change` WHERE status='pending' LIMIT 1")
                    ->fetchOne();
 
 if ($changes) {
@@ -185,7 +185,7 @@ foreach (Module::getActiveModules() as $module) {
         default:
             switch ($modules_action) {
                 case 'disable':
-                    Database::prepare(
+                    Database::i()->prepare(
                         "UPDATE `##module` SET status = 'disabled' WHERE module_name = ?"
                     )
                             ->execute(array($module->getName()));
@@ -235,7 +235,7 @@ foreach (Theme::themeNames() as $theme_id => $theme_name) {
         case 'xenea':
             break;
         default:
-            $theme_used = Database::prepare(
+            $theme_used = Database::i()->prepare(
                 "SELECT EXISTS (SELECT 1 FROM `##site_setting`   WHERE setting_name='THEME_DIR' AND setting_value=?)" .
                 " OR    EXISTS (SELECT 1 FROM `##gedcom_setting` WHERE setting_name='THEME_DIR' AND setting_value=?)" .
                 " OR    EXISTS (SELECT 1 FROM `##user_setting`   WHERE setting_name='theme'     AND setting_value=?)"
@@ -249,15 +249,15 @@ foreach (Theme::themeNames() as $theme_id => $theme_name) {
             if ($theme_used) {
                 switch ($themes_action) {
                     case 'disable':
-                        Database::prepare(
+                        Database::i()->prepare(
                             "DELETE FROM `##site_setting`   WHERE setting_name = 'THEME_DIR' AND setting_value = ?"
                         )
                                 ->execute(array($theme_id));
-                        Database::prepare(
+                        Database::i()->prepare(
                             "DELETE FROM `##gedcom_setting` WHERE setting_name = 'THEME_DIR' AND setting_value = ?"
                         )
                                 ->execute(array($theme_id));
-                        Database::prepare(
+                        Database::i()->prepare(
                             "DELETE FROM `##user_setting`   WHERE setting_name = 'theme'     AND setting_value = ?"
                         )
                                 ->execute(array($theme_id));

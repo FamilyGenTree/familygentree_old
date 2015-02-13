@@ -19,7 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Update the database schema from version 28-29
 // - earlier versions used the wrong month number for Adar in non-leap years
 
-Database::exec(
+Database::i()->exec(
     "UPDATE `##dates` SET d_mon = 7 WHERE d_mon = 6 && d_type = '@#DHEBREW@' AND MOD(7 * d_year + 1, 19) >= 7"
 );
 

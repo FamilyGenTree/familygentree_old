@@ -19,7 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Update the database schema from version 5 to version 6
 // - changes to the values for the gedcom setting SHOW_RELATIVES_EVENTS
 
-$settings = Database::prepare(
+$settings = Database::i()->prepare(
     "SELECT gedcom_id, setting_value FROM `##gedcom_setting` WHERE setting_name='SHOW_RELATIVES_EVENTS'"
 )
                     ->fetchAssoc();

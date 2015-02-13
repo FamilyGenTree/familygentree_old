@@ -29,7 +29,7 @@ $confirm = Filter::post('confirm');
 $changes = array();
 
 if ($search && $replace) {
-    $rows = Database::prepare(
+    $rows = Database::i()->prepare(
         "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
         " FROM `##individuals`" .
         " LEFT JOIN `##change` ON (i_id = xref AND i_file=gedcom_id AND status='pending')" .
@@ -55,7 +55,7 @@ if ($search && $replace) {
             }
         }
     }
-    $rows = Database::prepare(
+    $rows = Database::i()->prepare(
         "SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom" .
         " FROM `##families`" .
         " LEFT JOIN `##change` ON (f_id = xref AND f_file=gedcom_id AND status='pending')" .

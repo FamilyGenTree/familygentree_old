@@ -116,7 +116,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
         }
     }
     // Update any linked user-accounts
-    Database::prepare(
+    Database::i()->prepare(
         "UPDATE `##user_gedcom_setting`" .
         " SET setting_value=?" .
         " WHERE gedcom_id=? AND setting_name='gedcomid' AND setting_value=?"
@@ -128,7 +128,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
                       ));
 
     // Merge hit counters
-    $hits = Database::prepare(
+    $hits = Database::i()->prepare(
         "SELECT page_name, SUM(page_count)" .
         " FROM `##hit_counter`" .
         " WHERE gedcom_id=? AND page_parameter IN (?, ?)" .
@@ -142,7 +142,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
                     ->fetchAssoc();
 
     foreach ($hits as $page_name => $page_count) {
-        Database::prepare(
+        Database::i()->prepare(
             "UPDATE `##hit_counter` SET page_count=?" .
             " WHERE gedcom_id=? AND page_name=? AND page_parameter=?"
         )
@@ -153,7 +153,7 @@ if ($rec1 && $rec2 && $rec1->getXref() !== $rec2->getXref() && $rec1::RECORD_TYP
                               $gid1
                           ));
     }
-    Database::prepare(
+    Database::i()->prepare(
         "DELETE FROM `##hit_counter`" .
         " WHERE gedcom_id=? AND page_parameter=?"
     )

@@ -22,7 +22,7 @@ use PDOException;
 // - change index on name table
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##dates` CHANGE d_type d_type ENUM('@#DGREGORIAN@', '@#DJULIAN@', '@#DHEBREW@', '@#DFRENCH R@', '@#DHIJRI@', '@#DROMAN@', '@#DJALALI@')"
     );
 } catch (PDOException $ex) {
@@ -32,7 +32,7 @@ try {
 
 try {
     // The INDILIST and FAMLIST scripts have been rewritten to use this index
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##name` DROP INDEX ix2, ADD INDEX ix2 (n_surn, n_file, n_type, n_id), ADD INDEX ix3 (n_givn, n_file, n_type, n_id)"
     );
 } catch (PDOException $ex) {

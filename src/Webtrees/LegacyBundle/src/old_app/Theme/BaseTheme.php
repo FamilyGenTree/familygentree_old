@@ -1448,7 +1448,7 @@ abstract class BaseTheme
         $menu = new Menu(I18N::translate('Lists'), UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url), 'menu-list');
 
         // Do not show empty lists
-        $row = Database::prepare(
+        $row = Database::i()->prepare(
             "SELECT SQL_CACHE" .
             " EXISTS(SELECT 1 FROM `##sources` WHERE s_file=?                  ) AS sour," .
             " EXISTS(SELECT 1 FROM `##other`   WHERE o_file=? AND o_type='REPO') AS repo," .
@@ -1503,7 +1503,7 @@ abstract class BaseTheme
      */
     protected function menuLogin()
     {
-        if (Auth::check() || $this->isSearchEngine() || WT_SCRIPT_NAME === 'login.php') {
+        if (Auth::check() || $this->isSearchEngine() || WT_SCRIPT_NAME === UrlConstants::LOGIN_PHP) {
             return null;
         } else {
             return new Menu(I18N::translate('Login'), WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()

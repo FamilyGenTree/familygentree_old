@@ -67,7 +67,7 @@ class top10_pageviews_WT_Module extends Module implements ModuleBlockInterface
 
         $content = "";
         // load the lines from the file
-        $top10 = Database::prepare(
+        $top10 = Database::i()->prepare(
             "SELECT page_parameter, page_count" .
             " FROM `##hit_counter`" .
             " WHERE gedcom_id = :tree_id AND page_name IN ('individual.php','family.php','source.php','repo.php','note.php','mediaviewer.php')" .

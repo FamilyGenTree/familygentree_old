@@ -20,7 +20,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 //
 // Convert flag icons from .gif to .png
 
-Database::exec("UPDATE `##placelocation` SET pl_icon=REPLACE(pl_icon, '.gif', '.png')");
+Database::i()->exec("UPDATE `##placelocation` SET pl_icon=REPLACE(pl_icon, '.gif', '.png')");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

@@ -19,7 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Update the database schema from version 22-23
 // - data update for 1.4.0 media changes
 
-$_cfgs = Database::prepare(
+$_cfgs = Database::i()->prepare(
     "SELECT gs1.gedcom_id AS gedcom_id, gs1.setting_value AS media_directory, gs2.setting_value AS use_media_firewall, gs3.setting_value AS media_firewall_thumbs, gs4.setting_value AS media_firewall_rootdir" .
     " FROM `##gedcom_setting` gs1" .
     " LEFT JOIN `##gedcom_setting` gs2 ON (gs1.gedcom_id = gs2.gedcom_id AND gs2.setting_name='USE_MEDIA_FIREWALL')" .
@@ -56,7 +56,7 @@ foreach ($_cfgs as $_cfg) {
                 }
             }
             $_media_dir .= $_cfg->media_directory;
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##gedcom_setting`" .
                 " SET setting_value=?" .
                 " WHERE gedcom_id=? AND setting_name='MEDIA_DIRECTORY'"
@@ -83,7 +83,7 @@ foreach ($_cfgs as $_cfg) {
 unset($_cfgs, $_cfg, $_mf_dir, $_tmp_dir);
 
 // Delete old settings
-Database::exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('USE_MEDIA_FIREWALL', 'MEDIA_FIREWALL_THUMBS', 'MEDIA_FIREWALL_ROOTDIR')");
+Database::i()->exec("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('USE_MEDIA_FIREWALL', 'MEDIA_FIREWALL_THUMBS', 'MEDIA_FIREWALL_ROOTDIR')");
 
 // Update the version to indicate success
 Site::setPreference($schema_name, $next_version);

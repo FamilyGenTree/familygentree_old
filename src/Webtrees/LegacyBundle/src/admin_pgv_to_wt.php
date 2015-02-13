@@ -92,7 +92,7 @@ if ($PGV_PATH) {
         } else {
             unset($wt_config);
             try {
-                $PGV_SCHEMA_VERSION = Database::prepare(
+                $PGV_SCHEMA_VERSION = Database::i()->prepare(
                     "SELECT site_setting_value FROM `{$DBNAME}`.`{$TBLPREFIX}site_setting` WHERE site_setting_name='PGV_SCHEMA_VERSION'"
                 )
                                               ->fetchOne();
@@ -191,17 +191,17 @@ if (!$PGV_PATH) {
 }
 
 // Run in a transaction
-Database::beginTransaction();
+Database::i()->beginTransaction();
 
 // Delete the existing user accounts, and any information associated with it
-Database::exec("UPDATE `##log` SET user_id=NULL");
-Database::exec("DELETE FROM `##change`");
-Database::exec("DELETE `##block_setting` FROM `##block_setting` JOIN  `##block` USING (block_id) WHERE user_id>0 OR gedcom_id>0");
-Database::exec("DELETE FROM `##block`               WHERE user_id>0 OR gedcom_id>0");
-Database::exec("DELETE FROM `##message`");
-Database::exec("DELETE FROM `##user_gedcom_setting` WHERE user_id>0");
-Database::exec("DELETE FROM `##user_setting`        WHERE user_id>0");
-Database::exec("DELETE FROM `##user`                WHERE user_id>0");
+Database::i()->exec("UPDATE `##log` SET user_id=NULL");
+Database::i()->exec("DELETE FROM `##change`");
+Database::i()->exec("DELETE `##block_setting` FROM `##block_setting` JOIN  `##block` USING (block_id) WHERE user_id>0 OR gedcom_id>0");
+Database::i()->exec("DELETE FROM `##block`               WHERE user_id>0 OR gedcom_id>0");
+Database::i()->exec("DELETE FROM `##message`");
+Database::i()->exec("DELETE FROM `##user_gedcom_setting` WHERE user_id>0");
+Database::i()->exec("DELETE FROM `##user_setting`        WHERE user_id>0");
+Database::i()->exec("DELETE FROM `##user`                WHERE user_id>0");
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -226,7 +226,7 @@ Site::setPreference('SMTP_FROM_NAME', $PGV_SMTP_FROM_NAME);
 
 echo '<p>pgv_site_setting => wt_site_setting…</p>';
 
-Database::prepare(
+Database::i()->prepare(
     "REPLACE INTO `##site_setting` (setting_name, setting_value)" .
     " SELECT site_setting_name, site_setting_value FROM `{$DBNAME}`.`{$TBLPREFIX}site_setting`" .
     " WHERE site_setting_name IN ('DEFAULT_GEDCOM', 'LAST_CHANGE_EMAIL')"
@@ -238,7 +238,7 @@ Database::prepare(
 if ($PGV_SCHEMA_VERSION >= 12) {
     echo '<p>pgv_gedcom => wt_gedcom…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##gedcom` (gedcom_id, gedcom_name)" .
         " SELECT gedcom_id, gedcom_name FROM `{$DBNAME}`.`{$TBLPREFIX}gedcom`"
     )
@@ -246,7 +246,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
 
     echo '<p>pgv_gedcom_setting => wt_gedcom_setting…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value)" .
         " SELECT gedcom_id, setting_name," .
         "  CASE setting_name" .
@@ -307,7 +307,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
 
     try {
         // "INSERT IGNORE" is needed to allow for PGV users with duplicate emails.  Only the first will be imported.
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT IGNORE INTO `##user` (user_id, user_name, real_name, email, password)" .
             " SELECT user_id, user_name, CONCAT_WS(' ', us1.setting_value, us2.setting_value), us3.setting_value, password FROM `{$DBNAME}`.`{$TBLPREFIX}user`" .
             " LEFT JOIN `{$DBNAME}`.`{$TBLPREFIX}user_setting` us1 USING (user_id)" .
@@ -324,7 +324,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
 
     echo '<p>pgv_user_setting => wt_user_setting…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##user_setting` (user_id, setting_name, setting_value)" .
         " SELECT user_id, setting_name," .
         " CASE setting_name" .
@@ -386,7 +386,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
 
     echo '<p>pgv_user_gedcom_setting => wt_user_gedcom_setting…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "INSERT INTO `##user_gedcom_setting` (user_id, gedcom_id, setting_name, setting_value)" .
         " SELECT user_id, gedcom_id, setting_name, setting_value FROM `{$DBNAME}`.`{$TBLPREFIX}user_gedcom_setting`" .
         " JOIN `##user` USING (user_id)"
@@ -402,7 +402,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
         if (isset($GEDCOMS) && is_array($GEDCOMS)) {
             foreach ($GEDCOMS as $array) {
                 try {
-                    Database::prepare("INSERT INTO `##gedcom` (gedcom_id, gedcom_name) VALUES (?,?)")
+                    Database::i()->prepare("INSERT INTO `##gedcom` (gedcom_id, gedcom_name) VALUES (?,?)")
                             ->execute(array(
                                           $array['id'],
                                           $array['gedcom']
@@ -414,7 +414,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
                 foreach ($array as $key => $value) {
                     if ($key != 'id' && $key != 'gedcom' && $key != 'commonsurnames') {
                         try {
-                            Database::prepare("INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value) VALUES (?,?, ?)")
+                            Database::i()->prepare("INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value) VALUES (?,?, ?)")
                                     ->execute(array(
                                                   $array['id'],
                                                   $key,
@@ -434,7 +434,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
 
     try {
         // "INSERT IGNORE" is needed to allow for PGV users with duplicate emails.  Only the first will be imported.
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT IGNORE INTO `##user` (user_name, real_name, email, password)" .
             " SELECT u_username, CONCAT_WS(' ', u_firstname, u_lastname), u_email, u_password FROM `{$DBNAME}`.`{$TBLPREFIX}users`"
         )
@@ -447,7 +447,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
     echo '<p>pgv_users => wt_user_setting…</p>';
 
     try {
-        Database::prepare(
+        Database::i()->prepare(
             "INSERT INTO `##user_setting` (user_id, setting_name, setting_value)" .
             " SELECT user_id, 'canadmin', " .
             " CASE WHEN u_canadmin IN ('Y', 'yes') THEN 1 WHEN u_canadmin IN ('N', 'no') THEN 0 ELSE u_canadmin END" .
@@ -552,19 +552,19 @@ if ($PGV_SCHEMA_VERSION >= 12) {
         // b) it doesn't exist (new install)
     }
     // Some PGV installations store the u_reg_timestamp in the format "2010-03-07 21:41:07"
-    Database::prepare(
+    Database::i()->prepare(
         "UPDATE `##user_setting` SET setting_value=UNIX_TIMESTAMP(setting_value) WHERE setting_name='reg_timestamp' AND setting_value LIKE '____-__-__ __:__:__'"
     )
             ->execute();
     // Some PGV installations have empty/invalid values for reg_timestamp
-    Database::prepare(
+    Database::i()->prepare(
         "UPDATE `##user_setting` SET setting_value=CAST(setting_value AS UNSIGNED) WHERE setting_name='reg_timestamp'"
     )
             ->execute();
     echo '<p>pgv_users => wt_user_gedcom_setting…</p>';
 
     $user_gedcom_settings =
-        Database::prepare(
+        Database::i()->prepare(
             "SELECT user_id, u_gedcomid, u_rootid, u_canedit" .
             " FROM `{$DBNAME}`.`{$TBLPREFIX}users`" .
             " JOIN `##user` ON (user_name=CONVERT(u_username USING utf8) COLLATE utf8_unicode_ci)"
@@ -575,7 +575,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
         if (is_array($array)) {
             foreach ($array as $gedcom => $value) {
                 try {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##user_gedcom_setting` (user_id, gedcom_id, setting_name, setting_value) VALUES (?, ?, ?, ?)"
                     )
                             ->execute(array(
@@ -593,7 +593,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
         if (is_array($array)) {
             foreach ($array as $gedcom => $value) {
                 try {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##user_gedcom_setting` (user_id, gedcom_id, setting_name, setting_value) VALUES (?, ?, ?, ?)"
                     )
                             ->execute(array(
@@ -611,7 +611,7 @@ if ($PGV_SCHEMA_VERSION >= 12) {
         if (is_array($array)) {
             foreach ($array as $gedcom => $value) {
                 try {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##user_gedcom_setting` (user_id, gedcom_id, setting_name, setting_value) VALUES (?, ?, ?, ?)"
                     )
                             ->execute(array(
@@ -640,7 +640,7 @@ $PRIV_HIDE   = WT_PRIV_HIDE;
 
 // Old versions of PGV used a $GEDCOMS[] array.
 // New versions used a database.
-$GEDCOMS = Database::prepare(
+$GEDCOMS = Database::i()->prepare(
     "SELECT" .
     " gedcom_id         AS id," .
     " gedcom_name       AS gedcom," .
@@ -757,8 +757,8 @@ foreach ($GEDCOMS as $ged_com => $ged_data) {
         echo '<p>Error - could not read configuration file ', $config, '</p>';
     }
 
-    $stmt_default_resn   = Database::prepare("INSERT INTO `##default_resn` (gedcom_id, xref, tag_type, resn) VALUES (?, ?, ?, CASE ? WHEN -1 THEN 'hidden' WHEN 0 THEN 'confidential' WHEN 1 THEN 'privacy' ELSE 'none' END)");
-    $stmt_gedcom_setting = Database::prepare("INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value) VALUES (?,?,?)");
+    $stmt_default_resn   = Database::i()->prepare("INSERT INTO `##default_resn` (gedcom_id, xref, tag_type, resn) VALUES (?, ?, ?, CASE ? WHEN -1 THEN 'hidden' WHEN 0 THEN 'confidential' WHEN 1 THEN 'privacy' ELSE 'none' END)");
+    $stmt_gedcom_setting = Database::i()->prepare("INSERT INTO `##gedcom_setting` (gedcom_id, setting_name, setting_value) VALUES (?,?,?)");
 
 
     $privacy = str_replace(array(
@@ -1438,12 +1438,12 @@ foreach ($GEDCOMS as $ged_com => $ged_data) {
                                       $WORD_WRAPPED_NOTES
                                   ));
 }
-Database::prepare("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('config', 'privacy', 'path', 'pgv_ver', 'imported')")
+Database::i()->prepare("DELETE FROM `##gedcom_setting` WHERE setting_name IN ('config', 'privacy', 'path', 'pgv_ver', 'imported')")
         ->execute();
 
 // webtrees 1.0.5 combines user and gedcom settings for relationship privacy
 // into a combined user-gedcom setting, for more granular control
-Database::exec(
+Database::i()->exec(
     "INSERT IGNORE INTO `##user_gedcom_setting` (user_id, gedcom_id, setting_name, setting_value)" .
     " SELECT u.user_id, g.gedcom_id, 'RELATIONSHIP_PATH_LENGTH', LEAST(us1.setting_value, gs1.setting_value)" .
     " FROM   `##user` u" .
@@ -1455,11 +1455,11 @@ Database::exec(
     " WHERE  us2.setting_value AND gs2.setting_value"
 );
 
-Database::exec(
+Database::i()->exec(
     "DELETE FROM `##gedcom_setting` WHERE setting_name IN ('MAX_RELATION_PATH_LENGTH', 'USE_RELATIONSHIP_PRIVACY')"
 );
 
-Database::exec(
+Database::i()->exec(
     "DELETE FROM `##user_setting` WHERE setting_name IN ('relationship_privacy', 'max_relation_path_length')"
 );
 
@@ -1468,7 +1468,7 @@ Database::exec(
 // Just give everybody and every tree default blocks
 ////////////////////////////////////////////////////////////////////////////////
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##block` (user_id, location, block_order, module_name)" .
     " SELECT `##user`.user_id, location, block_order, module_name" .
     " FROM `##block`" .
@@ -1478,7 +1478,7 @@ Database::prepare(
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##block` (gedcom_id, location, block_order, module_name)" .
     " SELECT `##gedcom`.gedcom_id, location, block_order, module_name" .
     " FROM `##block`" .
@@ -1495,14 +1495,14 @@ Database::prepare(
 if ($PGV_SCHEMA_VERSION >= 13) {
     echo '<p>pgv_hit_counter => wt_hit_counter…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "REPLACE INTO `##hit_counter` (gedcom_id, page_name, page_parameter, page_count)" .
         " SELECT gedcom_id, page_name, page_parameter, page_count FROM `{$DBNAME}`.`{$TBLPREFIX}hit_counter`"
     )
             ->execute();
 } else {
     // Copied from PGV's db_schema_12_13
-    $statement = Database::prepare("INSERT IGNORE INTO `##hit_counter` (gedcom_id, page_name, page_parameter, page_count) VALUES (?, ?, ?, ?)");
+    $statement = Database::i()->prepare("INSERT IGNORE INTO `##hit_counter` (gedcom_id, page_name, page_parameter, page_count) VALUES (?, ?, ?, ?)");
 
     foreach ($GEDCOMS as $ged_com => $ged_data) {
         $file = $INDEX_DIRECTORY . '/' . $ged_data['gedcom'] . 'pgv_counters.txt';
@@ -1542,13 +1542,13 @@ foreach ($GEDCOMS as $ged_data) {
 
 echo '<p>pgv_site_setting => wt_module_setting…</p>';
 
-Database::prepare(
+Database::i()->prepare(
     "REPLACE INTO `##module_setting` (module_name, setting_name, setting_value)" .
     " SELECT 'googlemap', site_setting_name, site_setting_value FROM `{$DBNAME}`.`{$TBLPREFIX}site_setting`" .
     " WHERE site_setting_name LIKE 'GM_%'"
 )
         ->execute();
-Database::prepare(
+Database::i()->prepare(
     "REPLACE INTO `##module_setting` (module_name, setting_name, setting_value)" .
     " SELECT 'lightbox', site_setting_name, site_setting_value FROM `{$DBNAME}`.`{$TBLPREFIX}site_setting`" .
     " WHERE site_setting_name LIKE 'LB_%'"
@@ -1560,7 +1560,7 @@ Database::prepare(
 echo '<p>pgv_favorites => wt_favorite…</p>';
 
 try {
-    Database::prepare(
+    Database::i()->prepare(
         "REPLACE INTO `##favorite` (favorite_id, user_id, gedcom_id, xref, favorite_type, url, title, note)" .
         " SELECT fv_id, u.user_id, g.gedcom_id, fv_gid, fv_type, fv_url, fv_title, fv_note" .
         " FROM `{$DBNAME}`.`{$TBLPREFIX}favorites` f" .
@@ -1577,7 +1577,7 @@ try {
 echo '<p>pgv_news => wt_news…</p>';
 
 try {
-    Database::prepare(
+    Database::i()->prepare(
         "REPLACE INTO `##news` (news_id, user_id, gedcom_id, subject, body, updated)" .
         " SELECT n_id, u.user_id, g.gedcom_id, n_title, n_text, FROM_UNIXTIME(n_date)" .
         " FROM `{$DBNAME}`.`{$TBLPREFIX}news` n" .
@@ -1593,7 +1593,7 @@ try {
 
 echo '<p>pgv_nextid => wt_next_id…</p>';
 
-Database::prepare(
+Database::i()->prepare(
     "REPLACE INTO `##next_id` (gedcom_id, record_type, next_id)" .
     " SELECT ni_gedfile, ni_type, ni_id" .
     " FROM `{$DBNAME}`.`{$TBLPREFIX}nextid`" .
@@ -1606,7 +1606,7 @@ Database::prepare(
 
 echo '<p>pgv_messages => wt_message…</p>';
 
-Database::prepare(
+Database::i()->prepare(
     "REPLACE INTO `##message` (message_id, sender, ip_address, user_id, subject, body, created)" .
     " SELECT m_id, m_from, '127.0.0.1', user_id, m_subject, m_body, str_to_date(m_created,'%a, %d %M %Y %H:%i:%s')" .
     " FROM `{$DBNAME}`.`{$TBLPREFIX}messages`" .
@@ -1619,7 +1619,7 @@ Database::prepare(
 try {
     echo '<p>pgv_placelocation => wt_placelocation…</p>';
 
-    Database::prepare(
+    Database::i()->prepare(
         "REPLACE INTO `##placelocation` (pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon)" .
         " SELECT pl_id, pl_parent_id, pl_level, pl_place, pl_long, pl_lati, pl_zoom, pl_icon FROM `{$DBNAME}`.`{$TBLPREFIX}placelocation`"
     )
@@ -1632,7 +1632,7 @@ try {
 
 echo '<p>Genealogy records…</p>';
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##gedcom_chunk` (gedcom_id, chunk_data, imported)" .
     " SELECT o_file, o_gedcom, 0 FROM `{$DBNAME}`.`{$TBLPREFIX}other`" .
     " JOIN `##gedcom` ON (o_file = gedcom_id)" .
@@ -1640,42 +1640,42 @@ Database::prepare(
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##gedcom_chunk` (gedcom_id, chunk_data, imported)" .
     " SELECT i_file, i_gedcom, 0 FROM `{$DBNAME}`.`{$TBLPREFIX}individuals`" .
     " JOIN `##gedcom` ON (i_file = gedcom_id)"
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##gedcom_chunk` (gedcom_id, chunk_data, imported)" .
     " SELECT f_file, f_gedcom, 0 FROM `{$DBNAME}`.`{$TBLPREFIX}families`" .
     " JOIN `##gedcom` ON (f_file = gedcom_id)"
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##gedcom_chunk` (gedcom_id, chunk_data, imported)" .
     " SELECT s_file, s_gedcom, 0 FROM `{$DBNAME}`.`{$TBLPREFIX}sources`" .
     " JOIN `##gedcom` ON (s_file = gedcom_id)"
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "INSERT INTO `##gedcom_chunk` (gedcom_id, chunk_data, imported)" .
     " SELECT m_gedfile, m_gedrec, 0 FROM `{$DBNAME}`.`{$TBLPREFIX}media`" .
     " JOIN `##gedcom` ON (m_gedfile = gedcom_id)"
 )
         ->execute();
 
-Database::prepare(
+Database::i()->prepare(
     "UPDATE `##gedcom_setting` SET setting_value='0' WHERE setting_name='imported'"
 )
         ->execute();
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Database::commit();
+Database::i()->commit();
 
 echo '<hr>';
 echo '<p>', I18N::translate('You need to login again, using your PhpGedView username and password.'), '</p>';

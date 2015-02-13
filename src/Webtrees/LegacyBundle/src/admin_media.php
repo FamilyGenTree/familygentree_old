@@ -162,13 +162,13 @@ switch ($action) {
                     $ARGS1['start']  = $start;
                 }
 
-                $rows = Database::prepare($SELECT1)
+                $rows = Database::i()->prepare($SELECT1)
                                 ->execute($ARGS1)
                                 ->fetchAll();
                 // Total filtered/unfiltered rows
-                $recordsFiltered = Database::prepare("SELECT FOUND_ROWS()")
+                $recordsFiltered = Database::i()->prepare("SELECT FOUND_ROWS()")
                                            ->fetchOne();
-                $recordsTotal    = Database::prepare($SELECT2)
+                $recordsTotal    = Database::i()->prepare($SELECT2)
                                            ->execute($ARGS2)
                                            ->fetchOne();
 
@@ -230,14 +230,14 @@ switch ($action) {
                     $ARGS1['start']  = $start;
                 }
 
-                $rows = Database::prepare($SELECT1)
+                $rows = Database::i()->prepare($SELECT1)
                                 ->execute($ARGS1)
                                 ->fetchAll();
 
                 // Total filtered/unfiltered rows
-                $recordsFiltered = Database::prepare("SELECT FOUND_ROWS()")
+                $recordsFiltered = Database::i()->prepare("SELECT FOUND_ROWS()")
                                            ->fetchOne();
-                $recordsTotal    = Database::prepare($SELECT2)
+                $recordsTotal    = Database::i()->prepare($SELECT2)
                                            ->execute($ARGS2)
                                            ->fetchOne();
 
@@ -254,7 +254,7 @@ switch ($action) {
 
             case 'unused':
                 // Which trees use this media folder?
-                $media_trees = Database::prepare(
+                $media_trees = Database::i()->prepare(
                     "SELECT gedcom_name, gedcom_name" .
                     " FROM `##gedcom`" .
                     " JOIN `##gedcom_setting` USING (gedcom_id)" .
@@ -308,7 +308,7 @@ switch ($action) {
                     }
 
                     // Is there a pending record for this file?
-                    $exists_pending = Database::prepare(
+                    $exists_pending = Database::i()->prepare(
                         "SELECT 1 FROM `##change` WHERE status='pending' AND new_gedcom LIKE CONCAT('%\n1 FILE ', :unused_file, '\n%')"
                     )
                                               ->execute(array(
@@ -361,7 +361,7 @@ switch ($action) {
  */
 function all_media_folders()
 {
-    return Database::prepare(
+    return Database::i()->prepare(
         "SELECT SQL_CACHE setting_value, setting_value" .
         " FROM `##gedcom_setting`" .
         " WHERE setting_name='MEDIA_DIRECTORY'" .
@@ -381,7 +381,7 @@ function all_media_folders()
  */
 function media_paths($media_folder)
 {
-    $media_paths = Database::prepare(
+    $media_paths = Database::i()->prepare(
         "SELECT SQL_CACHE LEFT(m_filename, CHAR_LENGTH(m_filename) - CHAR_LENGTH(SUBSTRING_INDEX(m_filename, '/', -1))) AS media_path" .
         " FROM  `##media`" .
         " JOIN  `##gedcom_setting` ON (m_file = gedcom_id AND setting_name = 'MEDIA_DIRECTORY')" .
@@ -467,7 +467,7 @@ function all_disk_files($media_folder, $media_path, $subfolders, $filter)
  */
 function all_media_files($media_folder, $media_path, $subfolders, $filter)
 {
-    return Database::prepare(
+    return Database::i()->prepare(
         "SELECT SQL_CACHE SQL_CALC_FOUND_ROWS TRIM(LEADING :media_path_1 FROM m_filename) AS media_path, 'OBJE' AS type, m_titl, m_id AS xref, m_file AS ged_id, m_gedcom AS gedrec, m_filename" .
         " FROM  `##media`" .
         " JOIN  `##gedcom_setting` ON (m_file = gedcom_id AND setting_name = 'MEDIA_DIRECTORY')" .

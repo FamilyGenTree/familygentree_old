@@ -22,7 +22,7 @@ use PDOException;
 // Add the new columns
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##favorites`" .
         " CHANGE fv_id    favorite_id   INTEGER AUTO_INCREMENT NOT NULL," .
         " CHANGE fv_gid   xref          VARCHAR(20) NULL," .
@@ -41,7 +41,7 @@ try {
 
 // Migrate data from the old columns to the new ones
 try {
-    Database::exec(
+    Database::i()->exec(
         "UPDATE `##favorites` f" .
         " LEFT JOIN `##gedcom` g ON (f.fv_file    =g.gedcom_name)" .
         " LEFT JOIN `##user`   u ON (f.fv_username=u.user_name)" .
@@ -53,7 +53,7 @@ try {
 
 // Delete orphaned rows
 try {
-    Database::exec(
+    Database::i()->exec(
         "DELETE FROM `##favorites` WHERE user_id IS NULL AND gedcom_id IS NULL"
     );
 } catch (PDOException $ex) {
@@ -62,7 +62,7 @@ try {
 
 // Delete the old column
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##favorites` DROP fv_username, DROP fv_file"
     );
 } catch (PDOException $ex) {
@@ -71,7 +71,7 @@ try {
 
 // Rename the table
 try {
-    Database::exec(
+    Database::i()->exec(
         "RENAME TABLE `##favorites` TO `##favorite`"
     );
 } catch (PDOException $ex) {

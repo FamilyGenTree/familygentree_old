@@ -45,7 +45,7 @@ switch ($action) {
         echo '<h3>' . I18N::translate('Add/edit a journal/news entry') . '</h3>';
         echo '<form style="overflow: hidden;" name="messageform" method="post" action="editnews.php?action=save&news_id=' . $news_id . '">';
         if ($news_id) {
-            $news = Database::prepare("SELECT SQL_CACHE news_id AS id, user_id, gedcom_id, UNIX_TIMESTAMP(updated) AS date, subject, body FROM `##news` WHERE news_id=?")
+            $news = Database::i()->prepare("SELECT SQL_CACHE news_id AS id, user_id, gedcom_id, UNIX_TIMESTAMP(updated) AS date, subject, body FROM `##news` WHERE news_id=?")
                             ->execute(array($news_id))
                             ->fetchOneRow(PDO::FETCH_ASSOC);
         } else {
@@ -72,7 +72,7 @@ switch ($action) {
         break;
     case 'save':
         if ($news_id) {
-            Database::prepare("UPDATE `##news` SET subject=?, body=?, updated=FROM_UNIXTIME(?) WHERE news_id=?")
+            Database::i()->prepare("UPDATE `##news` SET subject=?, body=?, updated=FROM_UNIXTIME(?) WHERE news_id=?")
                     ->execute(array(
                                   $title,
                                   $text,
@@ -80,7 +80,7 @@ switch ($action) {
                                   $news_id
                               ));
         } else {
-            Database::prepare("INSERT INTO `##news` (user_id, gedcom_id, subject, body) VALUES (NULLIF(?, ''), NULLIF(?, '') ,? ,?)")
+            Database::i()->prepare("INSERT INTO `##news` (user_id, gedcom_id, subject, body) VALUES (NULLIF(?, ''), NULLIF(?, '') ,? ,?)")
                     ->execute(array(
                                   $user_id,
                                   $gedcom_id,

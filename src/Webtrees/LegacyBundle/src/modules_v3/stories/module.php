@@ -78,7 +78,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
         $controller = Application::i()->getActiveController();
 
         $block_ids =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT block_id" .
                 " FROM `##block`" .
                 " WHERE module_name=?" .
@@ -126,7 +126,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
         $controller = Application::i()->getActiveController();
 
         $count_of_stories =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT COUNT(block_id)" .
                 " FROM `##block`" .
                 " WHERE module_name=?" .
@@ -164,7 +164,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
             if (Filter::postBool('save') && Filter::checkCsrf()) {
                 $block_id = Filter::postInteger('block_id');
                 if ($block_id) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "UPDATE `##block` SET gedcom_id=?, xref=? WHERE block_id=?"
                     )
                             ->execute(array(
@@ -173,7 +173,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                                           $block_id
                                       ));
                 } else {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT INTO `##block` (gedcom_id, xref, module_name, block_order) VALUES (?, ?, ?, ?)"
                     )
                             ->execute(array(
@@ -182,7 +182,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                                           $this->getName(),
                                           0
                                       ));
-                    $block_id = Database::getInstance()
+                    $block_id = Database::i()->getInstance()
                                         ->lastInsertId();
                 }
                 FunctionsDbPhp::i()->set_block_setting($block_id, 'title', Filter::post('title'));
@@ -198,7 +198,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
                     $controller->setPageTitle(I18N::translate('Edit story'));
                     $title      = FunctionsDbPhp::i()->get_block_setting($block_id, 'title');
                     $story_body = FunctionsDbPhp::i()->get_block_setting($block_id, 'story_body');
-                    $xref       = Database::prepare(
+                    $xref       = Database::i()->prepare(
                         "SELECT xref FROM `##block` WHERE block_id=?"
                     )
                                           ->execute(array($block_id))
@@ -281,12 +281,12 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
         if (WT_USER_CAN_EDIT) {
             $block_id = Filter::getInteger('block_id');
 
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##block_setting` WHERE block_id=?"
             )
                     ->execute(array($block_id));
 
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##block` WHERE block_id=?"
             )
                     ->execute(array($block_id));
@@ -327,7 +327,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
 				});
 			');
 
-        $stories = Database::prepare(
+        $stories = Database::i()->prepare(
             "SELECT block_id, xref" .
             " FROM `##block` b" .
             " WHERE module_name=?" .
@@ -440,7 +440,7 @@ class stories_WT_Module extends Module implements ModuleTabInterface, ModuleConf
 				});
 			');
 
-        $stories = Database::prepare(
+        $stories = Database::i()->prepare(
             "SELECT block_id, xref" .
             " FROM `##block` b" .
             " WHERE module_name=?" .

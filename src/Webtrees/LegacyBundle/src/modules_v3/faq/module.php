@@ -81,7 +81,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
         if (Filter::postBool('save') && Filter::checkCsrf()) {
             $block_id = Filter::postInteger('block_id');
             if ($block_id) {
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##block` SET gedcom_id = NULLIF(:tree_id, '0'), block_order = :block_order WHERE block_id = :block_id"
                 )
                         ->execute(array(
@@ -90,7 +90,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                       'block_id'    => $block_id
                                   ));
             } else {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT INTO `##block` (gedcom_id, module_name, block_order) VALUES (NULLIF(:tree_id, '0'), :module_name, :block_order)"
                 )
                         ->execute(array(
@@ -98,7 +98,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                       'module_name' => $this->getName(),
                                       'block_order' => Filter::postInteger('block_order'),
                                   ));
-                $block_id = Database::getInstance()
+                $block_id = Database::i()->getInstance()
                                     ->lastInsertId();
             }
             FunctionsDbPhp::i()->set_block_setting($block_id, 'header', Filter::post('header'));
@@ -114,12 +114,12 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                 $controller->setPageTitle(I18N::translate('Edit FAQ item'));
                 $header      = FunctionsDbPhp::i()->get_block_setting($block_id, 'header');
                 $faqbody     = FunctionsDbPhp::i()->get_block_setting($block_id, 'faqbody');
-                $block_order = Database::prepare(
+                $block_order = Database::i()->prepare(
                     "SELECT block_order FROM `##block` WHERE block_id = :block_id"
                 )
                                        ->execute(array('block_id' => $block_id))
                                        ->fetchOne();
-                $gedcom_id   = Database::prepare(
+                $gedcom_id   = Database::i()->prepare(
                     "SELECT gedcom_id FROM `##block` WHERE block_id = :block_id"
                 )
                                        ->execute(array('block_id' => $block_id))
@@ -128,7 +128,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                 $controller->setPageTitle(I18N::translate('Add an FAQ item'));
                 $header      = '';
                 $faqbody     = '';
-                $block_order = Database::prepare(
+                $block_order = Database::i()->prepare(
                     "SELECT IFNULL(MAX(block_order)+1, 0) FROM `##block` WHERE module_name = :module_name"
                 )
                                        ->execute(array('module_name' => $this->getName()))
@@ -193,12 +193,12 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
     {
         $block_id = Filter::getInteger('block_id');
 
-        Database::prepare(
+        Database::i()->prepare(
             "DELETE FROM `##block_setting` WHERE block_id = :block_id"
         )
                 ->execute(array('block_id' => $block_id));
 
-        Database::prepare(
+        Database::i()->prepare(
             "DELETE FROM `##block` WHERE block_id = :block_id"
         )
                 ->execute(array('block_id' => $block_id));
@@ -211,13 +211,13 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
     {
         $block_id = Filter::getInteger('block_id');
 
-        $block_order = Database::prepare(
+        $block_order = Database::i()->prepare(
             "SELECT block_order FROM `##block` WHERE block_id = :block_id"
         )
                                ->execute(array('block_id' => $block_id))
                                ->fetchOne();
 
-        $swap_block = Database::prepare(
+        $swap_block = Database::i()->prepare(
             "SELECT block_order, block_id" .
             " FROM `##block`" .
             " WHERE block_order = (" .
@@ -232,14 +232,14 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                         ))
                               ->fetchOneRow();
         if ($swap_block) {
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##block` SET block_order = :block_order WHERE block_id = :block_id"
             )
                     ->execute(array(
                                   'block_order' => $swap_block->block_order,
                                   'block_id'    => $block_id,
                               ));
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##block` SET block_order = :block_order WHERE block_id = :block_id"
             )
                     ->execute(array(
@@ -256,7 +256,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
     {
         $block_id = Filter::get('block_id');
 
-        $block_order = Database::prepare(
+        $block_order = Database::i()->prepare(
             "SELECT block_order FROM `##block` WHERE block_id = :block_id"
         )
                                ->execute(array(
@@ -264,7 +264,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                          ))
                                ->fetchOne();
 
-        $swap_block = Database::prepare(
+        $swap_block = Database::i()->prepare(
             "SELECT block_order, block_id" .
             " FROM `##block`" .
             " WHERE block_order=(" .
@@ -279,14 +279,14 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                         ))
                               ->fetchOneRow();
         if ($swap_block) {
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##block` SET block_order = :block_order WHERE block_id = :block_id"
             )
                     ->execute(array(
                                   'block_order' => $swap_block->block_order,
                                   'block_id'    => $block_id,
                               ));
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##block` SET block_order = :block_order WHERE block_id = :block_id"
             )
                     ->execute(array(
@@ -306,7 +306,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             ->setPageTitle(I18N::translate('Frequently asked questions'))
             ->pageHeader();
 
-        $faqs = Database::prepare(
+        $faqs = Database::i()->prepare(
             "SELECT block_id, bs1.setting_value AS header, bs2.setting_value AS body, bs3.setting_value AS languages" .
             " FROM `##block` b" .
             " JOIN `##block_setting` bs1 USING (block_id)" .
@@ -373,7 +373,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             ->setPageTitle(I18N::translate('Frequently asked questions'))
             ->pageHeader();
 
-        $faqs = Database::prepare(
+        $faqs = Database::i()->prepare(
             "SELECT block_id, block_order, gedcom_id, bs1.setting_value AS header, bs2.setting_value AS faqbody" .
             " FROM `##block` b" .
             " JOIN `##block_setting` bs1 USING (block_id)" .
@@ -391,13 +391,13 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
                                   ))
                         ->fetchAll();
 
-        $min_block_order = Database::prepare(
+        $min_block_order = Database::i()->prepare(
             "SELECT MIN(block_order) FROM `##block` WHERE module_name=?"
         )
                                    ->execute(array($this->getName()))
                                    ->fetchOne();
 
-        $max_block_order = Database::prepare(
+        $max_block_order = Database::i()->prepare(
             "SELECT MAX(block_order) FROM `##block` WHERE module_name=?"
         )
                                    ->execute(array($this->getName()))
@@ -485,7 +485,7 @@ class faq_WT_Module extends Module implements ModuleMenuInterface, ModuleConfigI
             return null;
         }
 
-        $faqs = Database::prepare(
+        $faqs = Database::i()->prepare(
             "SELECT block_id FROM `##block` WHERE module_name = :module_name AND IFNULL(gedcom_id, :tree_id_1) = :tree_id_2"
         )
                         ->execute(array(

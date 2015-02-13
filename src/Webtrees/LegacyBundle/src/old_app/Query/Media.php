@@ -32,7 +32,7 @@ class WT_Query_Media
      */
     public static function folderList()
     {
-        $folders = Database::prepare(
+        $folders = Database::i()->prepare(
             "SELECT SQL_CACHE LEFT(m_filename, CHAR_LENGTH(m_filename) - CHAR_LENGTH(SUBSTRING_INDEX(m_filename, '/', -1))) AS media_path" .
             " FROM  `##media`" .
             " WHERE m_file = ?" .
@@ -58,7 +58,7 @@ class WT_Query_Media
      */
     public static function folderListAll()
     {
-        $folders = Database::prepare(
+        $folders = Database::i()->prepare(
             "SELECT SQL_CACHE LEFT(m_filename, CHAR_LENGTH(m_filename) - CHAR_LENGTH(SUBSTRING_INDEX(m_filename, '/', -1))) AS media_path" .
             " FROM  `##media`" .
             " WHERE m_filename NOT LIKE 'http://%'" .
@@ -138,7 +138,7 @@ class WT_Query_Media
                 throw new \Exception('Bad argument (sort=' . $sort . ') in WT_Query_Media::mediaList()');
         }
 
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->execute($args)
                         ->fetchAll();
         $list = array();

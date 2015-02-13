@@ -56,7 +56,7 @@ class FunctionsDbPhp
     function fetch_all_links($xref, $gedcom_id)
     {
         return
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT l_from FROM `##link` WHERE l_file=? AND l_to=?" .
                 " UNION " .
                 "SELECT xref FROM `##change` WHERE status='pending' AND gedcom_id=? AND new_gedcom LIKE" .
@@ -95,7 +95,7 @@ class FunctionsDbPhp
 
         return
             $tree->canAcceptChanges($user)
-            && Database::prepare(
+            && Database::i()->prepare(
                 "SELECT 1" .
                 " FROM `##change`" .
                 " WHERE status='pending' AND gedcom_id=?"
@@ -114,7 +114,7 @@ class FunctionsDbPhp
     function get_source_list($ged_id)
     {
         $rows =
-            Database::prepare("SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom FROM `##sources` WHERE s_file=?")
+            Database::i()->prepare("SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom FROM `##sources` WHERE s_file=?")
                     ->execute(array($ged_id))
                     ->fetchAll();
 
@@ -137,7 +137,7 @@ class FunctionsDbPhp
     function get_repo_list($ged_id)
     {
         $rows =
-            Database::prepare("SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE o_type='REPO' AND o_file=?")
+            Database::i()->prepare("SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE o_type='REPO' AND o_file=?")
                     ->execute(array($ged_id))
                     ->fetchAll();
 
@@ -160,7 +160,7 @@ class FunctionsDbPhp
     function get_note_list($ged_id)
     {
         $rows =
-            Database::prepare("SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE o_type='NOTE' AND o_file=?")
+            Database::i()->prepare("SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE o_type='NOTE' AND o_file=?")
                     ->execute(array($ged_id))
                     ->fetchAll();
 
@@ -190,7 +190,7 @@ class FunctionsDbPhp
         }
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             $list[] = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
@@ -216,7 +216,7 @@ class FunctionsDbPhp
         }
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             $list[] = Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
@@ -248,7 +248,7 @@ class FunctionsDbPhp
 
         foreach ($query as $q) {
             $queryregex[] = preg_quote(I18N::strtoupper($q), '/');
-            $querysql[]   = "i_gedcom LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[]   = "i_gedcom LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
 
         $sql = "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom FROM `##individuals` WHERE (" . implode(" {$match} ", $querysql) . ') AND i_file IN (' . implode(',', $geds) . ')';
@@ -257,7 +257,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             // SQL may have matched on private data or gedcom tags, so check again against privatized data.
@@ -298,7 +298,7 @@ class FunctionsDbPhp
         // Convert the query into a SQL expression
         $querysql = array();
         foreach ($query as $q) {
-            $querysql[] = "n_full LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[] = "n_full LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
         $sql = "SELECT DISTINCT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom, n_full FROM `##individuals` JOIN `##name` ON i_id=n_id AND i_file=n_file WHERE (" . implode(" {$match} ", $querysql) . ') AND i_file IN (' . implode(',', $geds) . ')';
 
@@ -306,7 +306,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             $indi = Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
@@ -403,7 +403,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->execute($sql_args)
                         ->fetchAll();
         foreach ($rows as $row) {
@@ -434,7 +434,7 @@ class FunctionsDbPhp
         }
         $sql .= " ORDER BY d_julianday1 DESC";
 
-        return Database::prepare($sql)
+        return Database::i()->prepare($sql)
                        ->execute($vars)
                        ->fetchOneColumn();
     }
@@ -480,7 +480,7 @@ class FunctionsDbPhp
         }
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->execute($vars)
                         ->fetchAll();
         foreach ($rows as $row) {
@@ -513,7 +513,7 @@ class FunctionsDbPhp
 
         foreach ($query as $q) {
             $queryregex[] = preg_quote(I18N::strtoupper($q), '/');
-            $querysql[]   = "f_gedcom LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[]   = "f_gedcom LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
 
         $sql = "SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom FROM `##families` WHERE (" . implode(" {$match} ", $querysql) . ') AND f_file IN (' . implode(',', $geds) . ')';
@@ -522,7 +522,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             // SQL may have matched on private data or gedcom tags, so check again against privatized data.
@@ -565,7 +565,7 @@ class FunctionsDbPhp
         // Convert the query into a SQL expression
         $querysql = array();
         foreach ($query as $q) {
-            $querysql[] = "(husb.n_full LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "' OR wife.n_full LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "')";
+            $querysql[] = "(husb.n_full LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "' OR wife.n_full LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "')";
         }
 
         $sql = "SELECT DISTINCT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom FROM `##families` LEFT OUTER JOIN `##name` husb ON f_husb=husb.n_id AND f_file=husb.n_file LEFT OUTER JOIN `##name` wife ON f_wife=wife.n_id AND f_file=wife.n_file WHERE (" . implode(" {$match} ", $querysql) . ') AND f_file IN (' . implode(',', $geds) . ')';
@@ -574,7 +574,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             $indi = Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
@@ -609,7 +609,7 @@ class FunctionsDbPhp
 
         foreach ($query as $q) {
             $queryregex[] = preg_quote(I18N::strtoupper($q), '/');
-            $querysql[]   = "s_gedcom LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[]   = "s_gedcom LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
 
         $sql = "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom FROM `##sources` WHERE (" . implode(" {$match} ", $querysql) . ') AND s_file IN (' . implode(',', $geds) . ')';
@@ -618,7 +618,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             // SQL may have matched on private data or gedcom tags, so check again against privatized data.
@@ -665,7 +665,7 @@ class FunctionsDbPhp
 
         foreach ($query as $q) {
             $queryregex[] = preg_quote(I18N::strtoupper($q), '/');
-            $querysql[]   = "o_gedcom LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[]   = "o_gedcom LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
 
         $sql = "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE (" . implode(" {$match} ", $querysql) . ") AND o_type='NOTE' AND o_file IN (" . implode(',', $geds) . ')';
@@ -674,7 +674,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             // SQL may have matched on private data or gedcom tags, so check again against privatized data.
@@ -722,7 +722,7 @@ class FunctionsDbPhp
 
         foreach ($query as $q) {
             $queryregex[] = preg_quote(I18N::strtoupper($q), '/');
-            $querysql[]   = "o_gedcom LIKE " . Database::quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
+            $querysql[]   = "o_gedcom LIKE " . Database::i()->quote("%{$q}%") . " COLLATE '" . I18N::$collation . "'";
         }
 
         $sql = "SELECT o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom FROM `##other` WHERE (" . implode(" {$match} ", $querysql) . ") AND o_type='REPO' AND o_file IN (" . implode(',', $geds) . ')';
@@ -731,7 +731,7 @@ class FunctionsDbPhp
         $sql .= ' ORDER BY gedcom_id';
 
         $list = array();
-        $rows = Database::prepare($sql)
+        $rows = Database::i()->prepare($sql)
                         ->fetchAll();
         foreach ($rows as $row) {
             // SQL may have matched on private data or gedcom tags, so check again against privatized data.
@@ -765,7 +765,7 @@ class FunctionsDbPhp
     function find_rin_id($rin)
     {
         $xref =
-            Database::prepare("SELECT i_id FROM `##individuals` WHERE i_rin=? AND i_file=?")
+            Database::i()->prepare("SELECT i_id FROM `##individuals` WHERE i_rin=? AND i_file=?")
                     ->execute(array(
                                   $rin,
                                   WT_GED_ID
@@ -832,7 +832,7 @@ class FunctionsDbPhp
         $max = (int)$max;
         if ($max == 0) {
             return
-                Database::prepare(
+                Database::i()->prepare(
                     "SELECT SQL_CACHE n_surn, COUNT(n_surn) FROM `##name`" .
                     " WHERE n_file = :tree_id AND n_type != '_MARNM' AND n_surn NOT IN ('@N.N.', '', '?', 'UNKNOWN')" .
                     " GROUP BY n_surn HAVING COUNT(n_surn) >= :min" .
@@ -845,7 +845,7 @@ class FunctionsDbPhp
                         ->fetchAssoc();
         } else {
             return
-                Database::prepare(
+                Database::i()->prepare(
                     "SELECT SQL_CACHE n_surn, COUNT(n_surn) FROM `##name`" .
                     " WHERE n_file = :tree_id AND n_type != '_MARNM' AND n_surn NOT IN ('@N.N.', '', '?', 'UNKNOWN')" .
                     " GROUP BY n_surn HAVING COUNT(n_surn) >= :min" .
@@ -1016,7 +1016,7 @@ class FunctionsDbPhp
                          $ind_sql,
                          $fam_sql
                      ) as $sql) {
-                $rows = Database::prepare($sql)
+                $rows = Database::i()->prepare($sql)
                                 ->fetchAll();
                 foreach ($rows as $row) {
                     if ($row->type == 'INDI') {
@@ -1084,7 +1084,7 @@ class FunctionsDbPhp
                      $ind_sql,
                      $fam_sql
                  ) as $sql) {
-            $rows = Database::prepare($sql)
+            $rows = Database::i()->prepare($sql)
                             ->fetchAll();
             foreach ($rows as $row) {
                 if ($row->type == 'INDI') {
@@ -1139,7 +1139,7 @@ class FunctionsDbPhp
     function is_media_used_in_other_gedcom($file_name, $ged_id)
     {
         return
-            (bool)Database::prepare("SELECT COUNT(*) FROM `##media` WHERE m_filename LIKE ? AND m_file<>?")
+            (bool)Database::i()->prepare("SELECT COUNT(*) FROM `##media` WHERE m_filename LIKE ? AND m_file<>?")
                           ->execute(array(
                                         "%{$file_name}",
                                         $ged_id
@@ -1160,7 +1160,7 @@ class FunctionsDbPhp
         }
 
         return
-            Database::prepare("SELECT SQL_CACHE gedcom_name FROM `##gedcom` WHERE gedcom_id=?")
+            Database::i()->prepare("SELECT SQL_CACHE gedcom_name FROM `##gedcom` WHERE gedcom_id=?")
                     ->execute(array($ged_id))
                     ->fetchOne();
     }
@@ -1180,7 +1180,7 @@ class FunctionsDbPhp
         }
 
         return
-            Database::prepare("SELECT SQL_CACHE gedcom_id FROM `##gedcom` WHERE gedcom_name=?")
+            Database::i()->prepare("SELECT SQL_CACHE gedcom_id FROM `##gedcom` WHERE gedcom_name=?")
                     ->execute(array($ged_name))
                     ->fetchOne();
     }
@@ -1196,7 +1196,7 @@ class FunctionsDbPhp
             'main' => array(),
             'side' => array()
         );
-        $rows   = Database::prepare(
+        $rows   = Database::i()->prepare(
             "SELECT SQL_CACHE location, block_id, module_name" .
             " FROM  `##block`" .
             " JOIN  `##module` USING (module_name)" .
@@ -1235,7 +1235,7 @@ class FunctionsDbPhp
             'main' => array(),
             'side' => array()
         );
-        $rows   = Database::prepare(
+        $rows   = Database::i()->prepare(
             "SELECT SQL_CACHE location, block_id, module_name" .
             " FROM  `##block`" .
             " JOIN  `##module` USING (module_name)" .
@@ -1268,7 +1268,7 @@ class FunctionsDbPhp
     {
         static $statement;
         if ($statement === null) {
-            $statement = Database::prepare(
+            $statement = Database::i()->prepare(
                 "SELECT SQL_CACHE setting_value FROM `##block_setting` WHERE block_id=? AND setting_name=?"
             );
         }
@@ -1291,13 +1291,13 @@ class FunctionsDbPhp
     function set_block_setting($block_id, $setting_name, $setting_value)
     {
         if ($setting_value === null) {
-            Database::prepare("DELETE FROM `##block_setting` WHERE block_id=? AND setting_name=?")
+            Database::i()->prepare("DELETE FROM `##block_setting` WHERE block_id=? AND setting_name=?")
                     ->execute(array(
                                   $block_id,
                                   $setting_name
                               ));
         } else {
-            Database::prepare("REPLACE INTO `##block_setting` (block_id, setting_name, setting_value) VALUES (?, ?, ?)")
+            Database::i()->prepare("REPLACE INTO `##block_setting` (block_id, setting_name, setting_value) VALUES (?, ?, ?)")
                     ->execute(array(
                                   $block_id,
                                   $setting_name,
@@ -1318,7 +1318,7 @@ class FunctionsDbPhp
     function update_favorites($xref_from, $xref_to, $ged_id = WT_GED_ID)
     {
         return
-            Database::prepare("UPDATE `##favorite` SET xref=? WHERE xref=? AND gedcom_id=?")
+            Database::i()->prepare("UPDATE `##favorite` SET xref=? WHERE xref=? AND gedcom_id=?")
                     ->execute(array(
                                   $xref_to,
                                   $xref_from,

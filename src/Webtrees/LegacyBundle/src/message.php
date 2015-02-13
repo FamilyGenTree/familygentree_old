@@ -294,7 +294,7 @@ function addMessage($message)
     }
 
     if ($message['method'] !== 'messaging3' && $message['method'] !== 'mailto' && $message['method'] !== 'none') {
-        Database::prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
+        Database::i()->prepare("INSERT INTO `##message` (sender, ip_address, user_id, subject, body) VALUES (? ,? ,? ,? ,?)")
                 ->execute(array(
                               $message['from'],
                               Globals::i()->WT_REQUEST->getClientIp(),

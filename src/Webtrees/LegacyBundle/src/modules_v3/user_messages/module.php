@@ -44,7 +44,7 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
         $message_ids = Filter::postArray('message_id');
         if ($action === 'deletemessage') {
             foreach ($message_ids as $message_id) {
-                Database::prepare("DELETE FROM `##message` WHERE message_id=?")
+                Database::i()->prepare("DELETE FROM `##message` WHERE message_id=?")
                         ->execute(array($message_id));
             }
         }
@@ -56,7 +56,7 @@ class user_messages_WT_Module extends Module implements ModuleBlockInterface
                 }
             }
         }
-        $messages = Database::prepare("SELECT message_id, sender, subject, body, UNIX_TIMESTAMP(created) AS created FROM `##message` WHERE user_id=? ORDER BY message_id DESC")
+        $messages = Database::i()->prepare("SELECT message_id, sender, subject, body, UNIX_TIMESTAMP(created) AS created FROM `##message` WHERE user_id=? ORDER BY message_id DESC")
                             ->execute(array(Auth::id()))
                             ->fetchAll();
 

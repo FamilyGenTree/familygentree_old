@@ -22,7 +22,7 @@ define('WT_SCRIPT_NAME', 'block_edit.php');
 Application::i()->init()->started();
 
 $block_id = Filter::getInteger('block_id');
-$block    = Database::prepare(
+$block    = Database::i()->prepare(
     "SELECT SQL_CACHE * FROM `##block` WHERE block_id=?"
 )
                     ->execute(array($block_id))

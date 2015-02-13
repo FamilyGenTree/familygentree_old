@@ -93,5 +93,10 @@ class AbstractSymfonyConnectorController
         return $this->theme;
     }
 
-
+    /**
+     * @return \FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
+     */
+    protected function getConfig() {
+        return $this->diContainer->get('fam_gene_tree_app.configuration');
+    }
 }

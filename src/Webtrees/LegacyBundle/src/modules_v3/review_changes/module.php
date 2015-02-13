@@ -58,7 +58,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
             }
         }
 
-        $changes = Database::prepare(
+        $changes = Database::i()->prepare(
             "SELECT 1" .
             " FROM `##change`" .
             " WHERE status='pending'" .
@@ -111,7 +111,7 @@ class review_changes_WT_Module extends Module implements ModuleBlockInterface
                 $content .= I18N::translate('Next email reminder will be sent after ') . FunctionsDate::i()
                                                                                                       ->format_timestamp(Site::getPreference('LAST_CHANGE_EMAIL') + (60 * 60 * 24 * $days)) . "<br><br>";
             }
-            $changes = Database::prepare(
+            $changes = Database::i()->prepare(
                 "SELECT xref" .
                 " FROM  `##change`" .
                 " WHERE status='pending'" .

@@ -101,7 +101,7 @@ abstract class Module
     private function loadAllSettings()
     {
         if ($this->settings === null) {
-            $this->settings = Database::prepare(
+            $this->settings = Database::i()->prepare(
                 "SELECT SQL_CACHE setting_name, setting_value FROM `##module_setting` WHERE module_name = ?"
             )
                                       ->execute(array($this->getName()))
@@ -142,7 +142,7 @@ abstract class Module
         $this->loadAllSettings();
 
         if ($setting_value === null) {
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##module_setting` WHERE module_name = ? AND setting_name = ?"
             )
                     ->execute(array(
@@ -151,7 +151,7 @@ abstract class Module
                               ));
             unset($this->settings[$setting_name]);
         } elseif (!array_key_exists($setting_name, $this->settings)) {
-            Database::prepare(
+            Database::i()->prepare(
                 "INSERT INTO `##module_setting` (module_name, setting_name, setting_value) VALUES (?, ?, ?)"
             )
                     ->execute(array(
@@ -161,7 +161,7 @@ abstract class Module
                               ));
             $this->settings[$setting_name] = $setting_value;
         } elseif ($setting_value != $this->settings[$setting_name]) {
-            Database::prepare(
+            Database::i()->prepare(
                 "UPDATE `##module_setting` SET setting_value = ? WHERE module_name = ? AND setting_name = ?"
             )
                     ->execute(array(
@@ -195,7 +195,7 @@ abstract class Module
      */
     public function getAccessLevel(Tree $tree, $component)
     {
-        $access_level = Database::prepare(
+        $access_level = Database::i()->prepare(
             "SELECT access_level FROM `##module_privacy` WHERE gedcom_id = :gedcom_id AND module_name = :module_name AND component = :component"
         )
                                 ->execute(array(
@@ -228,7 +228,7 @@ abstract class Module
         static $sorted = false;
 
         if ($modules === null) {
-            $module_names = Database::prepare(
+            $module_names = Database::i()->prepare(
                 "SELECT SQL_CACHE module_name FROM `##module` WHERE status = 'enabled'"
             )
                                     ->fetchOneColumn();
@@ -241,7 +241,7 @@ abstract class Module
                 } else {
                     // Module has been deleted from disk?  Disable it.
                     Log::addConfigurationLog("Module {$module_name} has been deleted from disk - disabling it");
-                    Database::prepare(
+                    Database::i()->prepare(
                         "UPDATE `##module` SET status = 'disabled' WHERE module_name = ?"
                     )
                             ->execute(array($module_name));
@@ -271,7 +271,7 @@ abstract class Module
      */
     private static function getActiveModulesByComponent($component, $tree_id, $access_level)
     {
-        $module_names = Database::prepare(
+        $module_names = Database::i()->prepare(
             "SELECT SQL_CACHE module_name" .
             " FROM `##module`" .
             " JOIN `##module_privacy` USING (module_name)" .
@@ -299,7 +299,7 @@ abstract class Module
             } else {
                 // Module has been deleted from disk?  Disable it.
                 Log::addConfigurationLog("Module {$module_name} has been deleted from disk - disabling it");
-                Database::prepare(
+                Database::i()->prepare(
                     "UPDATE `##module` SET status='disabled' WHERE module_name=?"
                 )
                         ->execute(array($module_name));
@@ -470,7 +470,7 @@ abstract class Module
                 $class                       = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
                 $module                      = new $class;
                 $modules[$module->getName()] = $module;
-                Database::prepare("INSERT IGNORE INTO `##module` (module_name, status, menu_order, sidebar_order, tab_order) VALUES (?, ?, ?, ?, ?)")
+                Database::i()->prepare("INSERT IGNORE INTO `##module` (module_name, status, menu_order, sidebar_order, tab_order) VALUES (?, ?, ?, ?, ?)")
                         ->execute(array(
                                       $module->getName(),
                                       $default_status,
@@ -481,7 +481,7 @@ abstract class Module
                 // Set the default privcy for this module.  Note that this also sets it for the
                 // default family tree, with a gedcom_id of -1
                 if ($module instanceof ModuleMenuInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'menu', ?" .
                         " FROM `##gedcom`"
@@ -492,7 +492,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleSidebarInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'sidebar', ?" .
                         " FROM `##gedcom`"
@@ -503,7 +503,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleTabInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'tab', ?" .
                         " FROM `##gedcom`"
@@ -514,7 +514,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleBlockInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'block', ?" .
                         " FROM `##gedcom`"
@@ -525,7 +525,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleChartInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'chart', ?" .
                         " FROM `##gedcom`"
@@ -536,7 +536,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleReportInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'report', ?" .
                         " FROM `##gedcom`"
@@ -547,7 +547,7 @@ abstract class Module
                                       ));
                 }
                 if ($module instanceof ModuleThemeInterface) {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "INSERT IGNORE INTO `##module_privacy` (module_name, gedcom_id, component, access_level)" .
                         " SELECT ?, gedcom_id, 'theme', ?" .
                         " FROM `##gedcom`"
@@ -579,7 +579,7 @@ abstract class Module
     {
         foreach (self::getInstalledModules('disabled') as $module) {
             if ($module instanceof ModuleMenuInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'menu', ?)"
                 )
                         ->execute(array(
@@ -589,7 +589,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleSidebarInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'sidebar', ?)"
                 )
                         ->execute(array(
@@ -599,7 +599,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleTabInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'tab', ?)"
                 )
                         ->execute(array(
@@ -609,7 +609,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleBlockInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'block', ?)"
                 )
                         ->execute(array(
@@ -619,7 +619,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleChartInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'chart', ?)"
                 )
                         ->execute(array(
@@ -629,7 +629,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleReportInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'report', ?)"
                 )
                         ->execute(array(
@@ -639,7 +639,7 @@ abstract class Module
                                   ));
             }
             if ($module instanceof ModuleThemeInterface) {
-                Database::prepare(
+                Database::i()->prepare(
                     "INSERT IGNORE `##module_privacy` (module_name, gedcom_id, component, access_level) VALUES (?, ?, 'theme', ?)"
                 )
                         ->execute(array(

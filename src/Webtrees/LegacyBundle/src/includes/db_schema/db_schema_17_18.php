@@ -19,7 +19,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Update the database schema from version 17 to 18
 // - add table to control site access
 
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##site_access_rule` (" .
     " site_access_rule_id INTEGER          NOT NULL AUTO_INCREMENT," .
     " ip_address_start     INTEGER UNSIGNED NOT NULL DEFAULT 0," .
@@ -38,7 +38,7 @@ Database::exec(
     ") ENGINE=InnoDB COLLATE=utf8_unicode_ci"
 );
 
-Database::exec(
+Database::i()->exec(
     "INSERT IGNORE INTO `##site_access_rule` (user_agent_pattern, rule, comment) VALUES" .
     " ('Mozilla/5.0 (%) Gecko/% %/%', 'allow', 'Gecko-based browsers')," .
     " ('Mozilla/5.0 (%) AppleWebKit/% (KHTML, like Gecko)%', 'allow', 'WebKit-based browsers')," .

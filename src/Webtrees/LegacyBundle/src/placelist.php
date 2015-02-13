@@ -193,7 +193,7 @@ switch ($display) {
             $myfamlist  = array();
 
             $positions =
-                Database::prepare("SELECT DISTINCT pl_gid FROM `##placelinks` WHERE pl_p_id=? AND pl_file=?")
+                Database::i()->prepare("SELECT DISTINCT pl_gid FROM `##placelinks` WHERE pl_p_id=? AND pl_file=?")
                         ->execute(array(
                                       $place_id,
                                       WT_GED_ID

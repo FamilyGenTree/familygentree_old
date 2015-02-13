@@ -27,7 +27,7 @@ use PDOException;
 // Create all of the tables needed for this module
 
 try {
-    Database::exec(
+    Database::i()->exec(
         "ALTER TABLE `##placelocation` ADD (" .
         " pl_media      VARCHAR(60)     NULL," .
         " sv_long       FLOAT           NOT NULL DEFAULT 0," .

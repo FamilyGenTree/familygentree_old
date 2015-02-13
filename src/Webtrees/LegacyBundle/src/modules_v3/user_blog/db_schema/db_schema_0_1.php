@@ -21,7 +21,7 @@ namespace Webtrees\LegacyBundle\Legacy;
 // Version 0: empty database
 // Version 1: create the tables, as per PGV 4.2.1
 
-Database::exec(
+Database::i()->exec(
     "CREATE TABLE IF NOT EXISTS `##news` (" .
     " n_id       INTEGER AUTO_INCREMENT NOT NULL," .
     " n_username VARCHAR(100)           NOT NULL," .

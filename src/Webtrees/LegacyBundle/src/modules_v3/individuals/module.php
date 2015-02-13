@@ -235,7 +235,7 @@ class individuals_WT_Module extends Module implements ModuleSidebarInterface
             return '';
         }
         $rows =
-            Database::prepare(
+            Database::i()->prepare(
                 "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom" .
                 " FROM `##individuals`, `##name`" .
                 " WHERE (i_id LIKE ? OR n_sort LIKE ?)" .

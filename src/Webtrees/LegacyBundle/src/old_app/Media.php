@@ -76,7 +76,7 @@ class Media extends GedcomRecord
     protected function canShowByType($access_level)
     {
         // Hide media objects if they are attached to private records
-        $linked_ids = Database::prepare(
+        $linked_ids = Database::i()->prepare(
             "SELECT l_from FROM `##link` WHERE l_to = ? AND l_file = ?"
         )
                               ->execute(array(
@@ -101,7 +101,7 @@ class Media extends GedcomRecord
         static $statement = null;
 
         if ($statement === null) {
-            $statement = Database::prepare("SELECT m_gedcom FROM `##media` WHERE m_id=? AND m_file=?");
+            $statement = Database::i()->prepare("SELECT m_gedcom FROM `##media` WHERE m_id=? AND m_file=?");
         }
 
         return $statement->execute(array(

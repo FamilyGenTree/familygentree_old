@@ -209,7 +209,7 @@ foreach ($tags as $tag) {
 
 uasort($all_tags, __NAMESPACE__ . '\I18N::strcasecmp');
 
-$resns = Database::prepare(
+$resns = Database::i()->prepare(
     "SELECT default_resn_id, tag_type, xref, resn" .
     " FROM `##default_resn`" .
     " LEFT JOIN `##name` ON (gedcom_id=n_file AND xref=n_id AND n_num=0)" .
@@ -240,7 +240,7 @@ $relatives_events = explode(',', Globals::i()->WT_TREE->getPreference('SHOW_RELA
 switch (Filter::post('action')) {
     case 'privacy':
         foreach (Filter::postArray('delete', WT_REGEX_INTEGER) as $delete_resn) {
-            Database::prepare(
+            Database::i()->prepare(
                 "DELETE FROM `##default_resn` WHERE default_resn_id=?"
             )
                     ->execute(array($delete_resn));
@@ -257,7 +257,7 @@ switch (Filter::post('action')) {
             if ($tag_type || $xref) {
                 // Delete any existing data
                 if ($xref === '') {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "DELETE FROM `##default_resn` WHERE gedcom_id=? AND tag_type=? AND xref IS NULL"
                     )
                             ->execute(array(
@@ -266,7 +266,7 @@ switch (Filter::post('action')) {
                                       ));
                 }
                 if ($tag_type === '') {
-                    Database::prepare(
+                    Database::i()->prepare(
                         "DELETE FROM `##default_resn` WHERE gedcom_id=? AND xref=? AND tag_type IS NULL"
                     )
                             ->execute(array(
@@ -275,7 +275,7 @@ switch (Filter::post('action')) {
                                       ));
                 }
                 // Add (or update) the new data
-                Database::prepare(
+                Database::i()->prepare(
                     "REPLACE INTO `##default_resn` (gedcom_id, xref, tag_type, resn) VALUES (?, NULLIF(?, ''), NULLIF(?, ''), ?)"
                 )
                         ->execute(array(
@@ -419,12 +419,12 @@ switch (Filter::post('action')) {
         $gedcom = Filter::post('gedcom');
         if ($gedcom && $gedcom != WT_GEDCOM) {
             try {
-                Database::prepare("UPDATE `##gedcom` SET gedcom_name = ? WHERE gedcom_id = ?")
+                Database::i()->prepare("UPDATE `##gedcom` SET gedcom_name = ? WHERE gedcom_id = ?")
                         ->execute(array(
                                       $gedcom,
                                       WT_GED_ID
                                   ));
-                Database::prepare("UPDATE `##site_setting` SET setting_value = ? WHERE setting_name='DEFAULT_GEDCOM' AND setting_value = ?")
+                Database::i()->prepare("UPDATE `##site_setting` SET setting_value = ? WHERE setting_name='DEFAULT_GEDCOM' AND setting_value = ?")
                         ->execute(array(
                                       $gedcom,
                                       WT_GEDCOM
