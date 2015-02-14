@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <meta name="robots" content="noindex,follow">
+{% extends 'WebtreesLegacyThemeBundle:Default:base.html.twig' %}
+{% block head_inline_css %}
     <style type="text/css">
         body {
             color: gray;
@@ -47,18 +43,16 @@
             color: green;
         }
     </style>
-</head>
-<body>
-<h1>This website is temporarily unavailable</h1>
+{% endblock %}
 
-<div class="content"><p>
-        {% if offline_txt %}
-            {{ offline_txt }}
-        {% else %}
-            This website is down for maintenance.  You should <a href="{{ url('_welcome') }}">try
-            again</a> in a few minutes.
-        {% endif %}
-    </p>
-</div>
-</body>
-</html>
+{% block page_content %}
+    <div class="content"><p>
+            {% if offline_txt %}
+                {{ offline_txt }}
+            {% else %}
+                This website is down for maintenance.  You should <a href="{{ url('_welcome') }}">try
+                again</a> in a few minutes.
+            {% endif %}
+        </p>
+    </div>
+{% endblock %}

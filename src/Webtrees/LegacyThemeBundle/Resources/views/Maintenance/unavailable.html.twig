@@ -1,0 +1,31 @@
+{% extends 'WebtreesLegacyThemeBundle:Maintenance:offline.html.twig' %}
+
+{% block page_content %}
+    <h1><?php echo I18N::translate('This website is temporarily unavailable'); ?></h1>
+
+    <div class="content">
+        Oops! The webserver is unable to connect to the database server. It could be busy, undergoing maintenance, or
+        simply broken. You should <a href="{{ url('_welcome') }}">try again</a> in a few minutes or contact the website
+        administrator.
+        <div>
+            If you are the website administrator, you should check that:
+            <ol>
+                <li>
+                    the database connection settings in the file “/data/config.ini.php” are still correct.
+                </li>
+                <li>
+                    the folder “/data” and the file “/data/config.ini.php” have access permissions that allow the
+                    webserver
+                    to read them
+                </li>
+                <li>
+                    you can connect to the database using other applications, such as phpmyadmin
+                </li>
+            </ol>
+        </div>
+        <p class="good">
+            If you cannot resolve the problem yourself, you can ask for help on the forums at <a
+                    href="http://webtrees.net">webtrees.net</a>
+        </p>
+    </div>
+{% endblock %}

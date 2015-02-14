@@ -30,7 +30,7 @@ class User extends BaseUser implements AdvancedUserInterface
     /**
      * @var String
      *
-     * @ORM\Column(name="password_algorithm",type="string",length=10,options={"default" = "bcrypt"})
+     * @ORM\Column(name="password_algorithm",type="string",length=15,options={"default" = "bcrypt_10"})
      */
     protected $passwordAlgorithm = null;
 

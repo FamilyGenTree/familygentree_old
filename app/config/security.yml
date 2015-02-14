@@ -3,7 +3,9 @@
 security:
     # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
     encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+        FOS\UserBundle\Model\UserInterface:
+            algorithm: bcrypt
+            cost: 10
         Symfony\Component\Security\Core\User\User: plaintext
         FamGeneTree\AppBundle\Entity\User:
             algorithm:  md5
