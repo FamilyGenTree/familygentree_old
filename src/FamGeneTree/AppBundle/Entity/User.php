@@ -38,6 +38,7 @@ class User extends BaseUser implements AdvancedUserInterface
     {
         parent::__construct();
         // your own logic
+        $this->passwordAlgorithm =  \FamGeneTree\AppBundle\Service\Auth::ALGORITHM_BCRYPT_NEW;
     }
 
 }

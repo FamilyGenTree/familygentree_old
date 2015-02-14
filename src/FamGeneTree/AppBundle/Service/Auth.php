@@ -13,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Auth implements ContainerAwareInterface
 {
+    const ALGORITHM_BCRYPT_NEW = 'bcrypt_12';
 
     /**
      * @var ContainerInterface
