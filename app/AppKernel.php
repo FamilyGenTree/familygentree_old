@@ -16,14 +16,26 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Webtrees\LegacyBundle\WebtreesLegacyBundle(),
-            new FamGeneTree\AppBundle\FamGeneTreeAppBundle(),
-            new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle(),
-            new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle(),
-            new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle(),
+            new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle()
         );
 
-        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+        if ($this->isSetup()) {
+            $bundles[] = new FOS\UserBundle\FOSUserBundle();
+            $bundles[] = new Webtrees\LegacyBundle\WebtreesLegacyBundle();
+            $bundles[] = new FamGeneTree\AppBundle\FamGeneTreeAppBundle();
+            $bundles[] = new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle();
+            $bundles[] = new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle();
+        } else {
+        }
+
+
+        if (in_array(
+            $this->getEnvironment(),
+            array(
+                'dev',
+                'test'
+            ))
+        ) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
@@ -35,6 +47,11 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+    }
+
+    protected function isSetup()
+    {
+        return file_exists(__DIR__ . '/config/parameters.yml');
     }
 }

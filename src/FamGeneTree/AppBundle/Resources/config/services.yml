@@ -10,3 +10,10 @@ services:
   fam_gene_tree_app.configuration:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
     factory: ["@fam_gene_tree_app.configuration.factory", load]
+
+  fgt.tblprefix_subscriber:
+    class: FamGeneTree\AppBundle\Subscriber\TablePrefixSubscriber
+    arguments: [%database_prefix%]
+    tags:
+      - { name: doctrine.event_subscriber }
+      

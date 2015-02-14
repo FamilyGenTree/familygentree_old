@@ -406,8 +406,8 @@ class Application
         $SERVER_URL = Site::getPreference('SERVER_URL');
         if ($SERVER_URL && $SERVER_URL != Config::get(Config::BASE_URL)) {
             header('Location: ' . $SERVER_URL . WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
-                                                                                 ? '?' . $_SERVER['QUERY_STRING']
-                                                                                 : ''), true, 301);
+                                                                                                   ? '?' . $_SERVER['QUERY_STRING']
+                                                                                                   : ''), true, 301);
             exit;
         }
     }
@@ -720,5 +720,10 @@ class Application
         $config->set(ConfigKeys::SYSTEM_MODULES_PATH, Config::get(Config::MODULES_DIR), FgtConfig::SCOPE_RUNTIME);
 
         Constants::defineCommonConstants($this->getConfig());
+    }
+
+    public function getUrl($route, $params)
+    {
+        return $this->diContainer->get('router')->generate($route, $params);
     }
 }
