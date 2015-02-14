@@ -597,7 +597,7 @@ switch ($type) {
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_FAM_rows($term)
 {
@@ -621,7 +621,7 @@ function get_FAM_rows($term)
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_INDI_rows($term)
 {
@@ -642,7 +642,7 @@ function get_INDI_rows($term)
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_NOTE_rows($term)
 {
@@ -664,7 +664,7 @@ function get_NOTE_rows($term)
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_OBJE_rows($term)
 {
@@ -685,7 +685,7 @@ function get_OBJE_rows($term)
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_REPO_rows($term)
 {
@@ -707,7 +707,7 @@ function get_REPO_rows($term)
 /**
  * @param string $term
  *
- * @return stdClass[]
+ * @return \stdClass[]
  */
 function get_SOUR_rows($term)
 {

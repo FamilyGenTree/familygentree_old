@@ -72,18 +72,18 @@ if (Auth::check()) {
 // This makes it harder for spammers.
 switch ($action) {
     case 'compose':
-        Globals::i()->WT_SESSION->good_to_send = true;
+        Application::i()->getSession()->good_to_send = true;
         break;
     case 'send':
         // Only send messages if we've come straight from the compose page.
-        if (!Globals::i()->WT_SESSION->good_to_send) {
+        if (!Application::i()->getSession()->good_to_send) {
             Log::addAuthenticationLog('Attempt to send a message without visiting the compose page.  Spam attack?');
             $action = 'compose';
         }
         if (!Filter::checkCsrf()) {
             $action = 'compose';
         }
-        unset(Globals::i()->WT_SESSION->good_to_send);
+        unset(Application::i()->getSession()->good_to_send);
         break;
 }
 

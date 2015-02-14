@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Fisharebest\ExtCalendar\GregorianCalendar;
 
@@ -332,8 +333,8 @@ class LifespanController extends PageController
             $this->place = $place;
         } else {
             // Modify an existing list of records
-            if (is_array(Globals::i()->WT_SESSION->timeline_pids)) {
-                $this->pids = Globals::i()->WT_SESSION->timeline_pids;
+            if (is_array(Application::i()->getSession()->timeline_pids)) {
+                $this->pids = Application::i()->getSession()->timeline_pids;
             } else {
                 $this->pids = array();
             }
@@ -349,7 +350,7 @@ class LifespanController extends PageController
                 $this->addFamily($this->getSignificantIndividual(), false);
             }
         }
-        Globals::i()->WT_SESSION->timeline_pids = $this->pids;
+        Application::i()->getSession()->timeline_pids = $this->pids;
 
         $this->beginYear = $beginYear;
         $this->endYear   = $endYear;
@@ -389,7 +390,7 @@ class LifespanController extends PageController
                     }
                 }
             }
-            Globals::i()->WT_SESSION->timeline_pids = null;
+            Application::i()->getSession()->timeline_pids = null;
         }
 
         // Sort the array in order of birth year

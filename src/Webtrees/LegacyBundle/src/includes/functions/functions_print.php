@@ -653,9 +653,9 @@ class FunctionsPrint
     function print_add_new_fact($id, $usedfacts, $type)
     {
         // -- Add from clipboard
-        if (Globals::i()->WT_SESSION->clipboard) {
+        if (Application::i()->getSession()->clipboard) {
             $newRow = true;
-            foreach (array_reverse(Globals::i()->WT_SESSION->clipboard, true) as $fact_id => $fact) {
+            foreach (array_reverse(Application::i()->getSession()->clipboard, true) as $fact_id => $fact) {
                 if ($fact["type"] == $type || $fact["type"] == 'all') {
                     if ($newRow) {
                         $newRow = false;

@@ -68,17 +68,17 @@ switch (Filter::post('action')) {
                             $type = $record::RECORD_TYPE; // paste only to the same record type
                             break;
                     }
-                    if (!is_array(Globals::i()->WT_SESSION->clipboard)) {
-                        Globals::i()->WT_SESSION->clipboard = array();
+                    if (!is_array(Application::i()->getSession()->clipboard)) {
+                        Application::i()->getSession()->clipboard = array();
                     }
-                    Globals::i()->WT_SESSION->clipboard[$fact_id] = array(
+                    Application::i()->getSession()->clipboard[$fact_id] = array(
                         'type'    => $type,
                         'factrec' => $fact->getGedcom(),
                         'fact'    => $fact->getTag()
                     );
                     // The clipboard only holds 10 facts
-                    while (count(Globals::i()->WT_SESSION->clipboard) > 10) {
-                        array_shift(Globals::i()->WT_SESSION->clipboard);
+                    while (count(Application::i()->getSession()->clipboard) > 10) {
+                        array_shift(Application::i()->getSession()->clipboard);
                     }
                     FlashMessages::addMessage(I18N::translate('The record has been copied to the clipboard.'));
                     break 2;
@@ -94,8 +94,8 @@ switch (Filter::post('action')) {
 
         $record = GedcomRecord::getInstance($xref);
 
-        if ($record && $record->canEdit() && isset(Globals::i()->WT_SESSION->clipboard[$fact_id])) {
-            $record->createFact(Globals::i()->WT_SESSION->clipboard[$fact_id]['factrec'], true);
+        if ($record && $record->canEdit() && isset(Application::i()->getSession()->clipboard[$fact_id])) {
+            $record->createFact(Application::i()->getSession()->clipboard[$fact_id]['factrec'], true);
         }
         break;
 
@@ -232,7 +232,7 @@ switch (Filter::post('action')) {
         // Change the current theme
         $theme = Filter::post('theme');
         if (Site::getPreference('ALLOW_USER_THEMES') && array_key_exists($theme, Theme::themeNames())) {
-            Globals::i()->WT_SESSION->theme_id = $theme;
+            Application::i()->getSession()->theme_id = $theme;
             // Remember our selection
             Auth::user()
                 ->setPreference('theme', $theme);

@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 use HTMLPurifier;
@@ -481,14 +482,14 @@ class Filter
     public static function getCsrfToken()
     {
 
-        if (Globals::i()->WT_SESSION->CSRF_TOKEN === null) {
+        if (Application::i()->getSession()->CSRF_TOKEN === null) {
             $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcedfghijklmnopqrstuvwxyz0123456789';
             for ($n = 0; $n < 32; ++$n) {
-                Globals::i()->WT_SESSION->CSRF_TOKEN .= substr($charset, mt_rand(0, 61), 1);
+                Application::i()->getSession()->CSRF_TOKEN .= substr($charset, mt_rand(0, 61), 1);
             }
         }
 
-        return Globals::i()->WT_SESSION->CSRF_TOKEN;
+        return Application::i()->getSession()->CSRF_TOKEN;
     }
 
     /**

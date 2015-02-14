@@ -118,7 +118,7 @@ if ($PGV_PATH) {
 
 if ($PGV_PATH) {
     // The account we are using is about to be deleted.
-    Globals::i()->WT_SESSION->wt_user = null;
+    Application::i()->getSession()->wt_user = null;
 }
 
 $controller->pageHeader();

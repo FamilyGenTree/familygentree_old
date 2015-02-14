@@ -2071,7 +2071,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
     /**
      * @param string $place
      *
-     * @return null|stdClass
+     * @return null|\stdClass
      */
     private function getLatitudeAndLongitudeFromPlaceLocation($place)
     {

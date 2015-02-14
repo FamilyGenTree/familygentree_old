@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Zend_Session;
 
@@ -143,7 +144,7 @@ class Auth
     public static function id()
     {
 
-        return isset(Globals::i()->WT_SESSION) ? Globals::i()->WT_SESSION->wt_user : null;
+        return Application::i()->getSession()->wt_user;
     }
 
     /**
@@ -175,7 +176,7 @@ class Auth
     public static function login(User $user)
     {
 
-        Globals::i()->WT_SESSION->wt_user = $user->getUserId();
+        Application::i()->getSession()->wt_user = $user->getUserId();
         Zend_Session::regenerateId();
     }
 

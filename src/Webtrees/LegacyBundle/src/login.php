@@ -135,12 +135,12 @@ class LoginPhp extends AbstractSymfonyConnectorController
                                                   ->getUserName() . '/' . Auth::user()
                                                                               ->getRealName());
 
-        Globals::i()->WT_SESSION->timediff      = $timediff;
-        Globals::i()->WT_SESSION->locale        = Auth::user()
+        Application::i()->getSession()->timediff      = $timediff;
+        Application::i()->getSession()->locale        = Auth::user()
                                                       ->getPreference('language');
-        Globals::i()->WT_SESSION->theme_id      = Auth::user()
+        Application::i()->getSession()->theme_id      = Auth::user()
                                                       ->getPreference('theme');
-        Globals::i()->WT_SESSION->activity_time = WT_TIMESTAMP;
+        Application::i()->getSession()->activity_time = WT_TIMESTAMP;
 
         Auth::user()
             ->setPreference('sessiontime', WT_TIMESTAMP);
@@ -329,7 +329,7 @@ class LoginPhp extends AbstractSymfonyConnectorController
         $controller->setPageTitle(I18N::translate('Request new user account'));
 
         // The form parameters are mandatory, and the validation errors are shown in the client.
-        if (Globals::i()->WT_SESSION->good_to_send && $user_name && $user_password01 && $user_password01 == $user_password02 && $user_realname && $user_email && $user_comments) {
+        if (Application::i()->getSession()->good_to_send && $user_name && $user_password01 && $user_password01 == $user_password02 && $user_realname && $user_email && $user_comments) {
 
             // These validation errors cannot be shown in the client.
             if (User::findByIdentifier($user_name)) {
@@ -462,7 +462,7 @@ class LoginPhp extends AbstractSymfonyConnectorController
             }
         }
 
-        Globals::i()->WT_SESSION->good_to_send = true;
+        Application::i()->getSession()->good_to_send = true;
         $controller
             ->pageHeader()
             ->addInlineJavascript('function regex_quote(str) {return str.replace(/[\\\\.?+*()[\](){}|]/g, "\\\\$&");}');

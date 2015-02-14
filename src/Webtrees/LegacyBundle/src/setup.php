@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 use Fgt\UrlConstants;
@@ -57,9 +58,9 @@ if (version_compare(PHP_VERSION, WT_REQUIRED_PHP_VERSION) < 0) {
 }
 
 Globals::i()->WT_REQUEST          = new \Zend_Controller_Request_Http;
-Globals::i()->WT_SESSION          = new \stdClass;
-Globals::i()->WT_SESSION->locale  = null; // Needed for I18N
-Globals::i()->WT_SESSION->wt_user = null; // Needed for Auth
+Application::i()->getSession()          = new \stdClass;
+Application::i()->getSession()->locale  = null; // Needed for I18N
+Application::i()->getSession()->wt_user = null; // Needed for Auth
 define('WT_LOCALE', I18N::init(Filter::post('lang', '[@a-zA-Z_]+')));
 
 header('Content-Type: text/html; charset=UTF-8');

@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Fgt\UrlConstants;
 use PDO;
@@ -33,8 +34,8 @@ define('WT_WEBTREES', 'webtrees');
 define('WT_ROOT', '');
 define('WT_GED_ID', 0);
 
-Globals::i()->WT_SESSION         = new \stdClass;
-Globals::i()->WT_SESSION->locale = '';
+Application::i()->getSession()         = new \stdClass;
+Application::i()->getSession()->locale = '';
 
 define('WT_LOCALE', I18N::init());
 

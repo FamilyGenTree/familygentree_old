@@ -65,7 +65,7 @@ class Config
     public function __get($name)
     {
         if (!array_key_exists($name, $this->valueStore)) {
-            throw new Exception("$name was never initialized, but accessed. Unknown result.");
+            throw new \Exception("$name was never initialized, but accessed. Unknown result.");
         }
 
         return $this->__isset($name) ? $this->valueStore[$name] : null;

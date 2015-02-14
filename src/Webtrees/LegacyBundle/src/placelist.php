@@ -123,7 +123,7 @@ switch ($display) {
             $gm_module->createMap($placelevels);
         } elseif (array_key_exists('places_assistant', Module::getActiveModules())) {
             // Places Assistant is a custom/add-on module that was once part of the core code.
-            \places_assistant_WT_Module::display_map($level, $parent);
+            places_assistant_WT_Module::display_map($level, $parent);
         }
 
         // -- echo the array

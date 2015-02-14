@@ -16,7 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Zend_Controller_Action_HelperBroker;
+use Fgt\Application;
 
 /**
  * Class FlashMessages - Flash messages allow us to generate messages
@@ -32,12 +32,9 @@ class FlashMessages
      */
     public static function addMessage($text, $status = 'info')
     {
-        $message         = new \stdClass;
-        $message->text   = $text;
-        $message->status = $status;
-        $flash_messenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+        $flash_messenger = Application::i()->getSession()->getFlashMessageBag();
 
-        $flash_messenger->addMessage($message);
+        $flash_messenger->add($status,$text);
     }
 
     /**
@@ -47,20 +44,14 @@ class FlashMessages
      */
     public static function getMessages()
     {
-        $flash_messenger = Zend_Controller_Action_HelperBroker::getStaticHelper('FlashMessenger');
+        $flash_messenger = Application::i()->getSession()->getFlashMessageBag();
 
         $messages = array();
 
         // Get messages from previous requests
-        foreach ($flash_messenger->getMessages() as $message) {
+        foreach ($flash_messenger->all() as $message) {
             $messages[] = $message;
         }
-
-        // Get messages from the current request
-        foreach ($flash_messenger->getCurrentMessages() as $message) {
-            $messages[] = $message;
-        }
-        $flash_messenger->clearCurrentMessages();
 
         return $messages;
     }

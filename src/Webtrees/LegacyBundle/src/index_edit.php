@@ -52,7 +52,7 @@ if ($user_id) {
 if ($user_id < 0 || $gedcom_id < 0 || Auth::isAdmin() && $user_id != Auth::id()) {
     // We're doing this from an admin page.  Use the admin theme, and return there afterwards.
     Theme::theme(new AdministrationTheme)
-         ->init(Globals::i()->WT_SESSION, Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+         ->init(Application::i()->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
     $return_to = UrlConstants::url(UrlConstants::ADMIN_TREES_MANAGE_PHP, ['ged' => '']);
 } else {
     $return_to = UrlConstants::url(UrlConstants::INDEX_PHP);

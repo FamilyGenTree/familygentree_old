@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 use Patchwork\TurkishUtf8;
@@ -478,9 +479,9 @@ class I18N
             if (array_key_exists(Filter::get('lang'), $installed_languages)) {
                 // Requested in the URL?
                 $locale = Filter::get('lang');
-            } elseif (array_key_exists(Globals::i()->WT_SESSION->locale, $installed_languages)) {
+            } elseif (array_key_exists(Application::i()->getSession()->locale, $installed_languages)) {
                 // Rembered from a previous visit?
-                $locale = Globals::i()->WT_SESSION->locale;
+                $locale = Application::i()->getSession()->locale;
             } else {
                 // Browser preference takes priority over gedcom default
                 if (empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {

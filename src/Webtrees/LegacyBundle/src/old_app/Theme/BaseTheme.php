@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FamGeneTree\AppBundle\Service\Session;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\UrlConstants;
@@ -1019,13 +1020,13 @@ abstract class BaseTheme
      * Initialise the theme.  We cannot pass these in a constructor, as the construction
      * happens in a theme file, and we need to be able to change it.
      *
-     * @param Zend_Session_Namespace $session
+     * @param Session $session
      * @param bool                   $search_engine
      * @param Tree|null              $tree The current tree (if there is one).
      *
      * @return void
      */
-    final public function init(Zend_Session_Namespace $session, $search_engine, Tree $tree = null)
+    final public function init(Session $session, $search_engine, Tree $tree = null)
     {
         $this->tree          = $tree;
         $this->tree_url      = $tree ? 'ged=' . $tree->getNameUrl() : '';

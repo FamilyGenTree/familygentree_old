@@ -831,8 +831,8 @@ class FunctionsEdit
                 echo '<span  onclick="jQuery(\'tr[id^=', $upperlevel, '_LATI],tr[id^=', $upperlevel, '_LONG],tr[id^=LATI],tr[id^=LONG]\').toggle(\'fast\'); return false;" class="icon-target" title="', WT_Gedcom_Tag::getLabel('LATI'), ' / ', WT_Gedcom_Tag::getLabel('LONG'), '"></span>';
                 echo '</div>';
                 if (array_key_exists('places_assistant', Module::getActiveModules())) {
-                    \places_assistant_WT_Module::setup_place_subfields($element_id);
-                    \places_assistant_WT_Module::print_place_subfields($element_id);
+                    places_assistant_WT_Module::setup_place_subfields($element_id);
+                    places_assistant_WT_Module::print_place_subfields($element_id);
                 }
             } elseif (!in_array($fact, $tmp_array)) {
                 echo FunctionsPrint::i()->print_specialchar_link($element_id);
