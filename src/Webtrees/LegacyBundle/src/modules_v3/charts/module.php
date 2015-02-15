@@ -149,7 +149,7 @@ class charts_WT_Module extends Module implements ModuleBlockInterface
         }
 
         if ($template) {
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->formatBlock($id, $title, $class, $content);
         } else {
             return $content;

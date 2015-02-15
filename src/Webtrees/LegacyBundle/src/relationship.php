@@ -41,11 +41,11 @@ $asc          = Filter::getBool('asc');
 $asc     = $asc ? -1 : 1;
 $Dbwidth = $bwidth;
 if (!$show_full) {
-    $bwidth  = Theme::theme()
+    $bwidth  = Application::i()->getTheme()
                     ->parameter('compact-chart-box-x');
-    $bheight = Theme::theme()
+    $bheight = Application::i()->getTheme()
                     ->parameter('compact-chart-box-y');
-    $Dbwidth = Theme::theme()
+    $Dbwidth = Application::i()->getTheme()
                     ->parameter('compact-chart-box-x');
 }
 
@@ -264,7 +264,7 @@ if ($person1 && $person2) {
                     case 'mother':
                     case 'parent':
                         $arrow_img = $down_arrow;
-                        $line      = Theme::theme()
+                        $line      = Application::i()->getTheme()
                                           ->parameter('image-vline');
                         $liney += $Dbheight;
                         $linex += $Dbwidth / 2;
@@ -297,14 +297,14 @@ if ($person1 && $person2) {
                             $joiny = $liney - 2 - ($asc - 1) / 2 * $lh;
                             echo "<div id=\"joina", $index, "\" style=\"position:absolute; ", Globals::i()->TEXT_DIRECTION == 'ltr'
                                 ? 'left'
-                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, "px;\" align=\"center\"><img src=\"", Theme::theme()
+                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, "px;\" align=\"center\"><img src=\"", Application::i()->getTheme()
                                                                                                                                                    ->parameter('image-hline'), "\" align=\"left\" width=\"", $joinw, "\" height=\"", $joinh, "\" alt=\"\"></div>";
                             $joinw = $xs / 2 + 2;
                             $joinx = $joinx + $xs / 2;
                             $joiny = $joiny + $asc * $lh;
                             echo "<div id=\"joinb", $index, "\" style=\"position:absolute; ", Globals::i()->TEXT_DIRECTION == 'ltr'
                                 ? 'left'
-                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, "px;\" align=\"center\"><img src=\"", Theme::theme()
+                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, "px;\" align=\"center\"><img src=\"", Application::i()->getTheme()
                                                                                                                                                    ->parameter('image-hline'), "\" align=\"left\" width=\"", $joinw, "\" height=\"", $joinh, "\" alt=\"\"></div>";
                         } else {
                             $change_count = '';
@@ -321,7 +321,7 @@ if ($person1 && $person2) {
                         $xoffset += $Dbwidth + $Dbxspacing + 70;
                         $colNum++;
                         //$rowNum is inherited from the box immediately to the left
-                        $line = Theme::theme()
+                        $line = Application::i()->getTheme()
                                      ->parameter('image-hline');
                         $linex += $Dbwidth;
                         $liney += $Dbheight / 2;
@@ -336,7 +336,7 @@ if ($person1 && $person2) {
                     case 'daughter':
                     case 'child':
                         $arrow_img = $up_arrow;
-                        $line      = Theme::theme()
+                        $line      = Application::i()->getTheme()
                                           ->parameter('image-vline');
                         $liney += $Dbheight;
                         $linex += $Dbwidth / 2;
@@ -369,14 +369,14 @@ if ($person1 && $person2) {
                             $joiny = $liney - 2 + ($asc + 1) / 2 * $lh;
                             echo '<div id="joina', $index, '" style="position:absolute; ', Globals::i()->TEXT_DIRECTION == 'ltr'
                                 ? 'left'
-                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, 'px;" align="center"><img src="', Theme::theme()
+                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, 'px;" align="center"><img src="', Application::i()->getTheme()
                                                                                                                                                ->parameter('image-hline'), '" align="left" width="', $joinw, '" height="', $joinh, '" alt=""></div>';
                             $joinw = $xs / 2 + 2;
                             $joinx = $joinx + $xs / 2;
                             $joiny = $joiny - $asc * $lh;
                             echo '<div id="joinb', $index, '" style="position:absolute; ', Globals::i()->TEXT_DIRECTION == 'ltr'
                                 ? 'left'
-                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, 'px;" align="center"><img src="', Theme::theme()
+                                : 'right', ':', $joinx + $Dbxspacing, 'px; top:', $joiny + $Dbyspacing, 'px;" align="center"><img src="', Application::i()->getTheme()
                                                                                                                                                ->parameter('image-hline'), '" align="left" width="', $joinw, '" height="', $joinh, '" alt=""></div>';
                         } else {
                             $change_count = '';
@@ -395,7 +395,7 @@ if ($person1 && $person2) {
 
                 if ($index > 0) {
                     if (Globals::i()->TEXT_DIRECTION === 'rtl'
-                        && $line !== Theme::theme()
+                        && $line !== Application::i()->getTheme()
                                           ->parameter('image-hline')
                     ) {
                         echo '<div id="line', $index, '" style="background:none; position:absolute; right:', $plinex + $Dbxspacing, 'px; top:', $liney + $Dbyspacing, 'px; width:', $lw + $lh * 2, 'px;" align="right">';

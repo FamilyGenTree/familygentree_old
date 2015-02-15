@@ -23,6 +23,7 @@ use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Log;
 use Webtrees\LegacyBundle\Legacy\Theme;
 use Webtrees\LegacyBundle\Legacy\Tree;
+use Webtrees\LegacyBundle\Legacy\WebtreesTheme;
 
 class AppInitializer
 {
@@ -50,10 +51,6 @@ class AppInitializer
      * @var ContainerInterface
      */
     protected $diContainer;
-    /**
-     * @var \Webtrees\LegacyBundle\Context\Application\Service\Theme
-     */
-    protected $themeObject;
 
     public function __construct($diContainer)
     {
@@ -154,8 +151,6 @@ class AppInitializer
                 ->setPreference('sessiontime', WT_TIMESTAMP);
             Application::i()->getSession()->activity_time = WT_TIMESTAMP;
         }
-        $this->initTheme();
-
 
 // Page hit counter - load after theme, as we need theme formatting
         if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
@@ -298,8 +293,8 @@ class AppInitializer
         $SERVER_URL = Site::getPreference('SERVER_URL');
         if ($SERVER_URL && $SERVER_URL != Config::get(Config::BASE_URL)) {
             header('Location: ' . $SERVER_URL . WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
-                                                                                                                     ? '?' . $_SERVER['QUERY_STRING']
-                                                                                                                     : ''), true, 301);
+                                                                                                                              ? '?' . $_SERVER['QUERY_STRING']
+                                                                                                                              : ''), true, 301);
             exit;
         }
     }
@@ -451,76 +446,6 @@ class AppInitializer
         I18N::init();
     }
 
-    private function initTheme()
-    {
-// Set the theme
-        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === UrlConstants::MODULE_PHP && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
-            // Administration scripts begin with “admin” and use a special administration theme
-            Theme::theme(new AdministrationTheme())
-                 ->init(Application::i()->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-        } else {
-            if (Site::getPreference('ALLOW_USER_THEMES')) {
-                // Requested change of theme?
-                $theme_id = Filter::get('theme');
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = '';
-                }
-                // Last theme used?
-                if (!$theme_id && array_key_exists(Application::i()->getSession()->theme_id, Theme::themeNames())) {
-                    $theme_id = Application::i()->getSession()->theme_id;
-                }
-            } else {
-                $theme_id = '';
-            }
-            if (!$theme_id) {
-                // User cannot choose (or has not chosen) a theme.
-                // 1) gedcom setting
-                // 2) site setting
-                // 3) webtrees
-                // 4) first one found
-                if (WT_GED_ID) {
-                    $theme_id = Globals::i()->WT_TREE->getPreference('THEME_DIR');
-                }
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = Site::getPreference('THEME_DIR');
-                }
-                if (!array_key_exists($theme_id, Theme::themeNames())) {
-                    $theme_id = 'webtrees';
-                }
-            }
-            foreach (Theme::installedThemes() as $theme) {
-                if ($theme->themeId() === $theme_id) {
-                    Theme::theme($theme)
-                         ->init(Application::i()->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
-                }
-            }
-
-            // Remember this setting
-            Application::i()->getSession()->theme_id = $theme_id;
-        }
-
-        // These theme globals are horribly abused.
-        global $bwidth, $bheight, $basexoffset, $baseyoffset, $bxspacing, $byspacing, $Dbwidth, $Dbheight;
-
-        $bwidth      = Theme::theme()
-                            ->parameter('chart-box-x');
-        $bheight     = Theme::theme()
-                            ->parameter('chart-box-y');
-        $basexoffset = Theme::theme()
-                            ->parameter('chart-offset-x');
-        $baseyoffset = Theme::theme()
-                            ->parameter('chart-offset-y');
-        $bxspacing   = Theme::theme()
-                            ->parameter('chart-spacing-x');
-        $byspacing   = Theme::theme()
-                            ->parameter('chart-spacing-y');
-        $Dbwidth     = Theme::theme()
-                            ->parameter('chart-descendancy-box-x');
-        $Dbheight    = Theme::theme()
-                            ->parameter('chart-descendancy-box-y');
-
-    }
-
     private function initConfig()
     {
         $config = $this->getConfig();
@@ -541,17 +466,4 @@ class AppInitializer
 
         return $this->configObject;
     }
-
-    /**
-     * @return \Webtrees\LegacyBundle\Context\Application\Service\Theme
-     */
-    public function getTheme()
-    {
-        if (null === $this->themeObject) {
-            $this->themeObject = $this->diContainer->get('webtrees.theme');
-        }
-
-        return $this->themeObject;
-    }
-
 }

@@ -1944,7 +1944,7 @@ switch ($action) {
                             echo ' class="facts_value new"';
                         }
                         echo ' id="li_', $id, '">';
-                        echo Theme::theme()
+                        echo Application::i()->getTheme()
                                   ->individualBoxLarge(Individual::getInstance($id));
                         echo '<input type="hidden" name="order[', $id, ']" value="', $i, '">';
                         echo '</li>';

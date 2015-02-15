@@ -31,7 +31,6 @@ class ConfigRepository implements ContainerAwareInterface
      */
     public function load()
     {
-        echo __METHOD__;
         $config = new FgtConfig();
         $values = parse_ini_file(__DIR__ . '/../../../Resources/config/config.system.ini');
         foreach ($values as $key => $value) {

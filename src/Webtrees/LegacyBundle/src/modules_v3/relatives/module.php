@@ -127,7 +127,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                         <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
-                        <?php echo Theme::theme()
+                        <?php echo Application::i()->getTheme()
                                         ->individualBoxLarge($person); ?>
                     </td>
                 </tr>
@@ -164,7 +164,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                         <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
-                        <?php echo Theme::theme()
+                        <?php echo Application::i()->getTheme()
                                         ->individualBoxLarge($person); ?>
                     </td>
                 </tr>
@@ -259,7 +259,7 @@ class relatives_WT_Module extends Module implements ModuleTabInterface
                         <?php echo Functions::i()->get_close_relationship_name($controller->record, $person); ?>
                     </td>
                     <td class="<?php echo $controller->getPersonStyle($person); ?>">
-                        <?php echo Theme::theme()
+                        <?php echo Application::i()->getTheme()
                                         ->individualBoxLarge($person); ?>
                     </td>
                 </tr>

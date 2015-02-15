@@ -16,41 +16,50 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FamGeneTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
+use Fgt\Application;
 use Fgt\Globals;
-use Zend_Session;
 
 /**
  * Class PageController Controller for full-page, themed HTML responses
  */
 class PageController extends BaseController implements PageControllerInterface
 {
+    const VIEW_STYLE_NONE   = '';
+    const VIEW_STYLE_SIMPLE = 'simple';
+    protected $viewStyle;
+
     // Page header information
     private $canonical_url = '';
-    private $meta_robots   = 'noindex,nofollow'; // Most pages are not intended for robots
-    private $page_title    = WT_WEBTREES; // <head><title> $page_title </title></head>
+    private $page_title    = null; // <head><title> $page_title </title></head>
+    private $meta          = array();
 
     /**
      * Startup activity
      */
-    public function __construct()
-    {
-        parent::__construct();
+    public function __construct(
+        \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine $templateEngine,
+        $template = 'WebtreesLegacyThemeBundle:Default:index.html.twig'
+    ) {
+        parent::__construct($templateEngine, $template);
+        $fgtConfig        = Application::i()->getConfig();
+        $this->page_title = $fgtConfig->getValue(ConfigKeys::SYSTEM_NAME);
+        $this->addMeta('robots', $fgtConfig->getValue(ConfigKeys::SITE_META_ROBOTS));
+        $this->addMeta('generator', $fgtConfig->getValue(ConfigKeys::SYSTEM_NAME)
+                                    . ' ' . $fgtConfig->getValue(ConfigKeys::SYSTEM_VERSION)
+                                    . ' - ' . $fgtConfig->getValue(ConfigKeys::PROJECT_HOMEPAGE_URL));
+
+        if (Application::i()->getTree()) {
+            $this->metaDescription(Application::i()->getTree()->getPreference('META_DESCRIPTION'));
+        }
+
         // Every page uses these scripts
         $this
-            ->addExternalJavascript(WT_JQUERY_JS_URL)
-            ->addExternalJavascript(WT_JQUERYUI_JS_URL)
-            ->addExternalJavascript(WT_STATIC_URL.WebtreesTheme::WT_WEBTREES_JS_URL);
-    }
-
-    /**
-     * Shutdown activity
-     */
-    public function __destruct()
-    {
-        // If we printed a header, automatically print a footer
-        if ($this->page_header) {
-            echo $this->pageFooter();
-        }
+            ->addExternalJavascript($fgtConfig->getValue('WT_JQUERY_JS_URL'))
+            ->addExternalJavascript($fgtConfig->getValue('WT_JQUERYUI_JS_URL'))
+            ->addExternalJavascript(Application::i()
+                                               ->getConfig()
+                                               ->getValue('WT_STATIC_URL') . WebtreesTheme::WT_WEBTREES_JS_URL);
     }
 
     /**
@@ -110,7 +119,7 @@ class PageController extends BaseController implements PageControllerInterface
      */
     public function setMetaRobots($meta_robots)
     {
-        $this->meta_robots = $meta_robots;
+        $this->addMeta('robots', $meta_robots);
 
         return $this;
     }
@@ -122,7 +131,7 @@ class PageController extends BaseController implements PageControllerInterface
      */
     public function getMetaRobots()
     {
-        return $this->meta_robots;
+        return $this->getMeta('robots');
     }
 
     /**
@@ -150,17 +159,13 @@ class PageController extends BaseController implements PageControllerInterface
     protected function pageFooter()
     {
         return
-            Theme::theme()
-                 ->footerContainer() .
+            Application::i()->getTheme()
+                       ->footerContainer() .
             $this->getJavascript() .
-            Theme::theme()
-                 ->hookFooterExtraJavascript() .
+            Application::i()->getTheme()
+                       ->hookFooterExtraJavascript() .
             '</body>' .
-            '</html>' . PHP_EOL .
-            '<!-- webtrees: ' . WT_VERSION . ' -->' .
-            '<!-- Execution time: ' . I18N::number(microtime(true) - WT_START_TIME, 3) . ' seconds -->' .
-            '<!-- Memory: ' . I18N::number(memory_get_peak_usage(true) / 1024) . ' KB -->' .
-            '<!-- SQL queries: ' . I18N::number(Database::i()->getQueryCount()) . ' -->';
+            '</html>' . PHP_EOL;
     }
 
     /**
@@ -172,6 +177,7 @@ class PageController extends BaseController implements PageControllerInterface
      */
     public function pageHeader($view = '')
     {
+        $this->setViewStyle($view);
         // Give Javascript access to some PHP constants
         $this->addInlineJavascript('
 			var WT_STATIC_URL  = "' . Filter::escapeJs(WT_STATIC_URL) . '";
@@ -182,7 +188,7 @@ class PageController extends BaseController implements PageControllerInterface
 			var WT_SCRIPT_NAME = "' . Filter::escapeJs(WT_SCRIPT_NAME) . '";
 			var WT_LOCALE      = "' . Filter::escapeJs(WT_LOCALE) . '";
 			var WT_CSRF_TOKEN  = "' . Filter::escapeJs(Filter::getCsrfToken()) . '";
-		', self::JS_PRIORITY_HIGH);
+		', static::JS_PRIORITY_HIGH);
 
         // Temporary fix for access to main menu hover elements on android/blackberry touch devices
         $this->addInlineJavascript('
@@ -190,36 +196,6 @@ class PageController extends BaseController implements PageControllerInterface
 				jQuery(".primary-menu > li > a").attr("href", "#");
 			}
 		');
-
-        Theme::theme()
-             ->sendHeaders();
-        echo Theme::theme()
-                  ->doctype();
-        echo Theme::theme()
-                  ->html();
-        echo Theme::theme()
-                  ->head($this);
-
-        switch ($view) {
-            case 'simple':
-                echo Theme::theme()
-                          ->bodyHeaderPopupWindow();
-                break;
-            default:
-                echo Theme::theme()
-                          ->bodyHeader();
-                break;
-        }
-
-        // Flush the output, so the browser can render the header and load javascript
-        // while we are preparing data for the page
-        if (ini_get('output_buffering')) {
-            ob_flush();
-        }
-        flush();
-
-        // Once we've displayed the header, we should no longer write session data.
-        Zend_Session::writeClose();
 
         // We've displayed the header - display the footer automatically
         $this->page_header = true;
@@ -295,4 +271,101 @@ class PageController extends BaseController implements PageControllerInterface
     {
         return '';
     }
+
+    public function render($templateName = null, array $arguments = array())
+    {
+        $arguments = array_merge(
+            array(
+                'page_title'     => $this->getPageTitle(),
+                'metaRobots'     => $this->getMetaRobots(),
+                'canonicalUrl'   => $this->getCanonicalUrl(),
+                'powered_by_url' => Application::i()->getConfig()->getValue(ConfigKeys::PROJECT_HOMEPAGE_URL),
+                'debug' => array(
+                    'execution_time' => I18N::number(microtime(true) - WT_START_TIME, 3) . ' seconds',
+                    'memory' => I18N::number(memory_get_peak_usage(true) / 1024) . ' KB',
+                    'sql_queries' => I18N::number(Database::i()->getQueryCount())
+                )
+            ),
+            $arguments
+        );
+
+        return parent::render($templateName, $arguments);
+    }
+
+    private function setViewStyle($view)
+    {
+        $this->viewStyle = $view;
+    }
+
+    public function addMeta($key, $value)
+    {
+        $this->meta[$key] = $value;
+    }
+
+    public function getMeta($key)
+    {
+        return $this->meta[$key];
+    }
+
+    /**
+     * Create the <link rel="canonical"> tag.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    protected function metaCanonicalUrl($url)
+    {
+        if ($url) {
+            return '<link rel="canonical" href="' . $url . '">';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Create the <meta charset=""> tag.
+     *
+     * @return string
+     */
+    protected function metaCharset()
+    {
+        return '<meta charset="UTF-8">';
+    }
+
+    /**
+     * Create the <meta name="description"> tag.
+     *
+     * @param string $description
+     *
+     * @return string
+     */
+    protected function metaDescription($description)
+    {
+        $this->addMeta('description', $description);
+    }
+
+    /**
+     * Create the <meta name="generator"> tag.
+     *
+     * @param string $generator
+     *
+     * @return string
+     */
+    protected function metaGenerator($generator)
+    {
+        $this->addMeta('generator', $generator);
+    }
+
+    /**
+     * Create the <meta http-equiv="X-UA-Compatible"> tag.
+     *
+     * @return string
+     */
+    protected function metaUaCompatible()
+    {
+
+        return '';
+    }
+
 }

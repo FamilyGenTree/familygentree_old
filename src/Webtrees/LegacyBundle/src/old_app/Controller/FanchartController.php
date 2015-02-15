@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\Globals;
 
@@ -199,37 +200,37 @@ class FanchartController extends ChartController
 
         $color    = ImageColorAllocate(
             $image,
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-font-color'), 0, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-font-color'), 2, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-font-color'), 4, 2)));
         $bgcolor  = ImageColorAllocate(
             $image,
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-u'), 0, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-u'), 2, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-u'), 4, 2))
         );
         $bgcolorM = ImageColorAllocate(
             $image,
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-m'), 0, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-m'), 2, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-m'), 4, 2))
         );
         $bgcolorF = ImageColorAllocate(
             $image,
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-f'), 0, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-f'), 2, 2)),
-            hexdec(substr(Theme::theme()
+            hexdec(substr(Application::i()->getTheme()
                                ->parameter('chart-background-f'), 4, 2))
         );
 
@@ -284,7 +285,7 @@ class FanchartController extends ChartController
                     ImageFilledArc($image, $cx, $cy, $rx, $rx, $deg1, $deg2, $bg, IMG_ARC_PIE);
 
                     // split and center text by lines
-                    $wmax = (int)($angle * 7 / Theme::theme()
+                    $wmax = (int)($angle * 7 / Application::i()->getTheme()
                                                     ->parameter('chart-font-size') * $scale);
                     $wmax = min($wmax, 35 * $scale);
                     if ($gen == 0) {
@@ -326,10 +327,10 @@ class FanchartController extends ChartController
                     // print text
                     ImageTtfText(
                         $image,
-                        Theme::theme()
+                        Application::i()->getTheme()
                              ->parameter('chart-font-size'),
                         $tangle, $tx, $ty,
-                        $color, Theme::theme()
+                        $color, Application::i()->getTheme()
                                      ->parameter('chart-font-name'),
                         $text
                     );

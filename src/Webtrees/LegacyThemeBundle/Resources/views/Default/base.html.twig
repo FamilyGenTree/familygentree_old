@@ -1,69 +1,127 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>{{ title }}</title>
-    <meta name="robots" content="noindex,follow">
-    {% block head_inline_css %}
-    <style type="text/css">
-        body {
-            color: gray;
-            background-color: white;
-            font: 14px tahoma, arial, helvetica, sans-serif;
-            padding: 10px;
-        }
-
-        a {
-            color: #81A9CB;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        h1 {
-            color: #81A9CB;
-            font-weight: normal;
-            text-align: center;
-        }
-
-        li {
-            line-height: 2;
-        }
-
-        blockquote {
-            color: red;
-        }
-
-        .content {
-            /*margin:auto; width:800px;*/
-            border: 1px solid gray;
-            padding: 15px;
-            border-radius: 15px;
-        }
-
-        .good {
-            color: green;
-        }
-    </style>
-    {% endblock %}
-</head>
-<body>
-<h1>{{ title|escape }}</h1>
-{% block page_content %}
-<div class="content">
-
-    <p>
-        {% if offline_txt %}
-            {{ offline_txt }}
-        {% else %}
-            This website is down for maintenance.  You should <a href="{{ url('_welcome') }}">try
-            again</a> in a few minutes.
+<html
+        {% if html_markup %}
+            {{ html_markup | raw }}
         {% endif %}
-    </p>
-</div>
+        >
+<head>
+    {% block meta %}
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="robots" content="noindex,follow">
+    {% endblock %}
+
+    <title>{{ title }}</title>
+    <link rel="icon" href="{{ asset('bundles/webtreeslegacytheme/images/favicon.ico') }}" type="image/x-icon">
+
+    {% block headContents %}
+    {% endblock %}
+
+    {% stylesheets '@jquery_ui_css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% block head_inline_css %}
+        <style type="text/css">
+            body {
+                color: gray;
+                background-color: white;
+                font: 14px tahoma, arial, helvetica, sans-serif;
+                padding: 10px;
+            }
+
+            a {
+                color: #81A9CB;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            h1 {
+                color: #81A9CB;
+                font-weight: normal;
+                text-align: center;
+            }
+
+            li {
+                line-height: 2;
+            }
+
+            blockquote {
+                color: red;
+            }
+
+            .content {
+                /*margin:auto; width:800px;*/
+                border: 1px solid gray;
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            .good {
+                color: green;
+            }
+        </style>
+    {% endblock %}
+    {# modernizr.js and respond.js need to be loaded before the <body> to avoid FOUC #}
+    {%  javascripts '@modernizer_respond' %}
+    <!--[if IE 8]><script src="{{ asset_url }}"></script><![endif]-->
+    {% endjavascripts %}
+    {% javascripts '@WebtreesLegacyBundle/Resources/public/js/webtrees.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+</head>
+
+<body class="container">
+<header>
+    {% block headerContent %}
+        <div class="header-logo"></div>
+        {% if title %}
+            <h1 class="header-title">{{ title }}</h1>
+        {% endif %}
+
+        {% include "WebtreesLegacyThemeBundle:Default:partial.quicksearch.html.twig" %}
+        {# knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') #}
+    {% endblock %}
+</header>
+
+<main id="content" role="main">
+    {% include "WebtreesLegacyThemeBundle:Default:partial.flashmessages.html.twig" %}
+    {% block page_content %}
+    {% endblock %}
+    </main>
+
+        <footer>
+            {% block footer %}
+                {% include 'WebtreesLegacyThemeBundle:Default:partial.contactlinks.html.twig' %}
+
+                <a href="{{ powered_by_url }}" class="powered-by-webtrees" title="{{ powered_by_url }}"></a>'
+            {% endblock %}
+        </footer>
+{% block javascript_at_end %}
+    <script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_COLORBOX_URL . '"></script>
+    <script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_WHEELZOOM_URL . '"></script>
+<script>
+    activate_colorbox();' .
+    jQuery.extend(jQuery.colorbox.settings, {
+     width:"85%",
+     height:"85%",
+     transition:"none",
+     slideshowStart:"{{ 'Play' |trans }}",
+     slideshowStop:"{{ 'Stop' | trans }}",
+     title: function() { return jQuery(this).data("title"); }
+    });
+    </script>
 {% endblock %}
 </body>
 </html>
+
+{% if debug %}
+<!-- Execution time: {{ debug.execution_time }} -->
+<!-- Memory: {{ debug.memory }} -->
+<!-- SQL queries: {{ debug.sql_queries }} -->
+{% endif %}

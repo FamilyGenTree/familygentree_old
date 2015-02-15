@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -65,9 +66,9 @@ class FamilybookController extends ChartController
 
         // -- adjust size of the compact box
         if (!$this->show_full) {
-            $bwidth  = $this->box_width * Theme::theme()
+            $bwidth  = $this->box_width * Application::i()->getTheme()
                                                ->parameter('compact-chart-box-x') / 100;
-            $bheight = Theme::theme()
+            $bheight = Application::i()->getTheme()
                             ->parameter('compact-chart-box-y');
         }
         $bhalfheight = $bheight / 2;
@@ -155,7 +156,7 @@ class FamilybookController extends ChartController
                                 $h = ($kids - 1) * 4 + $h;
                             }
                             echo '<td class="tdbot">',
-                            '<img class="tvertline" id="vline_', $chil, '" src="', Theme::theme()
+                            '<img class="tvertline" id="vline_', $chil, '" src="', Application::i()->getTheme()
                                                                                         ->parameter('image-vline'), '"  height="', $h - 1, '" alt=""></td>';
                         } else if ($i == $ct - 1) {
                             //-- adjust for the first column on left
@@ -165,12 +166,12 @@ class FamilybookController extends ChartController
                                 $h = ((($kids - 1) * 4) + $h);
                             }
                             echo '<td class="tdtop">',
-                            '<img class="bvertline" id="vline_', $chil, '" src="', Theme::theme()
+                            '<img class="bvertline" id="vline_', $chil, '" src="', Application::i()->getTheme()
                                                                                         ->parameter('image-vline'), '" height="', $h + 1, '" alt=""></td>';
                         } else {
-                            echo '<td style="background: url(', Theme::theme()
+                            echo '<td style="background: url(', Application::i()->getTheme()
                                                                      ->parameter('image-vline'), ');">',
-                            '<img class="spacer" src="', Theme::theme()
+                            '<img class="spacer" src="', Application::i()->getTheme()
                                                               ->parameter('image-spacer'), '" alt=""></td>';
                         }
                     }
@@ -189,7 +190,7 @@ class FamilybookController extends ChartController
         if ($person) {
             FunctionsPrint::i()->print_pedigree_person($person);
             echo '</td><td>',
-            '<img class="line2" src="', Theme::theme()
+            '<img class="line2" src="', Application::i()->getTheme()
                                              ->parameter('image-hline'), '" width="8" height="3" alt="">';
         } else {
             echo '<div style="width:', $bwidth + 19, 'px; height:', $bheight + 8, 'px;"></div>',
@@ -298,10 +299,10 @@ class FamilybookController extends ChartController
                     $lh = $savlh;
                 }
             }
-            echo '<img class="line3 pvline"  src="', Theme::theme()
+            echo '<img class="line3 pvline"  src="', Application::i()->getTheme()
                                                           ->parameter('image-vline'), '" height="', $lh - 1, '" alt=""></td>',
             '<td>',
-            '<img class="line4" src="', Theme::theme()
+            '<img class="line4" src="', Application::i()->getTheme()
                                              ->parameter('image-hline'), '" height="3" alt=""></td>',
             '<td>';
             $lh = $savlh; // restore original line height
@@ -325,9 +326,9 @@ class FamilybookController extends ChartController
                 }
             }
             echo '</tr><tr>',
-            '<td class="tdtop"><img class="pvline" src="', Theme::theme()
+            '<td class="tdtop"><img class="pvline" src="', Application::i()->getTheme()
                                                                 ->parameter('image-vline'), '" height="', $lh + 1, '"></td>',
-            '<td><img class="line4" src="', Theme::theme()
+            '<td><img class="line4" src="', Application::i()->getTheme()
                                                  ->parameter('image-hline'), '" height="3"></td>',
             '<td>';
             //-- print the mother box

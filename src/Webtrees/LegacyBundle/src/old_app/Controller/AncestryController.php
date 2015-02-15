@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -62,9 +63,9 @@ class AncestryController extends ChartController
 
         // -- adjust size of the compact box
         if (!$this->show_full) {
-            $bwidth  = Theme::theme()
+            $bwidth  = Application::i()->getTheme()
                             ->parameter('compact-chart-box-x');
-            $bheight = Theme::theme()
+            $bheight = Application::i()->getTheme()
                             ->parameter('compact-chart-box-y');
         }
 
@@ -109,14 +110,14 @@ class AncestryController extends ChartController
         echo '<li>';
         echo '<table><tr><td>';
         if ($sosa == 1) {
-            echo '<img src="', Theme::theme()
-                                    ->parameter('image-spacer'), '" height="3" width="', Theme::theme()
+            echo '<img src="', Application::i()->getTheme()
+                                    ->parameter('image-spacer'), '" height="3" width="', Application::i()->getTheme()
                                                                                               ->parameter('chart-descendancy-indent'), '"></td><td>';
         } else {
-            echo '<img src="', Theme::theme()
+            echo '<img src="', Application::i()->getTheme()
                                     ->parameter('image-spacer'), '" height="3" width="2" alt="">';
-            echo '<img src="', Theme::theme()
-                                    ->parameter('image-hline'), '" height="3" width="', Theme::theme()
+            echo '<img src="', Application::i()->getTheme()
+                                    ->parameter('image-hline'), '" height="3" width="', Application::i()->getTheme()
                                                                                              ->parameter('chart-descendancy-indent') - 2, '"></td><td>';
         }
         FunctionsPrint::i()->print_pedigree_person($person);
@@ -151,8 +152,8 @@ class AncestryController extends ChartController
         if ($family && $new && $depth > 0) {
             // print marriage info
             echo '<span class="details1">';
-            echo '<img src="', Theme::theme()
-                                    ->parameter('image-spacer'), '" height="2" width="', Theme::theme()
+            echo '<img src="', Application::i()->getTheme()
+                                    ->parameter('image-spacer'), '" height="2" width="', Application::i()->getTheme()
                                                                                               ->parameter('chart-descendancy-indent'), '" alt=""><a href="#" onclick="return expand_layer(\'sosa_', $sosa, '\');" class="top"><i id="sosa_', $sosa, '_img" class="icon-minus" title="', I18N::translate('View family'), '"></i></a>';
             echo '&nbsp;<span dir="ltr" class="person_box">&nbsp;', ($sosa * 2), '&nbsp;</span>&nbsp;', I18N::translate('and');
             echo '&nbsp;<span dir="ltr" class="person_boxF">&nbsp;', ($sosa * 2 + 1), '&nbsp;</span>&nbsp;';

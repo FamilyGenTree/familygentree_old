@@ -9,7 +9,11 @@ namespace Fgt;
 
 use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig as FgtConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
 use Webtrees\LegacyBundle\Legacy\BaseController;
+use Webtrees\LegacyBundle\Legacy\BaseTheme;
+use Webtrees\LegacyBundle\Legacy\Filter;
+use Webtrees\LegacyBundle\Legacy\WebtreesTheme;
 
 class Application
 {
@@ -30,10 +34,6 @@ class Application
      * @var ContainerInterface
      */
     protected $diContainer;
-    /**
-     * @var \Webtrees\LegacyBundle\Context\Application\Service\Theme
-     */
-    protected $themeObject;
 
     /**
      * Singleton protected
@@ -83,14 +83,10 @@ class Application
     }
 
     /**
-     * @return \Webtrees\LegacyBundle\Context\Application\Service\Theme
+     * @return BaseTheme
      */
     public function getTheme()
     {
-        if (null === $this->themeObject) {
-            $this->themeObject = $this->diContainer->get('webtrees.theme');
-        }
-
         return $this->themeObject;
     }
 
@@ -109,6 +105,8 @@ class Application
     {
         $appInit = new AppInitializer($this->diContainer);
         $appInit->init();
+        $this->initTheme();
+
         return $this;
     }
 
@@ -161,4 +159,48 @@ class Application
     {
         return $this->diContainer->get('router')->generate($route, $params);
     }
+
+    private function initTheme()
+    {
+// Set the theme
+        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === UrlConstants::MODULE_PHP && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
+            // Administration scripts begin with “admin” and use a special administration theme
+            $this->themeObject = new AdministrationTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+        } else {
+            $theme_id = 'webtrees';
+            $this->themeObject = new WebtreesTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+
+            // Remember this setting
+            Application::i()->getSession()->theme_id = $theme_id;
+        }
+
+        // These theme globals are horribly abused.
+        global $bwidth, $bheight, $basexoffset, $baseyoffset, $bxspacing, $byspacing, $Dbwidth, $Dbheight;
+
+        $bwidth      = Application::i()->getTheme()
+                                  ->parameter('chart-box-x');
+        $bheight     = Application::i()->getTheme()
+                                  ->parameter('chart-box-y');
+        $basexoffset = Application::i()->getTheme()
+                                  ->parameter('chart-offset-x');
+        $baseyoffset = Application::i()->getTheme()
+                                  ->parameter('chart-offset-y');
+        $bxspacing   = Application::i()->getTheme()
+                                  ->parameter('chart-spacing-x');
+        $byspacing   = Application::i()->getTheme()
+                                  ->parameter('chart-spacing-y');
+        $Dbwidth     = Application::i()->getTheme()
+                                  ->parameter('chart-descendancy-box-x');
+        $Dbheight    = Application::i()->getTheme()
+                                  ->parameter('chart-descendancy-box-y');
+
+    }
+
+    /**
+     * @return \Webtrees\LegacyBundle\Legacy\Tree
+     */
+    public function getTree() {
+        return Globals::i()->WT_TREE;
+    }
+
 }

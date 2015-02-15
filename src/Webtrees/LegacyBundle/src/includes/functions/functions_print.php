@@ -62,19 +62,19 @@ class FunctionsPrint
         switch ($show_full) {
             case 0:
                 if ($person) {
-                    echo Theme::theme()
+                    echo Application::i()->getTheme()
                               ->individualBoxSmall($person);
                 } else {
-                    echo Theme::theme()
+                    echo Application::i()->getTheme()
                               ->individualBoxSmallEmpty();
                 }
                 break;
             case 1:
                 if ($person) {
-                    echo Theme::theme()
+                    echo Application::i()->getTheme()
                               ->individualBox($person);
                 } else {
-                    echo Theme::theme()
+                    echo Application::i()->getTheme()
                               ->individualBoxEmpty();
                 }
                 break;

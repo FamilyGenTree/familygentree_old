@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
@@ -77,9 +78,9 @@ class DescendancyController extends ChartController
 
         // -- adjust size of the compact box
         if (!$this->show_full) {
-            $bwidth  = Theme::theme()
+            $bwidth  = Application::i()->getTheme()
                             ->parameter('compact-chart-box-x');
-            $bheight = Theme::theme()
+            $bheight = Application::i()->getTheme()
                             ->parameter('compact-chart-box-y');
         }
 
@@ -141,14 +142,14 @@ class DescendancyController extends ChartController
         echo "<li>";
         echo "<table><tr><td>";
         if ($depth == $this->generations) {
-            echo "<img src=\"" . Theme::theme()
-                                      ->parameter('image-spacer') . "\" height=\"3\" width=\"", Theme::theme()
+            echo "<img src=\"" . Application::i()->getTheme()
+                                      ->parameter('image-spacer') . "\" height=\"3\" width=\"", Application::i()->getTheme()
                                                                                                      ->parameter('chart-descendancy-indent'), "\" alt=\"\"></td><td>";
         } else {
-            echo "<img src=\"" . Theme::theme()
+            echo "<img src=\"" . Application::i()->getTheme()
                                       ->parameter('image-spacer') . "\" height=\"3\" width=\"3\" alt=\"\">";
-            echo "<img src=\"" . Theme::theme()
-                                      ->parameter('image-hline') . "\" height=\"3\" width=\"", Theme::theme()
+            echo "<img src=\"" . Application::i()->getTheme()
+                                      ->parameter('image-hline') . "\" height=\"3\" width=\"", Application::i()->getTheme()
                                                                                                     ->parameter('chart-descendancy-indent') - 3, "\" alt=\"\"></td><td>";
         }
         FunctionsPrint::i()->print_pedigree_person($person);
@@ -215,8 +216,8 @@ class DescendancyController extends ChartController
         $uid = Uuid::uuid4(); // create a unique ID
         // print marriage info
         echo '<li>';
-        echo '<img src="', Theme::theme()
-                                ->parameter('image-spacer'), '" height="2" width="', Theme::theme()
+        echo '<img src="', Application::i()->getTheme()
+                                ->parameter('image-spacer'), '" height="2" width="', Application::i()->getTheme()
                                                                                           ->parameter('chart-descendancy-indent') + 4, '" alt="">';
         echo '<span class="details1">';
         echo "<a href=\"#\" onclick=\"expand_layer('" . $uid . "'); return false;\" class=\"top\"><i id=\"" . $uid . "_img\" class=\"icon-minus\" title=\"" . I18N::translate('View family') . "\"></i></a>";

@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
      * You should have received a copy of the GNU General Public License
      * along with this program. If not, see <http://www.gnu.org/licenses/>.
      */
+use Fgt\Application;
 
 /**
  * Class WebtreesTheme - The webtrees (default) theme.
@@ -56,7 +57,7 @@ class WebtreesTheme extends BaseTheme
     {
         return
             '<input type="search" name="query" size="25" placeholder="' . I18N::translate('Search') . '">' .
-            '<input type="image" class="image" src="' . Theme::theme()
+            '<input type="image" class="image" src="' . Application::i()->getTheme()
                                                              ->parameter('image-search') . '" alt="' . I18N::translate('Search') . '" title="' . I18N::translate('Search') . '">';
     }
 

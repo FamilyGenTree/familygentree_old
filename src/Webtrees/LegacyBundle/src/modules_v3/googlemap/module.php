@@ -207,7 +207,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
             echo '</td>';
             echo '</tr></table>';
             // start
-            echo '<img src="', Theme::theme()
+            echo '<img src="', Application::i()->getTheme()
                                     ->parameter('image-spacer'), '" id="marker6" width="1" height="1" alt="">';
             // end
             echo '</td></tr></table>';
@@ -2149,7 +2149,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                         'fact_label'   => $fact->getLabel(),
                         'image'        => $spouse
                             ? $spouse->displayImage()
-                            : Theme::theme()
+                            : Application::i()->getTheme()
                                    ->icon($fact),
                         'info'         => $fact->getValue(),
                         'lat'          => str_replace(array(
@@ -2195,7 +2195,7 @@ class googlemap_WT_Module extends Module implements ModuleConfigInterface, Modul
                             'fact_label'   => $fact->getLabel(),
                             'image'        => $spouse
                                 ? $spouse->displayImage()
-                                : Theme::theme()
+                                : Application::i()->getTheme()
                                        ->icon($fact),
                             'info'         => $fact->getValue(),
                             'lat'          => str_replace(array(

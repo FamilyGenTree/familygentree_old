@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class user_welcome_WT_Module
@@ -53,7 +54,7 @@ class user_welcome_WT_Module extends Module implements ModuleBlockInterface
         $content .= '</tr></table>';
 
         if ($template) {
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->formatBlock($id, $title, $class, $content);
         } else {
             return $content;

@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 
 /**
  * Class theme_select_WT_Module
@@ -42,14 +43,14 @@ class theme_select_WT_Module extends Module implements ModuleBlockInterface
         $id    = $this->getName() . $block_id;
         $class = $this->getName() . '_block';
         $title = $this->getTitle();
-        $menu  = Theme::theme()
+        $menu  = Application::i()->getTheme()
                       ->menuThemes();
 
         if ($menu) {
             $content = '<div class="center theme_form">' . $menu . '</div><br>';
 
             if ($template) {
-                return Theme::theme()
+                return Application::i()->getTheme()
                             ->formatBlock($id, $title, $class, $content);
             } else {
                 return $content;

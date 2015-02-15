@@ -24,46 +24,6 @@ class Theme
     /** @var BaseTheme The current theme */
     private static $theme;
 
-    /** @var string[] All currently installed themes */
-    private static $installed_themes;
-
-    /**
-     * Create a list of all themes available on the system, including
-     * any custom themes.
-     *
-     * @return string[]
-     */
-    public static function installedThemes()
-    {
-        if (self::$installed_themes === null) {
-            self::$installed_themes = array();
-            foreach (glob(WT_ROOT . 'themes/*/theme.php') as $theme_path) {
-                $theme = require $theme_path;
-                // Themes beginning with an underscore are reserved for special use.
-                if (substr_compare($theme->themeId(), '_', 0, 1) !== 0) {
-                    self::$installed_themes[] = $theme;
-                }
-            }
-        }
-
-        return self::$installed_themes;
-    }
-
-    /**
-     * An associative array of theme names, for <select> fields, etc.
-     *
-     * @return string[]
-     */
-    public static function themeNames()
-    {
-        $theme_names = array();
-        foreach (self::installedThemes() as $theme) {
-            $theme_names[$theme->themeId()] = $theme->themeName();
-        }
-
-        return $theme_names;
-    }
-
     /**
      * The currently active theme
      *
@@ -72,15 +32,23 @@ class Theme
      * @return BaseTheme
      * @throws \LogicException
      */
-    public static function theme(BaseTheme $theme = null)
+    public static function theme()
     {
 
-        if ($theme) {
-            self::$theme = $theme;
-        } elseif (!self::$theme) {
-            throw new \LogicException;
+        if (!self::$theme) {
+            throw new \LogicException("Theme not set.");
         }
 
+        return self::$theme;
+    }
+
+    /**
+     * @param \Webtrees\LegacyBundle\Legacy\BaseTheme $theme
+     *
+     * @return \Webtrees\LegacyBundle\Legacy\BaseTheme
+     */
+    public static function setTheme(BaseTheme $theme) {
+        self::$theme = $theme;
         return self::$theme;
     }
 }

@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -123,7 +124,7 @@ class top10_surnames_WT_Module extends Module implements ModuleBlockInterface
                 $class .= ' small_inner_block';
             }
 
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->formatBlock($id, $title, $class, $content);
         } else {
 

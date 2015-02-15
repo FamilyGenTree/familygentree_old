@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -47,15 +48,15 @@ class PedigreeController extends ChartController
         global $bwidth, $bheight, $baseyoffset, $basexoffset, $byspacing, $bxspacing, $show_full, $talloffset;
 
         parent::__construct();
-        $this->linewidth     = Theme::theme()
+        $this->linewidth     = Application::i()->getTheme()
                                     ->parameter('line-width');
-        $this->shadowcolor   = Theme::theme()
+        $this->shadowcolor   = Application::i()->getTheme()
                                     ->parameter('shadow-color');
-        $this->shadowblur    = Theme::theme()
+        $this->shadowblur    = Application::i()->getTheme()
                                     ->parameter('shadow-blur');
-        $this->shadowoffsetX = Theme::theme()
+        $this->shadowoffsetX = Application::i()->getTheme()
                                     ->parameter('shadow-offset-x');
-        $this->shadowoffsetY = Theme::theme()
+        $this->shadowoffsetY = Application::i()->getTheme()
                                     ->parameter('shadow-offset-y');
 
         $this->show_full            = Filter::getInteger('show_full', 0, 1, Globals::i()->WT_TREE->getPreference('PEDIGREE_FULL_DETAILS'));
@@ -93,14 +94,14 @@ class PedigreeController extends ChartController
         }
 
         if ($this->show_full) {
-            $this->pbwidth  = Theme::theme()
+            $this->pbwidth  = Application::i()->getTheme()
                                    ->parameter('chart-box-x') + 6;
-            $this->pbheight = Theme::theme()
+            $this->pbheight = Application::i()->getTheme()
                                    ->parameter('chart-box-y') + 5;
         } else {
-            $this->pbwidth  = Theme::theme()
+            $this->pbwidth  = Application::i()->getTheme()
                                    ->parameter('compact-chart-box-x') + 6;
-            $this->pbheight = Theme::theme()
+            $this->pbheight = Application::i()->getTheme()
                                    ->parameter('compact-chart-box-y') + 5;
         }
 

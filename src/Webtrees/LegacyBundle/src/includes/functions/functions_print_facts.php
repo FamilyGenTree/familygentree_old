@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Globals;
 use Rhumsaa\Uuid\Uuid;
 
@@ -173,7 +174,7 @@ class FunctionsPrintFacts
         echo '<td class="descriptionbox width20">';
 
         if (Globals::i()->WT_TREE->getPreference('SHOW_FACT_ICONS')) {
-            echo Theme::theme()
+            echo Application::i()->getTheme()
                       ->icon($fact), ' ';
         }
 

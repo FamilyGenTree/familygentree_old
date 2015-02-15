@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -88,9 +89,9 @@ class HourglassController extends ChartController
 
         // -- adjust size of the compact box
         if (!$this->show_full) {
-            $bwidth  = $this->box_width * Theme::theme()
+            $bwidth  = $this->box_width * Application::i()->getTheme()
                                                ->parameter('compact-chart-box-x') / 100;
-            $bheight = Theme::theme()
+            $bheight = Application::i()->getTheme()
                             ->parameter('compact-chart-box-y');
         }
 
@@ -148,9 +149,9 @@ class HourglassController extends ChartController
         foreach ($person->getChildFamilies() as $family) {
             echo '<table class="hourglassChart">';
             echo '<tr>';
-            echo '<td style="vertical-align:bottom;"><img class="line3 pvline" src="' . Theme::theme()
+            echo '<td style="vertical-align:bottom;"><img class="line3 pvline" src="' . Application::i()->getTheme()
                                                                                              ->parameter('image-vline') . '" width="3"></td>';
-            echo '<td><img class="line4" src="' . Theme::theme()
+            echo '<td><img class="line4" src="' . Application::i()->getTheme()
                                                        ->parameter('image-hline') . '" width="7" height="3"></td>';
             echo '<td>';
             //-- print the father box
@@ -186,9 +187,9 @@ class HourglassController extends ChartController
             }
             echo
             '</tr><tr>',
-                "<td style='vertical-align:top'><img class='pvline' src='" . Theme::theme()
+                "<td style='vertical-align:top'><img class='pvline' src='" . Application::i()->getTheme()
                                                                                   ->parameter('image-vline') . "' width='3' alt=''></td>",
-                '<td><img class="line4" src="' . Theme::theme()
+                '<td><img class="line4" src="' . Application::i()->getTheme()
                                                       ->parameter('image-hline') . '" width="7" height="3" alt=""></td>',
             '<td>';
             //-- print the mother box
@@ -296,16 +297,16 @@ class HourglassController extends ChartController
                     if ($ct > 1) {
                         if ($i == 0) {
                             // First child
-                            echo "<td style='vertical-align:bottom'><img alt='' class='line1 tvertline' id='vline_$chil' src='" . Theme::theme()
+                            echo "<td style='vertical-align:bottom'><img alt='' class='line1 tvertline' id='vline_$chil' src='" . Application::i()->getTheme()
                                                                                                                                        ->parameter('image-vline') . "' width='3'></td>";
                         } elseif ($i == $ct - 1) {
                             // Last child
-                            echo "<td style='vertical-align:top'><img alt='' class='bvertline' id='vline_$chil' src='" . Theme::theme()
+                            echo "<td style='vertical-align:top'><img alt='' class='bvertline' id='vline_$chil' src='" . Application::i()->getTheme()
                                                                                                                               ->parameter('image-vline') . "' width='3'></td>";
                         } else {
                             // Middle child
-                            echo '<td style="background: url(\'' . Theme::theme()
-                                                                        ->parameter('image-vline') . '\');"><img src=\'' . Theme::theme()
+                            echo '<td style="background: url(\'' . Application::i()->getTheme()
+                                                                        ->parameter('image-vline') . '\');"><img src=\'' . Application::i()->getTheme()
                                                                                                                                 ->parameter('image-spacer') . '\' width="3" alt=""></td>';
                         }
                     }
@@ -342,7 +343,7 @@ class HourglassController extends ChartController
 
         echo '<table id="table2_' . $pid . '"><tr><td>';
         FunctionsPrint::i()->print_pedigree_person($person);
-        echo '</td><td><img class="line2" src="' . Theme::theme()
+        echo '</td><td><img class="line2" src="' . Application::i()->getTheme()
                                                         ->parameter('image-hline') . '" width="7" height="3">';
 
         //----- Print the spouse

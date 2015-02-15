@@ -226,7 +226,7 @@ class yahrzeit_WT_Module extends Module implements ModuleBlockInterface
                 $class .= ' small_inner_block';
             }
 
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->formatBlock($id, $title, $class, $content);
         } else {
             return $content;

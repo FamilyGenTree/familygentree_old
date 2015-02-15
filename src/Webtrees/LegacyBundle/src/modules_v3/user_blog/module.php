@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Fgt\Application;
 use Fgt\Config;
 use Fgt\UrlConstants;
 use PDOException;
@@ -108,7 +109,7 @@ class user_blog_WT_Module extends Module implements ModuleBlockInterface
                 $class .= ' small_inner_block';
             }
 
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->formatBlock($id, $title, $class, $content);
         } else {
             return $content;

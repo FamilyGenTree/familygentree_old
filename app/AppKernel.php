@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 
         if ($this->isSetup()) {
             $bundles[] = new FOS\UserBundle\FOSUserBundle();
+            $bundles[] = new Knp\Bundle\MenuBundle\KnpMenuBundle();
             $bundles[] = new Webtrees\LegacyBundle\WebtreesLegacyBundle();
             $bundles[] = new FamGeneTree\AppBundle\FamGeneTreeAppBundle();
             $bundles[] = new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle();

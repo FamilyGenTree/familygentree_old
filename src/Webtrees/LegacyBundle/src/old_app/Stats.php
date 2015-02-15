@@ -422,13 +422,13 @@ class Stats
      */
     public function chartIndisWithSources($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
         if (isset($params[0]) && $params[0] != '') {
@@ -516,13 +516,13 @@ class Stats
      */
     public function chartFamsWithSources($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -916,9 +916,9 @@ class Stats
      */
     public function chartSex($params = array())
     {
-        $WT_STATS_S_CHART_X = Theme::theme()
+        $WT_STATS_S_CHART_X = Application::i()->getTheme()
                                    ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y = Theme::theme()
+        $WT_STATS_S_CHART_Y = Application::i()->getTheme()
                                    ->parameter('stats-small-chart-y');
 
         if (isset($params[0]) && $params[0] != '') {
@@ -1051,9 +1051,9 @@ class Stats
      */
     public function chartMortality($params = array())
     {
-        $WT_STATS_S_CHART_X = Theme::theme()
+        $WT_STATS_S_CHART_X = Application::i()->getTheme()
                                    ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y = Theme::theme()
+        $WT_STATS_S_CHART_Y = Application::i()->getTheme()
                                    ->parameter('stats-small-chart-y');
 
         if (isset($params[0]) && $params[0] != '') {
@@ -1328,13 +1328,13 @@ class Stats
      */
     public function chartMedia($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
         if (isset($params[0]) && $params[0] != '') {
@@ -1593,15 +1593,15 @@ class Stats
      */
     public function chartDistribution($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_CHART_COLOR3 = Theme::theme()
+        $WT_STATS_CHART_COLOR3 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-low-values');
-        $WT_STATS_MAP_X        = Theme::theme()
+        $WT_STATS_MAP_X        = Application::i()->getTheme()
                                       ->parameter('distribution-chart-x');
-        $WT_STATS_MAP_Y        = Theme::theme()
+        $WT_STATS_MAP_Y        = Application::i()->getTheme()
                                       ->parameter('distribution-chart-y');
 
         if (isset($params[0])) {
@@ -1874,13 +1874,13 @@ class Stats
      */
     public function statsBirthQuery($simple = true, $sex = false, $year1 = -1, $year2 = -1, $params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -1971,13 +1971,13 @@ class Stats
      */
     public function statsDeathQuery($simple = true, $sex = false, $year1 = -1, $year2 = -1, $params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
         if ($simple) {
@@ -3448,13 +3448,13 @@ class Stats
      */
     public function statsMarrQuery($simple = true, $first = false, $year1 = -1, $year2 = -1, $params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -3550,13 +3550,13 @@ class Stats
      */
     private function statsDivQuery($simple = true, $first = false, $year1 = -1, $year2 = -1, $params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -4574,13 +4574,13 @@ class Stats
      */
     public function monthFirstChildQuery($simple = true, $sex = false, $year1 = -1, $year2 = -1, $params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -4757,13 +4757,13 @@ class Stats
      */
     public function chartLargestFamilies($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_L_CHART_X    = Theme::theme()
+        $WT_STATS_L_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-large-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
         if (isset($params[0]) && $params[0] != '') {
@@ -5391,13 +5391,13 @@ class Stats
      */
     public function chartCommonSurnames($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -5893,13 +5893,13 @@ class Stats
      */
     public function chartCommonGiven($params = array())
     {
-        $WT_STATS_CHART_COLOR1 = Theme::theme()
+        $WT_STATS_CHART_COLOR1 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-no-values');
-        $WT_STATS_CHART_COLOR2 = Theme::theme()
+        $WT_STATS_CHART_COLOR2 = Application::i()->getTheme()
                                       ->parameter('distribution-chart-high-values');
-        $WT_STATS_S_CHART_X    = Theme::theme()
+        $WT_STATS_S_CHART_X    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-x');
-        $WT_STATS_S_CHART_Y    = Theme::theme()
+        $WT_STATS_S_CHART_Y    = Application::i()->getTheme()
                                       ->parameter('stats-small-chart-y');
 
 
@@ -6244,7 +6244,7 @@ class Stats
         $user_id = $this->tree->getPreference('WEBMASTER_USER_ID');
         $user    = User::find($user_id);
         if ($user) {
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->contactLink($user);
         } else {
             return $user_id;
@@ -6259,7 +6259,7 @@ class Stats
         $user_id = $this->tree->getPreference('CONTACT_USER_ID');
         $user    = User::find($user_id);
         if ($user) {
-            return Theme::theme()
+            return Application::i()->getTheme()
                         ->contactLink($user);
         } else {
             return $user_id;

@@ -16,12 +16,13 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Zend_Session;
+use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
+use Fgt\Application;
 
 /**
  * Class BaseController - Base controller for all other controllers
  */
-class BaseController
+class BaseController implements \ArrayAccess
 {
     // The controller accumulates Javascript (inline and external), and renders it in the footer
     const JS_PRIORITY_HIGH   = 0;
@@ -29,25 +30,39 @@ class BaseController
     const JS_PRIORITY_LOW    = 2;
 
     public static $activeController;
-
-    private $inline_javascript   = array(
+    protected     $page_header   = false;
+    protected     $collectOutput = false;
+    protected     $output        = []; // Have we printed a page header?
+    /**
+     * @var \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine
+     */
+    protected $templateEngine;
+    /**
+     * @var string
+     */
+    protected $defaultTemplate;
+    private   $inline_javascript   = array(
         self::JS_PRIORITY_HIGH   => array(),
         self::JS_PRIORITY_NORMAL => array(),
         self::JS_PRIORITY_LOW    => array(),
     );
-    private $external_javascript = array();
-
-    protected $page_header = false; // Have we printed a page header?
-
-    protected $collectOutput = false;
-    protected $output        = [];
+    private   $external_javascript = array();
 
     /**
      * Startup activity
+     *
+     * @param \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine $templateEngine
+     * @param string                                           $template
      */
-    public function __construct()
-    {
+    public function __construct(
+        \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine $templateEngine,
+        $template = 'WebtreesLegacyThemeBundle:Default:index.html.twig'
+    ) {
         static::$activeController = $this;
+        $this->templateEngine     = $templateEngine;
+        $this->defaultTemplate    = $template;
+
+
     }
 
     /**
@@ -71,40 +86,16 @@ class BaseController
     }
 
     /**
-     * Make a list of external Javascript, so we can render them in the footer
-     *
-     * @param string $script_name
-     *
-     * @return $this
+     * Print the page footer, using the theme
      */
-    public function addExternalJavascript($script_name)
+    protected function pageFooter()
     {
-        $this->external_javascript[$script_name] = true;
-
-        return $this;
-    }
-
-    /**
-     * Make a list of inline Javascript, so we can render them in the footer
-     * NOTE: there is no need to use "jQuery(document).ready(function(){...})", etc.
-     * as this Javascript won’t be inserted until the very end of the page.
-     *
-     * @param string  $script
-     * @param integer $priority
-     *
-     * @return $this
-     */
-    public function addInlineJavascript($script, $priority = self::JS_PRIORITY_NORMAL)
-    {
-        if (WT_DEBUG) {
-            /* Show where the JS was added */
-            $backtrace = debug_backtrace();
-            $script    = '/* ' . $backtrace[0]['file'] . ':' . $backtrace[0]['line'] . ' */' . PHP_EOL . $script;
+        $ret = $this->getJavascript();
+        if (Database::i()->isDebugSql()) {
+            $ret = Database::i()->getQueryLog() . $ret;
         }
-        $tmp   = &$this->inline_javascript[$priority];
-        $tmp[] = $script;
 
-        return $this;
+        return $ret;
     }
 
     /**
@@ -152,31 +143,176 @@ class BaseController
     }
 
     /**
+     * Make a list of external Javascript, so we can render them in the footer
+     *
+     * @param string $script_name
+     *
+     * @return $this
+     */
+    public function addExternalJavascript($script_name)
+    {
+        $this->external_javascript[$script_name] = true;
+
+        return $this;
+    }
+
+    /**
+     * Make a list of inline Javascript, so we can render them in the footer
+     * NOTE: there is no need to use "jQuery(document).ready(function(){...})", etc.
+     * as this Javascript won’t be inserted until the very end of the page.
+     *
+     * @param string  $script
+     * @param integer $priority
+     *
+     * @return $this
+     */
+    public function addInlineJavascript($script, $priority = self::JS_PRIORITY_NORMAL)
+    {
+        if (WT_DEBUG) {
+            /* Show where the JS was added */
+            $backtrace = debug_backtrace();
+            $script    = '/* ' . $backtrace[0]['file'] . ':' . $backtrace[0]['line'] . ' */' . PHP_EOL . $script;
+        }
+        $tmp   = &$this->inline_javascript[$priority];
+        $tmp[] = $script;
+
+        return $this;
+    }
+
+    /**
      * Print the page header, using the theme
      *
      * @return $this
      */
     public function pageHeader()
     {
-        // Once we've displayed the header, we should no longer write session data.
-        Zend_Session::writeClose();
-
         // We've displayed the header - display the footer automatically
         $this->page_header = true;
 
         return $this;
     }
 
-    /**
-     * Print the page footer, using the theme
-     */
-    protected function pageFooter()
+    public function render($templateName = null, array $arguments = array())
     {
-        $ret = $this->getJavascript();
-        if (Database::i()->isDebugSql()) {
-            $ret = Database::i()->getQueryLog() . $ret;
+        if ($templateName == null) {
+            $templateName = $this->getDefaultTemplate();
         }
+        $arguments    = array_merge(
+            array(
+                'html_markup'               => I18N::html_markup(),
+                'head_contents'             => Application::i()->getTheme()->headContents($this),
+                'hook_header_extra_content' => Application::i()
+                                                          ->getTheme()
+                                                          ->hookHeaderExtraContent(),
+                'analytics'                 => Application::i()->getTheme()->analytics(),
+                'inline_javascript'         => $this->getJavascript(),
+                'javascript_at_end'         => null,
+                'title'                     => Application::i()->getTree()
+                    ? Application::i()->getTree()->getName()
+                    : Application::i()->getConfig()->getValue(FgtConfig::SITE_NAME),
+                'collected_output'          => implode('', $this->output),
+                'ged_name'                  => 'ged_name'
+            ),
+            $arguments
+        );
+        $this->output = [];
 
-        return $ret;
+        return $this->getTemplateEngine()->render($templateName, $arguments);
+    }
+
+    protected function getDefaultTemplate()
+    {
+        return $this->defaultTemplate;
+    }
+
+    /**
+     * @return \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine
+     */
+    public function getTemplateEngine()
+    {
+        return $this->templateEngine;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Whether a offset exists
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @param mixed $offset <p>
+     *                      An offset to check for.
+     *                      </p>
+     *
+     * @return boolean true on success or false on failure.
+     * </p>
+     * <p>
+     * The return value will be casted to boolean if non-boolean was returned.
+     */
+    public function offsetExists($offset)
+    {
+        return isset($offset);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to retrieve
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to retrieve.
+     *                      </p>
+     *
+     * @return mixed Can return all value types.
+     */
+    public function offsetGet($offset)
+    {
+        return $this->output[$offset];
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to set
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to assign the value to.
+     *                      </p>
+     * @param mixed $value  <p>
+     *                      The value to set.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (is_null($offset)) {
+            $this->output[] = $value;
+        } else {
+            $this->output[$offset] = $value;
+        }
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to unset.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->output[$offset]);
+    }
+
+    public function flush()
+    {
+        echo implode('', $this->output);
     }
 }

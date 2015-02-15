@@ -181,7 +181,7 @@ if ($action == 'choose' && $paramok) {
     echo '<input type="text" data-autocomplete-type="IFS" name="gid" id="gid" size="6" value="">';
     echo '</td><td style="padding-bottom: 2px; vertical-align: middle;">';
     echo '&nbsp;';
-    echo '<img style="border-style:none;" src="', Theme::theme()
+    echo '<img style="border-style:none;" src="', Application::i()->getTheme()
                                                        ->parameter('image-add'), '" alt="', I18N::translate('Add'), ' " title="', I18N::translate('Add'), '" align="middle" name="addLink" value="" onclick="blankwin(); return false;">';
     echo ' ', FunctionsPrint::i()->print_findindi_link('gid');
     echo ' ', FunctionsPrint::i()->print_findfamily_link('gid');
@@ -219,9 +219,9 @@ if ($action == 'choose' && $paramok) {
 	var ifamily = "<?php echo I18N::translate('Family navigator'); ?>";
 	var remove = "<?php echo I18N::translate('Remove'); ?>";
 	/* ===icons === */
-	var removeLinkIcon = "<?php echo Theme::theme()
+	var removeLinkIcon = "<?php echo Application::i()->getTheme()
                                           ->parameter('image-remove'); ?>";
-	var familyNavIcon = "<?php echo Theme::theme()
+	var familyNavIcon = "<?php echo Application::i()->getTheme()
                                          ->parameter('image-button_family'); ?>";
 
 

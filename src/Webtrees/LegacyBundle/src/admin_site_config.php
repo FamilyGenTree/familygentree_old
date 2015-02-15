@@ -479,7 +479,7 @@ $controller->pageHeader();
 
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
-                <?php echo Theme::theme()
+                <?php echo Application::i()->getTheme()
                                 ->htmlAlert(I18N::translate('To use a Google mail account, use the following settings: server=smtp.gmail.com, port=587, security=tls, username=xxxxx@gmail.com, password=[your gmail password]'), 'info', false); ?>
                 </p>
             </div>

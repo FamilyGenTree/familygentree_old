@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\UrlConstants;
 
 /**
@@ -222,7 +223,7 @@ class random_media_WT_Module extends Module implements ModuleBlockInterface
             $content = I18N::translate('This family tree has no images to display.');
         }
         if ($template) {
-            echo Theme::theme()
+            echo Application::i()->getTheme()
                       ->formatBlock($id, $title, $class, $content);
         } else {
             return $content;

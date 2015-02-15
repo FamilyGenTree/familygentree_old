@@ -151,7 +151,7 @@ if (!$PGV_PATH) {
             $html .= '<div onclick="jQuery(\'#PGV_PATH\').val(\'' . Filter::escapeHtml($pgv_dir) . '\')">' . Filter::escapeHtml($pgv_dir) . '</div>';
         }
 
-        echo Theme::theme()
+        echo Application::i()->getTheme()
                   ->htmlAlert($html, 'info', true);
     }
     ?>

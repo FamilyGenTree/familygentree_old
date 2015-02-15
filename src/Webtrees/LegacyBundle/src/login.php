@@ -41,7 +41,7 @@ class LoginPhp extends AbstractSymfonyConnectorController
             return;
         }
 
-        $controller = Application::i()->setActiveController(new LegacyPageController($this->getTemplating()));
+        $controller = Application::i()->setActiveController(new PageController($this->getTemplating()));
 
         $REQUIRE_ADMIN_AUTH_REGISTRATION = $this->getConfig()->getValue('REQUIRE_ADMIN_AUTH_REGISTRATION');
 

@@ -123,7 +123,7 @@ class families_WT_Module extends Module implements ModuleSidebarInterface
 					  success: function(html) {
 					    jQuery("#sb_fam_"+surname+" div").html(html);
 					    jQuery("#sb_fam_"+surname+" div").show();
-					    jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Theme::theme()
+					    jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Application::i()->getTheme()
                                                                                          ->parameter('image-minus') . ')");
 					    famloadedNames[surname]=2;
 					  }
@@ -132,13 +132,13 @@ class families_WT_Module extends Module implements ModuleSidebarInterface
 				else if (famloadedNames[surname]==1) {
 					famloadedNames[surname]=2;
 					jQuery("#sb_fam_"+surname+" div").show();
-					jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Theme::theme()
+					jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Application::i()->getTheme()
                                                                                      ->parameter('image-minus') . ')");
 				}
 				else {
 					famloadedNames[surname]=1;
 					jQuery("#sb_fam_"+surname+" div").hide();
-					jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Theme::theme()
+					jQuery("#sb_fam_"+surname).css("list-style-image", "url(' . Application::i()->getTheme()
                                                                                      ->parameter('image-plus') . ')");
 				}
 				return false;

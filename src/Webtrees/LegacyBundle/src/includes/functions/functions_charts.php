@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 class FunctionsCharts
@@ -138,10 +139,10 @@ class FunctionsCharts
         $hfam = $husb->getPrimaryChildFamily();
         if ($hfam) {
             // remove the|| test for $sosa
-            echo "<td rowspan=\"2\"><img src=\"" . Theme::theme()
-                                                        ->parameter('image-hline') . "\" alt=\"\"></td><td rowspan=\"2\"><img src=\"" . Theme::theme()
+            echo "<td rowspan=\"2\"><img src=\"" . Application::i()->getTheme()
+                                                        ->parameter('image-hline') . "\" alt=\"\"></td><td rowspan=\"2\"><img src=\"" . Application::i()->getTheme()
                                                                                                                                              ->parameter('image-vline') . "\" width=\"3\" height=\"" . ($pbheight + 9) . "\" alt=\"\"></td>";
-            echo "<td><img class=\"line5\" src=\"" . Theme::theme()
+            echo "<td><img class=\"line5\" src=\"" . Application::i()->getTheme()
                                                           ->parameter('image-hline') . "\" alt=\"\"></td><td>";
             // husband’s father
             if ($hfam && $hfam->getHusband()) {
@@ -177,7 +178,7 @@ class FunctionsCharts
         }
         if ($hfam) {
             // husband’s mother
-            echo "</tr><tr><td><img src=\"" . Theme::theme()
+            echo "</tr><tr><td><img src=\"" . Application::i()->getTheme()
                                                    ->parameter('image-hline') . "\" alt=\"\"></td><td>";
             if ($hfam && $hfam->getWife()) {
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\" border=\"0\"><tr>";
@@ -244,10 +245,10 @@ class FunctionsCharts
         $hfam = $wife->getPrimaryChildFamily();
 
         if ($hfam) {
-            echo "<td rowspan=\"2\"><img src=\"" . Theme::theme()
-                                                        ->parameter('image-hline') . "\" alt=\"\"></td><td rowspan=\"2\"><img src=\"" . Theme::theme()
+            echo "<td rowspan=\"2\"><img src=\"" . Application::i()->getTheme()
+                                                        ->parameter('image-hline') . "\" alt=\"\"></td><td rowspan=\"2\"><img src=\"" . Application::i()->getTheme()
                                                                                                                                              ->parameter('image-vline') . "\" width=\"3\" height=\"" . ($pbheight + 9) . "\" alt=\"\"></td>";
-            echo "<td><img class=\"line5\" src=\"" . Theme::theme()
+            echo "<td><img class=\"line5\" src=\"" . Application::i()->getTheme()
                                                           ->parameter('image-hline') . "\" alt=\"\"></td><td>";
             // wife’s father
             if ($hfam && $hfam->getHusband()) {
@@ -283,7 +284,7 @@ class FunctionsCharts
         }
         if ($hfam) {
             // wife’s mother
-            echo "</tr><tr><td><img src=\"" . Theme::theme()
+            echo "</tr><tr><td><img src=\"" . Application::i()->getTheme()
                                                    ->parameter('image-hline') . "\" alt=\"\"></td><td>";
             if ($hfam && $hfam->getWife()) {
                 echo "<table style=\"width: " . ($pbwidth) . "px; height: " . $pbheight . "px;\"><tr>";
@@ -396,11 +397,11 @@ class FunctionsCharts
                             //find out how many cousins there are to establish vertical line on second families
                             $fchildren = $famids[$f]->getChildren();
                             $kids      = count($fchildren);
-                            $Pheader   = Theme::theme()
+                            $Pheader   = Application::i()->getTheme()
                                               ->parameter('compact-chart-box-y') * $kids - $bheight;
                             $PBadj     = 6; // default
                             if ($show_cousins > 0) {
-                                if (Theme::theme()
+                                if (Application::i()->getTheme()
                                          ->parameter('compact-chart-box-y') * $kids > $bheight
                                 ) {
                                     $PBadj = $Pheader / 2 + $kids * 4.5;
@@ -415,7 +416,7 @@ class FunctionsCharts
                             } else {
                                 echo "<img height=\"" . $pbheight . "px\"";
                             }
-                            echo " width=\"3\" src=\"" . Theme::theme()
+                            echo " width=\"3\" src=\"" . Application::i()->getTheme()
                                                               ->parameter('image-vline') . "\" alt=\"\">";
                             echo "</td>";
                         }
@@ -436,7 +437,7 @@ class FunctionsCharts
                                               ->format('%Y');
                             }
                         }
-                        echo "<br><img width=\"100%\" class=\"line5\" height=\"3\" src=\"" . Theme::theme()
+                        echo "<br><img width=\"100%\" class=\"line5\" height=\"3\" src=\"" . Application::i()->getTheme()
                                                                                                   ->parameter('image-hline') . "\" alt=\"\">";
                         echo "</td>";
                         // spouse information
@@ -569,9 +570,9 @@ class FunctionsCharts
         $sbheight       = $bheight;
         $sbwidth        = $bwidth;
         if ($save_show_full) {
-            $bheight = Theme::theme()
+            $bheight = Application::i()->getTheme()
                             ->parameter('compact-chart-box-y');
-            $bwidth  = Theme::theme()
+            $bwidth  = Application::i()->getTheme()
                             ->parameter('compact-chart-box-x');
         }
 
@@ -580,7 +581,7 @@ class FunctionsCharts
         if ($kids) {
             echo '<table cellspacing="0" cellpadding="0" border="0" ><tr valign="middle">';
             if ($kids > 1) {
-                echo '<td rowspan="', $kids, '" valign="middle" align="right"><img width="3px" height="', (($bheight + 9) * ($kids - 1)), 'px" src="', Theme::theme()
+                echo '<td rowspan="', $kids, '" valign="middle" align="right"><img width="3px" height="', (($bheight + 9) * ($kids - 1)), 'px" src="', Application::i()->getTheme()
                                                                                                                                                             ->parameter('image-vline'), '" alt=""></td>';
             }
             $ctkids = count($fchildren);
@@ -596,7 +597,7 @@ class FunctionsCharts
                 } else {
                     echo ' style="padding-left: 2px;"';
                 }
-                echo ' src="', Theme::theme()
+                echo ' src="', Application::i()->getTheme()
                                     ->parameter('image-hline'), '" alt=""></td><td>';
                 FunctionsPrint::i()->print_pedigree_person($fchil);
                 echo '</td></tr>';

@@ -6,11 +6,11 @@ webtrees_legacy_homepage:
     path:     /
     defaults: { _controller: WebtreesLegacyBundle:Default:indexPhp }
 
-webtrees_themes_asset:
-    path:       /themes/{themeName}/{file}
-    defaults:   { _controller: WebtreesLegacyBundle:Default:themesAsset }
-    requirements:
-        file: .+
+#webtrees_themes_asset:
+#    path:       /themes/{themeName}/{file}
+#    defaults:   { _controller: WebtreesLegacyBundle:Default:themesAsset }
+#    requirements:
+#        file: .+
 
 webtrees_legacy_admin_media_php_route:
     path: /admin_media_php

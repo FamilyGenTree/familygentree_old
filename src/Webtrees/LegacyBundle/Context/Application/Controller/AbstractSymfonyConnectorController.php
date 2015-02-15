@@ -8,9 +8,12 @@
 namespace Webtrees\LegacyBundle\Context\Application\Controller;
 
 
+use Fgt\Application;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Webtrees\LegacyBundle\Legacy\BaseController;
 use Webtrees\LegacyBundle\Legacy\BaseTheme;
+use Webtrees\LegacyBundle\Legacy\Output;
 use Webtrees\LegacyBundle\Legacy\Theme;
 
 class AbstractSymfonyConnectorController
@@ -19,17 +22,25 @@ class AbstractSymfonyConnectorController
     protected $request;
     protected $diContainer;
     protected $renderer;
-    protected $output = array();
     protected $outputMenus = array();
+    /**
+     * @var \Webtrees\LegacyBundle\Legacy\Output
+     */
+    protected $output = null;
     /**
      * @var BaseTheme
      */
     protected $theme;
+    /**
+     * @var BaseController
+     */
+    protected $viewModel;
 
     function __construct(ContainerInterface $diContainer, Request $request)
     {
         $this->diContainer = $diContainer;
         $this->request     = $request;
+        $this->output      = new Output();
     }
 
     /**
@@ -67,7 +78,8 @@ class AbstractSymfonyConnectorController
     /**
      * @return \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine
      */
-    public function getTemplating() {
+    public function getTemplating()
+    {
         return $this->diContainer->get('templating');
     }
 
@@ -84,19 +96,30 @@ class AbstractSymfonyConnectorController
     /**
      * @return BaseTheme
      */
-    protected function getTheme() {
-        if (null === $this->theme) {
-
-
-            $this->theme = $this->diContainer->get('webtrees.theme');
-        }
-        return $this->theme;
+    protected function getTheme()
+    {
+        return Application::i()->getTheme();
     }
 
     /**
      * @return \FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
      */
-    protected function getConfig() {
+    protected function getConfig()
+    {
         return $this->diContainer->get('fam_gene_tree_app.configuration');
+    }
+
+    /**
+     * @return \Webtrees\LegacyBundle\Legacy\BaseController
+     */
+    public function getViewModel()
+    {
+        return $this->viewModel;
+    }
+
+    protected function setViewModel(BaseController $param)
+    {
+        $this->viewModel = Application::i()->setActiveController($param);
+        return $this->viewModel;
     }
 }

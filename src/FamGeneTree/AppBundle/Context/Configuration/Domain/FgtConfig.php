@@ -8,7 +8,7 @@
 namespace FamGeneTree\AppBundle\Context\Configuration\Domain;
 
 
-class FgtConfig
+class FgtConfig implements ConfigKeys
 {
     const SCOPE_SITE    = 0;
     const SCOPE_USER    = 1;

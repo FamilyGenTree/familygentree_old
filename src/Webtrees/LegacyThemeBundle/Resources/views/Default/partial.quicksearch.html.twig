@@ -1,0 +1,9 @@
+<form action="search.php" class="header-search" method="post" role="search">
+    <input type="hidden" name="action" value="general">
+    <input type="hidden" name="ged" value="{{ ged_name }}">
+    <input type="hidden" name="topsearch" value="yes">
+    {% block quick_search_fields %}
+        <input type="search" name="query" size="15" placeholder="{{ "Search" | trans }}">
+        <input type="image" src="{{ asset('images/go.png') }}" alt="{{ "Search" | trans }}">
+    {% endblock %}
+</form>

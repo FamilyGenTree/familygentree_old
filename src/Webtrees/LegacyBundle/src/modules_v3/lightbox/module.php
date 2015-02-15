@@ -70,13 +70,13 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface
             // Add a new media object
             if (Globals::i()->WT_TREE->getPreference('MEDIA_UPLOAD') >= WT_USER_ACCESS_LEVEL) {
                 $html .= '<span><a href="#" onclick="window.open(\'addmedia.php?action=showmediaform&linktoid=' . $controller->record->getXref() . '\', \'_blank\', \'resizable=1,scrollbars=1,top=50,height=780,width=600\');return false;">';
-                $html .= '<img src="' . Theme::theme()
+                $html .= '<img src="' . Application::i()->getTheme()
                                              ->assetUrl() . 'images/image_add.png" id="head_icon" class="icon" title="' . I18N::translate('Add a new media object') . '" alt="' . I18N::translate('Add a new media object') . '">';
                 $html .= I18N::translate('Add a new media object');
                 $html .= '</a></span>';
                 // Link to an existing item
                 $html .= '<span><a href="#" onclick="window.open(\'inverselink.php?linktoid=' . $controller->record->getXref() . '&linkto=person\', \'_blank\', \'resizable=1,scrollbars=1,top=50,height=300,width=450\');">';
-                $html .= '<img src="' . Theme::theme()
+                $html .= '<img src="' . Application::i()->getTheme()
                                              ->assetUrl() . 'images/image_link.png" id="head_icon" class="icon" title="' . I18N::translate('Link to an existing media object') . '" alt="' . I18N::translate('Link to an existing media object') . '">';
                 $html .= I18N::translate('Link to an existing media object');
                 $html .= '</a></span>';
@@ -84,7 +84,7 @@ class lightbox_WT_Module extends Module implements ModuleTabInterface
             if (WT_USER_GEDCOM_ADMIN && $this->get_media()) {
                 // Popup Reorder Media
                 $html .= '<span><a href="#" onclick="reorder_media(\'' . $controller->record->getXref() . '\')">';
-                $html .= '<img src="' . Theme::theme()
+                $html .= '<img src="' . Application::i()->getTheme()
                                              ->assetUrl() . 'images/images.png" id="head_icon" class="icon" title="' . I18N::translate('Re-order media') . '" alt="' . I18N::translate('Re-order media') . '">';
                 $html .= I18N::translate('Re-order media');
                 $html .= '</a></span>';

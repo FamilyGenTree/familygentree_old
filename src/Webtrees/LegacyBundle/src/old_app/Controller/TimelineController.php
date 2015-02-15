@@ -15,6 +15,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+use Fgt\Application;
 use Fgt\Globals;
 
 /**
@@ -204,7 +205,7 @@ class TimelineController extends PageController
                 ? "left: " . ($xoffset)
                 : "right: " . ($xoffset)) . "px; top:" . ($yoffset) . "px; font-size: 8pt; height: " . ($this->bheight) . "px;\" onmousedown=\"factMouseDown(this, '" . $factcount . "', " . ($yoffset - $tyoffset) . ");\">";
         echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"cursor: hand;\"><tr><td>";
-        echo "<img src=\"" . Theme::theme()
+        echo "<img src=\"" . Application::i()->getTheme()
                                   ->parameter('image-hline') . "\" name=\"boxline$factcount\" id=\"boxline$factcount\" height=\"3\" align=\"left\" width=\"10\" alt=\"\" style=\"padding-";
         if (Globals::i()->TEXT_DIRECTION == 'ltr') {
             echo 'left: 3px;">';
@@ -301,7 +302,7 @@ class TimelineController extends PageController
         echo '<div id="dbox' . $factcount . '" style="position:absolute; ' . (Globals::i()->TEXT_DIRECTION == 'ltr'
                 ? 'left: ' . ($basexoffset + 25)
                 : 'right: ' . ($basexoffset + 25)) . 'px; top:' . ($dyoffset) . 'px; font-size: 8pt; height: ' . abs($tyoffset) . 'px; width: ' . abs($tyoffset) . 'px;';
-        echo ' background-image: url(\'' . Theme::theme()
+        echo ' background-image: url(\'' . Application::i()->getTheme()
                                                 ->parameter($img) . '\');';
         echo ' background-position: 0% ' . $ypos . ';">';
         echo '</div>';
