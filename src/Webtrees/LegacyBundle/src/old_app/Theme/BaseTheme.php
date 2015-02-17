@@ -304,51 +304,6 @@ abstract class BaseTheme
     }
 
     /**
-     * Create the <DOCTYPE> tag.
-     *
-     * @return string
-     */
-    public function doctype()
-    {
-        return '<!DOCTYPE html>';
-    }
-
-    /**
-     * Add markup to a flash message.
-     *
-     * @param \stdClass $message
-     *
-     * @return string
-     */
-    protected function flashMessageContainer(\stdClass $message)
-    {
-        return $this->htmlAlert($message->text, $message->status, true);
-    }
-
-    /**
-     * Create a container for messages that are "flashed" to the session
-     * on one request, and displayed on another.  If there are many messages,
-     * the container may need a max-height and scroll-bar.
-     *
-     * @param \stdClass[] $messages
-     *
-     * @return string
-     */
-    protected function flashMessagesContainer(array $messages)
-    {
-        $html = '';
-        foreach ($messages as $message) {
-            $html .= $this->flashMessageContainer($message);
-        }
-
-        if ($html) {
-            return '<div class="flash-messages">' . $html . '</div>';
-        } else {
-            return '';
-        }
-    }
-
-    /**
      * Create the <footer> tag.
      *
      * @return string

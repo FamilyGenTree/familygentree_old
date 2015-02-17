@@ -1,5 +1,5 @@
 {% for type, flashMessages in app.session.flashbag.all() %}
-    <div class="flash-messages">
+    <div class="flash-messages ui-state-highlight">
         {% for flashMessage in flashMessages %}
             {% if dismissible %}
                 <div class="alert alert-{{ type }} alert-dismissible" role="alert">

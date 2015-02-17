@@ -25,9 +25,9 @@ use Fgt\Application;
 class BaseController implements \ArrayAccess
 {
     // The controller accumulates Javascript (inline and external), and renders it in the footer
-    const JS_PRIORITY_HIGH   = 0;
-    const JS_PRIORITY_NORMAL = 1;
-    const JS_PRIORITY_LOW    = 2;
+    const JS_PRIORITY_HIGH   = 'high';
+    const JS_PRIORITY_NORMAL = 'normal';
+    const JS_PRIORITY_LOW    = 'low';
 
     public static $activeController;
     protected     $page_header   = false;
@@ -48,6 +48,9 @@ class BaseController implements \ArrayAccess
     );
     private   $external_javascript = array();
 
+    protected $jsAtTop = array();
+    protected $jsAtEnd = array();
+
     /**
      * Startup activity
      *
@@ -61,8 +64,6 @@ class BaseController implements \ArrayAccess
         static::$activeController = $this;
         $this->templateEngine     = $templateEngine;
         $this->defaultTemplate    = $template;
-
-
     }
 
     /**
@@ -90,12 +91,13 @@ class BaseController implements \ArrayAccess
      */
     protected function pageFooter()
     {
-        $ret = $this->getJavascript();
-        if (Database::i()->isDebugSql()) {
-            $ret = Database::i()->getQueryLog() . $ret;
-        }
+//        $ret = $this->getJavascript();
+//        if (Database::i()->isDebugSql()) {
+//            $ret = Database::i()->getQueryLog() . $ret;
+//        }
 
-        return $ret;
+
+        return '';
     }
 
     /**
@@ -161,8 +163,8 @@ class BaseController implements \ArrayAccess
      * NOTE: there is no need to use "jQuery(document).ready(function(){...})", etc.
      * as this Javascript won’t be inserted until the very end of the page.
      *
-     * @param string  $script
-     * @param integer $priority
+     * @param string     $script
+     * @param int|string $priority
      *
      * @return $this
      */
@@ -188,10 +190,27 @@ class BaseController implements \ArrayAccess
     {
         // We've displayed the header - display the footer automatically
         $this->page_header = true;
+        $this->jsAtTop     = [
+            'inline'   => $this->inline_javascript,
+            'external' => array_keys($this->external_javascript)
+        ];
+
+        $this->inline_javascript   = array(
+            self::JS_PRIORITY_HIGH   => array(),
+            self::JS_PRIORITY_NORMAL => array(),
+            self::JS_PRIORITY_LOW    => array(),
+        );
+        $this->external_javascript = array();
 
         return $this;
     }
 
+    /**
+     * @param null  $templateName
+     * @param array $arguments
+     *
+     * @return string
+     */
     public function render($templateName = null, array $arguments = array())
     {
         if ($templateName == null) {
@@ -205,8 +224,11 @@ class BaseController implements \ArrayAccess
                                                           ->getTheme()
                                                           ->hookHeaderExtraContent(),
                 'analytics'                 => Application::i()->getTheme()->analytics(),
-                'inline_javascript'         => $this->getJavascript(),
-                'javascript_at_end'         => null,
+                'javascript_at_top'         => $this->jsAtTop,
+                'javascript_at_end'         => [
+                    'inline'   => $this->inline_javascript,
+                    'external' => array_filter(array_keys($this->external_javascript))
+                ],
                 'title'                     => Application::i()->getTree()
                     ? Application::i()->getTree()->getName()
                     : Application::i()->getConfig()->getValue(FgtConfig::SITE_NAME),

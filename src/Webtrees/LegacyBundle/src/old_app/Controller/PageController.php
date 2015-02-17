@@ -36,6 +36,9 @@ class PageController extends BaseController implements PageControllerInterface
 
     /**
      * Startup activity
+     *
+     * @param \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine $templateEngine
+     * @param string                                           $template
      */
     public function __construct(
         \Symfony\Bundle\TwigBundle\Debug\TimedTwigEngine $templateEngine,
@@ -52,14 +55,23 @@ class PageController extends BaseController implements PageControllerInterface
         if (Application::i()->getTree()) {
             $this->metaDescription(Application::i()->getTree()->getPreference('META_DESCRIPTION'));
         }
+        $this->addInlineJavascript('
+			var WT_STATIC_URL  = "' . Filter::escapeJs(WT_STATIC_URL) . '";
+			var WT_MODULES_DIR = "' . Filter::escapeJs(WT_MODULES_DIR) . '";
+			var WT_GEDCOM      = "' . Filter::escapeJs(WT_GEDCOM) . '";
+			var WT_GED_ID      = "' . Filter::escapeJs(WT_GED_ID) . '";
+			var textDirection  = "' . Filter::escapeJs(Globals::i()->TEXT_DIRECTION) . '";
+			var WT_SCRIPT_NAME = "' . Filter::escapeJs(WT_SCRIPT_NAME) . '";
+			var WT_LOCALE      = "' . Filter::escapeJs(WT_LOCALE) . '";
+			var WT_CSRF_TOKEN  = "' . Filter::escapeJs(Filter::getCsrfToken()) . '";
+		', static::JS_PRIORITY_HIGH);
 
-        // Every page uses these scripts
-        $this
-            ->addExternalJavascript($fgtConfig->getValue('WT_JQUERY_JS_URL'))
-            ->addExternalJavascript($fgtConfig->getValue('WT_JQUERYUI_JS_URL'))
-            ->addExternalJavascript(Application::i()
-                                               ->getConfig()
-                                               ->getValue('WT_STATIC_URL') . WebtreesTheme::WT_WEBTREES_JS_URL);
+        // Temporary fix for access to main menu hover elements on android/blackberry touch devices
+        $this->addInlineJavascript('
+			if(navigator.userAgent.match(/Android|PlayBook/i)) {
+				jQuery(".primary-menu > li > a").attr("href", "#");
+			}
+		');
     }
 
     /**
@@ -158,14 +170,8 @@ class PageController extends BaseController implements PageControllerInterface
      */
     protected function pageFooter()
     {
-        return
-            Application::i()->getTheme()
-                       ->footerContainer() .
-            $this->getJavascript() .
-            Application::i()->getTheme()
-                       ->hookFooterExtraJavascript() .
-            '</body>' .
-            '</html>' . PHP_EOL;
+        Application::i()->getTheme()
+                   ->hookFooterExtraJavascript();
     }
 
     /**
@@ -179,28 +185,11 @@ class PageController extends BaseController implements PageControllerInterface
     {
         $this->setViewStyle($view);
         // Give Javascript access to some PHP constants
-        $this->addInlineJavascript('
-			var WT_STATIC_URL  = "' . Filter::escapeJs(WT_STATIC_URL) . '";
-			var WT_MODULES_DIR = "' . Filter::escapeJs(WT_MODULES_DIR) . '";
-			var WT_GEDCOM      = "' . Filter::escapeJs(WT_GEDCOM) . '";
-			var WT_GED_ID      = "' . Filter::escapeJs(WT_GED_ID) . '";
-			var textDirection  = "' . Filter::escapeJs(Globals::i()->TEXT_DIRECTION) . '";
-			var WT_SCRIPT_NAME = "' . Filter::escapeJs(WT_SCRIPT_NAME) . '";
-			var WT_LOCALE      = "' . Filter::escapeJs(WT_LOCALE) . '";
-			var WT_CSRF_TOKEN  = "' . Filter::escapeJs(Filter::getCsrfToken()) . '";
-		', static::JS_PRIORITY_HIGH);
-
-        // Temporary fix for access to main menu hover elements on android/blackberry touch devices
-        $this->addInlineJavascript('
-			if(navigator.userAgent.match(/Android|PlayBook/i)) {
-				jQuery(".primary-menu > li > a").attr("href", "#");
-			}
-		');
 
         // We've displayed the header - display the footer automatically
         $this->page_header = true;
 
-        return $this;
+        return parent::pageHeader();
     }
 
     /**
@@ -280,10 +269,10 @@ class PageController extends BaseController implements PageControllerInterface
                 'metaRobots'     => $this->getMetaRobots(),
                 'canonicalUrl'   => $this->getCanonicalUrl(),
                 'powered_by_url' => Application::i()->getConfig()->getValue(ConfigKeys::PROJECT_HOMEPAGE_URL),
-                'debug' => array(
+                'debug'          => array(
                     'execution_time' => I18N::number(microtime(true) - WT_START_TIME, 3) . ' seconds',
-                    'memory' => I18N::number(memory_get_peak_usage(true) / 1024) . ' KB',
-                    'sql_queries' => I18N::number(Database::i()->getQueryCount())
+                    'memory'         => I18N::number(memory_get_peak_usage(true) / 1024) . ' KB',
+                    'sql_queries'    => I18N::number(Database::i()->getQueryCount())
                 )
             ),
             $arguments

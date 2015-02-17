@@ -18,6 +18,10 @@
     {% block headContents %}
     {% endblock %}
 
+    {% if analytics %}
+    {{ analytics | raw }}
+    {% endif %}
+
     {% stylesheets '@jquery_ui_css' filter='cssrewrite' %}
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
@@ -67,17 +71,36 @@
             }
         </style>
     {% endblock %}
+
     {# modernizr.js and respond.js need to be loaded before the <body> to avoid FOUC #}
     {%  javascripts '@modernizer_respond' %}
     <!--[if IE 8]><script src="{{ asset_url }}"></script><![endif]-->
     {% endjavascripts %}
-    {% javascripts '@WebtreesLegacyBundle/Resources/public/js/webtrees.js' %}
+
+    {% javascripts
+        '@WebtreesLegacyBundle/Resources/public/packages/jquery-1.11.2/jquery.min.js'
+        '@WebtreesLegacyBundle/Resources/public/packages/jquery-ui-1.11.2/js/jquery-ui.min.js'
+        '@WebtreesLegacyBundle/Resources/public/js/webtrees.js'
+    %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    {% block top_javascripts %}
+        {% for js in javascript_at_top.external %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+        <script>
+        {% for js_prio in javascript_at_top.inline %}
+            {% for js_source in js_prio %}
+                    {{ js_source|raw }}
+            {% endfor %}
+        {% endfor %}
+        </script>
+    {% endblock %}
 </head>
 
 <body class="container">
-<header>
+    <header>
     {% block headerContent %}
         <div class="header-logo"></div>
         {% if title %}
@@ -85,11 +108,11 @@
         {% endif %}
 
         {% include "WebtreesLegacyThemeBundle:Default:partial.quicksearch.html.twig" %}
-        {# knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') #}
+        {# { knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') } #}
     {% endblock %}
-</header>
+    </header>
 
-<main id="content" role="main">
+    <main id="content" role="main">
     {% include "WebtreesLegacyThemeBundle:Default:partial.flashmessages.html.twig" %}
     {% block page_content %}
     {% endblock %}
@@ -102,11 +125,26 @@
                 <a href="{{ powered_by_url }}" class="powered-by-webtrees" title="{{ powered_by_url }}"></a>'
             {% endblock %}
         </footer>
+
 {% block javascript_at_end %}
-    <script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_COLORBOX_URL . '"></script>
-    <script src="' . WT_STATIC_URL . WebtreesTheme::WT_JQUERY_WHEELZOOM_URL . '"></script>
-<script>
-    activate_colorbox();' .
+    {% javascripts
+        '@WebtreesLegacyBundle/Resources/public/js/jquery.wheelzoom-2.0.0.js'
+        '@WebtreesLegacyBundle/Resources/public/js/jquery.colorbox-1.5.14.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% for js in javascript_at_end.external %}
+         <script src="{{ js }}" ></script>
+    {% endfor %}
+
+    <script>
+    {% for js_prio in javascript_at_end.inline %}
+        {% for js_source in js_prio %}
+            {{ js_source|raw }}
+        {% endfor %}
+    {% endfor %}
+
+    activate_colorbox();
     jQuery.extend(jQuery.colorbox.settings, {
      width:"85%",
      height:"85%",

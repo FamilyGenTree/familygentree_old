@@ -2,15 +2,8 @@
 
 {% block headContents %}
     {{ hook_header_extra_content | raw }}
-    {{ analytics | raw }}
-    {{ inline_javascript | raw }}
 {% endblock %}
 
-
-{% block bodyContent %}
-    {{ knp_menu_render('FamGeneTreeAppBundle:Builder:mainMenu') }}
-
-    <h1>{{ page_title}}</h1>
-
+{% block page_content %}
     {{ collected_output | raw }}
 {% endblock %}
