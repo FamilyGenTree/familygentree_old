@@ -108,7 +108,8 @@
         {% endif %}
 
         {% include "WebtreesLegacyThemeBundle:Default:partial.quicksearch.html.twig" %}
-        {# { knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') } #}
+        <div style="clear: both"></div>
+        {{ knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') }}
     {% endblock %}
     </header>
 

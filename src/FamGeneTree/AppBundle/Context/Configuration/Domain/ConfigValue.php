@@ -54,6 +54,10 @@ class ConfigValue {
         return $this->immutable;
     }
 
+    public function asBoolean() {
+        return (bool)$this->value;
+    }
+
     public function __toString()
     {
         return $this->value;

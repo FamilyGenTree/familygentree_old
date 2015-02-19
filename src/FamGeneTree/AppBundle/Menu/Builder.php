@@ -7,17 +7,30 @@
 
 namespace FamGeneTree\AppBundle\Menu;
 
+use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
 use Fgt\Application;
 use Fgt\UrlConstants;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Webtrees\LegacyBundle\Legacy\Database;
+use Webtrees\LegacyBundle\Legacy\Functions;
 use Webtrees\LegacyBundle\Legacy\I18N;
+use Webtrees\LegacyBundle\Legacy\Individual;
+use Webtrees\LegacyBundle\Legacy\Module;
 use Webtrees\LegacyBundle\Legacy\Site;
 use Webtrees\LegacyBundle\Legacy\Tree;
 
 class Builder extends ContainerAware
 {
+
+    protected $tree_url;
+
+    function __construct()
+    {
+        $this->tree_url = Application::i()->getTree() ? 'ged=' . Application::i()->getTree()->getNameUrl() : '';
+    }
+
     public function mainMenu(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root');
@@ -63,13 +76,13 @@ class Builder extends ContainerAware
 
         if ($tree) {
             $individual = $controller->getSignificantIndividual();
-            $menu->addChild($this->menuHomePage());
-            $menu->addChild($this->menuChart($individual));
-            $menu->addChild($this->menuLists());
+            $menu->addChild($this->menuHomePage($factory, $options));
+            $menu->addChild($this->menuChart($factory, $options, $individual));
+            $menu->addChild($this->menuLists($factory, $options));
             $menu->addChild($this->menuCalendar($factory, $options));
-            $menu->addChild($this->menuReports());
-            $menu->addChild($this->menuSearch());
-            $menu->addChild($this->menuModules());
+            $menu->addChild($this->menuReports($factory, $options));
+            $menu->addChild($this->menuSearch($factory, $options));
+//            $menu->addChild($this->menuModules($factory, $options));
 
             return $menu;
         } else {
@@ -89,13 +102,13 @@ class Builder extends ContainerAware
     protected function secondaryMenu(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root');
-        $menu->addChild($this->menuPendingChanges());
-        $menu->addChild($this->menuMyPages());
-        $menu->addChild($this->menuFavorites());
-        $menu->addChild($this->menuThemes());
-        $menu->addChild($this->menuLanguages());
-        $menu->addChild($this->menuLogin());
-        $menu->addChild($this->menuLogout());
+        $menu->addChild($this->menuPendingChanges($factory, $options));
+        $menu->addChild($this->menuMyPages($factory, $options));
+        $menu->addChild($this->menuFavorites($factory, $options));
+        $menu->addChild($this->menuThemes($factory, $options));
+        $menu->addChild($this->menuLanguages($factory, $options));
+        $menu->addChild($this->menuLogin($factory, $options));
+        $menu->addChild($this->menuLogout($factory, $options));
 
         return $menu;
     }
@@ -171,40 +184,87 @@ class Builder extends ContainerAware
     }
 
     /**
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    protected function menuHomePage(FactoryInterface $factory, array $options)
+    {
+        $submenus            = array();
+        $ALLOW_CHANGE_GEDCOM = Application::i()
+                                          ->getConfig()
+                                          ->get('ALLOW_CHANGE_GEDCOM')
+                                          ->asBoolean()
+                               && count(Application::i()->getTree()->getAll()) > 1;
+        $root                = $factory->createItem('homepage');
+
+        foreach (Application::i()->getTree()->getAll() as $tree) {
+            if ($tree->getTreeId() === WT_GED_ID || $ALLOW_CHANGE_GEDCOM) {
+                $submenu = $factory->createItem(
+                    $tree->getTitle(),
+                    array(
+                        'uri' => UrlConstants::url(
+                            UrlConstants::INDEX_PHP,
+                            [
+                                'ctype' => 'gedcom',
+                                'ged'   => $tree->getNameUrl()
+                            ]
+                        ),
+                        'id'  =>
+                            'menu-tree-' . $tree->getTreeId()
+                    )
+                );
+                $root->addChild($submenu);
+            }
+        }
+        $root->setLabel('Family trees');
+        $root->setUri(UrlConstants::url(UrlConstants::INDEX_PHP, [
+            'ctype' => 'gedcom',
+            'ged'   => Application::i()->getTree()->getNameUrl()
+        ]));
+        $root->setAttribute('id', 'menu-tree');
+
+        return $root;
+    }
+
+    /**
      * Generate a menu for each of the different charts.
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
-    protected function menuChart(Individual $individual)
+    protected function menuChart(FactoryInterface $factory, array $options, Individual $individual)
     {
         $tree = Application::i()->getTree();
 
         if ($tree && !$this->isSearchEngine()) {
             // The top level menu is the pedigree chart
-            $menu = $this->menuChartPedigree($individual);
+            $menu = $this->menuChartPedigree($factory, $options, $individual);
             $menu->setLabel('Charts');
             $menu->setAttribute('id', 'menu-chart');
 
-            $menu->addChild($this->menuChartAncestors($individual));
-            $menu->addChild($this->menuChartCompact($individual));
-            $menu->addChild($this->menuChartDescendants($individual));
-            $menu->addChild($this->menuChartFamilyBook($individual));
-            $menu->addChild($this->menuChartFanChart($individual));
-            $menu->addChild($this->menuChartHourglass($individual));
-            $menu->addChild($this->menuChartInteractiveTree($individual));
-            $menu->addChild($this->menuChartLifespan($individual));
-            $menu->addChild($this->menuChartPedigree($individual));
-            $menu->addChild($this->menuChartPedigreeMap($individual));
-            $menu->addChild($this->menuChartRelationship($individual));
-            $menu->addChild($this->menuChartStatistics());
-            $menu->addChild($this->menuChartTimeline($individual));
+            $menu->addChild($this->menuChartAncestors($factory, $options, $individual));
+//            $menu->addChild($this->menuChartCompact($factory, $options, $individual));
+//            $menu->addChild($this->menuChartDescendants($factory, $options, $individual));
+//            $menu->addChild($this->menuChartFamilyBook($factory, $options, $individual));
+//            $menu->addChild($this->menuChartFanChart($factory, $options, $individual));
+//            $menu->addChild($this->menuChartHourglass($factory, $options, $individual));
+//            $menu->addChild($this->menuChartInteractiveTree($factory, $options, $individual));
+//            $menu->addChild($this->menuChartLifespan($factory, $options, $individual));
+//            $menu->addChild($this->menuChartPedigree($factory, $options, $individual));
+//            $menu->addChild($this->menuChartPedigreeMap($factory, $options, $individual));
+//            $menu->addChild($this->menuChartRelationship($factory, $options, $individual));
+//            $menu->addChild($this->menuChartStatistics($factory, $options, ));
+//            $menu->addChild($this->menuChartTimeline($factory, $options, $individual));
 
             return $menu;
         } else {
 
-            return new Menu(I18N::translate('Charts'), '#', 'menu-chart');
+            return $this->createMenuUri($factory, $options, 'Charts', '#', 'menu-chart');
         }
     }
 
@@ -215,9 +275,13 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartAncestors(Individual $individual)
+    protected function menuChartAncestors(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Ancestors'), 'ancestry.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-pedigree');
+        return $factory->createItem('Ancestors',
+                                    [
+                                        'uri'        => 'ancestry.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url,
+                                        'attributes' => ['id' => 'menu-chart-pedigree']
+                                    ]);
     }
 
     /**
@@ -227,9 +291,12 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartCompact(Individual $individual)
+    protected function menuChartCompact(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Compact tree'), 'compact.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-compact');
+        return $factory->createItem('Compact tree', [
+            'uri'        => 'compact.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url,
+            'attributes' => ['id' => 'menu-chart-compact']
+        ]);
     }
 
     /**
@@ -239,21 +306,31 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartDescendants(Individual $individual)
+    protected function menuChartDescendants(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Descendants'), 'descendancy.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-descendants');
+        return $factory->createItem('Descendants',
+                                    [
+                                        'uri'        => 'descendancy.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url,
+                                        'attributes' => ['id' => 'menu-chart-descendants']
+                                    ]);
     }
 
     /**
      * Generate a menu item for the family-book chart (familybook.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
-    protected function menuChartFamilyBook(Individual $individual)
+    protected function menuChartFamilyBook(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Family book'), 'familybook.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-familybook');
+        return $factory->createItem('Family book',
+                                    [
+                                        'uri'        => 'familybook.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url,
+                                        'attributes' => ['id' => 'menu-chart-familybook']
+                                    ]);
     }
 
     /**
@@ -265,10 +342,11 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface|null
      */
-    protected function menuChartFanChart(Individual $individual)
+    protected function menuChartFanChart(FactoryInterface $factory, array $options, Individual $individual)
     {
         if (function_exists('imagettftext')) {
-            return new Menu(I18N::translate('Fan chart'), 'fanchart.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-fanchart');
+            return $this->createMenuUri($factory, $options, 'Fan chart', 'fanchart.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url,
+                                        'menu-chart-fanchart');
         } else {
             return null;
         }
@@ -281,10 +359,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartInteractiveTree(Individual $individual)
+    protected function menuChartInteractiveTree(FactoryInterface $factory, array $options, Individual $individual)
     {
         if (array_key_exists('tree', Module::getActiveModules())) {
-            return new Menu(I18N::translate('Interactive tree'), 'module.php?mod=tree&amp;mod_action=treeview&amp;' . $this->tree_url . '&amp;rootid=' . $individual->getXref(), 'menu-chart-tree');
+            return $this->createMenuUri($factory, $options, 'Interactive tree', 'module.php?mod=tree&amp;mod_action=treeview&amp;' . $this->tree_url . '&amp;rootid=' . $individual->getXref(), 'menu-chart-tree');
         } else {
             return null;
         }
@@ -297,9 +375,9 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartHourglass(Individual $individual)
+    protected function menuChartHourglass(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Hourglass chart'), 'hourglass.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-hourglass');
+        return $this->createMenuUri($factory, $options, 'Hourglass chart', 'hourglass.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-hourglass');
     }
 
     /**
@@ -309,9 +387,9 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartLifespan(Individual $individual)
+    protected function menuChartLifespan(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Lifespans'), 'lifespan.php?pids%5B%5D=' . $individual->getXref() . '&amp;addFamily=1&amp;' . $this->tree_url, 'menu-chart-lifespan');
+        return $this->createMenuUri($factory, $options, 'Lifespans', 'lifespan.php?pids%5B%5D=' . $individual->getXref() . '&amp;addFamily=1&amp;' . $this->tree_url, 'menu-chart-lifespan');
     }
 
     /**
@@ -321,9 +399,9 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartPedigree(Individual $individual)
+    protected function menuChartPedigree(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Pedigree'), 'pedigree.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-pedigree');
+        return $this->createMenuUri($factory, $options, 'Pedigree', 'pedigree.php?rootid=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-pedigree');
     }
 
     /**
@@ -333,10 +411,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartPedigreeMap(Individual $individual)
+    protected function menuChartPedigreeMap(FactoryInterface $factory, array $options, Individual $individual)
     {
         if (array_key_exists('googlemap', Module::getActiveModules())) {
-            return new Menu(I18N::translate('Pedigree map'), 'module.php?' . $this->tree_url . '&amp;mod=googlemap&amp;mod_action=pedigree_map&amp;rootid=' . $individual->getXref(), 'menu-chart-pedigree_map');
+            return $this->createMenuUri($factory, $options, 'Pedigree map', 'module.php?' . $this->tree_url . '&amp;mod=googlemap&amp;mod_action=pedigree_map&amp;rootid=' . $individual->getXref(), 'menu-chart-pedigree_map');
         } else {
             return null;
         }
@@ -349,12 +427,12 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartRelationship(Individual $individual)
+    protected function menuChartRelationship(FactoryInterface $factory, array $options, Individual $individual)
     {
         if (WT_USER_GEDCOM_ID && $individual->getXref()) {
-            return new Menu(I18N::translate('Relationship to me'), 'relationship.php?pid1=' . WT_USER_GEDCOM_ID . '&amp;pid2=' . $individual->getXref() . '&amp;ged=' . $this->tree_url, 'menu-chart-relationship');
+            return $this->createMenuUri($factory, $options, 'Relationship to me', 'relationship.php?pid1=' . WT_USER_GEDCOM_ID . '&amp;pid2=' . $individual->getXref() . '&amp;ged=' . $this->tree_url, 'menu-chart-relationship');
         } else {
-            return new Menu(I18N::translate('Relationships'), 'relationship.php?pid1=' . $individual->getXref() . '&amp;ged=' . $this->tree_url, 'menu-chart-relationship');
+            return $this->createMenuUri($factory, $options, 'Relationships', 'relationship.php?pid1=' . $individual->getXref() . '&amp;ged=' . $this->tree_url, 'menu-chart-relationship');
         }
     }
 
@@ -363,9 +441,9 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartStatistics()
+    protected function menuChartStatistics(FactoryInterface $factory, array $options)
     {
-        return new Menu(I18N::translate('Statistics'), 'statistics.php?' . $this->tree_url, 'menu-chart-statistics');
+        return $this->createMenuUri($factory, $options, 'Statistics', 'statistics.php?' . $this->tree_url, 'menu-chart-statistics');
     }
 
     /**
@@ -375,9 +453,9 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuChartTimeline(Individual $individual)
+    protected function menuChartTimeline(FactoryInterface $factory, array $options, Individual $individual)
     {
-        return new Menu(I18N::translate('Timeline'), 'timeline.php?pids%5B%5D=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-timeline');
+        return $this->createMenuUri($factory, $options, 'Timeline', 'timeline.php?pids%5B%5D=' . $individual->getXref() . '&amp;' . $this->tree_url, 'menu-chart-timeline');
     }
 
     /**
@@ -385,10 +463,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuControlPanel()
+    protected function menuControlPanel(FactoryInterface $factory, array $options)
     {
         if (WT_USER_GEDCOM_ADMIN) {
-            return new Menu(I18N::translate('Control panel'), UrlConstants::map(UrlConstants::ADMIN_PHP), 'menu-admin');
+            return $this->createMenuUri($factory, $options, 'Control panel', UrlConstants::map(UrlConstants::ADMIN_PHP), 'menu-admin');
         } else {
             return null;
         }
@@ -399,7 +477,7 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuFavorites()
+    protected function menuFavorites(FactoryInterface $factory, array $options)
     {
         $controller = Application::i()->getActiveController();
 
@@ -419,13 +497,13 @@ class Builder extends ContainerAware
             return null;
         }
 
-        $menu = new Menu(I18N::translate('Favorites'), '#', 'menu-favorites');
+        $menu = $this->createMenuUri($factory, $options, 'Favorites', '#', 'menu-favorites');
 
         foreach ($favorites as $favorite) {
             switch ($favorite['type']) {
                 case 'URL':
-                    $submenu = new Menu($favorite['title'], $favorite['url']);
-                    $menu->addSubmenu($submenu);
+                    $submenu = $this->createMenuUri($factory, $options, $favorite['title'], $favorite['url']);
+                    $menu->addChild($submenu);
                     break;
                 case 'INDI':
                 case 'FAM':
@@ -434,7 +512,7 @@ class Builder extends ContainerAware
                 case 'NOTE':
                     $obj = GedcomRecord::getInstance($favorite['gid']);
                     if ($obj && $obj->canShowName()) {
-                        $submenu = new Menu($obj->getFullName(), $obj->getHtmlUrl());
+                        $submenu = $this->createMenuUri($factory, $options, $obj->getFullName(), $obj->getHtmlUrl());
                         $menu->addSubmenu($submenu);
                     }
                     break;
@@ -443,65 +521,35 @@ class Builder extends ContainerAware
 
         if ($show_user_favorites) {
             if (isset($controller->record) && $controller->record instanceof GedcomRecord) {
-                $submenu = new Menu(I18N::translate('Add to favorites'), '#');
+                $submenu = $this->createMenuUri($factory, $options, 'Add to favorites', '#');
                 $submenu->setOnclick("jQuery.post('module.php?mod=user_favorites&amp;mod_action=menu-add-favorite',{xref:'" . $controller->record->getXref() . "'},function(){location.reload();})");
-                $menu->addSubmenu($submenu);
+                $menu->addChild($submenu);
             }
         }
 
         return $menu;
     }
 
-    /**
-     * @return ItemInterface
-     */
-    protected function menuHomePage()
-    {
-        $submenus            = array();
-        $ALLOW_CHANGE_GEDCOM = Site::getPreference('ALLOW_CHANGE_GEDCOM') && count(Tree::getAll()) > 1;
-
-        foreach (Tree::getAll() as $tree) {
-            if ($tree->getTreeId() === WT_GED_ID || $ALLOW_CHANGE_GEDCOM) {
-                $submenu    = new Menu(
-                    $tree->getTitleHtml(),
-                    UrlConstants::url(UrlConstants::INDEX_PHP, [
-                        'ctype' => 'gedcom',
-                        'ged'   => $tree->getNameUrl()
-                    ]),
-                    'menu-tree-' . $tree->getTreeId()
-                );
-                $submenus[] = $submenu;
-            }
-        }
-
-        if (count($submenus) > 1) {
-            $label = I18N::translate('Family trees');
-        } else {
-            $label = I18N::translate('Family trees');
-        }
-
-        return new Menu($label, UrlConstants::url(UrlConstants::INDEX_PHP, ['ctype' => 'gedcom']) . $this->tree_url, 'menu-tree', null, $submenus);
-    }
 
     /**
      * A menu to show a list of available languages.
      *
      * @return ItemInterface
      */
-    protected function menuLanguages()
+    protected function menuLanguages(FactoryInterface $factory, array $options)
     {
-        $menu = new Menu(I18N::translate('Language'), '#', 'menu-language');
+        $menu = $this->createMenuUri($factory, $options, 'Language', '#', 'menu-language');
 
         foreach (I18N::installed_languages() as $lang => $name) {
-            $submenu = new Menu($name, Functions::i()
-                                                ->get_query_url(array('lang' => $lang), '&amp;'), 'menu-language-' . $lang);
+            $submenu = $this->createMenuUri($factory, $options, $name, Functions::i()
+                                                                                ->get_query_url(array('lang' => $lang), '&amp;'), 'menu-language-' . $lang);
             if (WT_LOCALE === $lang) {
-                $submenu->addClass('', '', 'active');
+                $submenu->setAttribute('class', $submenu->getAttribute('class') . ' active');
             }
-            $menu->addSubmenu($submenu);
+            $menu->addChild($submenu);
         }
 
-        if (count($menu->getSubmenus()) > 1 && !$this->isSearchEngine()) {
+        if (count($menu->getChildren()) > 1 && !$this->isSearchEngine()) {
             return $menu;
         } else {
             return null;
@@ -513,12 +561,12 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuLists()
+    protected function menuLists(FactoryInterface $factory, array $options)
     {
         $controller = Application::i()->getActiveController();
 
         // The top level menu shows the individual list
-        $menu = new Menu(I18N::translate('Lists'), UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url), 'menu-list');
+        $menu = $this->createMenuUri($factory, $options, 'Lists', UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url), 'menu-list');
 
         // Do not show empty lists
         $row = Database::i()->prepare(
@@ -539,32 +587,27 @@ class Builder extends ContainerAware
         // Build a list of submenu items and then sort it in localized name order
         $surname_url = '&amp;surname=' . rawurlencode($controller->getSignificantSurname());
 
-        $menulist = array(
-            new Menu(I18N::translate('Individuals'), UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url . $surname_url), 'menu-list-indi'),
+        $menu->addChild(
+            $this->createMenuUri($factory, $options, 'Individuals', UrlConstants::url(UrlConstants::INDILIST_PHP, $this->tree_url . $surname_url), 'menu-list-indi')
         );
 
         if (!$this->isSearchEngine()) {
-            $menulist[] = new Menu(I18N::translate('Families'), UrlConstants::url(UrlConstants::FAMLIST_PHP, $this->tree_url . $surname_url), 'menu-list-fam');
-            $menulist[] = new Menu(I18N::translate('Branches'), UrlConstants::url(UrlConstants::BRANCHES_PHP, $this->tree_url . $surname_url), 'menu-branches');
-            $menulist[] = new Menu(I18N::translate('Place hierarchy'), UrlConstants::url(UrlConstants::PLACELIST_PHP, $this->tree_url), 'menu-list-plac');
+            $menu->addChild($this->createMenuUri($factory, $options, 'Families', UrlConstants::url(UrlConstants::FAMLIST_PHP, $this->tree_url . $surname_url), 'menu-list-fam'));
+            $menu->addChild($this->createMenuUri($factory, $options, 'Branches', UrlConstants::url(UrlConstants::BRANCHES_PHP, $this->tree_url . $surname_url), 'menu-branches'));
+            $menu->addChild($this->createMenuUri($factory, $options, 'Place hierarchy', UrlConstants::url(UrlConstants::PLACELIST_PHP, $this->tree_url), 'menu-list-plac'));
             if ($row->obje) {
-                $menulist[] = new Menu(I18N::translate('Media objects'), UrlConstants::url(UrlConstants::MEDIALIST_PHP, $this->tree_url), 'menu-list-obje');
+                $menu->addChild($this->createMenuUri($factory, $options, 'Media objects', UrlConstants::url(UrlConstants::MEDIALIST_PHP, $this->tree_url), 'menu-list-obje'));
             }
             if ($row->repo) {
-                $menulist[] = new Menu(I18N::translate('Repositories'), UrlConstants::url(UrlConstants::REPOLIST_PHP, $this->tree_url), 'menu-list-repo');
+                $menu->addChild($this->createMenuUri($factory, $options, 'Repositories', UrlConstants::url(UrlConstants::REPOLIST_PHP, $this->tree_url), 'menu-list-repo'));
             }
             if ($row->sour) {
-                $menulist[] = new Menu(I18N::translate('Sources'), UrlConstants::url(UrlConstants::SOURCELIST_PHP, $this->tree_url), 'menu-list-sour');
+                $menu->addChild($this->createMenuUri($factory, $options, 'Sources', UrlConstants::url(UrlConstants::SOURCELIST_PHP, $this->tree_url), 'menu-list-sour'));
             }
             if ($row->note) {
-                $menulist[] = new Menu(I18N::translate('Shared notes'), UrlConstants::url(UrlConstants::NOTELIST_PHP, $this->tree_url), 'menu-list-note');
+                $menu->addChild($this->createMenuUri($factory, $options, 'Shared notes', UrlConstants::url(UrlConstants::NOTELIST_PHP, $this->tree_url), 'menu-list-note'));
             }
         }
-        uasort($menulist, function (Menu $x, Menu $y) {
-            return I18N::strcasecmp($x->getLabel(), $y->getLabel());
-        });
-
-        $menu->setSubmenus($menulist);
 
         return $menu;
     }
@@ -574,13 +617,13 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuLogin()
+    protected function menuLogin(FactoryInterface $factory, array $options)
     {
         if (Auth::check() || $this->isSearchEngine() || WT_SCRIPT_NAME === UrlConstants::LOGIN_PHP) {
             return null;
         } else {
-            return new Menu(I18N::translate('Login'), WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()
-                                                                                                     ->get_query_url()));
+            return $this->createMenuUri($factory, $options, 'Login', WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()
+                                                                                                                    ->get_query_url()));
         }
     }
 
@@ -589,10 +632,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuLogout()
+    protected function menuLogout(FactoryInterface $factory, array $options)
     {
         if (Auth::check()) {
-            return new Menu(I18N::translate('Logout'), 'logout.php');
+            return $this->createMenuUri($factory, $options, 'Logout', 'logout.php');
         } else {
             return null;
         }
@@ -603,7 +646,7 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuModules()
+    protected function menuModules(FactoryInterface $factory, array $options)
     {
         $menus = array();
         foreach (Module::getActiveMenus() as $module) {
@@ -621,10 +664,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuMyAccount()
+    protected function menuMyAccount(FactoryInterface $factory, array $options)
     {
         if (Auth::check()) {
-            return new Menu(I18N::translate('My account'), 'edituser.php');
+            return $this->createMenuUri($factory, $options, 'My account', 'edituser.php');
         } else {
             return null;
         }
@@ -635,10 +678,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuMyIndividualRecord()
+    protected function menuMyIndividualRecord(FactoryInterface $factory, array $options)
     {
         if (WT_USER_GEDCOM_ID) {
-            return new Menu(I18N::translate('My individual record'), 'individual.php?pid=' . WT_USER_GEDCOM_ID . '&amp;' . $this->tree_url, 'menu-myrecord');
+            return $this->createMenuUri($factory, $options, 'My individual record', 'individual.php?pid=' . WT_USER_GEDCOM_ID . '&amp;' . $this->tree_url, 'menu-myrecord');
         } else {
             return null;
         }
@@ -649,24 +692,24 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuMyPage()
+    protected function menuMyPage(FactoryInterface $factory, array $options)
     {
-        return new Menu(I18N::translate('My page'), 'index.php?ctype=user&amp;' . $this->tree_url, 'menu-mypage');
+        return $this->createMenuUri($factory, $options, 'My page', 'index.php?ctype=user&amp;' . $this->tree_url, 'menu-mypage');
     }
 
     /**
      * @return ItemInterface
      */
-    protected function menuMyPages()
+    protected function menuMyPages(FactoryInterface $factory, array $options)
     {
         if (Auth::id()) {
-            return new Menu(I18N::translate('My pages'), '#', 'menu-mymenu', null, array_filter(array(
-                                                                                                    $this->menuMyPage(),
-                                                                                                    $this->menuMyIndividualRecord(),
-                                                                                                    $this->menuMyPedigree(),
-                                                                                                    $this->menuMyAccount(),
-                                                                                                    $this->menuControlPanel(),
-                                                                                                )));
+            return $this->createMenuUri($factory, $options, 'My pages', '#', 'menu-mymenu', null, array_filter(array(
+                                                                                                                   $this->menuMyPage($factory, $options),
+                                                                                                                   $this->menuMyIndividualRecord($factory, $options),
+                                                                                                                   $this->menuMyPedigree($factory, $options),
+                                                                                                                   $this->menuMyAccount($factory, $options),
+                                                                                                                   $this->menuControlPanel($factory, $options),
+                                                                                                               )));
         } else {
             return null;
         }
@@ -677,16 +720,15 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuMyPedigree()
+    protected function menuMyPedigree(FactoryInterface $factory, array $options)
     {
         $showFull   = $this->tree->getPreference('PEDIGREE_FULL_DETAILS') ? 1 : 0;
         $showLayout = $this->tree->getPreference('PEDIGREE_LAYOUT') ? 1 : 0;
 
         if (WT_USER_GEDCOM_ID) {
-            return new Menu(
-                I18N::translate('My pedigree'),
-                'pedigree.php?' . $this->tree_url . '&amp;rootid=' . WT_USER_GEDCOM_ID . "&amp;show_full={$showFull}&amp;talloffset={$showLayout}",
-                'menu-mypedigree'
+            return $this->createMenuUri($factory, $options, 'My pedigree',
+                                        'pedigree.php?' . $this->tree_url . '&amp;rootid=' . WT_USER_GEDCOM_ID . "&amp;show_full={$showFull}&amp;talloffset={$showLayout}",
+                                        'menu-mypedigree'
             );
         } else {
             return null;
@@ -698,10 +740,10 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuPendingChanges()
+    protected function menuPendingChanges(FactoryInterface $factory, array $options)
     {
         if ($this->pendingChangesExist()) {
-            $menu = new Menu(I18N::translate('Pending changes'), '#', 'menu-pending');
+            $menu = $this->createMenuUri($factory, $options, 'Pending changes', '#', 'menu-pending');
             $menu->setOnclick('window.open(\'edit_changes.php\', \'_blank\', chan_window_specs); return false;');
 
             return $menu;
@@ -713,20 +755,20 @@ class Builder extends ContainerAware
     /**
      * @return ItemInterface
      */
-    protected function menuReports()
+    protected function menuReports(FactoryInterface $factory, array $options)
     {
         $active_reports = Module::getActiveReports();
 
         if ($this->isSearchEngine() || !$active_reports) {
-            return new Menu(I18N::translate('Reports'), '#', 'menu-report');
+            return $this->createMenuUri($factory, $options, 'Reports', '#', 'menu-report');
         }
 
-        $menu = new Menu(I18N::translate('Reports'), 'reportengine.php?' . $this->tree_url, 'menu-report');
+        $menu = $this->createMenuUri($factory, $options, 'Reports', 'reportengine.php?' . $this->tree_url, 'menu-report');
 
         $sub_menu = false;
         foreach ($active_reports as $report) {
             foreach ($report->getReportMenus() as $submenu) {
-                $menu->addSubmenu($submenu);
+                $menu->addChild($submenu);
                 $sub_menu = true;
             }
         }
@@ -743,27 +785,27 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function menuSearch()
+    protected function menuSearch(FactoryInterface $factory, array $options)
     {
         if ($this->isSearchEngine()) {
-            return new Menu(I18N::translate('Search'), '#', 'menu-search');
+            return $this->createMenuUri($factory, $options, 'Search', '#', 'menu-search');
         }
         //-- main search menu item
-        $menu = new Menu(I18N::translate('Search'), 'search.php?' . $this->tree_url, 'menu-search');
+        $menu = $this->createMenuUri($factory, $options, 'Search', 'search.php?' . $this->tree_url, 'menu-search');
         //-- search_general sub menu
-        $submenu = new Menu(I18N::translate('General search'), 'search.php?' . $this->tree_url, 'menu-search-general');
-        $menu->addSubmenu($submenu);
+        $submenu = $this->createMenuUri($factory, $options, 'General search', 'search.php?' . $this->tree_url, 'menu-search-general');
+        $menu->addChild($submenu);
         //-- search_soundex sub menu
-        $submenu = new Menu(/* I18N: search using “sounds like”, rather than exact spelling */
-            I18N::translate('Phonetic search'), 'search.php?' . $this->tree_url . '&amp;action=soundex', 'menu-search-soundex');
-        $menu->addSubmenu($submenu);
+        $submenu = $this->createMenuUri($factory, $options,
+            'Phonetic search', 'search.php?' . $this->tree_url . '&amp;action=soundex', 'menu-search-soundex');
+        $menu->addChild($submenu);
         //-- advanced search
-        $submenu = new Menu(I18N::translate('Advanced search'), 'search_advanced.php?' . $this->tree_url, 'menu-search-advanced');
-        $menu->addSubmenu($submenu);
+        $submenu = $this->createMenuUri($factory, $options, 'Advanced search', 'search_advanced.php?' . $this->tree_url, 'menu-search-advanced');
+        $menu->addChild($submenu);
         //-- search_replace sub menu
         if (WT_USER_CAN_EDIT) {
-            $submenu = new Menu(I18N::translate('Search and replace'), 'search.php?' . $this->tree_url . '&amp;action=replace', 'menu-search-replace');
-            $menu->addSubmenu($submenu);
+            $submenu = $this->createMenuUri($factory, $options, 'Search and replace', 'search.php?' . $this->tree_url . '&amp;action=replace', 'menu-search-replace');
+            $menu->addChild($submenu);
         }
 
         return $menu;
@@ -774,24 +816,20 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    public function menuThemes()
+    public function menuThemes(FactoryInterface $factory, array $options)
     {
         if ($this->tree && !$this->isSearchEngine() && Site::getPreference('ALLOW_USER_THEMES') && $this->tree->getPreference('ALLOW_THEME_DROPDOWN')) {
             $submenus = array();
+            $menu     = $this->createMenuUri($factory, $options, 'Theme', '#', 'menu-theme');
             foreach (Theme::installedThemes() as $theme) {
-                $submenu = new Menu($theme->themeName(), Functions::i()
-                                                                  ->get_query_url(array('theme' => $theme->themeId()), '&amp;'), 'menu-theme-' . $theme->themeId());
+                $submenu = $this->createMenuUri($factory, $options, $theme->themeName(), Functions::i()
+                                                                                                  ->get_query_url(array('theme' => $theme->themeId()), '&amp;'), 'menu-theme-' . $theme->themeId());
                 if ($theme === $this) {
                     $submenu->addClass('', '', 'active');
                 }
-                $submenus[] = $submenu;
+                $menu->addChild($submenu);
             }
 
-            usort($submenus, function (Menu $x, Menu $y) {
-                return I18N::strcasecmp($x->getLabel(), $y->getLabel());
-            });
-
-            $menu = new Menu(I18N::translate('Theme'), '#', 'menu-theme', '', $submenus);
 
             return $menu;
         } else {
@@ -806,11 +844,11 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function individualBoxMenu(Individual $individual)
+    protected function individualBoxMenu(FactoryInterface $factory, array $options, Individual $individual)
     {
         $menus = array_merge(
-            $this->individualBoxMenuCharts($individual),
-            $this->individualBoxMenuFamilyLinks($individual)
+            $this->individualBoxMenuCharts($factory, $options, $individual),
+            $this->individualBoxMenuFamilyLinks($factory, $options, $individual)
         );
 
         return $menus;
@@ -819,23 +857,25 @@ class Builder extends ContainerAware
     /**
      * Chart links, to show in chart boxes;
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
-    protected function individualBoxMenuCharts(Individual $individual)
+    protected function individualBoxMenuCharts(FactoryInterface $factory, array $options, Individual $individual)
     {
         $menus = array_filter(array(
-                                  $this->menuChartAncestors($individual),
-                                  $this->menuChartCompact($individual),
-                                  $this->menuChartDescendants($individual),
-                                  $this->menuChartFanChart($individual),
-                                  $this->menuChartHourglass($individual),
-                                  $this->menuChartInteractiveTree($individual),
-                                  $this->menuChartPedigree($individual),
-                                  $this->menuChartPedigreeMap($individual),
-                                  $this->menuChartRelationship($individual),
-                                  $this->menuChartTimeline($individual),
+                                  $this->menuChartAncestors($factory, $options, $individual),
+                                  $this->menuChartCompact($factory, $options, $individual),
+                                  $this->menuChartDescendants($factory, $options, $individual),
+                                  $this->menuChartFanChart($factory, $options, $individual),
+                                  $this->menuChartHourglass($factory, $options, $individual),
+                                  $this->menuChartInteractiveTree($factory, $options, $individual),
+                                  $this->menuChartPedigree($factory, $options, $individual),
+                                  $this->menuChartPedigreeMap($factory, $options, $individual),
+                                  $this->menuChartRelationship($factory, $options, $individual),
+                                  $this->menuChartTimeline($factory, $options, $individual),
                               ));
 
         usort($menus, function (Menu $x, Menu $y) {
@@ -848,6 +888,23 @@ class Builder extends ContainerAware
     private function isSearchEngine()
     {
         return false;
+    }
+
+    /**
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param                            $name
+     * @param                            $uri
+     * @param                            $id
+     *
+     * @return \Knp\Menu\ItemInterface
+     */
+    protected function createMenuUri(FactoryInterface $factory, array $options, $name, $uri, $id = null)
+    {
+        return $factory->createItem($name, [
+            'uri' => $uri,
+            ['attributes' => ['id' => $id]]
+        ]);
     }
 
 }
