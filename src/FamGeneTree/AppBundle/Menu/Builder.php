@@ -18,6 +18,7 @@ use Webtrees\LegacyBundle\Legacy\Functions;
 use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Individual;
 use Webtrees\LegacyBundle\Legacy\Module;
+use Webtrees\LegacyBundle\Legacy\ModuleReportInterface;
 use Webtrees\LegacyBundle\Legacy\Site;
 use Webtrees\LegacyBundle\Legacy\Tree;
 
@@ -114,7 +115,10 @@ class Builder extends ContainerAware
     }
 
     /**
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuCalendar(FactoryInterface $factory, array $options)
     {
@@ -143,7 +147,7 @@ class Builder extends ContainerAware
         $menu = $factory->createItem(
             'Calendar',
             [
-                'uri'        => 'calendar.php?' . $this->tree_url,
+                'uri'        => UrlConstants::url(UrlConstants::CALENDAR_PHP, $this->tree_url),
                 'attributes' => ['id' => 'menu-calendar']
             ]
         );
@@ -153,7 +157,7 @@ class Builder extends ContainerAware
             $factory->createItem(
                 'Day',
                 [
-                    'uri'        => 'calendar.php?' . $this->tree_url . '&amp;view=day',
+                    'uri'        => UrlConstants::url(UrlConstants::CALENDAR_PHP, $this->tree_url . '&amp;view=day'),
                     'attributes' => ['id' => 'menu-calendar-day']
                 ]
             )
@@ -164,7 +168,7 @@ class Builder extends ContainerAware
             $factory->createItem(
                 'Month',
                 [
-                    'uri'        => 'calendar.php?' . $this->tree_url . '&amp;view=month',
+                    'uri'        => UrlConstants::url(UrlConstants::CALENDAR_PHP, $this->tree_url . '&amp;view=month'),
                     'attributes' => ['id' => 'menu-calendar-month']
                 ]
             )
@@ -174,7 +178,7 @@ class Builder extends ContainerAware
             $factory->createItem(
                 'Year',
                 [
-                    'uri'        => 'calendar.php?' . $this->tree_url . '&amp;view=year',
+                    'uri'        => UrlConstants::url(UrlConstants::CALENDAR_PHP, $this->tree_url . '&amp;view=year'),
                     'attributes' => ['id' => 'menu-calendar-year']
                 ]
             )
@@ -271,9 +275,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the ancestors chart (ancestry.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartAncestors(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -287,9 +293,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the compact tree (compact.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartCompact(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -302,9 +310,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the descendants chart (descendancy.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartDescendants(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -338,9 +348,11 @@ class Builder extends ContainerAware
      *
      * We can only do this if the GD2 library is installed with TrueType support.
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface|null
+     * @return \Knp\Menu\ItemInterface|null
      */
     protected function menuChartFanChart(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -355,9 +367,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the interactive tree (tree module).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartInteractiveTree(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -371,9 +385,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the hourglass chart (hourglass.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartHourglass(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -383,9 +399,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the lifepsan chart (lifespan.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartLifespan(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -395,9 +413,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the pedigree chart (pedigree.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartPedigree(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -407,9 +427,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the pedigree map (googlemap module).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartPedigreeMap(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -423,9 +445,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the relationship chart (relationship.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartRelationship(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -439,7 +463,10 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the statistics charts (statistics.php).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartStatistics(FactoryInterface $factory, array $options)
     {
@@ -449,9 +476,11 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the timeline chart (timeline.php).
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuChartTimeline(FactoryInterface $factory, array $options, Individual $individual)
     {
@@ -461,7 +490,10 @@ class Builder extends ContainerAware
     /**
      * Generate a menu item for the control panel (admin.php).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuControlPanel(FactoryInterface $factory, array $options)
     {
@@ -475,7 +507,10 @@ class Builder extends ContainerAware
     /**
      * Favorites menu.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuFavorites(FactoryInterface $factory, array $options)
     {
@@ -534,7 +569,10 @@ class Builder extends ContainerAware
     /**
      * A menu to show a list of available languages.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuLanguages(FactoryInterface $factory, array $options)
     {
@@ -559,7 +597,11 @@ class Builder extends ContainerAware
     /**
      * Create a menu to show lists of individuals, families, sources, etc.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
+     * @throws \Exception
      */
     protected function menuLists(FactoryInterface $factory, array $options)
     {
@@ -615,7 +657,10 @@ class Builder extends ContainerAware
     /**
      * A login menu option (or null if we are already logged in).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuLogin(FactoryInterface $factory, array $options)
     {
@@ -630,7 +675,10 @@ class Builder extends ContainerAware
     /**
      * A logout menu option (or null if we are already logged out).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuLogout(FactoryInterface $factory, array $options)
     {
@@ -644,7 +692,10 @@ class Builder extends ContainerAware
     /**
      * Get the additional menus created by each of the modules
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuModules(FactoryInterface $factory, array $options)
     {
@@ -662,7 +713,10 @@ class Builder extends ContainerAware
     /**
      * A link to allow users to edit their account settings (edituser.php).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuMyAccount(FactoryInterface $factory, array $options)
     {
@@ -676,7 +730,10 @@ class Builder extends ContainerAware
     /**
      * A link to the user's individual record (individual.php).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuMyIndividualRecord(FactoryInterface $factory, array $options)
     {
@@ -690,7 +747,10 @@ class Builder extends ContainerAware
     /**
      * A link to the user's personal home page.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuMyPage(FactoryInterface $factory, array $options)
     {
@@ -698,7 +758,10 @@ class Builder extends ContainerAware
     }
 
     /**
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuMyPages(FactoryInterface $factory, array $options)
     {
@@ -718,7 +781,10 @@ class Builder extends ContainerAware
     /**
      * A link to the user's individual record (pedigree.php).
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuMyPedigree(FactoryInterface $factory, array $options)
     {
@@ -738,7 +804,10 @@ class Builder extends ContainerAware
     /**
      * Create a pending changes menu.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuPendingChanges(FactoryInterface $factory, array $options)
     {
@@ -753,7 +822,10 @@ class Builder extends ContainerAware
     }
 
     /**
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuReports(FactoryInterface $factory, array $options)
     {
@@ -763,11 +835,12 @@ class Builder extends ContainerAware
             return $this->createMenuUri($factory, $options, 'Reports', '#', 'menu-report');
         }
 
-        $menu = $this->createMenuUri($factory, $options, 'Reports', 'reportengine.php?' . $this->tree_url, 'menu-report');
+        $menu = $this->createMenuUri($factory, $options, 'Reports', UrlConstants::url(UrlConstants::REPORTENGINE_PHP, $this->tree_url, 'menu-report'));
 
         $sub_menu = false;
+        /** @var ModuleReportInterface $report */
         foreach ($active_reports as $report) {
-            foreach ($report->getReportMenus() as $submenu) {
+            foreach ($report->getReportMenus($factory, $options) as $submenu) {
                 $menu->addChild($submenu);
                 $sub_menu = true;
             }
@@ -783,7 +856,10 @@ class Builder extends ContainerAware
     /**
      * Create the search menu
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     protected function menuSearch(FactoryInterface $factory, array $options)
     {
@@ -814,7 +890,10 @@ class Builder extends ContainerAware
     /**
      * Themes menu.
      *
-     * @return ItemInterface
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     *
+     * @return \Knp\Menu\ItemInterface
      */
     public function menuThemes(FactoryInterface $factory, array $options)
     {
@@ -840,9 +919,11 @@ class Builder extends ContainerAware
     /**
      * Links, to show in chart boxes;
      *
-     * @param Individual $individual
+     * @param \Knp\Menu\FactoryInterface $factory
+     * @param array                      $options
+     * @param Individual                 $individual
      *
-     * @return ItemInterface
+     * @return \Knp\Menu\ItemInterface
      */
     protected function individualBoxMenu(FactoryInterface $factory, array $options, Individual $individual)
     {

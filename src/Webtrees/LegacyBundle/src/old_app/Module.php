@@ -291,10 +291,10 @@ abstract class Module
                 require_once WT_ROOT . WT_MODULES_DIR . $module_name . '/module.php';
                 $class     = __NAMESPACE__ . '\\' . $module_name . '_WT_Module';
                 $interface = __NAMESPACE__ . '\Module' . ucfirst($component) . 'Interface';
-                $module    = new $class;
+                $module    = new $class();
                 // Check that this module is still implementing the desired interface.
                 if ($module instanceof $interface) {
-                    $array[$module_name] = new $module;
+                    $array[$module_name] = new $module();
                 }
             } else {
                 // Module has been deleted from disk?  Disable it.
@@ -376,10 +376,10 @@ abstract class Module
     /**
      * Get a list of modules which (a) provide a report and (b) we have permission to see.
      *
-     * @param integer $tree_id
-     * @param integer $access_level
+     * @param int|null $tree_id
+     * @param int      $access_level
      *
-     * @return $controller = new ModuleReportInterface[]
+     * @return \Webtrees\LegacyBundle\Legacy\Module[] $controller = new ModuleReportInterface[]
      */
     public static function getActiveReports($tree_id = WT_GED_ID, $access_level = WT_USER_ACCESS_LEVEL)
     {

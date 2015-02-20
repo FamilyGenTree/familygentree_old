@@ -1,6 +1,9 @@
 <?php
 namespace Webtrees\LegacyBundle\Legacy;
 
+use Fgt\UrlConstants;
+use Knp\Menu\FactoryInterface;
+
 /**
  * webtrees: online genealogy
  * Copyright (C) 2015 webtrees development team
@@ -44,13 +47,17 @@ class occupation_report_WT_Module extends Module implements ModuleReportInterfac
     }
 
     /** {@inheritdoc} */
-    public function getReportMenus()
+    public function getReportMenus(FactoryInterface $factory, array $options)
     {
         $menus   = array();
-        $menu    = new Menu(
+        $menu    = $factory->createItem(
             $this->getTitle(),
-            'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml',
-            'menu-report-' . $this->getName()
+            [
+                'uri'        => UrlConstants::url(UrlConstants::REPORTENGINE_PHP, 'ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml'),
+                'attributes' => [
+                    'id' => 'menu-report-' . $this->getName()
+                ]
+            ]
         );
         $menus[] = $menu;
 

@@ -1,6 +1,8 @@
 <?php
 namespace Webtrees\LegacyBundle\Legacy;
 
+use Knp\Menu\FactoryInterface;
+
 /**
  * webtrees: online genealogy
  * Copyright (C) 2015 webtrees development team
@@ -24,7 +26,10 @@ interface ModuleReportInterface
     /**
      * Return a list of (usually just one) menu items.
      *
-     * @return Menu[]
+     * @param FactoryInterface $factory
+     * @param array            $options
+     *
+     * @return \Webtrees\LegacyBundle\Legacy\Menu[]
      */
-    public function getReportMenus();
+    public function getReportMenus(FactoryInterface $factory, array $options);
 }

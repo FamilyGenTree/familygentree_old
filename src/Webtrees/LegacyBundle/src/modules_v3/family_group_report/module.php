@@ -1,6 +1,10 @@
 <?php
 namespace Webtrees\LegacyBundle\Legacy;
 
+use Fgt\Application;
+use Fgt\UrlConstants;
+use Knp\Menu\FactoryInterface;
+
 /**
  * webtrees: online genealogy
  * Copyright (C) 2015 webtrees development team
@@ -15,7 +19,6 @@ namespace Webtrees\LegacyBundle\Legacy;
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use Fgt\Application;
 
 /**
  * Class family_group_report_WT_Module
@@ -45,16 +48,20 @@ class family_group_report_WT_Module extends Module implements ModuleReportInterf
     }
 
     /** {@inheritdoc} */
-    public function getReportMenus()
+    public function getReportMenus(FactoryInterface $factory, array $options)
     {
         $controller = Application::i()->getActiveController();
 
         $menus   = array();
-        $menu    = new Menu(
+        $menu    = $factory->createItem(
             $this->getTitle(),
-            'reportengine.php?ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml&amp;famid=' . $controller->getSignificantFamily()
-                                                                                                                                                              ->getXref(),
-            'menu-report-' . $this->getName()
+            [
+                'uri'        => UrlConstants::url(UrlConstants::REPORTENGINE_PHP, 'ged=' . WT_GEDURL . '&amp;action=setup&amp;report=' . WT_MODULES_DIR . $this->getName() . '/report.xml&amp;famid=' . $controller->getSignificantFamily()
+                                                                                                                                                                                  ->getXref()),
+                'attributes' => [
+                    'id' => 'menu-report-' . $this->getName()
+                ]
+            ]
         );
         $menus[] = $menu;
 
