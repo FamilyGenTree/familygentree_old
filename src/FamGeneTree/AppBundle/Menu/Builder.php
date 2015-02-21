@@ -74,6 +74,8 @@ class Builder extends ContainerAware
         $controller = Application::i()->getActiveController();
         $tree       = Application::i()->getTree();
         $menu       = $factory->createItem('root');
+        $menu->setAttribute('id','primary');
+        $menu->setChildrenAttributes(array('class' => 'primary-menu'));
 
         if ($tree) {
             $individual = $controller->getSignificantIndividual();
