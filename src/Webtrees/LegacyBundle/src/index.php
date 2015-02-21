@@ -49,11 +49,11 @@ class IndexPHP extends AbstractSymfonyConnectorController
      */
     protected function actionAjax()
     {
-        $controller = Application::i()->setActiveController(new AjaxController($this->getTemplating()));
+        $this->setViewModel(new AjaxController($this->getTemplating()));
 
         list($ctype, $blocks, $all_blocks) = $this->commonAction();
 
-        $controller->pageHeader();
+        $this->viewModel->pageHeader();
 
         // Check we’re displaying an allowable block.
         $block_id = Filter::getInteger('block_id');
@@ -73,7 +73,6 @@ class IndexPHP extends AbstractSymfonyConnectorController
         if (Database::i()->isDebugSql()) {
             $this->viewModel[] = Database::i()->getQueryLog();
         }
-        $this->viewModel->render();
         return;
     }
 

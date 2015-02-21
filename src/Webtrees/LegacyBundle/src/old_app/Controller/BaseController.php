@@ -186,7 +186,7 @@ class BaseController implements \ArrayAccess
      *
      * @return $this
      */
-    public function pageHeader()
+    public function pageHeader($view = '')
     {
         // We've displayed the header - display the footer automatically
         $this->page_header = true;

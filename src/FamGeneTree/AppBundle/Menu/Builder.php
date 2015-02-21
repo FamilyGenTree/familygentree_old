@@ -7,7 +7,6 @@
 
 namespace FamGeneTree\AppBundle\Menu;
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
 use Fgt\Application;
 use Fgt\UrlConstants;
 use Knp\Menu\FactoryInterface;
@@ -15,12 +14,12 @@ use Knp\Menu\ItemInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Webtrees\LegacyBundle\Legacy\Database;
 use Webtrees\LegacyBundle\Legacy\Functions;
+use Webtrees\LegacyBundle\Legacy\gedcom_favorites_WT_Module;
 use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Individual;
 use Webtrees\LegacyBundle\Legacy\Module;
 use Webtrees\LegacyBundle\Legacy\ModuleReportInterface;
-use Webtrees\LegacyBundle\Legacy\Site;
-use Webtrees\LegacyBundle\Legacy\Tree;
+use Webtrees\LegacyBundle\Legacy\user_favorites_WT_Module;
 
 class Builder extends ContainerAware
 {
@@ -74,7 +73,6 @@ class Builder extends ContainerAware
         $controller = Application::i()->getActiveController();
         $tree       = Application::i()->getTree();
         $menu       = $factory->createItem('root');
-        $menu->setAttribute('id','primary');
         $menu->setChildrenAttributes(array('class' => 'primary-menu'));
 
         if ($tree) {
@@ -85,6 +83,7 @@ class Builder extends ContainerAware
             $menu->addChild($this->menuCalendar($factory, $options));
             $menu->addChild($this->menuReports($factory, $options));
             $menu->addChild($this->menuSearch($factory, $options));
+
 //            $menu->addChild($this->menuModules($factory, $options));
 
             return $menu;
@@ -102,16 +101,16 @@ class Builder extends ContainerAware
      *
      * @return ItemInterface
      */
-    protected function secondaryMenu(FactoryInterface $factory, array $options)
+    public function secondaryMenu(FactoryInterface $factory, array $options)
     {
         $menu = $factory->createItem('root');
+        $menu->setChildrenAttributes(array('class' => 'nav nav-pills secondary-menu'));
+
         $menu->addChild($this->menuPendingChanges($factory, $options));
         $menu->addChild($this->menuMyPages($factory, $options));
         $menu->addChild($this->menuFavorites($factory, $options));
-        $menu->addChild($this->menuThemes($factory, $options));
         $menu->addChild($this->menuLanguages($factory, $options));
         $menu->addChild($this->menuLogin($factory, $options));
-        $menu->addChild($this->menuLogout($factory, $options));
 
         return $menu;
     }
@@ -197,7 +196,6 @@ class Builder extends ContainerAware
      */
     protected function menuHomePage(FactoryInterface $factory, array $options)
     {
-        $submenus            = array();
         $ALLOW_CHANGE_GEDCOM = Application::i()
                                           ->getConfig()
                                           ->get('ALLOW_CHANGE_GEDCOM')
@@ -518,16 +516,17 @@ class Builder extends ContainerAware
     {
         $controller = Application::i()->getActiveController();
 
-        $show_user_favorites = $this->tree && array_key_exists('user_favorites', Module::getActiveModules()) && Auth::check();
-        $show_tree_favorites = $this->tree && array_key_exists('gedcom_favorites', Module::getActiveModules());
+        $show_user_favorites = $this->getCurrentTree() && array_key_exists('user_favorites', Module::getActiveModules())
+                               && $this->getAuth()->isLoggedIn();
+        $show_tree_favorites = $this->getCurrentTree() && array_key_exists('gedcom_favorites', Module::getActiveModules());
 
         if ($show_user_favorites && $show_tree_favorites) {
             $favorites = array_merge(
                 gedcom_favorites_WT_Module::getFavorites(WT_GED_ID),
-                user_favorites_WT_Module::getFavorites(Auth::id())
+                user_favorites_WT_Module::getFavorites($this->getAuth()->getUser()->getId())
             );
         } elseif ($show_user_favorites) {
-            $favorites = user_favorites_WT_Module::getFavorites(Auth::id());
+            $favorites = user_favorites_WT_Module::getFavorites($this->getAuth()->getUser()->getId());
         } elseif ($show_tree_favorites) {
             $favorites = gedcom_favorites_WT_Module::getFavorites(WT_GED_ID);
         } else {
@@ -666,28 +665,13 @@ class Builder extends ContainerAware
      */
     protected function menuLogin(FactoryInterface $factory, array $options)
     {
-        if (Auth::check() || $this->isSearchEngine() || WT_SCRIPT_NAME === UrlConstants::LOGIN_PHP) {
-            return null;
+        if ($this->getAuth()->isLoggedIn() || $this->isSearchEngine() || WT_SCRIPT_NAME === UrlConstants::LOGIN_PHP) {
+            return $this->createMenuRoute($factory, $options, 'Logout', '_fgt_logout');
         } else {
-            return $this->createMenuUri($factory, $options, 'Login', WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()
-                                                                                                                    ->get_query_url()));
-        }
-    }
+            return $this->createMenuRoute($factory, $options, 'Login','_fgt_login');
 
-    /**
-     * A logout menu option (or null if we are already logged out).
-     *
-     * @param \Knp\Menu\FactoryInterface $factory
-     * @param array                      $options
-     *
-     * @return \Knp\Menu\ItemInterface
-     */
-    protected function menuLogout(FactoryInterface $factory, array $options)
-    {
-        if (Auth::check()) {
-            return $this->createMenuUri($factory, $options, 'Logout', 'logout.php');
-        } else {
-            return null;
+//                                        WT_LOGIN_URL . '?url=' . rawurlencode(Functions::i()
+//                                                                                                                    ->get_query_url()));
         }
     }
 
@@ -722,7 +706,7 @@ class Builder extends ContainerAware
      */
     protected function menuMyAccount(FactoryInterface $factory, array $options)
     {
-        if (Auth::check()) {
+        if ($this->getAuth()->isLoggedIn()) {
             return $this->createMenuUri($factory, $options, 'My account', 'edituser.php');
         } else {
             return null;
@@ -767,14 +751,15 @@ class Builder extends ContainerAware
      */
     protected function menuMyPages(FactoryInterface $factory, array $options)
     {
-        if (Auth::id()) {
-            return $this->createMenuUri($factory, $options, 'My pages', '#', 'menu-mymenu', null, array_filter(array(
-                                                                                                                   $this->menuMyPage($factory, $options),
-                                                                                                                   $this->menuMyIndividualRecord($factory, $options),
-                                                                                                                   $this->menuMyPedigree($factory, $options),
-                                                                                                                   $this->menuMyAccount($factory, $options),
-                                                                                                                   $this->menuControlPanel($factory, $options),
-                                                                                                               )));
+        if ($this->getAuth()->isLoggedIn()) {
+            $menu = $this->createMenuUri($factory, $options, 'My pages', '#', 'menu-mymenu');
+            $menu->addChild($this->menuMyPage($factory, $options));
+            $menu->addChild($this->menuMyIndividualRecord($factory, $options));
+            $menu->addChild($this->menuMyPedigree($factory, $options));
+            $menu->addChild($this->menuMyAccount($factory, $options));
+            $menu->addChild($this->menuControlPanel($factory, $options));
+
+            return $menu;
         } else {
             return null;
         }
@@ -790,8 +775,8 @@ class Builder extends ContainerAware
      */
     protected function menuMyPedigree(FactoryInterface $factory, array $options)
     {
-        $showFull   = $this->tree->getPreference('PEDIGREE_FULL_DETAILS') ? 1 : 0;
-        $showLayout = $this->tree->getPreference('PEDIGREE_LAYOUT') ? 1 : 0;
+        $showFull   = $this->getCurrentTree()->getPreference('PEDIGREE_FULL_DETAILS') ? 1 : 0;
+        $showLayout = $this->getCurrentTree()->getPreference('PEDIGREE_LAYOUT') ? 1 : 0;
 
         if (WT_USER_GEDCOM_ID) {
             return $this->createMenuUri($factory, $options, 'My pedigree',
@@ -815,7 +800,7 @@ class Builder extends ContainerAware
     {
         if ($this->pendingChangesExist()) {
             $menu = $this->createMenuUri($factory, $options, 'Pending changes', '#', 'menu-pending');
-            $menu->setOnclick('window.open(\'edit_changes.php\', \'_blank\', chan_window_specs); return false;');
+            $menu->setAttribute('onClick', 'window.open(\'edit_changes.php\', \'_blank\', chan_window_specs); return false;');
 
             return $menu;
         } else {
@@ -875,7 +860,7 @@ class Builder extends ContainerAware
         $menu->addChild($submenu);
         //-- search_soundex sub menu
         $submenu = $this->createMenuUri($factory, $options,
-            'Phonetic search', 'search.php?' . $this->tree_url . '&amp;action=soundex', 'menu-search-soundex');
+                                        'Phonetic search', 'search.php?' . $this->tree_url . '&amp;action=soundex', 'menu-search-soundex');
         $menu->addChild($submenu);
         //-- advanced search
         $submenu = $this->createMenuUri($factory, $options, 'Advanced search', 'search_advanced.php?' . $this->tree_url, 'menu-search-advanced');
@@ -887,35 +872,6 @@ class Builder extends ContainerAware
         }
 
         return $menu;
-    }
-
-    /**
-     * Themes menu.
-     *
-     * @param \Knp\Menu\FactoryInterface $factory
-     * @param array                      $options
-     *
-     * @return \Knp\Menu\ItemInterface
-     */
-    public function menuThemes(FactoryInterface $factory, array $options)
-    {
-        if ($this->tree && !$this->isSearchEngine() && Site::getPreference('ALLOW_USER_THEMES') && $this->tree->getPreference('ALLOW_THEME_DROPDOWN')) {
-            $submenus = array();
-            $menu     = $this->createMenuUri($factory, $options, 'Theme', '#', 'menu-theme');
-            foreach (Theme::installedThemes() as $theme) {
-                $submenu = $this->createMenuUri($factory, $options, $theme->themeName(), Functions::i()
-                                                                                                  ->get_query_url(array('theme' => $theme->themeId()), '&amp;'), 'menu-theme-' . $theme->themeId());
-                if ($theme === $this) {
-                    $submenu->addClass('', '', 'active');
-                }
-                $menu->addChild($submenu);
-            }
-
-
-            return $menu;
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -984,10 +940,46 @@ class Builder extends ContainerAware
      */
     protected function createMenuUri(FactoryInterface $factory, array $options, $name, $uri, $id = null)
     {
-        return $factory->createItem($name, [
-            'uri' => $uri,
-            ['attributes' => ['id' => $id]]
-        ]);
+        $opts = array_merge(
+            [
+                'uri' => $uri,
+                ['attributes' => ['id' => $id]]
+            ],
+            $options
+        );
+        return $factory->createItem($name, $opts);
     }
 
+    protected function createMenuRoute(FactoryInterface $factory, array $options, $name, $route, $id = null)
+    {
+        $opts = array_merge(
+            [
+                'route' => $route,
+                ['attributes' => ['id' => $id]]
+            ],
+            $options
+        );
+        return $factory->createItem($name, $opts);
+    }
+
+    private function pendingChangesExist()
+    {
+        return true;
+    }
+
+    /**
+     * @return \FamGeneTree\AppBundle\Service\Auth
+     */
+    protected function getAuth()
+    {
+        return $this->container->get('fgt.auth');
+    }
+
+    /**
+     * @return \Webtrees\LegacyBundle\Legacy\Tree
+     */
+    protected function getCurrentTree()
+    {
+        return Application::i()->getTree();
+    }
 }

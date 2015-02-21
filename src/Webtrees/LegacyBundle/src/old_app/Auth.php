@@ -25,6 +25,8 @@ use Zend_Session;
  */
 class Auth
 {
+    protected static $authService = null;
+
     /**
      * Are we currently logged in?
      *
@@ -32,7 +34,7 @@ class Auth
      */
     public static function check()
     {
-        return Auth::id() !== null;
+        return self::getAuthService()->isLoggedIn();
     }
 
     /**
@@ -44,11 +46,12 @@ class Auth
      */
     public static function isAdmin(User $user = null)
     {
-        if ($user === null) {
-            $user = self::user();
-        }
-
-        return $user && $user->getPreference('canadmin') === '1';
+//        if ($user === null) {
+//            $user = self::user();
+//        }
+//
+//        return $user && $user->getPreference('canadmin') === '1';
+        return self::getAuthService()->isAdmin($user);
     }
 
     /**
@@ -188,4 +191,16 @@ class Auth
         Zend_Session::regenerateId();
         Zend_Session::destroy();
     }
+
+    /**
+     * @return \FamGeneTree\AppBundle\Service\Auth
+     */
+    protected static function getAuthService()
+    {
+        if (null === self::$authService) {
+            self::$authService = Application::i()->getAuthService();
+        }
+        return self::$authService;
+    }
+
 }

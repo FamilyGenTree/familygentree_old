@@ -3,9 +3,9 @@ fam_gene_tree_app_homepage:
     defaults: { _controller: FamGeneTreeAppBundle:Default:index }
 
 _fgt_login:
-    path:   /auth/login
+    path:   /login
     defaults: { _controller: FamGeneTreeAppBundle:Auth:login }
 
 _fgt_logout:
-    path:   /auth/logout
+    path:   /logout
     defaults: { _controller: FamGeneTreeAppBundle:Auth:logout }

@@ -8,31 +8,20 @@
 namespace FamGeneTree\AppBundle\Service;
 
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use FamGeneTree\AppBundle\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Auth implements ContainerAwareInterface
+class Auth extends ContainerAware
 {
     const ALGORITHM_BCRYPT_NEW = 'bcrypt_12';
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container = null;
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $diContainer)
     {
-        // TODO: Implement setContainer() method.
+        $this->setContainer($diContainer);
     }
 
-    public function login($username, $password, $salt) {
+        public function login($username, $password, $salt) {
 
     }
 
@@ -52,6 +41,20 @@ class Auth implements ContainerAwareInterface
     protected function get($string)
     {
         return $this->container->get($string);
+    }
+
+    /**
+     * @param User|\Webtrees\LegacyBundle\Legacy\User $user
+     */
+    public function isAdmin($user)
+    {
+        if ($user instanceof \Webtrees\LegacyBundle\Legacy\User) {
+
+        } elseif ($user instanceof User) {
+
+        } else {
+
+        }
     }
 
 

@@ -20,3 +20,7 @@ services:
   fgt.session:
     class: FamGeneTree\AppBundle\Service\Session
     arguments: [@service_container]
+
+  fgt.auth:
+    class: FamGeneTree\AppBundle\Service\Auth
+    arguments: [@service_container]

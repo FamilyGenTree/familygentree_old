@@ -203,4 +203,9 @@ class Application
         return Globals::i()->WT_TREE;
     }
 
+    public function getAuthService()
+    {
+        return $this->diContainer->get('fgt.auth');
+    }
+
 }
