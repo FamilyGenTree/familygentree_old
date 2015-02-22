@@ -34,8 +34,15 @@ function setup_vagrant() {
     log INFO "You should run now 'vagrant up' or 'vagrant provision' now... "
 }
 
+function set_file_permissions() {
+	sudo chgrp 33 .
+	sudo chgrp -R 33 ./*
+}
+
 if [[ ! -f tools/vagrant/LICENSE ]]; then
     checkout_submodule
 fi
 
 setup_vagrant
+set_file_permissions
+

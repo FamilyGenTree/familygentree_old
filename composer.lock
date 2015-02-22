@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "95483ee79074c7e129244415b6c358df",
+    "hash": "4682e43ebafbd36824d283202934bdb6",
     "packages": [
         {
             "name": "bombayworks/zendframework1",
@@ -1122,7 +1122,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "Knplabs",
+                    "name": "KnpLabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
