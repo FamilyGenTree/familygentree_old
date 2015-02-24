@@ -28,42 +28,14 @@ if (strpos(ini_get('disable_functions'), 'ini_set') === false) {
     ini_set('display_errors', 'on');
 }
 
-define('WT_SCRIPT_NAME', UrlConstants::SETUP_PHP);
-define('WT_CONFIG_FILE', 'config.ini.php');
 
-define('WT_WEBTREES', 'webtrees');
-define('WT_REQUIRED_MYSQL_VERSION', '5.0.13');
-define('WT_REQUIRED_PHP_VERSION', '5.3.2');
-define('WT_MODULES_DIR', 'modules_v3/');
-define('WT_GED_ID', null);
-define('WT_PRIV_PUBLIC', 2);
-define('WT_PRIV_USER', 1);
-define('WT_PRIV_NONE', 0);
-define('WT_PRIV_HIDE', -1);
+//Globals::i()->WT_REQUEST          = new \Zend_Controller_Request_Http;
+//Application::i()->getSession()          = new \stdClass;
+//Application::i()->getSession()->locale  = null; // Needed for I18N
+//Application::i()->getSession()->wt_user = null; // Needed for Auth
+//define('WT_LOCALE', I18N::init(Filter::post('lang', '[@a-zA-Z_]+')));
 
-if (file_exists(Config::get(Config::get(Config::CONFIG_PATH)))) {
-    header('Location: ' . UrlConstants::url(UrlConstants::INDEX_PHP));
-
-    return;
-}
-
-if (version_compare(PHP_VERSION, WT_REQUIRED_PHP_VERSION) < 0) {
-    // We cannot translate these messages without a modern PHP
-    echo
-    '<h1>Sorry, the setup wizard cannot start.</h1>',
-    '<p>This server is running PHP version ', PHP_VERSION, '</p>',
-    '<p>PHP ', WT_REQUIRED_PHP_VERSION, ' (or any later version) is required</p>';
-
-    return;
-}
-
-Globals::i()->WT_REQUEST          = new \Zend_Controller_Request_Http;
-Application::i()->getSession()          = new \stdClass;
-Application::i()->getSession()->locale  = null; // Needed for I18N
-Application::i()->getSession()->wt_user = null; // Needed for Auth
-define('WT_LOCALE', I18N::init(Filter::post('lang', '[@a-zA-Z_]+')));
-
-header('Content-Type: text/html; charset=UTF-8');
+//header('Content-Type: text/html; charset=UTF-8');
 
 ?>
     <!DOCTYPE html>

@@ -106,7 +106,7 @@ class AbstractSymfonyConnectorController
      */
     protected function getConfig()
     {
-        return $this->diContainer->get('fam_gene_tree_app.configuration');
+        return $this->diContainer->get('fgt.configuration');
     }
 
     /**

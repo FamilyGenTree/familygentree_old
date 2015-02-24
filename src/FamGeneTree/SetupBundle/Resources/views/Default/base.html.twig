@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        {% endblock %}
+        {{ system.name }} Setup Wizard
+    </title>
+
+    {% stylesheets '@bootstrap_css' filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% javascripts '@bootstrap_js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+    {#<!-- Latest compiled and minified CSS -->#}
+    {#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">#}
+
+    {#<!-- Optional theme -->#}
+    {#<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">#}
+
+    {#<!-- Latest compiled and minified JavaScript -->#}
+    {#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>#}
+
+    <style type="text/css">
+        body {
+            color: black;
+            background-color: white;
+            font: 14px tahoma, arial, helvetica, sans-serif;
+            padding: 10px;
+        }
+
+        a {
+            color: black;
+            font-weight: normal;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #81A9CB;
+        }
+
+        h1 {
+            color: #81A9CB;
+            font-weight: normal;
+        }
+
+        legend {
+            color: #81A9CB;
+            font-style: italic;
+            font-weight: bold;
+            padding: 0 5px 5px;
+        }
+
+        .good {
+            color: green;
+        }
+
+        .bad {
+            color: red;
+            font-weight: bold;
+        }
+
+        .info {
+            color: blue;
+        }
+
+        table.setup {
+            width: 60%;
+        }
+        table.setup td.col-state {
+            width: 10%;
+        }
+        table.setup th.col-name {
+            width: 30%;
+        }
+        table.setup td.col-message {
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ system.name }} Setup Wizard</h1>
+<h2>{{ name }}</h2>
+
+{% block introduction %}
+{% endblock %}
+
+{{ form_start(form) }}
+
+{% block content %}
+{% endblock %}
+
+<div class="center">
+<footer class="center" id="">
+    {% if back_button == true %}
+    <button id="action_previous" name="action_previous" class="btn btn-lg btn-default {{ back_button }}" type="submit"><< Back</button>
+    {% endif %}
+    <button id="action_continue" name="action_continue" class="btn btn-lg btn-success {{ continue_button }}" type="submit">Continue >></button>
+</footer>
+</div>
+{{ form_end(form) }}
+
+</body>
+</html>
+

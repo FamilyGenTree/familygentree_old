@@ -3,13 +3,13 @@ services:
 #        class: FamGeneTree\AppBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
 
-  fam_gene_tree_app.configuration.factory:
+  fgt.configuration.factory:
     class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
     arguments: [@service_container]
 
-  fam_gene_tree_app.configuration:
+  fgt.configuration:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
-    factory: ["@fam_gene_tree_app.configuration.factory", load]
+    factory: ["@fgt.configuration.factory", load]
 
   fgt.tblprefix_subscriber:
     class: FamGeneTree\AppBundle\Subscriber\TablePrefixSubscriber

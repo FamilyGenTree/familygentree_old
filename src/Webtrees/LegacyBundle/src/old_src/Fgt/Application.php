@@ -76,7 +76,7 @@ class Application
     public function getConfig()
     {
         if (null === $this->configObject) {
-            $this->configObject = $this->diContainer->get('fam_gene_tree_app.configuration');
+            $this->configObject = $this->diContainer->get('fgt.configuration');
         }
 
         return $this->configObject;

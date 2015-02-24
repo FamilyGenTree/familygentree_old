@@ -2,3 +2,10 @@ services:
 #    fam_gene_tree_setup.example:
 #        class: FamGeneTree\SetupBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+  fgt.configuration.setup:
+    class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
+    factory: ["@fgt.configuration.factory", loadSetupConfig]
+
+  fgt.setup.prerequirementsfactory:
+    class: FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementsFactory
+    arguments: [@service_container]

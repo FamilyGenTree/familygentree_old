@@ -9,4 +9,4 @@ services:
 
   webtrees.theme:
     class: Webtrees\LegacyBundle\Context\Application\Service\Theme
-    arguments: [ "@fam_gene_tree_app.configuration" ]
+    arguments: [ "@fgt.configuration" ]

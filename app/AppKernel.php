@@ -16,17 +16,17 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle()
+            new FOS\UserBundle\FOSUserBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new FamGeneTree\AppBundle\FamGeneTreeAppBundle(),
+            new Webtrees\LegacyBundle\WebtreesLegacyBundle(),
+            new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle(),
+            new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle()
         );
 
-        if ($this->isSetup()) {
-            $bundles[] = new FOS\UserBundle\FOSUserBundle();
-            $bundles[] = new Knp\Bundle\MenuBundle\KnpMenuBundle();
-            $bundles[] = new Webtrees\LegacyBundle\WebtreesLegacyBundle();
-            $bundles[] = new FamGeneTree\AppBundle\FamGeneTreeAppBundle();
-            $bundles[] = new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle();
-            $bundles[] = new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle();
+        if (false === $this->isSetupMode()) {
         } else {
+            $bundles[] = new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle();
         }
 
 
@@ -48,11 +48,23 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+        if ($this->isSetupMode()) {
+            $loader->load(__DIR__ . '/config/config_setup.yml');
+        } else {
+            $loader->load(__DIR__ . '/config/config_' . $this->getEnvironment() . '.yml');
+        }
     }
 
-    protected function isSetup()
+    protected function isSetupMode()
     {
-        return file_exists(__DIR__ . '/config/parameters.yml');
+        if (!file_exists(__DIR__ . '/config/parameters.yml')) {
+            return true;
+        }
+
+        if (strpos(file_get_contents(__DIR__ . '/config/parameters.yml'), 'ThisTokenIsNotSoSecretChangeIt') !== false) {
+            return true;
+        }
+
+        return false;
     }
 }

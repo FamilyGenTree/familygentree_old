@@ -1,3 +1,11 @@
-fam_gene_tree_setup_homepage:
+fgt_setup_root:
     path:     /
     defaults: { _controller: FamGeneTreeSetupBundle:Default:index }
+
+fgt_setup_restart:
+  path:   /restart
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:restart }
+
+fgt_setup_step1:
+  path: /step1
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:checkPreRequirements }
