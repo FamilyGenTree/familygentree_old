@@ -57,6 +57,9 @@ class AppKernel extends Kernel
 
     protected function isSetupMode()
     {
+        if ($this->getEnvironment() === 'test') {
+            return false;
+        }
         if (!file_exists(__DIR__ . '/config/parameters.yml')) {
             return true;
         }
