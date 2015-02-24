@@ -15,7 +15,7 @@ class CheckFilesystem extends CheckAbstract
 
     function __construct(ContainerInterface $container)
     {
-        parent::__construct($container, 'filesystem', 'Description');
+        parent::__construct($container, 'File System', 'Description');
     }
 
     /**
@@ -23,12 +23,22 @@ class CheckFilesystem extends CheckAbstract
      */
     public function run()
     {
+
+        //@file_put_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt', 'FAB!');
+        //$FAB = @file_get_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
+        //@unlink(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
+        //
+        //if ($FAB != 'FAB!') {
+
         foreach ($this->getPathsToCheck() as $pathToWrite => $accessRules) {
             $state   = PreRequirementResult::STATE_FAILED;
             $message = $accessRules['error-message'];
-            switch ($accessRules['write']) {
-                case 'maybe':
+            $access  = 'Read only';
+            switch ($accessRules['access']) {
+                case 'rw?':
+                    $access = 'Read/Maybe Write';
                     if (is_writable($pathToWrite)) {
+
                         $state   = PreRequirementResult::STATE_SUCCESS;
                         $message = null;
                     } elseif (is_readable($pathToWrite)) {
@@ -36,8 +46,18 @@ class CheckFilesystem extends CheckAbstract
                         $message = $accessRules['warning-message'];
                     }
                     break;
-                case true:
+                case 'w':
+                case 'rw':
+                    $access = 'Read+Write';
                     if (is_writeable($pathToWrite)) {
+                        $state   = PreRequirementResult::STATE_SUCCESS;
+                        $message = null;
+                    }
+                    break;
+                case 'r':
+                default:
+                    $access = 'Read only';
+                    if (is_readable($pathToWrite)) {
                         $state   = PreRequirementResult::STATE_SUCCESS;
                         $message = null;
                     }
@@ -45,7 +65,7 @@ class CheckFilesystem extends CheckAbstract
             }
             $this->addResult(
                 new PreRequirementResult(
-                    $pathToWrite,
+                    "{$pathToWrite} ({$access})",
                     $state,
                     $message
                 )
@@ -59,13 +79,13 @@ class CheckFilesystem extends CheckAbstract
         $rootDir = $this->container->get('kernel')->getRootDir();
 
         return array(
-            $this->container->get('kernel')->getCacheDir()          => array(
-                'write'         => true,
+            $this->container->get('kernel')->getCacheDir()           => array(
+                'access'        => 'rw',
                 'sub-dirs'      => 'write',
                 'error-message' => 'Cache directory and its children must be writable by webserver user ',
             ),
             $rootDir . DIRECTORY_SEPARATOR . 'config/parameters.yml' => array(
-                'write'           => 'maybe',
+                'access'          => 'rw?',
                 'sub-dirs'        => 'write',
                 'error-message'   => 'For setting ',
                 'warning-message' => 'Warning'

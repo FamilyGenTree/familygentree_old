@@ -9,3 +9,7 @@ fgt_setup_restart:
 fgt_setup_step1:
   path: /step1
   defaults: { _controller: FamGeneTreeSetupBundle:Default:checkPreRequirements }
+
+fgt_setup_step2:
+  path: /step2
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:getDatabaseSetting }

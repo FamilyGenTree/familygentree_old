@@ -7,7 +7,6 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck;
 
-
 use FamGeneTree\SetupBundle\Context\Setup\ValueObject\PreRequirementResult;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,7 +54,7 @@ abstract class CheckAbstract extends ContainerAware implements CheckInterface
         $passed = true;
         /** @var PreRequirementResult $result */
         foreach ($this->getResults() as $result) {
-            $passed = $passed && $result->isSuccess();
+            $passed = $passed && ($result->isSuccess() || $result->isWarning());
         }
 
         return $passed;

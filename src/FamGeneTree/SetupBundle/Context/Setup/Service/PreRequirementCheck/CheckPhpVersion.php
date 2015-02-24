@@ -17,7 +17,7 @@ class CheckPhpVersion extends CheckAbstract implements CheckInterface
 
     function __construct(ContainerInterface $container)
     {
-        parent::__construct($container, 'php-version', 'Description');
+        parent::__construct($container, 'PHP Version', 'Description');
     }
 
     public function run()

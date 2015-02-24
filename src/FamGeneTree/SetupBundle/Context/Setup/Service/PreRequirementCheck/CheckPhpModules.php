@@ -7,7 +7,6 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck;
 
-
 use FamGeneTree\SetupBundle\Context\Setup\ValueObject\PreRequirementResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,15 +14,24 @@ class CheckPhpModules extends CheckAbstract
 {
 
     protected static $REQUIRED_MODULES = array(
-        'intl',
-        'mysql'
+        'intl'      => 'Missing, please install',
+        'pcre'      => 'Missing, please install',
+        'pdo'       => 'Missing, please install',
+        'pdo_mysql' => 'Missing, please install',
+        'session'   => 'Missing, please install',
+        'iconv'     => 'Missing, please install'
     );
 
-    protected static $RECOMMENDED_MODULES = array();
+    protected static $RECOMMENDED_MODULES = array(
+        'gd'        => 'Recommended for creating thumbnails of images',
+        'xml'       => 'Recommended for reporting',
+        'simplexml' => 'Recommended for reporting',
+
+    );
 
     function __construct(ContainerInterface $container)
     {
-        parent::__construct($container,'php-modules', 'Description');
+        parent::__construct($container, 'Needed PHP Modules', 'Description');
     }
 
     /**
@@ -31,14 +39,14 @@ class CheckPhpModules extends CheckAbstract
      */
     public function run()
     {
-        foreach (static::$REQUIRED_MODULES as $moduleName) {
-            $resultName = "PHP Module {$moduleName}";
+        foreach (static::$REQUIRED_MODULES as $moduleName => $message) {
+            $resultName = "PHP Module '{$moduleName}'";
             $result     = null;
             if (false === extension_loaded($moduleName)) {
                 $result = new PreRequirementResult(
                     $resultName,
                     PreRequirementResult::STATE_FAILED,
-                    'Missing'
+                    $message
                 );
             } else {
                 $result = new PreRequirementResult(
@@ -49,14 +57,14 @@ class CheckPhpModules extends CheckAbstract
             $this->addResult($result);
         }
 
-        foreach (static::$RECOMMENDED_MODULES as $moduleName) {
-            $resultName = "PHP Module {$moduleName}";
+        foreach (static::$RECOMMENDED_MODULES as $moduleName => $message) {
+            $resultName = "PHP Module '{$moduleName}'";
             $result     = null;
             if (false === extension_loaded($moduleName)) {
                 $result = new PreRequirementResult(
                     $resultName,
                     PreRequirementResult::STATE_WARNING,
-                    'Should be installed'
+                    $message
                 );
             } else {
                 $result = new PreRequirementResult(
@@ -67,5 +75,4 @@ class CheckPhpModules extends CheckAbstract
             $this->addResult($result);
         }
     }
-
 }

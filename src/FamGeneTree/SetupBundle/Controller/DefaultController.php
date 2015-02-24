@@ -68,11 +68,19 @@ class DefaultController extends Controller
 
     /**
      * Step 1: check pre requirements
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function checkPreRequirementsAction()
+    public function checkPreRequirementsAction(Request $request)
     {
-        if (strpos(ini_get('disable_functions'), 'ini_set') === false) {
-            ini_set('display_errors', 'on');
+        //var_dump($request);die;
+        if ($request->request->has('action_continue')) {
+            return $this->redirect($this->generateUrl('fgt_setup_step2'));
+        }
+        if ($request->request->has('action_previous')) {
+            return $this->redirect($this->generateUrl('fgt_setup_root'));
         }
 
         /** @var PreRequirementsFactory $servicePreRequirements */
@@ -106,134 +114,12 @@ class DefaultController extends Controller
     }
 
     /**
-     * Step one - choose language and confirm server configuration
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function step1Action()
+    public function getDatabaseSettingAction(Request $request)
     {
-        if (!isset($_POST['lang'])) {
-
-            echo
-
-            FunctionsEdit::i()
-                         ->edit_field_language('change_lang', WT_LOCALE, 'onchange="window.location=\'' . WT_SCRIPT_NAME . '?lang=\'+this.value;">'),
-            '</p>',
-            '<h2>', I18N::translate('Checking server configuration'), '</h2>';
-            $warnings = false;
-            $errors   = false;
-
-            // Mandatory functions
-            $disable_functions = preg_split('/ *, */', ini_get('disable_functions'));
-            foreach (array('parse_ini_file') as $function) {
-                if (in_array($function, $disable_functions)) {
-                    echo '<p class="bad">', /* I18N: %s is a PHP function/module/setting */
-                    I18N::translate('%s is disabled on this server.  You cannot install webtrees until it is enabled.  Please ask your server’s administrator to enable it.', $function . '()'), '</p>';
-                    $errors = true;
-                }
-            }
-            // Mandatory extensions
-            foreach (array(
-                         'pcre',
-                         'pdo',
-                         'pdo_mysql',
-                         'session',
-                         'iconv'
-                     ) as $extension) {
-                if (!extension_loaded($extension)) {
-                    echo '<p class="bad">', I18N::translate('PHP extension “%s” is disabled.  You cannot install webtrees until this is enabled.  Please ask your server’s administrator to enable it.', $extension), '</p>';
-                    $errors = true;
-                }
-            }
-            // Recommended extensions
-            foreach (array(
-                         'gd'        => /* I18N: a program feature */
-                             I18N::translate('creating thumbnails of images'),
-                         'xml'       => /* I18N: a program feature */
-                             I18N::translate('reporting'),
-                         'simplexml' => /* I18N: a program feature */
-                             I18N::translate('reporting'),
-                     ) as $extension => $features) {
-                if (!extension_loaded($extension)) {
-                    echo '<p class="bad">', I18N::translate('PHP extension “%1$s” is disabled.  Without it, the following features will not work: %2$s.  Please ask your server’s administrator to enable it.', $extension, $features), '</p>';
-                    $warnings = true;
-                }
-            }
-            // Settings
-            foreach (array(
-                         'file_uploads' =>/* I18N: a program feature */
-                             I18N::translate('file upload capability'),
-                     ) as $setting => $features) {
-                if (!ini_get($setting)) {
-                    echo '<p class="bad">', I18N::translate('PHP setting “%1$s” is disabled.  Without it, the following features will not work: %2$s.  Please ask your server’s administrator to enable it.', $setting, $features), '</p>';
-                    $warnings = true;
-                }
-            }
-            if (!$warnings && !$errors) {
-                echo '<p class="good">', I18N::translate('The server configuration is OK.'), '</p>';
-            }
-            echo '<h2>', I18N::translate('Checking server capacity'), '</h2>';
-            // Previously, we tried to determine the maximum value that we could set for these values.
-            // However, this is unreliable, especially on servers with custom restrictions.
-            // Now, we just show the default values.  These can (hopefully!) be changed using the
-            // site settings page.
-            $memory_limit = ini_get('memory_limit');
-            if (substr_compare($memory_limit, 'M', -1) === 0) {
-                $memory_limit = substr($memory_limit, 0, -1);
-            } elseif (substr_compare($memory_limit, 'K', -1) === 0) {
-                $memory_limit = substr($memory_limit, 0, -1) / 1024;
-            } elseif (substr_compare($memory_limit, 'G', -1) === 0) {
-                $memory_limit = substr($memory_limit, 0, -1) * 1024;
-            }
-            $max_execution_time = ini_get('max_execution_time');
-            echo
-            '<p>',
-            I18N::translate('The memory and CPU time requirements depend on the number of individuals in your family tree.'),
-            '<br>',
-            I18N::translate('The following list shows typical requirements.'),
-            '</p><p>',
-            I18N::translate('Small systems (500 individuals): 16–32 MB, 10–20 seconds'),
-            '<br>',
-            I18N::translate('Medium systems (5,000 individuals): 32–64 MB, 20–40 seconds'),
-            '<br>',
-            I18N::translate('Large systems (50,000 individuals): 64–128 MB, 40–80 seconds'),
-            '</p>',
-            ($memory_limit < 32 || $max_execution_time > 0 && $max_execution_time < 20) ? '<p class="bad">'
-                : '<p class="good">',
-            I18N::translate('This server’s memory limit is %d MB and its CPU time limit is %d seconds.', $memory_limit, $max_execution_time),
-            '</p><p>',
-            I18N::translate('If you try to exceed these limits, you may experience server time-outs and blank pages.'),
-            '</p><p>',
-            I18N::translate('If your server’s security policy permits it, you will be able to request increased memory or CPU time using the webtrees administration page.  Otherwise, you will need to contact your server’s administrator.'),
-            '</p>';
-            if (!$errors) {
-                echo '<br><hr><input type="submit" id="btncontinue" value="', /* I18N: button label */
-                I18N::translate('continue'), '">';
-            }
-            echo '</form></body></html>';
-
-            return;
-        }
-    }
-
-    public function step2()
-    {
-        ////////////////////////////////////////////////////////////////////////////////
-// Step two - The data folder needs to be writable
-////////////////////////////////////////////////////////////////////////////////
-
-        @file_put_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt', 'FAB!');
-        $FAB = @file_get_contents(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
-        @unlink(Config::get(Config::DATA_DIRECTORY) . 'test.txt');
-
-        if ($FAB != 'FAB!') {
-            echo '<h2>', realpath(Config::get(Config::DATA_DIRECTORY)), '</h2>';
-            echo '<p class="bad">', I18N::translate('Oops!  webtrees was unable to create files in this folder.'), '</p>';
-            echo '<p>', I18N::translate('This usually means that you need to change the folder permissions to 777.'), '</p>';
-            echo '<p>', I18N::translate('You must change this before you can continue.'), '</p>';
-            echo '<br><hr><input type="submit" id="btncontinue" value="', I18N::translate('continue'), '">';
-            echo '</form></body></html>';
-
-            return;
-        }
     }
 
     public function step3()

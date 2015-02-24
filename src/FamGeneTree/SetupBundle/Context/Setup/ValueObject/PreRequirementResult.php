@@ -18,6 +18,7 @@ class PreRequirementResult
     const STATE_SUCCESS = 'success';
     const STATE_FAILED  = 'failed';
     const STATE_WARNING = 'warning';
+    const STATE_OK      = 'OK';
 
     protected $state;
     protected $name;
@@ -40,7 +41,12 @@ class PreRequirementResult
 
     public function isSuccess()
     {
-        return $this->state === static::STATE_SUCCESS;
+        return $this->state === static::STATE_SUCCESS || $this->state === static::STATE_OK;
+    }
+
+    public function isWarning()
+    {
+        return $this->state === static::STATE_WARNING;
     }
 
     /**

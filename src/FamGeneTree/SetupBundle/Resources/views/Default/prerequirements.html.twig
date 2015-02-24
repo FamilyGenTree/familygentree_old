@@ -7,15 +7,15 @@
 
     {% for result in results %}
         <h3>{{ result.name | trans }}</h3>
-        {{ result.description | trans }}
-
+        <div>{{ result.description | trans | nl2br }}</div>
+        <br/>
         <table class="table setup">
             <tbody>
             {% for details in result.results %}
                 <tr>
                     <th class="col-name">{{ details.name }}</th>
-                    <td class="col-state">{% if details.state == 'success' %}
-                        <span class="label label-success">{{ details.state }}</span>
+                    <td class="col-state">{% if details.state == 'success' or details.state == 'OK' %}
+                            <span class="label label-success">{{ details.state }}</span>
                         {% elseif details.state == 'warning' %}
                             <span class="label label-warning">{{ details.state }}</span>
                         {% else %}

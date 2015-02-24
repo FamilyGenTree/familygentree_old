@@ -8,7 +8,9 @@
 namespace FamGeneTree\SetupBundle\Context\Setup\Service;
 
 use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckDatabase;
+use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpDisabledFunctions;
 use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckFilesystem;
+use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpIniSettings;
 use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpModules;
 use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpVersion;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -33,8 +35,10 @@ class PreRequirementsFactory extends ContainerAware
         return array(
             new CheckPhpVersion($this->container),
             new CheckPhpModules($this->container),
-            new CheckDatabase($this->container),
-            new CheckFilesystem($this->container)
+            new CheckPhpDisabledFunctions($this->container),
+            //new CheckDatabase($this->container),
+            new CheckPhpIniSettings($this->container),
+            new CheckFilesystem($this->container),
         );
     }
 
