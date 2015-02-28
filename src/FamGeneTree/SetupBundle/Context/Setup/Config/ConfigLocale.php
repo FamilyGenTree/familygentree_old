@@ -7,7 +7,7 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
-
-class Step1 {
+class ConfigLocale extends ConfigAbstract
+{
 
 }

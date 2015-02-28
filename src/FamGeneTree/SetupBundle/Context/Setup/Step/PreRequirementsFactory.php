@@ -5,30 +5,23 @@
  * Copyright (c) 2015 WorkingDevelopers.NET
  */
 
-namespace FamGeneTree\SetupBundle\Context\Setup\Service;
+namespace FamGeneTree\SetupBundle\Context\Setup\Step;
 
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckDatabase;
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpDisabledFunctions;
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckFilesystem;
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpIniSettings;
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpModules;
-use FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck\CheckPhpVersion;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use FamGeneTree\SetupBundle\Context\Setup\Config\ConfigAbstract;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\CheckFilesystem;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\CheckPhpDisabledFunctions;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\CheckPhpIniSettings;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\CheckPhpModules;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\CheckPhpVersion;
 
 /**
  * Class PreRequirementsFactory
  *
- * @package FamGeneTree\SetupBundle\Context\Setup\Service
+ * @package FamGeneTree\SetupBundle\Context\Setup\Step
  * @author  Christoph Graupner <ch.graupner@workingdeveloper.de>
  */
-class PreRequirementsFactory extends ContainerAware
+class PreRequirementsFactory extends StepBase
 {
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
 
     public function getChecks()
     {
@@ -52,5 +45,10 @@ class PreRequirementsFactory extends ContainerAware
         define('WT_PRIV_USER', 1);
         define('WT_PRIV_NONE', 0);
         define('WT_PRIV_HIDE', -1);
+    }
+
+    public function checkConfig(ConfigAbstract $config)
+    {
+        // TODO: Implement checkConfig() method.
     }
 }

@@ -8,6 +8,6 @@
 namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
 
-class Step2 {
+class ConfigAbstract {
 
 }

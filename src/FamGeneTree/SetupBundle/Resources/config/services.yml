@@ -6,6 +6,14 @@ services:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
     factory: ["@fgt.configuration.factory", loadSetupConfig]
 
+  fgt.setup.manager:
+    class: FamGeneTree\SetupBundle\Context\Setup\SetupManager
+    arguments: [@service_container]
+
   fgt.setup.prerequirementsfactory:
-    class: FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementsFactory
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementsFactory
+    arguments: [@service_container]
+
+  fgt.setup.service.step.database:
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSetup
     arguments: [@service_container]

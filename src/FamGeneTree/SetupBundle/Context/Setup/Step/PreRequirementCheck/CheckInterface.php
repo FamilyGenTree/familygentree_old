@@ -5,14 +5,14 @@
  * Copyright (c) 2015 WorkingDevelopers.NET
  */
 
-namespace FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck;
+namespace FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck;
 
-use FamGeneTree\SetupBundle\Context\Setup\ValueObject\PreRequirementResult;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\ValueObject\PreRequirementResult;
 
 /**
  * Interface CheckInterface
  *
- * @package FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck
+ * @package FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck
  */
 interface CheckInterface
 {

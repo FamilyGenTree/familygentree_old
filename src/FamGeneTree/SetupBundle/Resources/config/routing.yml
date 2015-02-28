@@ -2,14 +2,22 @@ fgt_setup_root:
     path:     /
     defaults: { _controller: FamGeneTreeSetupBundle:Default:index }
 
+fgt.setup.step.locale:
+    path:     /step0
+    defaults: { _controller: FamGeneTreeSetupBundle:Default:stepLocale }
+
 fgt_setup_restart:
   path:   /restart
   defaults: { _controller: FamGeneTreeSetupBundle:Default:restart }
 
-fgt_setup_step1:
+fgt.setup.step.pre_requirements:
   path: /step1
   defaults: { _controller: FamGeneTreeSetupBundle:Default:checkPreRequirements }
 
-fgt_setup_step2:
+fgt.setup.step.database:
   path: /step2
   defaults: { _controller: FamGeneTreeSetupBundle:Default:getDatabaseSetting }
+
+fgt.setup.step.finish:
+  path: /finish
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:finished }

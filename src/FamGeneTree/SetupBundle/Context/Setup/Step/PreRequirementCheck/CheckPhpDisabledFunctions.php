@@ -5,10 +5,10 @@
  * Copyright (c) 2015 WorkingDevelopers.NET
  */
 
-namespace FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck;
+namespace FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck;
 
 use FamGeneTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
-use FamGeneTree\SetupBundle\Context\Setup\ValueObject\PreRequirementResult;
+use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\ValueObject\PreRequirementResult;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CheckPhpDisabledFunctions extends CheckAbstract

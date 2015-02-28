@@ -5,7 +5,7 @@
  * Copyright (c) 2015 WorkingDevelopers.NET
  */
 
-namespace FamGeneTree\SetupBundle\Context\Setup\Service\PreRequirementCheck;
+namespace FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck;
 
 
 use Symfony\Component\DependencyInjection\ContainerInterface;

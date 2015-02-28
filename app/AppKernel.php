@@ -24,11 +24,9 @@ class AppKernel extends Kernel
             new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle()
         );
 
-        if (false === $this->isSetupMode()) {
-        } else {
+        if ($this->getEnvironment() == 'test' || true === $this->isSetupMode()) {
             $bundles[] = new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle();
         }
-
 
         if (in_array(
             $this->getEnvironment(),

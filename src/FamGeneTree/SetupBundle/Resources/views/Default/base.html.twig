@@ -87,12 +87,14 @@
 <h1>{{ system.name }} Setup Wizard</h1>
 <h2>{{ name }}</h2>
 
+<div class="introduction">
 {% block introduction %}
 {% endblock %}
+</div>
 
-{{ form_start(form) }}
-
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
 {% block content %}
+    {{ form_widget(form) }}
 {% endblock %}
 
 <div class="spacer"></div>
