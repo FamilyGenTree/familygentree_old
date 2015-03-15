@@ -11,7 +11,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DatabaseConnectionForm extends AbstractType
 {
@@ -29,6 +28,12 @@ class DatabaseConnectionForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('dbSystem', 'choice', array(
+                'choices' => array(
+                    'mysql' => 'MySql',
+                    'pgsql' => 'PostgreSQL'
+                )
+            ))
             ->add('host', 'text', array(
                             'required' => true,
                             'trim'     => true
@@ -57,6 +62,7 @@ class DatabaseConnectionForm extends AbstractType
                               'required' => false,
                               'trim'     => true
                           )
+            )->add('confirmedMigration', 'checkbox'
             );
     }
 

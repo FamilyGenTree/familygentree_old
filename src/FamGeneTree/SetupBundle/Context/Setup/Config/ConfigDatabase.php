@@ -9,12 +9,33 @@ namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
 class ConfigDatabase extends ConfigAbstract
 {
-    protected $host = 'localhost';
-    protected $user = null;
+    const DB_SYSTEM_MYSQL      = 'mysql';
+    const DB_SYSTEM_POSTGRESQL = 'pgsql';
+    protected $dbSystem = self::DB_SYSTEM_MYSQL;
+    protected $host     = 'localhost';
+    protected $user     = null;
     protected $password = null;
-    protected $port = 3306;
-    protected $dbname = null;
-    protected $prefix = 'fgt_';
+    protected $port     = 3306;
+    protected $dbname   = null;
+    protected $prefix   = 'fgt_';
+    protected $confirmedMigration = false;
+
+    /**
+     * @return string
+     */
+    public function getDbSystem()
+    {
+        return $this->dbSystem;
+    }
+
+    /**
+     * @param string $dbSystem
+     */
+    public function setDbSystem($dbSystem)
+    {
+        $this->dbSystem = $dbSystem;
+    }
+
 
     /**
      * @return mixed
@@ -111,4 +132,22 @@ class ConfigDatabase extends ConfigAbstract
     {
         $this->prefix = $prefix;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isConfirmedMigration()
+    {
+        return $this->confirmedMigration;
+    }
+
+    /**
+     * @param boolean $confirmedMigration
+     */
+    public function setConfirmedMigration($confirmedMigration)
+    {
+        $this->confirmedMigration = $confirmedMigration;
+    }
+
+
 }

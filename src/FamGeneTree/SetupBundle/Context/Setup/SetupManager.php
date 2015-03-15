@@ -8,17 +8,25 @@
 namespace FamGeneTree\SetupBundle\Context\Setup;
 
 use FamGeneTree\SetupBundle\Context\Setup\Config\SetupConfig;
-use FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSetup;
+use FamGeneTree\SetupBundle\Context\Setup\Exception\SetUpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class SetupManager
+ *
+ * @package FamGeneTree\SetupBundle\Context\Setup
+ * @author  Christoph Graupner <ch.graupner@workingdeveloper.net>
+ */
 class SetupManager
 {
     protected static $MAIN_STEP_ORDER = array(
-        SetupConfig::STEP_LOCALE               => 'fgt.setup.step.locale',
-        SetupConfig::STEP_PRE_REQUIREMENTS     => 'fgt.setup.step.pre_requirements',
-        SetupConfig::STEP_DATABASE_CREDENTIALS => 'fgt.setup.step.database',
-        SetupConfig::STEP_FINISH               => 'fgt.setup.step.finish'
+        SetupConfig::STEP_LOCALE                  => 'fgt.setup.step.locale',
+        SetupConfig::STEP_PRE_REQUIREMENTS        => 'fgt.setup.step.pre_requirements',
+        SetupConfig::STEP_DATABASE_CREDENTIALS    => 'fgt.setup.step.database',
+        SetupConfig::STEP_DATABASE_RUN_MIGRATIONS => 'fgt.setup.step.database.create',
+        SetupConfig::STEP_FIRST_USER              => 'fgt.setup.step.first_user',
+        SetupConfig::STEP_FINISH                  => 'fgt.setup.step.finish'
     );
 
     protected $stepOrder;
@@ -123,11 +131,21 @@ class SetupManager
     }
 
     /**
-     * @return \FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSetup
+     * @return \FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSettingsStep
      */
     public function getStepDatabase()
     {
         return $this->container->get('fgt.setup.service.step.database');
+    }
+
+    public function getStepAfterMigration()
+    {
+        return SetupConfig::STEP_FINISH;
+    }
+
+    public function writeConfig()
+    {
+        throw new SetUpException();
     }
 
     /**

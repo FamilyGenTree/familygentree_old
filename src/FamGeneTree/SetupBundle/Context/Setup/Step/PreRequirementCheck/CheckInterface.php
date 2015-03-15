@@ -17,7 +17,6 @@ use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementCheck\ValueObject\P
 interface CheckInterface
 {
     /**
-     * @return null
      */
     public function run();
 

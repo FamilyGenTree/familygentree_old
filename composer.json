@@ -60,7 +60,8 @@
     "pclzip/pclzip": "dev-master",
     "tecnick.com/tcpdf": "6.2.*",
     "rhumsaa/uuid": "2.8.*",
-    "phing/phing": "2.9.*"
+    "phing/phing": "2.9.*",
+    "mikey179/vfsStream": "1.4.x-dev"
   },
   "require-dev": {
     "sensio/generator-bundle": "~2.3"

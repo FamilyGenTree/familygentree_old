@@ -11,9 +11,17 @@ services:
     arguments: [@service_container]
 
   fgt.setup.prerequirementsfactory:
-    class: FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementsFactory
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementsStep
     arguments: [@service_container]
 
   fgt.setup.service.step.database:
-    class: FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSetup
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSettingsStep
+    arguments: [@service_container]
+
+  fgt.setup.service.step.database.creation:
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseCreationStep
+    arguments: [@service_container]
+
+  fgt.migrate.service:
+    class: FamGeneTree\SetupBundle\Context\Migration\Service\Migrate
     arguments: [@service_container]

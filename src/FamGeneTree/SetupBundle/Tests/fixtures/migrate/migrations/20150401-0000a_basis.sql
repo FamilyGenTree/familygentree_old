@@ -1,11 +1,3 @@
-CREATE TABLE IF NOT EXISTS `###PREFIX###schema_updates` (
-  id_schema_updates INTEGER(10) UNSIGNED AUTO_INCREMENT NOT NULL,
-  patch_name        VARCHAR(100)                        NOT NULL,
-  created_at        TIMESTAMP                           NOT NULL DEFAULT NOW()
-)
-  COLLATE utf8_unicode_ci
-  ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `###PREFIX###gedcom` (
   gedcom_id   INTEGER AUTO_INCREMENT NOT NULL,
   gedcom_name VARCHAR(255)           NOT NULL,
@@ -405,3 +397,55 @@ CREATE TABLE IF NOT EXISTS `###PREFIX###site_access_rule` (
   ENGINE = InnoDB
   COLLATE = utf8_unicode_ci;
 
+
+INSERT IGNORE INTO `###PREFIX###site_access_rule` (`user_agent_pattern`, `rule`, `comment`) VALUES
+  ('Mozilla/5.0 (%) Gecko/% %/%', 'allow', 'Gecko-based browsers'),
+  ('Mozilla/5.0 (%) AppleWebKit/% (KHTML, like Gecko)%', 'allow', 'WebKit-based browsers'),
+  ('Opera/% (%) Presto/% Version/%', 'allow', 'Presto-based browsers'),
+  ('Mozilla/% (compatible; MSIE %', 'allow', 'Trident-based browsers'),
+  ('Mozilla/% (Windows%; Trident%; rv:%) like Gecko', 'allow', 'Modern Internet Explorer'),
+  ('Mozilla/5.0 (% Konqueror/%', 'allow', 'Konqueror browser');
+
+
+INSERT IGNORE INTO `###PREFIX###site_setting` (setting_name, setting_value) VALUES
+  ('WT_SCHEMA_VERSION', '-2'),
+  ('INDEX_DIRECTORY', 'data/'),
+  ('USE_REGISTRATION_MODULE', '1'),
+  ('REQUIRE_ADMIN_AUTH_REGISTRATION', '1'),
+  ('ALLOW_USER_THEMES', '1'),
+  ('ALLOW_CHANGE_GEDCOM', '1'),
+  ('SESSION_TIME', '7200'),
+  ('SMTP_ACTIVE', 'internal'),
+  ('SMTP_HOST', 'localhost'),
+  ('SMTP_PORT', '25'),
+  ('SMTP_AUTH', '1'),
+  ('SMTP_AUTH_USER', ''),
+  ('SMTP_AUTH_PASS', ''),
+  ('SMTP_SSL', 'none'),
+  ('SMTP_HELO', 'helo'),
+  ('SMTP_FROM_NAME', 'from');
+
+
+INSERT IGNORE INTO `###PREFIX###gedcom` (`gedcom_id`, `gedcom_name`) VALUES (-1, 'DEFAULT_TREE');
+
+-- Create the default settings for new users/family trees
+INSERT INTO `###PREFIX###block` (user_id, location, block_order, module_name)
+VALUES
+  (-1, 'main', 1, 'todays_events'),
+  (-1, 'main', 2, 'user_messages'),
+  (-1, 'main', 3, 'user_favorites'),
+  (-1, 'side', 1, 'user_welcome'),
+  (-1, 'side', 2, 'random_media'),
+  (-1, 'side', 3, 'upcoming_events'),
+  (-1, 'side', 4, 'logged_in');
+
+INSERT INTO `###PREFIX###block` (gedcom_id, location, block_order, module_name)
+VALUES
+  (-1, 'main', 1, 'gedcom_stats'),
+  (-1, 'main', 2, 'gedcom_news'),
+  (-1, 'main', 3, 'gedcom_favorites'),
+  (-1, 'main', 4, 'review_changes'),
+  (-1, 'side', 1, 'gedcom_block'),
+  (-1, 'side', 2, 'random_media'),
+  (-1, 'side', 3, 'todays_events'),
+  (-1, 'side', 4, 'logged_in');

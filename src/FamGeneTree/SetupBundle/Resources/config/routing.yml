@@ -11,12 +11,20 @@ fgt_setup_restart:
   defaults: { _controller: FamGeneTreeSetupBundle:Default:restart }
 
 fgt.setup.step.pre_requirements:
-  path: /step1
+  path: /step/1
   defaults: { _controller: FamGeneTreeSetupBundle:Default:checkPreRequirements }
 
 fgt.setup.step.database:
-  path: /step2
+  path: /step/2
   defaults: { _controller: FamGeneTreeSetupBundle:Default:getDatabaseSetting }
+
+fgt.setup.step.database.create:
+  path: /step/3
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:execDatabaseCreate }
+
+fgt.setup.step.first_user:
+  path: /step/user
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:firstUserSettings }
 
 fgt.setup.step.finish:
   path: /finish

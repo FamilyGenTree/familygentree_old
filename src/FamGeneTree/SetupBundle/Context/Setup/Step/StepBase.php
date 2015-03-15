@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class StepBase extends ContainerAware
 {
     protected $results = [];
+    protected $config  = null;
 
     public function __construct(ContainerInterface $container)
     {
@@ -23,16 +24,47 @@ abstract class StepBase extends ContainerAware
     /**
      * @param \FamGeneTree\SetupBundle\Context\Setup\Config\ConfigAbstract $config
      *
-     * @return StepResultAggregate
+     * @return StepResultAggregate|null
      */
-    abstract public function checkConfig(ConfigAbstract $config);
+    public function checkConfig(ConfigAbstract $config)
+    {
+        return null;
+    }
+
+    abstract public function run();
 
     /**
-     *
+     * @param ConfigAbstract|null $config
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return StepResult[]
      */
     public function getResults()
     {
         return $this->results;
+    }
+
+    public function isSuccess()
+    {
+        $ret = true;
+        foreach ($this->getResults() as $stepResult) {
+            $ret = $ret && $stepResult->isSuccess();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return ConfigAbstract|null
+     */
+    protected function getConfig()
+    {
+        return $this->config;
     }
 
     protected function addResult(StepResult $result)
@@ -40,5 +72,12 @@ abstract class StepBase extends ContainerAware
         $this->results[] = $result;
 
         return $this;
+    }
+
+    protected function createSuccessResultAggregate($name)
+    {
+        return new StepResultAggregate(
+            $name
+        );
     }
 }

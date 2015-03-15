@@ -7,21 +7,21 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
-use FamGeneTree\SetupBundle\Context\Setup\SetupManager;
-
 class SetupConfig
 {
-    const STEP_PRE_REQUIREMENTS     = 1;
-    const STEP_LOCALE               = 0;
-    const STEP_DATABASE_CREDENTIALS = 2;
+    const STEP_PRE_REQUIREMENTS        = 1;
+    const STEP_LOCALE                  = 0;
+    const STEP_DATABASE_CREDENTIALS    = 2;
+    const STEP_DATABASE_RUN_MIGRATIONS = 3;
+    const STEP_FINISH_MIGRATION        = 5;
+    const STEP_FIRST_USER              = 10;
 
+    const STEPSTATE_COMPLETED = 2;
+    const STEPSTATE_STARTED   = 1;
 
-    const STEPSTATE_COMPLETED   = 2;
-    const STEPSTATE_STARTED     = 1;
     const STEPSTATE_NOT_STARTED = 0;
-
-    const STEP_START  = self::STEP_LOCALE;
-    const STEP_FINISH = 10;
+    const STEP_START            = self::STEP_LOCALE;
+    const STEP_FINISH           = 100;
 
     protected $setupLocale    = null;
     protected $completedSteps = array();
