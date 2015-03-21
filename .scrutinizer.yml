@@ -16,6 +16,12 @@ build:
     dependencies:
         before:
             - "sed -i -e 's#git@github.com:#https://github.com/#g' .gitmodules"
+    # Run after dependencies
+    project_setup:
+        before:
+            - 'mysql -e "CREATE DATABASE testdb"'
+            - 'sed -i -e "s/user:\s*testdb/user: root/i" -e "s/password:\s*testdb/password: ~/i" app/config/config_test.yml'
+
 # language: php
 
 checks:
