@@ -22,7 +22,7 @@ build:
             - 'mysql -uroot -e "CREATE DATABASE testdb"'
             - 'sed -i -e "s/user:\s*testdb/user: root/i" -e "s/password:\s*testdb/password: ~/i" app/config/config_test.yml'
     tests:
-       inference:
+       override:
             -
                 command: 'bin/phpunit -c app --coverage-clover=coverage0'
                 coverage: { file: coverage0, format: php-clover }
@@ -31,7 +31,10 @@ build:
         directories:
             - vendor/
             - bin/
-      
+
+#application:
+#    type: symfony2
+
 # language: php
 
 checks:
