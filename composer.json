@@ -64,7 +64,10 @@
     "mikey179/vfsStream": "1.4.x-dev"
   },
   "require-dev": {
-    "sensio/generator-bundle": "~2.3"
+    "sensio/generator-bundle": "~2.3",
+    "phpunit/phpunit": "4.5.*",
+    "phpunit/dbunit": ">=1.2",
+    "phpunit/php-invoker": "*"
   },
   "config": {
     "bin-dir": "bin"
