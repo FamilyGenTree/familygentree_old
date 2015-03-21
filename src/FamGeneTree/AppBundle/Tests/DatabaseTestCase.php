@@ -61,12 +61,15 @@ abstract class DatabaseTestCase extends AppTestCase
 
     protected function getDatabaseSettings()
     {
+
+        $container = $this->getContainer();
+
         return array(
-            'dbname'   => 'testdb',
-            'user'     => 'testdb',
-            'password' => 'testdb',
-            'host'     => 'localhost',
-            'port'     => 3306
+            'dbname'   => $container->getParameter('database_name'),
+            'user'     => $container->getParameter('database_user'),
+            'password' => $container->getParameter('database_password'),
+            'host'     => $container->getParameter('database_host'),
+            'port'     => $container->getParameter('database_port')
         );
     }
 }

@@ -20,7 +20,7 @@ build:
     project_setup:
         before:
             - 'mysql -uroot -e "CREATE DATABASE testdb"'
-            - 'sed -i -e "s/user:\s*testdb/user: root/i" -e "s/password:\s*testdb/password: ~/i" app/config/config_test.yml'
+            - 'sed -i -e "s/database_user:\s*testdb/database_user: root/i" -e "s/database_password:\s*testdb/database_password: ~/i" app/config/config_test.yml'
     tests:
        override:
             -
