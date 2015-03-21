@@ -130,12 +130,22 @@ class SetupManager
         return $this->getSetupConfig()->getConfigDatabase();
     }
 
+    public function getConfigFirstUser()
+    {
+        return $this->getSetupConfig()->getConfigFirstUser();
+    }
+
     /**
      * @return \FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseSettingsStep
      */
-    public function getStepDatabase()
+    public function getStepServiceDatabase()
     {
         return $this->container->get('fgt.setup.service.step.database');
+    }
+
+    public function getStepServiceFirstUser()
+    {
+        return $this->container->get('fgt.setup.service.step.first_user');
     }
 
     public function getStepAfterMigration()

@@ -28,6 +28,8 @@ class SetupConfig
     protected $currentStep    = self::STEP_START;
     /** @var ConfigDatabase */
     protected $configDatabase = null;
+    /** @var ConfigFirstUser */
+    protected $configFirstUser = null;
 
     /**
      * @param $locale
@@ -86,5 +88,17 @@ class SetupConfig
         }
 
         return $this->configDatabase;
+    }
+
+    /**
+     * @return \FamGeneTree\SetupBundle\Context\Setup\Config\ConfigFirstUser
+     */
+    public function getConfigFirstUser()
+    {
+        if (null === $this->configFirstUser) {
+            $this->configFirstUser = new ConfigFirstUser();
+        }
+
+        return $this->configFirstUser;
     }
 }

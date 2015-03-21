@@ -114,7 +114,7 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $dbStep      = $manager->getStepDatabase();
+            $dbStep      = $manager->getStepServiceDatabase();
             $checkResult = $dbStep->checkConfig($manager->getConfigDatabase());
             if ($checkResult->isSuccess()) {
                 $manager->setStepCompleted(SetupConfig::STEP_DATABASE_CREDENTIALS);
@@ -161,7 +161,6 @@ class DefaultController extends AbstractController
         $manager = $this->get('fgt.setup.manager');
         $manager->setCurrentStep(SetupConfig::STEP_DATABASE_RUN_MIGRATIONS);
         if ($request->request->has('action_continue')) {
-
             return $this->redirect($this->generateUrl($manager->getRouteToStep($manager->getNextStep())));
         }
 
@@ -197,15 +196,51 @@ class DefaultController extends AbstractController
         );
     }
 
-    public function firstUserSettingsAction()
+    public function firstUserSettingsAction(Request $request)
     {
+        $manager = $this->get('fgt.setup.manager');
+        $manager->setCurrentStep(SetupConfig::STEP_FIRST_USER);
+        $canContinue = false;
+
+        $form = $this->createForm(new DatabaseConnectionForm(), $manager->getConfigDatabase());;
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $firstUserStep = $manager->getStepServiceFirstUser();
+            $checkResult   = $firstUserStep->checkConfig($manager->getConfigFirstUser());
+            if ($checkResult->isSuccess()) {
+                try {
+                    $firstUserStep->run();
+                    $manager->setStepCompleted(SetupConfig::STEP_FIRST_USER);
+                    $canContinue = true;
+                } catch (\Exception $ex) {
+                    $form->addError(new FormError('Migration is needed and you need to confirm. Please confirm.'));
+                }
+            } else {
+                //failed
+                /** @var StepResult $result */
+                foreach ($checkResult->getResults() as $result) {
+                    if (!$result->isSuccess()) {
+                        $form->addError(new FormError($result->getMessage()));
+                    }
+                }
+            }
+        }
+
+        if ($canContinue && $request->request->has('action_continue')) {
+            return $this->redirect($this->generateUrl($manager->getRouteToStep($manager->getNextStep())));
+        }
+        if ($request->request->has('action_previous')) {
+            return $this->redirect($this->generateUrl($manager->getRouteToStep($manager->getPreviousStep())));
+        }
+
         return $this->render(
             'FamGeneTreeSetupBundle:Default:first-user-settings.html.twig',
             array_merge(
                 $this->getCommonValues(),
                 array(
                     'name'            => 'First User',
-                    'form'            => $this->createFormBuilder()->getForm()->createView(),
+                    'form'            => $form->createView(),
                     'continue_button' => 'enabled',
                     'previous_button' => 'disabled'
 
