@@ -1,0 +1,3 @@
+fam_gen_tree_theme_main_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FamGenTreeThemeMainBundle:Default:index }

@@ -10,6 +10,8 @@ namespace FamGeneTree\SetupBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 class FirstUserForm extends AbstractType {
     /**
@@ -25,41 +27,19 @@ class FirstUserForm extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dbSystem', 'choice', array(
-                'choices' => array(
-                    'mysql' => 'MySql',
-                    'pgsql' => 'PostgreSQL'
-                )
-            ))
-            ->add('host', 'text', array(
+            ->add('userName', 'text', array(
                             'required' => true,
                             'trim'     => true
                         )
             )
-            ->add('port', 'text', array(
-                            'required' => true,
-                            'trim'     => true
-                        )
-            )
-            ->add('user', 'text', array(
-                            'required' => true,
-                            'trim'     => true
-                        )
+            ->add('email', 'text', array(
+                                'required' => true,
+                                'trim'     => true
+                            )
             )
             ->add('password', 'text', array(
                                 'required' => false
                             )
-            )
-            ->add('dbname', 'text', array(
-                              'required' => true,
-                              'trim'     => true
-                          )
-            )
-            ->add('prefix', 'text', array(
-                              'required' => false,
-                              'trim'     => true
-                          )
-            )->add('confirmedMigration', 'checkbox'
             );
     }
 

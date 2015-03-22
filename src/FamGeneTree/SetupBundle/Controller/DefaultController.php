@@ -6,6 +6,7 @@ use FamGeneTree\SetupBundle\Context\Setup\Config\SetupConfig;
 use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementsStep;
 use FamGeneTree\SetupBundle\Context\Setup\Step\StepResult;
 use FamGeneTree\SetupBundle\Form\DatabaseConnectionForm;
+use FamGeneTree\SetupBundle\Form\FirstUserForm;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -118,12 +119,20 @@ class DefaultController extends AbstractController
             $checkResult = $dbStep->checkConfig($manager->getConfigDatabase());
             if ($checkResult->isSuccess()) {
                 $manager->setStepCompleted(SetupConfig::STEP_DATABASE_CREDENTIALS);
-                $isMigrationNeeded    = $dbStep->isMigrationNeeded($manager->getConfigDatabase());
-                $isConfirmedMigration = $form->get('confirmedMigration')->getData();
-                $canContinue          = $isMigrationNeeded ? $isConfirmedMigration : true;
-                if ($isMigrationNeeded && !$isConfirmedMigration) {
-                    $form->addError(new FormError('Migration is needed and you need to confirm. Please confirm.'));
+                $dbStep->setConfig($manager->getConfigDatabase());
+                try {
+                    $dbStep->run();
+                    $isMigrationNeeded    = $dbStep->isMigrationNeeded($manager->getConfigDatabase());
+                    $isConfirmedMigration = $form->get('confirmedMigration')->getData();
+                    $canContinue          = $isMigrationNeeded ? $isConfirmedMigration : true;
+                    if ($isMigrationNeeded && !$isConfirmedMigration) {
+                        $form->addError(new FormError('Migration is needed and you need to confirm. Please confirm.'));
+                    }
+                } catch (\Exception $ex) {
+                    $form->addError(new FormError($ex));
+                    $canContinue = false;
                 }
+
             } else {
                 //failed
                 /** @var StepResult $result */
@@ -202,7 +211,7 @@ class DefaultController extends AbstractController
         $manager->setCurrentStep(SetupConfig::STEP_FIRST_USER);
         $canContinue = false;
 
-        $form = $this->createForm(new DatabaseConnectionForm(), $manager->getConfigDatabase());;
+        $form = $this->createForm(new FirstUserForm(), $manager->getConfigFirstUser());;
         $form->handleRequest($request);
 
         if ($form->isValid()) {

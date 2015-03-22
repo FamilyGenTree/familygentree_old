@@ -35,10 +35,23 @@ class CheckFilesystem extends CheckAbstract
             $message = $accessRules['error-message'];
             $access  = 'Read only';
             switch ($accessRules['access']) {
-                case 'rw?':
-                    $access = 'Read/Maybe Write';
+                case 'rw?c':
+                    $access = 'Read + Maybe Write or Create';
                     if (is_writable($pathToWrite)) {
+                        $state   = PreRequirementResult::STATE_SUCCESS;
+                        $message = null;
+                    } elseif (is_writeable(dirname($pathToWrite))) {
+                        $state   = PreRequirementResult::STATE_SUCCESS;
+                        $message = 'File can be created.';
+                    } elseif (is_readable($pathToWrite)) {
+                        $state   = PreRequirementResult::STATE_WARNING;
+                        $message = $accessRules['warning-message'];
+                    }
 
+                    break;
+                case 'rw?':
+                    $access = 'Read + Maybe Write';
+                    if (is_writable($pathToWrite)) {
                         $state   = PreRequirementResult::STATE_SUCCESS;
                         $message = null;
                     } elseif (is_readable($pathToWrite)) {
@@ -85,9 +98,9 @@ class CheckFilesystem extends CheckAbstract
                 'error-message' => 'Cache directory and its children must be writable by webserver user ',
             ),
             $rootDir . DIRECTORY_SEPARATOR . 'config/parameters.yml' => array(
-                'access'          => 'rw?',
+                'access'          => 'rw?c',
                 'sub-dirs'        => 'write',
-                'error-message'   => 'For setting ',
+                'error-message'   => 'This file or the containing directory should be writable, if this setup wizard should write the settings for you.',
                 'warning-message' => 'Warning'
             )
         );

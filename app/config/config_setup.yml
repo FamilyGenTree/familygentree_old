@@ -1,18 +1,71 @@
 imports:
-    - { resource: config.yml }
+#    - { resource: config.yml }
+    - { resource: services.yml }
+
+parameters:
+    database_prefix: fgt_
 
 framework:
+    #esi:             ~
+    #translator:      { fallbacks: ["%locale%"] }
+    secret:          "setup"
     router:
         resource: "%kernel.root_dir%/config/routing_setup.yml"
         strict_requirements: true
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  en_US
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+    translator:      ~
     profiler: { only_exceptions: false }
+
+## Swiftmailer Configuration
+#swiftmailer:
+#    transport: "%mailer_transport%"
+#    host:      "%mailer_host%"
+#    username:  "%mailer_user%"
+#    password:  "%mailer_password%"
+#    spool:     { type: memory }
 
 web_profiler:
     toolbar: true
     intercept_redirects: false
 
 assetic:
-    bundles: [ "FamGeneTreeSetupBundle", "WebtreesLegacyThemeBundle" ]
+    bundles: [ "FamGenTreeThemeMainBundle", "FamGeneTreeSetupBundle" ]
+    use_controller: false
+    filters:
+        cssrewrite: ~
+        closure:
+            jar: "%kernel.root_dir%/Resources/java/compiler-20140407.jar"
+        yui_css:
+            jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.8.jar"
+    assets:
+        jquery_ui_js:
+            inputs:
+                - '@FamGenTreeThemeMainBundle/Resources/public/jquery-ui-1.11.4/jquery-ui.min.js'
+        jquery_ui_css:
+            inputs:
+                - 'bundles/famgentreethememain/jquery-ui-1.11.4/jquery-ui.css'
+                - 'bundles/famgentreethememain/jquery-ui-1.11.4/jquery-ui.theme.css'
+                - 'bundles/famgentreethememain/jquery-ui-1.11.4/jquery-ui.structure.css'
+        bootstrap_js:
+            inputs:
+                - '@FamGenTreeThemeMainBundle/Resources/public/js/bootstrap-3.3.2/bootstrap.min.js'
+        bootstrap_css:
+            inputs:
+                - 'bundles/famgentreethememain/css/bootstrap-3.3.2/bootstrap.min.css'
+                - 'bundles/famgentreethememain/css/bootstrap-3.3.2/bootstrap-theme.min.css'
 
 monolog:
     handlers:
@@ -34,7 +87,6 @@ monolog:
                 VERBOSITY_VERBOSE: NOTICE
                 VERBOSITY_VERY_VERBOSE: NOTICE
                 VERBOSITY_DEBUG: DEBUG
-            channels: ["doctrine"]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:
@@ -44,8 +96,63 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
-assetic:
-    use_controller: true
-
-#swiftmailer:
-#    delivery_address: me@example.com
+## you can read more about security in the related section of the documentation
+## http://symfony.com/doc/current/book/security.html
+#security:
+#    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
+#    encoders:
+#        Symfony\Component\Security\Core\User\User: plaintext
+#        FamGeneTree\AppBundle\Entity\User:
+#            algorithm:  md5
+#
+#    # http://symfony.com/doc/current/book/security.html#hierarchical-roles
+#    role_hierarchy:
+#        ROLE_MANAGER:     ROLE_USER
+#        ROLE_EDITOR:      ROLE_USER
+#        ROLE_MODERATOR:   ROLE_MANAGER
+#        ROLE_ADMIN:       [ROLE_USER,ROLE_MANAGER,ROLE_EDITOR,ROLE_MODERATOR]
+#        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+#
+#    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+#    providers:
+#        fos_userbundle:
+#            id: fos_user.user_provider.username
+#        in_memory:
+#            memory:
+#                users:
+#                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+#                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+#
+#    # the main part of the security, where you can set up firewalls
+#    # for specific sections of your app
+#    firewalls:
+#        # disables authentication for assets and the profiler, adapt it according to your needs
+#        dev:
+#            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+#            security: false
+#        admin_secured_area:
+#            pattern:    ^/admin
+#            form_login:
+#                check_path: _fgt_security_check
+#                login_path: _fgt_login
+#            logout:
+#                path:   _fgt_logout
+#                target: _fgt_homepage
+#        main:
+#            pattern: ^/
+#            form_login:
+#                provider: fos_userbundle
+#                csrf_provider: form.csrf_provider
+#            logout:       true
+#            anonymous:    true
+#
+#    # with these settings you can restrict or allow access for different parts
+#    # of your application based on roles, ip, host or methods
+#    # http://symfony.com/doc/current/cookbook/security/access_control.html
+#    access_control:
+#        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+#        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/admin/, role: ROLE_ADMIN }
+#        - { path: ^/[^/]*php, role: IS_AUTHENTICATED_FULLY}

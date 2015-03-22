@@ -7,12 +7,12 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Step;
 
+use FamGeneTree\AppBundle\Context\Configuration\Domain\SymfonyParameters\ParametersDatabase;
 use FamGeneTree\SetupBundle\Context\Setup\Config\ConfigAbstract;
 use FamGeneTree\SetupBundle\Context\Setup\Config\ConfigDatabase;
 
 class DatabaseSettingsStep extends StepBase
 {
-
     /**
      * @param \FamGeneTree\SetupBundle\Context\Setup\Config\ConfigAbstract $config
      *
@@ -20,7 +20,6 @@ class DatabaseSettingsStep extends StepBase
      */
     public function checkConfig(ConfigAbstract $config)
     {
-
         $result = new StepResultAggregate('Database Settings');
         /** @var ConfigDatabase $config */
         if ('' == trim($config->getDbname())) {
@@ -64,7 +63,22 @@ class DatabaseSettingsStep extends StepBase
 
     public function run()
     {
-        // TODO: Implement run() method.
+        /** @var ConfigDatabase $config */
+        $config        = $this->getConfig();
+        $paramFactory  = $this->container->get('fgt.setup.configuration.parameters.factory');
+        $symfonyParams = $paramFactory->loadParameters();
+        $symfonyParams->mergeParams(
+            new ParametersDatabase(
+                $config->getDbSystem(),
+                $config->getDbname(),
+                $config->getUser(),
+                $config->getPassword(),
+                $config->getPrefix(),
+                $config->getHost(),
+                $config->getPort()
+            )
+        );
+        $paramFactory->writeParameters($symfonyParams);
     }
 
     protected function checkConnect(ConfigDatabase $config)

@@ -11,6 +11,14 @@ services:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
     factory: ["@fgt.configuration.factory", load]
 
+  fgt.configuration.parameters.factory:
+    class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ParametersRepository
+    arguments: [@service_container]
+
+  fgt.configuration.parameters:
+    class: FamGeneTree\AppBundle\Context\Configuration\Domain\SymfonyParameters\SymfonyParameters
+    factory: ["@fgt.configuration.parameters.factory", load]
+
   fgt.tblprefix_subscriber:
     class: FamGeneTree\AppBundle\Subscriber\TablePrefixSubscriber
     arguments: [%database_prefix%]
@@ -24,3 +32,4 @@ services:
   fgt.auth:
     class: FamGeneTree\AppBundle\Service\Auth
     arguments: [@service_container]
+

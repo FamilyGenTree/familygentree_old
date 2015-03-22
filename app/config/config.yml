@@ -54,11 +54,11 @@ assetic:
                 - 'bundles/webtreeslegacytheme/css/style.css'
         bootstrap_js:
             inputs:
-                - '@FamGeneTreeAppBundle/Resources/public/js/bootstrap-3.3.2/bootstrap.min.js'
+                - '@FamGenTreeThemeMainBundle/Resources/public/js/bootstrap-3.3.2/bootstrap.min.js'
         bootstrap_css:
             inputs:
-                - 'bundles/famgenetreeapp/css/bootstrap-3.3.2/bootstrap.min.css'
-                - 'bundles/famgenetreeapp/css/bootstrap-3.3.2/bootstrap-theme.min.css'
+                - 'bundles/famgentreethememain/css/bootstrap-3.3.2/bootstrap.min.css'
+                - 'bundles/famgentreethememain/css/bootstrap-3.3.2/bootstrap-theme.min.css'
 
 # Doctrine Configuration
 doctrine:

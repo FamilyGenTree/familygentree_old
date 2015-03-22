@@ -7,21 +7,17 @@
 
 namespace FamGeneTree\AppBundle\Context\Configuration\Infrastructure;
 
-
+use FamGeneTree\AppBundle\Context\Configuration\Domain\Config\ConfigRepositoryInterface;
 use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webtrees\LegacyBundle\Legacy\Database;
 
-class ConfigRepository implements ContainerAwareInterface
+class ConfigRepository
+    extends ContainerAware
+    implements ConfigRepositoryInterface
 {
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    function __construct($container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -40,7 +36,7 @@ class ConfigRepository implements ContainerAwareInterface
         foreach ($values as $key => $value) {
             $config->set($key, $value, FgtConfig::SCOPE_SITE);
         }
-        $this->loadFromOldDb($config,FgtConfig::SCOPE_SITE);
+        $this->loadFromOldDb($config, FgtConfig::SCOPE_SITE);
         if (file_exists(__DIR__ . '/../../../Resources/config/config.user.ini')) {
             $values = parse_ini_file(__DIR__ . '/../../../Resources/config/config.user.ini');
             foreach ($values as $key => $value) {
@@ -86,7 +82,6 @@ class ConfigRepository implements ContainerAwareInterface
 
     public function store(FgtConfig $configuration)
     {
-
     }
 
     public function loadFromOldDb(FgtConfig $config, $scope)
@@ -108,19 +103,5 @@ class ConfigRepository implements ContainerAwareInterface
         foreach ($values as $key => $value) {
             $config->set($key, $value, $scope);
         }
-
-    }
-
-    /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        // TODO: Implement setContainer() method.
-        $this->container = $container;
     }
 }

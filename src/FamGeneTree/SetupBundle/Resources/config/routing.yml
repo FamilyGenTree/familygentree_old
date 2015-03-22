@@ -10,6 +10,10 @@ fgt_setup_restart:
   path:   /restart
   defaults: { _controller: FamGeneTreeSetupBundle:Default:restart }
 
+fgt_setup_reset:
+  path:   /reset
+  defaults: { _controller: FamGeneTreeSetupBundle:Default:restart }
+
 fgt.setup.step.pre_requirements:
   path: /step/1
   defaults: { _controller: FamGeneTreeSetupBundle:Default:checkPreRequirements }

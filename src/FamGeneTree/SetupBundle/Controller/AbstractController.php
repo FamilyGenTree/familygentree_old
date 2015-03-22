@@ -31,7 +31,7 @@ abstract class AbstractController extends Controller {
 
     protected function getCommonValues()
     {
-        $fgtConfig = $this->get('fgt.configuration.setup');
+        $fgtConfig = $this->get('fgt.setup.configuration');
 
         return array(
             'system'          => array(

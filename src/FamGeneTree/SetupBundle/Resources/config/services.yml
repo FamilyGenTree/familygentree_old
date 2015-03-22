@@ -1,10 +1,19 @@
 services:
-#    fam_gene_tree_setup.example:
-#        class: FamGeneTree\SetupBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
-  fgt.configuration.setup:
+  fgt.setup.configuration.factory:
+    class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
+    arguments: [@service_container]
+
+  fgt.setup.configuration:
     class: FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
-    factory: ["@fgt.configuration.factory", loadSetupConfig]
+    factory: ["@fgt.setup.configuration.factory", loadSetupConfig]
+
+  fgt.setup.configuration.parameters.factory:
+    class: FamGeneTree\AppBundle\Context\Configuration\Infrastructure\ParametersRepository
+    arguments: [@service_container]
+
+  fgt.setup.configuration.parameters:
+    class: FamGeneTree\AppBundle\Context\Configuration\Domain\SymfonyParameters\SymfonyParameters
+    factory: ["@fgt.setup.configuration.parameters.factory", load]
 
   fgt.setup.manager:
     class: FamGeneTree\SetupBundle\Context\Setup\SetupManager

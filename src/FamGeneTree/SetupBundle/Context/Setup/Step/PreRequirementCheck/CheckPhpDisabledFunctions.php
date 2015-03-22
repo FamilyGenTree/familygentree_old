@@ -36,7 +36,7 @@ class CheckPhpDisabledFunctions extends CheckAbstract
             if (in_array($function, $disable_functions)) {
                 $state   = PreRequirementResult::STATE_FAILED;
                 $message = 'is disabled on this server.  You cannot install '
-                           . $this->container->get('fgt.configuration.setup')
+                           . $this->container->get('fgt.setup.configuration')
                                              ->get(ConfigKeys::SYSTEM_NAME)
                            . ' until it is enabled. Please ask your server’s administrator to enable it.';
 

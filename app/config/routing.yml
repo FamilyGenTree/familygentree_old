@@ -2,8 +2,11 @@ fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
 fam_gene_tree_setup:
-    resource: "@FamGeneTreeSetupBundle/Resources/config/routing.yml"
-    prefix:   /setup/
+    path:   /setup/
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /app_setup.php
+        permanent: false
 
 fam_gene_tree_app:
     resource: "@FamGeneTreeAppBundle/Resources/config/routing.yml"
