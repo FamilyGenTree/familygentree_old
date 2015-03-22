@@ -19,3 +19,4 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    setup_pw_hash:     80437a44a661d141174209119d54125a59a64b2a

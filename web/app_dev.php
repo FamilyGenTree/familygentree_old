@@ -1,7 +1,7 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\HttpFoundation\Request;
 
 // If you don't want to setup permissions the proper way, just uncomment the following PHP line
 // read http://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
@@ -17,14 +17,16 @@ use Symfony\Component\Debug\Debug;
 //    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 //}
 
-$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
 Debug::enable();
 
-require_once __DIR__.'/../app/AppKernel.php';
+require_once __DIR__ . '/../app/AppKernel.php';
 
-$kernel = new AppKernel('dev', true);
+$environment = file_exists(__DIR__ . '/../app/config/parameters.yml') ? 'dev' : 'setup';
+
+$kernel = new AppKernel($environment, true);
 $kernel->loadClassCache();
-$request = Request::createFromGlobals();
+$request  = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
