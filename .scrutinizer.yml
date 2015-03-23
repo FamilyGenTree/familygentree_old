@@ -1,10 +1,15 @@
 tools:
     php_sim: true
     php_pdepend: true
-    php_analyzer: true
+    php_analyzer:
+        filter:
+            paths:
+                - src/*
+                - app/*
+        dependency_paths:
+            - vendor/*
 filter:
     excluded_paths:
-        - 'tests/*'
         - 'vendor/*'
         - 'tools/*'
 build:
@@ -22,15 +27,14 @@ build:
             - 'mysql -uroot -e "CREATE DATABASE testdb"'
             - 'sed -i -e "s/database_user:\s*testdb/database_user: root/i" -e "s/database_password:\s*testdb/database_password: ~/i" app/config/config_test.yml'
     tests:
-       override:
+        before:
             -
-                command: 'bin/phpunit -c app --coverage-clover=coverage0'
+                command: wget https://phar.phpunit.de/phpunit-4.5.0.phar && sudo mv phpunit-4.5.0.phar /usr/bin/phpunit && sudo chmod +x /usr/bin/phpunit && sudo cp /usr/bin/phpunit /usr/local/bin/
+        override:
+            -
+                command: '/usr/local/bin/phpunit -c app --coverage-clover=coverage0'
                 coverage: { file: coverage0, format: php-clover }
                 idle_timeout: 600
-    cache:
-        directories:
-            - vendor/
-            - bin/
 
 #application:
 #    type: symfony2
