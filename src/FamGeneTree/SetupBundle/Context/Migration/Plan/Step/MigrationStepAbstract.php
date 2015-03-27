@@ -21,8 +21,8 @@ abstract class MigrationStepAbstract
 
     public function __construct(\PDO $pdo, $prefix, $patchId)
     {
-        $this->pdo    = $pdo;
-        $this->prefix = $prefix;
+        $this->pdo     = $pdo;
+        $this->prefix  = $prefix;
         $this->patchId = $patchId;
     }
 
@@ -33,14 +33,14 @@ abstract class MigrationStepAbstract
     {
         try {
             $this->executeStep();
-                $statement = $this->getPdo()
-                                  ->prepare($this->applyPrefix('INSERT INTO `###PREFIX###schema_updates` (`patch_id`,`messages`) VALUES (:patch_id,:message);'));
-                $statement->execute(
-                    array(
-                        ':patch_id' => $this->getPatchId(),
-                        ':message'  => $this->getMigrationMessage()
-                    )
-                );
+            $statement = $this->getPdo()
+                              ->prepare($this->applyPrefix('INSERT INTO `###PREFIX###schema_updates` (`patch_id`,`messages`) VALUES (:patch_id,:message);'));
+            $statement->execute(
+                array(
+                    ':patch_id' => $this->getPatchId(),
+                    ':message'  => $this->getMigrationMessage()
+                )
+            );
         } catch (\PDOException $ex) {
             throw new MigrationException('Setting patch id failed.', 0, $ex);
         }

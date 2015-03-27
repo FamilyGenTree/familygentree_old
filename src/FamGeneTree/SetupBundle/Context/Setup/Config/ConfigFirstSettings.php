@@ -7,11 +7,11 @@
 
 namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
-class ConfigFirstUser extends ConfigAbstract
+class ConfigFirstSettings extends ConfigAbstract
 {
-    protected $userName;
-    protected $name;
-    protected $email;
+    protected $userName = 'admin';
+    protected $name = 'Administrator';
+    protected $email = 'webmaster@localhost';
     protected $password;
     protected $passwordRepeat;
 

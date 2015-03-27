@@ -401,7 +401,7 @@ class AppInitializer
         }
 
 // These attributes of the currently-selected tree are used frequently
-        if (Globals::i()->WT_TREE) {
+        if (isset(Globals::i()->WT_TREE) && Globals::i()->WT_TREE) {
             define('WT_GEDCOM', Globals::i()->WT_TREE->getName());
             define('WT_GED_ID', Globals::i()->WT_TREE->getTreeId());
             define('WT_GEDURL', Globals::i()->WT_TREE->getNameUrl());

@@ -7,10 +7,12 @@
 
 namespace FamGeneTree\SetupBundle\Context\Migration\Service;
 
+use FamGeneTree\SetupBundle\Context\Migration\Exception\MigrationException;
 use FamGeneTree\SetupBundle\Context\Migration\Exception\MigrationPlanStepClassNotFound;
 use FamGeneTree\SetupBundle\Context\Migration\Plan\MigrationPlan;
 use FamGeneTree\SetupBundle\Context\Migration\Plan\Step\MigrationPlanSqlStep;
 use FamGeneTree\SetupBundle\Context\Setup\Config\ConfigDatabase;
+use FamGeneTree\SetupBundle\Context\Setup\Step\StepResultAggregate;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -40,6 +42,11 @@ class Migrate extends ContainerAware
      * @var array|null
      */
     protected $availableMigrationFiles = null;
+
+    /**
+     * @var StepResultAggregate
+     */
+    protected $results = null;
 
     public function __construct(ContainerInterface $container)
     {
@@ -111,8 +118,28 @@ class Migrate extends ContainerAware
     {
         $plan = $this->getMigrationPlan();
         if (false !== $plan && $plan instanceof MigrationPlan) {
-            $plan->execute();
+            try {
+                $plan->execute();
+                $this->results = $plan->getResults();
+            } catch (\Exception $ex) {
+                $this->results = $plan->getResults();
+                throw $ex;
+            }
+        } else {
+            $this->results = new StepResultAggregate(
+                'Migration'
+            );
+
         }
+
+    }
+
+    /**
+     * @return StepResultAggregate
+     */
+    public function getResults()
+    {
+        return $this->results;
     }
 
     protected function getConnection()
@@ -219,6 +246,10 @@ class Migrate extends ContainerAware
         return end($files);
     }
 
+    /**
+     * @return array|null
+     * @throws \FamGeneTree\SetupBundle\Context\Migration\Exception\MigrationException
+     */
     protected function getAvailableMigrationFiles()
     {
         if (null === $this->availableMigrationFiles) {
@@ -226,6 +257,9 @@ class Migrate extends ContainerAware
             $this->availableMigrationFiles = [];
             foreach (scandir($path) as $file) {
                 if (preg_match(static::MIGRATION_FILENAME_PATTERN, $file, $matches)) {
+                    if (isset($this->availableMigrationFiles[$matches[1]])) {
+                        throw new MigrationException("Migration tag '{$matches[1]}' is defined twice. I don't know what to do. Inform the developer and wait for a bug fix.");
+                    }
                     $this->availableMigrationFiles[$matches[1]] = $path . DIRECTORY_SEPARATOR . $file;
                 }
             }

@@ -7,12 +7,13 @@
 
 namespace FamGeneTree\SetupBundle\Form;
 
+use FamGeneTree\SetupBundle\Context\Setup\Config\ConfigDatabase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-class DatabaseConnectionForm extends AbstractType
+class DatabaseSettingsForm extends AbstractType
 {
 
     /**
@@ -30,8 +31,8 @@ class DatabaseConnectionForm extends AbstractType
         $builder
             ->add('dbSystem', 'choice', array(
                 'choices' => array(
-                    'mysql' => 'MySql',
-                    'pgsql' => 'PostgreSQL'
+                    ConfigDatabase::DB_SYSTEM_MYSQL => 'MySql',
+                    ConfigDatabase::DB_SYSTEM_POSTGRES => 'PostgreSQL'
                 )
             ))
             ->add('host', 'text', array(

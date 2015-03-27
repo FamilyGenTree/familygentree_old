@@ -449,3 +449,6 @@ VALUES
   (-1, 'side', 2, 'random_media'),
   (-1, 'side', 3, 'todays_events'),
   (-1, 'side', 4, 'logged_in');
+
+INSERT IGNORE INTO `###PREFIX###user` (`user_id`, `user_name`, `real_name`, `email`, `password`) VALUES
+  (-1, 'DEFAULT_USER', 'DEFAULT_USER', 'DEFAULT_USER', 'DEFAULT_USER')

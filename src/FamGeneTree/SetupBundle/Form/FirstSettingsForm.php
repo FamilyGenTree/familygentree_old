@@ -7,13 +7,13 @@
 
 namespace FamGeneTree\SetupBundle\Form;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-class FirstUserForm extends AbstractType {
+class FirstSettingsForm extends AbstractType
+{
     /**
      * Returns the name of this type.
      *
@@ -27,20 +27,27 @@ class FirstUserForm extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('userName', 'text', array(
-                            'required' => true,
-                            'trim'     => true
-                        )
+            ->add('name', 'text', array(
+                                   'required' => true,
+                                   'trim'     => true
+                               )
             )
-            ->add('email', 'text', array(
+            ->add('userName', 'text', array(
                                 'required' => true,
                                 'trim'     => true
                             )
             )
+            ->add('email', 'text', array(
+                             'required' => true,
+                             'trim'     => true
+                         )
+            )
             ->add('password', 'text', array(
-                                'required' => false
+                                'required' => true
                             )
-            );
+            )->add('passwordRepeat', 'text', array(
+                'required' => true
+            ));
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)

@@ -36,25 +36,16 @@ class DatabaseCreationStep extends StepBase
 
     public function run()
     {
+        $srvMigrate = $this->container->get('fgt.migrate.service');
         try {
-            $srvMigrate = $this->container->get('fgt.migrate.service');
             $srvMigrate->setDatabaseConfig($this->getDatabaseConfig());
             $srvMigrate->executeMigrations();
-            $this->addResult(
-                new StepResult(
-                    'Database Creation',
-                    StepResult::STATE_SUCCESS
-                )
-            );
         } catch (\Exception $ex) {
-            $this->addResult(
-                new StepResult(
-                    'Database Creation',
-                    StepResult::STATE_FAILED,
-                    $ex->getMessage()
-                )
-            );
         }
+        foreach ($srvMigrate->getResults()->getResults() as $result) {
+            $this->addResult($result);
+        }
+
         return $this->isSuccess();
     }
 }

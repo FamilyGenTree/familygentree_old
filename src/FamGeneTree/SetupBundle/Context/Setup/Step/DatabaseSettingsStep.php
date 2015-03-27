@@ -69,7 +69,7 @@ class DatabaseSettingsStep extends StepBase
         $symfonyParams = $paramFactory->loadParameters();
         $symfonyParams->mergeParams(
             new ParametersDatabase(
-                $config->getDbSystem(),
+                $config->getDbSystemAsDbalString(),
                 $config->getDbname(),
                 $config->getUser(),
                 $config->getPassword(),

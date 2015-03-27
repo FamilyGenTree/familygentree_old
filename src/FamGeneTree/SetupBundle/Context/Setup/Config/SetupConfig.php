@@ -14,7 +14,7 @@ class SetupConfig
     const STEP_DATABASE_CREDENTIALS    = 2;
     const STEP_DATABASE_RUN_MIGRATIONS = 3;
     const STEP_FINISH_MIGRATION        = 5;
-    const STEP_FIRST_USER              = 10;
+    const STEP_FIRST_SETTINGS              = 10;
 
     const STEPSTATE_COMPLETED = 2;
     const STEPSTATE_STARTED   = 1;
@@ -28,7 +28,7 @@ class SetupConfig
     protected $currentStep    = self::STEP_START;
     /** @var ConfigDatabase */
     protected $configDatabase = null;
-    /** @var ConfigFirstUser */
+    /** @var ConfigFirstSettings */
     protected $configFirstUser = null;
 
     /**
@@ -91,12 +91,12 @@ class SetupConfig
     }
 
     /**
-     * @return \FamGeneTree\SetupBundle\Context\Setup\Config\ConfigFirstUser
+     * @return \FamGeneTree\SetupBundle\Context\Setup\Config\ConfigFirstSettings
      */
     public function getConfigFirstUser()
     {
         if (null === $this->configFirstUser) {
-            $this->configFirstUser = new ConfigFirstUser();
+            $this->configFirstUser = new ConfigFirstSettings();
         }
 
         return $this->configFirstUser;

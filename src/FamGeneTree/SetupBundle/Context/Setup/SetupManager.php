@@ -9,6 +9,7 @@ namespace FamGeneTree\SetupBundle\Context\Setup;
 
 use FamGeneTree\SetupBundle\Context\Setup\Config\SetupConfig;
 use FamGeneTree\SetupBundle\Context\Setup\Exception\SetUpException;
+use FamGeneTree\SetupBundle\Context\Setup\Step\FirstSettingsStep;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +26,7 @@ class SetupManager
         SetupConfig::STEP_PRE_REQUIREMENTS        => 'fgt.setup.step.pre_requirements',
         SetupConfig::STEP_DATABASE_CREDENTIALS    => 'fgt.setup.step.database',
         SetupConfig::STEP_DATABASE_RUN_MIGRATIONS => 'fgt.setup.step.database.create',
-        SetupConfig::STEP_FIRST_USER              => 'fgt.setup.step.first_user',
+        SetupConfig::STEP_FIRST_SETTINGS              => 'fgt.setup.step.first_user',
         SetupConfig::STEP_FINISH                  => 'fgt.setup.step.finish'
     );
 
@@ -130,7 +131,7 @@ class SetupManager
         return $this->getSetupConfig()->getConfigDatabase();
     }
 
-    public function getConfigFirstUser()
+    public function getConfigFirstSettings()
     {
         return $this->getSetupConfig()->getConfigFirstUser();
     }
@@ -143,19 +144,17 @@ class SetupManager
         return $this->container->get('fgt.setup.service.step.database');
     }
 
-    public function getStepServiceFirstUser()
+    /**
+     * @return FirstSettingsStep
+     */
+    public function getStepServiceFirstSettings()
     {
-        return $this->container->get('fgt.setup.service.step.first_user');
+        return $this->container->get('fgt.setup.service.step.first_settings');
     }
 
     public function getStepAfterMigration()
     {
         return SetupConfig::STEP_FINISH;
-    }
-
-    public function writeConfig()
-    {
-        throw new SetUpException();
     }
 
     /**
@@ -164,7 +163,7 @@ class SetupManager
      *
      * @return \FamGeneTree\SetupBundle\Context\Setup\Config\SetupConfig
      */
-    protected function getSetupConfig($createIfAbsent = true)
+    public function getSetupConfig($createIfAbsent = true)
     {
         $request     = $this->container->get('request');
         $setupConfig = $request->getSession()->get('setup-config');

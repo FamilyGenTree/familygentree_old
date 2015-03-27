@@ -7,25 +7,38 @@
 
 namespace FamGeneTree\AppBundle\Entity;
 
-
-use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="user")
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="username",
+ *          column=@ORM\Column(
+ *              name     = "user_name",
+ *              nullable = false,
+ *              unique   = true,
+ *              length   = 100
+ *          )
+ *      ),
+ * })
  */
 class User extends BaseUser implements AdvancedUserInterface
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", name="user_id")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", name="real_name",nullable=true,length=100)
+     */
+    protected $realName;
 
     /**
      * @var String
@@ -38,7 +51,6 @@ class User extends BaseUser implements AdvancedUserInterface
     {
         parent::__construct();
         // your own logic
-        $this->passwordAlgorithm =  \FamGeneTree\AppBundle\Service\Auth::ALGORITHM_BCRYPT_NEW;
+        $this->passwordAlgorithm = \FamGeneTree\AppBundle\Service\Auth::ALGORITHM_BCRYPT_NEW;
     }
-
 }

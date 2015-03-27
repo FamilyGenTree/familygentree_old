@@ -1,0 +1,30 @@
+{% extends 'FamGeneTreeSetupBundle:Default:base.html.twig' %}
+
+{% block introduction %}
+    Create your first user now. It will be the default maintenance user to configure your site.
+
+    You need to set up an administrator account.  This account can control all aspects of this webtrees installation.  Please choose a strong password.
+    <dl>
+        <dt>Name</dt>
+        <dd>
+            This is your real name, as you would like it displayed on screen.
+        </dd>
+        <dt>User Name</dt>
+        <dd>
+            You will use this to login to webtrees.
+        </dd>
+        <dt>Password</dt>
+        <dd>
+            This must to be at least six characters.  It is case-sensitive.
+        </dd>
+        <dt>EMail</dt>
+        <dd>
+            This email address will be used to send password reminders, website notifications, and messages from other family members who are registered on the website.
+        </dd>
+    </dl>
+{% endblock %}
+
+{% block content %}
+    {{ form_widget(form) }}
+{% endblock %}
+

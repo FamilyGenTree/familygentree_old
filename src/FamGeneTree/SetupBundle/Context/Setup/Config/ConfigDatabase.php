@@ -9,15 +9,16 @@ namespace FamGeneTree\SetupBundle\Context\Setup\Config;
 
 class ConfigDatabase extends ConfigAbstract
 {
-    const DB_SYSTEM_MYSQL      = 'mysql';
-    const DB_SYSTEM_POSTGRESQL = 'pgsql';
-    protected $dbSystem = self::DB_SYSTEM_MYSQL;
-    protected $host     = 'localhost';
-    protected $user     = null;
-    protected $password = null;
-    protected $port     = 3306;
-    protected $dbname   = null;
-    protected $prefix   = 'fgt_';
+    const DB_SYSTEM_MYSQL    = 'mysql';
+    const DB_SYSTEM_POSTGRES = 'pgsql';
+
+    protected $dbSystem           = self::DB_SYSTEM_MYSQL;
+    protected $host               = 'localhost';
+    protected $user               = null;
+    protected $password           = null;
+    protected $port               = 3306;
+    protected $dbname             = null;
+    protected $prefix             = 'fgt_';
     protected $confirmedMigration = false;
 
     /**
@@ -149,5 +150,15 @@ class ConfigDatabase extends ConfigAbstract
         $this->confirmedMigration = $confirmedMigration;
     }
 
+    public function getDbSystemAsDbalString()
+    {
+        switch ($this->getDbSystem()) {
+            case static::DB_SYSTEM_MYSQL:
+                return 'pdo_mysql';
+            case static::DB_SYSTEM_POSTGRES:
+                return 'pdo_pgsql';
+        }
 
+        return null;
+    }
 }

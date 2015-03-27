@@ -5,8 +5,8 @@ namespace FamGeneTree\SetupBundle\Controller;
 use FamGeneTree\SetupBundle\Context\Setup\Config\SetupConfig;
 use FamGeneTree\SetupBundle\Context\Setup\Step\PreRequirementsStep;
 use FamGeneTree\SetupBundle\Context\Setup\Step\StepResult;
-use FamGeneTree\SetupBundle\Form\DatabaseConnectionForm;
-use FamGeneTree\SetupBundle\Form\FirstUserForm;
+use FamGeneTree\SetupBundle\Form\DatabaseSettingsForm;
+use FamGeneTree\SetupBundle\Form\FirstSettingsForm;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -111,7 +111,7 @@ class DefaultController extends AbstractController
         $manager->setCurrentStep(SetupConfig::STEP_DATABASE_CREDENTIALS);
         $canContinue = false;
 
-        $form = $this->createForm(new DatabaseConnectionForm(), $manager->getConfigDatabase());
+        $form = $this->createForm(new DatabaseSettingsForm(), $manager->getConfigDatabase());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -121,7 +121,7 @@ class DefaultController extends AbstractController
                 $manager->setStepCompleted(SetupConfig::STEP_DATABASE_CREDENTIALS);
                 $dbStep->setConfig($manager->getConfigDatabase());
                 try {
-                    $dbStep->run();
+                    $dbStep->run(); //writes the config to parameters.yml
                     $isMigrationNeeded    = $dbStep->isMigrationNeeded($manager->getConfigDatabase());
                     $isConfirmedMigration = $form->get('confirmedMigration')->getData();
                     $canContinue          = $isMigrationNeeded ? $isConfirmedMigration : true;
@@ -132,7 +132,6 @@ class DefaultController extends AbstractController
                     $form->addError(new FormError($ex));
                     $canContinue = false;
                 }
-
             } else {
                 //failed
                 /** @var StepResult $result */
@@ -173,19 +172,21 @@ class DefaultController extends AbstractController
             return $this->redirect($this->generateUrl($manager->getRouteToStep($manager->getNextStep())));
         }
 
-        $results = null;
+        $results      = null;
+        $canContinue  = false;
+        $stepDatabase = $this->container->get('fgt.setup.service.step.database.creation');
         try {
-            $stepDatabase = $this->container->get('fgt.setup.service.step.database.creation');
             $stepDatabase->setDatabaseConfig($manager->getConfigDatabase());
             $stepDatabase->run();
-            $results = $stepDatabase->getResults();
             $manager->setCurrentStepCompleted();
-            $manager->writeConfig();
+            $canContinue = true;
+            $results     = $stepDatabase->getResults();
         } catch (\Exception $ex) {
+            $results   = $stepDatabase->getResults();
             $results[] = new StepResult(
-                'Database Creation',
+                'Database Migration',
                 StepResult::STATE_FAILED,
-                'Something went wrong: ' . $ex
+                $ex
             );
         }
 
@@ -197,7 +198,7 @@ class DefaultController extends AbstractController
                     'name'            => 'Database Creation',
                     'results'         => $results,
                     'form'            => $this->createFormBuilder()->getForm()->createView(),
-                    'continue_button' => 'enabled',
+                    'continue_button' => $canContinue ? 'enabled' : 'disabled',
                     'previous_button' => 'disabled'
 
                 )
@@ -205,25 +206,29 @@ class DefaultController extends AbstractController
         );
     }
 
-    public function firstUserSettingsAction(Request $request)
+    public function firstSettingsAction(Request $request)
     {
         $manager = $this->get('fgt.setup.manager');
-        $manager->setCurrentStep(SetupConfig::STEP_FIRST_USER);
+        $manager->setCurrentStep(SetupConfig::STEP_FIRST_SETTINGS);
         $canContinue = false;
+        $results     = null;
 
-        $form = $this->createForm(new FirstUserForm(), $manager->getConfigFirstUser());;
+        $form = $this->createForm(new FirstSettingsForm(), $manager->getConfigFirstSettings());;
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $firstUserStep = $manager->getStepServiceFirstUser();
-            $checkResult   = $firstUserStep->checkConfig($manager->getConfigFirstUser());
+            $firstSettingsStep = $manager->getStepServiceFirstSettings();
+            $checkResult       = $firstSettingsStep->checkConfig($manager->getConfigFirstSettings());
             if ($checkResult->isSuccess()) {
                 try {
-                    $firstUserStep->run();
-                    $manager->setStepCompleted(SetupConfig::STEP_FIRST_USER);
+                    $firstSettingsStep->setConfig($manager->getConfigFirstSettings());
+                    $firstSettingsStep->run();
+                    $results = $firstSettingsStep->getResults();
+                    $manager->setStepCompleted(SetupConfig::STEP_FIRST_SETTINGS);
                     $canContinue = true;
                 } catch (\Exception $ex) {
-                    $form->addError(new FormError('Migration is needed and you need to confirm. Please confirm.'));
+                    $form->addError(new FormError('Something went wrong: ' . $ex));
+                    $results = $firstSettingsStep->getResults();
                 }
             } else {
                 //failed
@@ -244,12 +249,13 @@ class DefaultController extends AbstractController
         }
 
         return $this->render(
-            'FamGeneTreeSetupBundle:Default:first-user-settings.html.twig',
+            'FamGeneTreeSetupBundle:Default:first-settings.html.twig',
             array_merge(
                 $this->getCommonValues(),
                 array(
-                    'name'            => 'First User',
+                    'name'            => 'First Settings',
                     'form'            => $form->createView(),
+                    'results'         => $results,
                     'continue_button' => 'enabled',
                     'previous_button' => 'disabled'
 
@@ -258,8 +264,13 @@ class DefaultController extends AbstractController
         );
     }
 
-    public function finishedAction()
+    public function finishedAction(Request $request)
     {
+
+        if ($request->request->has('action_continue')) {
+            return $this->redirect('/');
+        }
+
         return $this->render(
             'FamGeneTreeSetupBundle:Default:finished.html.twig',
             array_merge(

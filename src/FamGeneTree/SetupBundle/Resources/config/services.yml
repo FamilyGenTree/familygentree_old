@@ -31,8 +31,8 @@ services:
     class: FamGeneTree\SetupBundle\Context\Setup\Step\DatabaseCreationStep
     arguments: [@service_container]
 
-  fgt.setup.service.step.first_user:
-    class: FamGeneTree\SetupBundle\Context\Setup\Step\FirstUserStep
+  fgt.setup.service.step.first_settings:
+    class: FamGeneTree\SetupBundle\Context\Setup\Step\FirstSettingsStep
     arguments: [@service_container]
 
   fgt.migrate.service:

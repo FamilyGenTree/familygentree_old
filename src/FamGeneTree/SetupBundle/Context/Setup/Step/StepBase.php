@@ -80,4 +80,12 @@ abstract class StepBase extends ContainerAware
             $name
         );
     }
+
+    /**
+     * @return \FamGeneTree\SetupBundle\Context\Setup\SetupManager
+     */
+    protected function getSetupManager()
+    {
+        return $this->container->get('fgt.setup.manager');
+    }
 }
