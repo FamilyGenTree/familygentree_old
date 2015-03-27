@@ -16,7 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
+use FamGenTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
 use Fgt\Application;
 use Zend_Session;
 

@@ -10,7 +10,7 @@ class AppKernel extends Kernel
         $bundles = [];
 
         if ('test' === $this->getEnvironment() || $this->isSetupMode()) {
-            $bundles[] = new FamGeneTree\SetupBundle\FamGeneTreeSetupBundle();
+            $bundles[] = new FamGenTree\SetupBundle\FamGenTreeSetupBundle();
         }
 
         if (in_array(
@@ -88,7 +88,7 @@ class AppKernel extends Kernel
         return [
             new FOS\UserBundle\FOSUserBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new FamGeneTree\AppBundle\FamGeneTreeAppBundle(),
+            new FamGenTree\AppBundle\FamGenTreeAppBundle(),
             new Webtrees\LegacyBundle\WebtreesLegacyBundle(),
             new Webtrees\LegacyThemeBundle\WebtreesLegacyThemeBundle(),
             new Webtrees\LegacyAdminThemeBundle\WebtreesLegacyAdminThemeBundle()

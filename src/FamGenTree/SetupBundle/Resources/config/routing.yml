@@ -1,0 +1,35 @@
+fgt_setup_root:
+    path:     /
+    defaults: { _controller: FamGenTreeSetupBundle:Default:index }
+
+fgt.setup.step.locale:
+    path:     /step/locale
+    defaults: { _controller: FamGenTreeSetupBundle:Default:stepLocale }
+
+fgt_setup_restart:
+  path:   /restart
+  defaults: { _controller: FamGenTreeSetupBundle:Default:restart }
+
+fgt_setup_reset:
+  path:   /reset
+  defaults: { _controller: FamGenTreeSetupBundle:Default:restart }
+
+fgt.setup.step.pre_requirements:
+  path: /step/prerequirements
+  defaults: { _controller: FamGenTreeSetupBundle:Default:checkPreRequirements }
+
+fgt.setup.step.database:
+  path: /step/dbsettings
+  defaults: { _controller: FamGenTreeSetupBundle:Default:getDatabaseSetting }
+
+fgt.setup.step.database.create:
+  path: /step/dbcreate
+  defaults: { _controller: FamGenTreeSetupBundle:Default:execDatabaseCreate }
+
+fgt.setup.step.first_user:
+  path: /step/firstsettings
+  defaults: { _controller: FamGenTreeSetupBundle:Default:firstSettings }
+
+fgt.setup.step.finish:
+  path: /finish
+  defaults: { _controller: FamGenTreeSetupBundle:Default:finished }

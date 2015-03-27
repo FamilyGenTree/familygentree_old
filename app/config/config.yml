@@ -96,7 +96,7 @@ swiftmailer:
 fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
-    user_class: FamGeneTree\AppBundle\Entity\User
+    user_class: FamGenTree\AppBundle\Entity\User
 
 knp_menu:
     # use "twig: false" to disable the Twig extension and the TwigRenderer

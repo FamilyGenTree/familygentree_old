@@ -42,7 +42,7 @@ web_profiler:
     intercept_redirects: false
 
 assetic:
-    bundles: [ "FamGenTreeThemeMainBundle", "FamGeneTreeSetupBundle" ]
+    bundles: [ "FamGenTreeThemeMainBundle", "FamGenTreeSetupBundle" ]
     use_controller: false
     filters:
         cssrewrite: ~
@@ -102,7 +102,7 @@ monolog:
 #    # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
 #    encoders:
 #        Symfony\Component\Security\Core\User\User: plaintext
-#        FamGeneTree\AppBundle\Entity\User:
+#        FamGenTree\AppBundle\Entity\User:
 #            algorithm:  md5
 #
 #    # http://symfony.com/doc/current/book/security.html#hierarchical-roles

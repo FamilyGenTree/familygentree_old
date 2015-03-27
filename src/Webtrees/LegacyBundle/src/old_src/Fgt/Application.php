@@ -7,7 +7,7 @@
 
 namespace Fgt;
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig as FgtConfig;
+use FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig as FgtConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
 use Webtrees\LegacyBundle\Legacy\BaseController;
@@ -91,7 +91,7 @@ class Application
     }
 
     /**
-     * @return \FamGeneTree\AppBundle\Service\Session
+     * @return \FamGenTree\AppBundle\Service\Session
      */
     public function getSession() {
         return $this->diContainer->get('fgt.session');

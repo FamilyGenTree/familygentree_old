@@ -1,0 +1,11 @@
+fam_gene_tree_app_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: FamGenTreeAppBundle:Default:index }
+
+_fgt_login:
+    path:   /login
+    defaults: { _controller: FamGenTreeAppBundle:Auth:login }
+
+_fgt_logout:
+    path:   /logout
+    defaults: { _controller: FamGenTreeAppBundle:Auth:logout }

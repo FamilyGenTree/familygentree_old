@@ -16,7 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use FamGeneTree\AppBundle\Service\Session;
+use FamGenTree\AppBundle\Service\Session;
 use Fgt\Application;
 use Fgt\Config;
 use Fgt\UrlConstants;

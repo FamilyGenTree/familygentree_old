@@ -1,0 +1,35 @@
+services:
+#    fam_gene_tree_app.example:
+#        class: FamGenTree\AppBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+  fgt.configuration.factory:
+    class: FamGenTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
+    arguments: [@service_container]
+
+  fgt.configuration:
+    class: FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig
+    factory: ["@fgt.configuration.factory", load]
+
+  fgt.configuration.parameters.factory:
+    class: FamGenTree\AppBundle\Context\Configuration\Infrastructure\ParametersRepository
+    arguments: [@service_container]
+
+  fgt.configuration.parameters:
+    class: FamGenTree\AppBundle\Context\Configuration\Domain\SymfonyParameters\SymfonyParameters
+    factory: ["@fgt.configuration.parameters.factory", load]
+
+  fgt.tblprefix_subscriber:
+    class: FamGenTree\AppBundle\Subscriber\TablePrefixSubscriber
+    arguments: [%database_prefix%]
+    tags:
+      - { name: doctrine.event_subscriber }
+
+  fgt.session:
+    class: FamGenTree\AppBundle\Service\Session
+    arguments: [@service_container]
+
+  fgt.auth:
+    class: FamGenTree\AppBundle\Service\Auth
+    arguments: [@service_container]
+

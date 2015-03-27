@@ -16,7 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
+use FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig;
 use Fgt\Application;
 
 /**

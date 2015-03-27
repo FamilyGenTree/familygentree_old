@@ -102,7 +102,7 @@ class AbstractSymfonyConnectorController
     }
 
     /**
-     * @return \FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig
+     * @return \FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig
      */
     protected function getConfig()
     {

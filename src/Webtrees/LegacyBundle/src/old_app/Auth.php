@@ -193,7 +193,7 @@ class Auth
     }
 
     /**
-     * @return \FamGeneTree\AppBundle\Service\Auth
+     * @return \FamGenTree\AppBundle\Service\Auth
      */
     protected static function getAuthService()
     {

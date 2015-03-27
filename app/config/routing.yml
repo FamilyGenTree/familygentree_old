@@ -9,7 +9,7 @@ fam_gene_tree_setup:
         permanent: false
 
 fam_gene_tree_app:
-    resource: "@FamGeneTreeAppBundle/Resources/config/routing.yml"
+    resource: "@FamGenTreeAppBundle/Resources/config/routing.yml"
     prefix:   /
 
 webtrees_legacy:

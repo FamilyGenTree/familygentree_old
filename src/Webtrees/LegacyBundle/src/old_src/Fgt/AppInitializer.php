@@ -8,11 +8,11 @@
 namespace Fgt;
 
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\FgtConfig;
+use FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webtrees\LegacyBundle\Legacy\Site;
 
-use FamGeneTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
+use FamGenTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
 use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
 use Webtrees\LegacyBundle\Legacy\Auth;
 use Webtrees\LegacyBundle\Legacy\Database;

@@ -1,0 +1,40 @@
+services:
+  fgt.setup.configuration.factory:
+    class: FamGenTree\AppBundle\Context\Configuration\Infrastructure\ConfigRepository
+    arguments: [@service_container]
+
+  fgt.setup.configuration:
+    class: FamGenTree\AppBundle\Context\Configuration\Domain\FgtConfig
+    factory: ["@fgt.setup.configuration.factory", loadSetupConfig]
+
+  fgt.setup.configuration.parameters.factory:
+    class: FamGenTree\AppBundle\Context\Configuration\Infrastructure\ParametersRepository
+    arguments: [@service_container]
+
+  fgt.setup.configuration.parameters:
+    class: FamGenTree\AppBundle\Context\Configuration\Domain\SymfonyParameters\SymfonyParameters
+    factory: ["@fgt.setup.configuration.parameters.factory", load]
+
+  fgt.setup.manager:
+    class: FamGenTree\SetupBundle\Context\Setup\SetupManager
+    arguments: [@service_container]
+
+  fgt.setup.prerequirementsfactory:
+    class: FamGenTree\SetupBundle\Context\Setup\Step\PreRequirementsStep
+    arguments: [@service_container]
+
+  fgt.setup.service.step.database:
+    class: FamGenTree\SetupBundle\Context\Setup\Step\DatabaseSettingsStep
+    arguments: [@service_container]
+
+  fgt.setup.service.step.database.creation:
+    class: FamGenTree\SetupBundle\Context\Setup\Step\DatabaseCreationStep
+    arguments: [@service_container]
+
+  fgt.setup.service.step.first_settings:
+    class: FamGenTree\SetupBundle\Context\Setup\Step\FirstSettingsStep
+    arguments: [@service_container]
+
+  fgt.migrate.service:
+    class: FamGenTree\SetupBundle\Context\Migration\Service\Migrate
+    arguments: [@service_container]

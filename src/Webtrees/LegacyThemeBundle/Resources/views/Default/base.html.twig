@@ -103,7 +103,7 @@
     <header>
     {% block headerContent %}
         <div class="header-logo"></div>
-        {{ knp_menu_render('FamGeneTreeAppBundle:Builder:secondaryMenu') }}
+        {{ knp_menu_render('FamGenTreeAppBundle:Builder:secondaryMenu') }}
         {% if title %}
             <h1 class="header-title">{{ title }}</h1>
         {% endif %}
@@ -111,7 +111,7 @@
         {% include "WebtreesLegacyThemeBundle:Default:partial.quicksearch.html.twig" %}
         <div style="clear: both"></div>
         <nav id="menu-primary">
-        {{ knp_menu_render('FamGeneTreeAppBundle:Builder:primaryMenu') }}
+        {{ knp_menu_render('FamGenTreeAppBundle:Builder:primaryMenu') }}
         </nav>
     {% endblock %}
     </header>
