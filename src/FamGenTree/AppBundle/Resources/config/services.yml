@@ -33,3 +33,10 @@ services:
     class: FamGenTree\AppBundle\Service\Auth
     arguments: [@service_container]
 
+  fgt.import.manager:
+    class: FamGenTree\AppBundle\Context\Import\ImportManager
+    arguments: [@service_container]
+
+  fgt.gentree.manager:
+    class: FamGenTree\AppBundle\Context\GenTree\GenTreeManager
+    arguments: [@service_container]

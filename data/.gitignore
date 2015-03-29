@@ -5,3 +5,9 @@ config.ini.php
 histo.*.php
 html_purifier_cache/
 media/
+!gedcoms/.gitkeep
+gedcoms/*
+!uploads/.gitkeep
+uploads/*
+!imports/.gitkeep
+imports/*

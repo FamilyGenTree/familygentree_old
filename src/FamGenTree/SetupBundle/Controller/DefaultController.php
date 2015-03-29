@@ -323,4 +323,51 @@ class DefaultController extends AbstractController
                                  ), '', $_POST['tblpfx']);
     }
 
+    public function importPgvAction() {
+// display link to PGV-WT transfer wizard on first visit to this page, before any GEDCOM is loaded -->
+            if (count(Tree::GetAll()) === 0 && count(User::all()) === 1): ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <i class="fa fa-fw fa-magic"></i>
+                <a data-toggle="collapse" data-parent="#accordion" href="#pgv-import-wizard">
+                    <?php echo I18N::translate('PhpGedView to webtrees transfer wizard'); ?>
+                </a>
+            </h2>
+        </div>
+        <div id="pgv-import-wizard" class="panel-collapse collapse">
+            <div class="panel-body">
+                <p>
+                    <?php echo I18N::translate('The PGV to webtrees wizard is an automated process to assist administrators make the move from a PGV installation to a new webtrees one.  It will transfer all PGV GEDCOM and other database information directly to your new webtrees database.  The following requirements are necessary:'); ?>
+                </p>
+                <ul>
+                    <li>
+                        <?php echo I18N::translate('webtrees’ database must be on the same server as PGV’s'); ?>
+                    </li>
+                    <li>
+                        <?php echo /* I18N: %s is a number */
+                        I18N::translate('PGV must be version 4.2.3, or any SVN up to #%s', I18N::digits(7101)); ?>
+                    </li>
+                    <li>
+                        <?php echo I18N::translate('All changes in PGV must be accepted'); ?>
+                    </li>
+                    <li>
+                        <?php echo I18N::translate('All existing PGV users must have distinct email addresses'); ?>
+                    </li>
+                </ul>
+                <p>
+                    <?php echo I18N::translate('<b>Important note:</b> The transfer wizard is not able to assist with moving media items.  You will need to set up and move or copy your media configuration and objects separately after the transfer wizard is finished.'); ?>
+                </p>
+
+                <p>
+                    <a href="Webtrees/LegacyBundle/src/admin_pgv_to_wt.php">
+                        <?php echo I18N::translate('Click here for PhpGedView to webtrees transfer wizard'); ?>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+<?php endif;
+
+}
 }

@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webtrees\LegacyBundle\Legacy\Site;
 
 use FamGenTree\AppBundle\Context\Configuration\Domain\ConfigKeys;
-use Webtrees\LegacyBundle\Legacy\AdministrationTheme;
 use Webtrees\LegacyBundle\Legacy\Auth;
 use Webtrees\LegacyBundle\Legacy\Database;
 use Webtrees\LegacyBundle\Legacy\Filter;
@@ -21,9 +20,7 @@ use Webtrees\LegacyBundle\Legacy\FlashMessages;
 use Webtrees\LegacyBundle\Legacy\HitCounter;
 use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Log;
-use Webtrees\LegacyBundle\Legacy\Theme;
 use Webtrees\LegacyBundle\Legacy\Tree;
-use Webtrees\LegacyBundle\Legacy\WebtreesTheme;
 
 class AppInitializer
 {
@@ -123,7 +120,7 @@ class AppInitializer
 
 // If there is no current tree and we need one, then redirect somewhere
         if (!in_array(WT_SCRIPT_NAME, array(
-            UrlConstants::ADMIN_TREES_MERGE_PHP,
+            UrlConstants::ADMIN_TREES_MANAGE_PHP,
             UrlConstants::ADMIN_PGV_TO_WT_PHP,
             UrlConstants::LOGIN_PHP,
             UrlConstants::LOGOUT_PHP,
@@ -134,7 +131,8 @@ class AppInitializer
         ) {
             if (!isset(Globals::i()->WT_TREE) || !Globals::i()->WT_TREE->getPreference('imported')) {
                 if (Auth::isAdmin()) {
-                    header('Location: ' . Config::get(Config::BASE_URL) . 'admin_trees_manage.php');
+                    $url = UrlConstants::url(UrlConstants::ADMIN_TREES_MANAGE_PHP);
+                    header('Location: ' . $url);
                 } else {
                     header('Location: ' . WT_LOGIN_URL . '?url=' . rawurlencode(WT_SCRIPT_NAME . (isset($_SERVER['QUERY_STRING'])
                                                                                     ? '?' . $_SERVER['QUERY_STRING']
@@ -153,7 +151,7 @@ class AppInitializer
         }
 
 // Page hit counter - load after theme, as we need theme formatting
-        if (Globals::i()->WT_TREE && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
+        if (isset(Globals::i()->WT_TREE) && Globals::i()->WT_TREE->getPreference('SHOW_COUNTER') && !Globals::i()->SEARCH_SPIDER) {
             HitCounter::setup();
         } else {
             Globals::i()->hitCount = '';
@@ -449,7 +447,7 @@ class AppInitializer
     private function initConfig()
     {
         $config = $this->getConfig();
-        $config->set(ConfigKeys::SYSTEM_PATH_DATA, Config::get(Config::DATA_DIRECTORY), FgtConfig::SCOPE_RUNTIME);
+        $config->set(ConfigKeys::SITE_PATH_DATA, Config::get(Config::DATA_DIRECTORY), FgtConfig::SCOPE_RUNTIME);
         $config->set(ConfigKeys::SYSTEM_PATH_CONFIG, Config::get(Config::CONFIG_PATH), FgtConfig::SCOPE_RUNTIME);
         $config->set(ConfigKeys::SYSTEM_CACHE_DIR, Config::get(Config::CACHE_DIR), FgtConfig::SCOPE_RUNTIME);
         $config->set(ConfigKeys::SYSTEM_CACHE, Config::get(Config::CACHE), FgtConfig::SCOPE_RUNTIME);

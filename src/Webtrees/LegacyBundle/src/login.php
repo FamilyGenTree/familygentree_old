@@ -235,7 +235,7 @@ class LoginPhp extends AbstractSymfonyConnectorController
 		';
         // Emails are sent from a TREE, not from a SITE.  Therefore if there is no
         // tree available (initial setup or all trees private), then we can't send email.
-        if (Globals::i()->WT_TREE) {
+        if (isset(Globals::i()->WT_TREE) && Globals::i()->WT_TREE !== null) {
             echo '
 			<div>
 				<a href="#" id="passwd_click">', I18N::translate('Request new password'), '</a>

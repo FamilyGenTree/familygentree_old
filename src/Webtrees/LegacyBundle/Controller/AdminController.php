@@ -8,7 +8,30 @@
 namespace Webtrees\LegacyBundle\Controller;
 
 
+use Fgt\Application;
+use Fgt\UrlConstants;
+use Symfony\Component\HttpFoundation\Request;
+use Webtrees\LegacyBundle\Legacy\AdminTreesManagePhp;
+
 class AdminController extends AbstractController {
+
+    public function adminTreesManagePhpAction(Request $request)
+    {
+        defined('WT_SCRIPT_NAME') || define('WT_SCRIPT_NAME', UrlConstants::ADMIN_TREES_MANAGE_PHP);
+        $this->setConfig();
+        Application::i()->init()->started();
+        $class = new AdminTreesManagePhp($this->container, $request);
+        $class->run();
+
+        //require_once FGT_ROOT . DIRECTORY_SEPARATOR . UrlConstants::mapToFile(UrlConstants::INDEX_PHP);
+        return $this->render(
+            'WebtreesLegacyBundle:Default:output.html.twig',
+            array(
+                'output' => $class->getOutput(),
+                'menus' => $class->getOutputMenus()
+            )
+        );
+    }
 
     public function adminMediaPhpAction()
     {
@@ -99,10 +122,6 @@ class AdminController extends AbstractController {
     }
 
     public function adminTreesExportPhpAction()
-    {
-    }
-
-    public function adminTreesManagePhpAction()
     {
     }
 

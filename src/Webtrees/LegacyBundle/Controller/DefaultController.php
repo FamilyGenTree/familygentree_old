@@ -2,6 +2,7 @@
 
 namespace Webtrees\LegacyBundle\Controller;
 
+use Fgt\Application;
 use Fgt\UrlConstants;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +61,9 @@ class DefaultController extends AbstractController
 
     public function indexPhpAction(Request $request)
     {
+        defined('WT_SCRIPT_NAME') || define('WT_SCRIPT_NAME', UrlConstants::INDEX_PHP);
         $this->setConfig();
+        Application::i()->init()->started();
         $class = new IndexPHP($this->container, $request);
         $class->run();
 

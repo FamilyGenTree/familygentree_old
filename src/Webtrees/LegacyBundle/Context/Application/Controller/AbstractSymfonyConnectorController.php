@@ -8,13 +8,15 @@
 namespace Webtrees\LegacyBundle\Context\Application\Controller;
 
 
+use FamGenTree\AppBundle\Context\GenTree\GenTreeManager;
 use Fgt\Application;
+use Fgt\UrlConstants;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Webtrees\LegacyBundle\Legacy\BaseController;
 use Webtrees\LegacyBundle\Legacy\BaseTheme;
 use Webtrees\LegacyBundle\Legacy\Output;
-use Webtrees\LegacyBundle\Legacy\Theme;
+use Webtrees\LegacyBundle\Legacy\PageController;
 
 class AbstractSymfonyConnectorController
 {
@@ -32,7 +34,7 @@ class AbstractSymfonyConnectorController
      */
     protected $theme;
     /**
-     * @var BaseController
+     * @var PageController
      */
     protected $viewModel;
 
@@ -121,5 +123,25 @@ class AbstractSymfonyConnectorController
     {
         $this->viewModel = Application::i()->setActiveController($param);
         return $this->viewModel;
+    }
+
+    protected function redirect($url,$options=[]) {
+        header('Location: ' . UrlConstants::url($url,$options));
+    }
+
+    /**
+     * @param $service
+     *
+     * @return object
+     */
+    protected function get($service) {
+        return $this->diContainer->get($service);
+    }
+
+    /**
+     * @return GenTreeManager
+     */
+    protected function getGenTreeManager() {
+        return $this->get('fgt.gentree.manager');
     }
 }

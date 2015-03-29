@@ -40,17 +40,12 @@ class Auth
     /**
      * Is the specified/current user an administrator?
      *
-     * @param User|null $user
+     * @param null|\Webtrees\LegacyBundle\Legacy\LegacyUserInterface|\Webtrees\LegacyBundle\Legacy\User $user
      *
-     * @return boolean
+     * @return bool
      */
-    public static function isAdmin(User $user = null)
+    public static function isAdmin(LegacyUserInterface $user = null)
     {
-//        if ($user === null) {
-//            $user = self::user();
-//        }
-//
-//        return $user && $user->getPreference('canadmin') === '1';
         return self::getAuthService()->isAdmin($user);
     }
 
@@ -157,18 +152,19 @@ class Auth
      */
     public static function user()
     {
-        $user = User::find(Auth::id());
-        if ($user === null) {
-            $visitor            = new \stdClass;
-            $visitor->user_id   = '';
-            $visitor->user_name = '';
-            $visitor->real_name = '';
-            $visitor->email     = '';
-
-            return new User($visitor);
-        } else {
-            return $user;
-        }
+        return Application::i()->getAuthService()->getUser();
+        //$user = User::find(Auth::id());
+        //if ($user === null) {
+        //    $visitor            = new \stdClass;
+        //    $visitor->user_id   = '';
+        //    $visitor->user_name = '';
+        //    $visitor->real_name = '';
+        //    $visitor->email     = '';
+        //
+        //    return new User($visitor);
+        //} else {
+        //    return $user;
+        //}
     }
 
     /**

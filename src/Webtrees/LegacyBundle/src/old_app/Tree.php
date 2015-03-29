@@ -16,6 +16,7 @@ namespace Webtrees\LegacyBundle\Legacy;
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use FamGenTree\AppBundle\Entity\User;
 use PDOException;
 
 /**
@@ -264,19 +265,19 @@ class Tree
     {
         // There are lots of settings, and we need to fetch lots of them on every page
         // so it is quicker to fetch them all in one go.
-        if (!array_key_exists($user->getUserId(), $this->user_preferences)) {
-            $this->user_preferences[$user->getUserId()] = Database::i()->prepare(
+        if (!array_key_exists($user->getId(), $this->user_preferences)) {
+            $this->user_preferences[$user->getId()] = Database::i()->prepare(
                 "SELECT SQL_CACHE setting_name, setting_value FROM `##user_gedcom_setting` WHERE user_id = ? AND gedcom_id = ?"
             )
                                                                   ->execute(array(
-                                                                                $user->getUserId(),
+                                                                                $user->getId(),
                                                                                 $this->tree_id
                                                                             ))
                                                                   ->fetchAssoc();
         }
 
-        if (array_key_exists($setting_name, $this->user_preferences[$user->getUserId()])) {
-            return $this->user_preferences[$user->getUserId()][$setting_name];
+        if (array_key_exists($setting_name, $this->user_preferences[$user->getId()])) {
+            return $this->user_preferences[$user->getId()][$setting_name];
         } else {
             return $default;
         }

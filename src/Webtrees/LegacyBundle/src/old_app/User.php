@@ -24,15 +24,6 @@ class User
     /** @var  string The primary key of this user. */
     private $user_id;
 
-    /** @var  string The login name of this user. */
-    private $user_name;
-
-    /** @var  string The real (display) name of this user. */
-    private $real_name;
-
-    /** @var  string The email address of this user. */
-    private $email;
-
     /** @var array Cached copy of the wt_user_setting table. */
     private $preferences;
 
@@ -273,22 +264,9 @@ class User
     }
 
     /**
-     * Create a new user object from a row in the database.
-     *
-     * @param \stdclass $user A row from the wt_user table
-     */
-    public function __construct(\stdClass $user)
-    {
-        $this->user_id   = $user->user_id;
-        $this->user_name = $user->user_name;
-        $this->real_name = $user->real_name;
-        $this->email     = $user->email;
-    }
-
-    /**
      * Delete a user
      */
-    function delete()
+    public function delete()
     {
         // Don't delete the logs.
         Database::i()->prepare("UPDATE `##log` SET user_id=NULL WHERE user_id =?")
@@ -315,160 +293,6 @@ class User
                 ->execute(array($this->user_id));
         Database::i()->prepare("DELETE FROM `##user` WHERE user_id=?")
                 ->execute(array($this->user_id));
-    }
-
-    /** Validate a supplied password
-     *
-     * @param string $password
-     *
-     * @return boolean
-     */
-    public function checkPassword($password)
-    {
-        $password_hash = Database::i()->prepare(
-            "SELECT password FROM `##user` WHERE user_id = ?"
-        )
-                                 ->execute(array($this->user_id))
-                                 ->fetchOne();
-
-        if (password_verify($password, $password_hash)) {
-            if (password_needs_rehash($password_hash, PASSWORD_DEFAULT)) {
-                $this->setPassword($password);
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Get the numeric ID for this user.
-     *
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->user_id;
-    }
-
-    /**
-     * Get the login name for this user.
-     *
-     * @return string
-     */
-    public function getUserName()
-    {
-        return $this->user_name;
-    }
-
-    /**
-     * Set the login name for this user.
-     *
-     * @param string $user_name
-     *
-     * @return $this
-     */
-    public function setUserName($user_name)
-    {
-        if ($this->user_name !== $user_name) {
-            $this->user_name = $user_name;
-            Database::i()->prepare(
-                "UPDATE `##user` SET user_name = ? WHERE user_id = ?"
-            )
-                    ->execute(array(
-                                  $user_name,
-                                  $this->user_id
-                              ));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the real name of this user.
-     *
-     * @return string
-     */
-    public function getRealName()
-    {
-        return $this->real_name;
-    }
-
-    /**
-     * Set the real name of this user.
-     *
-     * @param string $real_name
-     *
-     * @return User
-     */
-    public function setRealName($real_name)
-    {
-        if ($this->real_name !== $real_name) {
-            $this->real_name = $real_name;
-            Database::i()->prepare(
-                "UPDATE `##user` SET real_name = ? WHERE user_id = ?"
-            )
-                    ->execute(array(
-                                  $real_name,
-                                  $this->user_id
-                              ));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the email address of this user.
-     *
-     * @return string
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-     * Set the email address of this user.
-     *
-     * @param string $email
-     *
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        if ($this->email !== $email) {
-            $this->email = $email;
-            Database::i()->prepare(
-                "UPDATE `##user` SET email = ? WHERE user_id = ?"
-            )
-                    ->execute(array(
-                                  $email,
-                                  $this->user_id
-                              ));
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the password of this user.
-     *
-     * @param string $password
-     *
-     * @return User
-     */
-    public function setPassword($password)
-    {
-        Database::i()->prepare(
-            "UPDATE `##user` SET password = ? WHERE user_id = ?"
-        )
-                ->execute(array(
-                              password_hash($password, PASSWORD_DEFAULT),
-                              $this->user_id
-                          ));
-
-        return $this;
     }
 
     /**

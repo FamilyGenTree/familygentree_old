@@ -35,14 +35,14 @@ security:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        admin_secured_area:
-            pattern:    ^/admin
-            form_login:
-                check_path: _fgt_security_check
-                login_path: _fgt_login
-            logout:
-                path:   _fgt_logout
-                target: _fgt_homepage
+#        admin_secured_area:
+#            pattern:    ^/admin
+#            form_login:
+#                check_path: _fgt_security_check
+#                login_path: _fgt_login
+#            logout:
+#                path:   _fgt_logout
+#                target: _fgt_homepage
         main:
             pattern: ^/
             form_login:
@@ -56,8 +56,8 @@ security:
     # http://symfony.com/doc/current/cookbook/security/access_control.html
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/admin, role: ROLE_ADMIN }
         - { path: ^/[^/]*php, role: IS_AUTHENTICATED_FULLY}

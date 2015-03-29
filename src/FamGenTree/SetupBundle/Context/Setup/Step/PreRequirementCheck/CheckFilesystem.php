@@ -97,6 +97,11 @@ class CheckFilesystem extends CheckAbstract
                 'sub-dirs'      => 'write',
                 'error-message' => 'Cache directory and its children must be writable by webserver user ',
             ),
+            $rootDir . DIRECTORY_SEPARATOR . '../data'               => array(
+                'access'        => 'rw',
+                'sub-dirs'      => 'write',
+                'error-message' => 'Data directory to store GEDCOMs, Uploads, Imports, Exports, Medias',
+            ),
             $rootDir . DIRECTORY_SEPARATOR . 'config/parameters.yml' => array(
                 'access'          => 'rw?c',
                 'sub-dirs'        => 'write',

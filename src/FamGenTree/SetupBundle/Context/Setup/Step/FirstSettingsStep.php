@@ -66,10 +66,15 @@ class FirstSettingsStep extends StepBase
             $statement = $pdo->prepare(
                 $this->applyPrefix("INSERT IGNORE INTO `###PREFIX###config` (`section`, `config_key`, `value`) VALUES (:section, :config_key, :value);")
             );
+            $rootDir   = $this->container->get('kernel')->getRootDir();
+            $dataDir   = $rootDir . DIRECTORY_SEPARATOR . '../data';
             foreach (array(
-                         'site:locale' => $this->getLocale(),
-                         'site:name' => 'Site Name',
-                         'site:url' => $_SERVER['SERVER_NAME']
+                         'site:locale'   => $this->getLocale(),
+                         'site:name'     => 'Site Name',
+                         'site:url'      => $_SERVER['SERVER_NAME'],
+                         'site:path.imports' => $dataDir . DIRECTORY_SEPARATOR . 'imports',
+                         'site:path.uploads' => $dataDir . DIRECTORY_SEPARATOR . 'uploads',
+                         'site:path.gedcoms' => $dataDir . DIRECTORY_SEPARATOR . 'gedcoms'
                      ) as $key => $value) {
                 list($section, $config_key) = explode(':', $key);
                 $statement->execute(

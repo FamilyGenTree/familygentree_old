@@ -7,6 +7,7 @@
 
 namespace FamGenTree\AppBundle\Context\Configuration\Domain;
 
+use Fgt\Config;
 
 class FgtConfig implements ConfigKeys
 {
@@ -106,6 +107,17 @@ class FgtConfig implements ConfigKeys
     public function getConfigTheme($key)
     {
         return $this->getSectionForSection(static::SCOPE_THEME)->getValue($key);
+    }
+
+    public function getPathUploads()
+    {
+        $path = $this->getValue(ConfigKeys::SITE_PATH_DATA_UPLOADS);
+        $path = empty($path) ? Config::get(Config::DATA_DIRECTORY) : $path;
+        if (!empty($path) && $path[0] != '/') {
+            $path = $this->getValue(ConfigKeys::SYSTEM_PATH_ROOT) . DIRECTORY_SEPARATOR . $path;
+        }
+
+        return $path;
     }
 
     protected function validateScope($scope)

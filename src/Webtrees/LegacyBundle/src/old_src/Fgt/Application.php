@@ -93,7 +93,8 @@ class Application
     /**
      * @return \FamGenTree\AppBundle\Service\Session
      */
-    public function getSession() {
+    public function getSession()
+    {
         return $this->diContainer->get('fgt.session');
     }
 
@@ -160,15 +161,31 @@ class Application
         return $this->diContainer->get('router')->generate($route, $params);
     }
 
+    /**
+     * @return \Webtrees\LegacyBundle\Legacy\Tree
+     */
+    public function getTree()
+    {
+        return isset(Globals::i()->WT_TREE) ? Globals::i()->WT_TREE : null;
+    }
+
+    public function getAuthService()
+    {
+        return $this->diContainer->get('fgt.auth');
+    }
+
     private function initTheme()
     {
 // Set the theme
-        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin' || WT_SCRIPT_NAME === UrlConstants::MODULE_PHP && substr(Filter::get('mod_action'), 0, 5) === 'admin') {
+        if (substr(WT_SCRIPT_NAME, 0, 5) === 'admin'
+            || WT_SCRIPT_NAME === UrlConstants::MODULE_PHP
+               && substr(Filter::get('mod_action'), 0, 5) === 'admin'
+        ) {
             // Administration scripts begin with “admin” and use a special administration theme
-            $this->themeObject = new AdministrationTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+            $this->themeObject = new AdministrationTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, $this->getTree());
         } else {
-            $theme_id = 'webtrees';
-            $this->themeObject = new WebtreesTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, Globals::i()->WT_TREE);
+            $theme_id          = 'webtrees';
+            $this->themeObject = new WebtreesTheme($this->getSession(), Globals::i()->SEARCH_SPIDER, $this->getTree());
 
             // Remember this setting
             Application::i()->getSession()->theme_id = $theme_id;
@@ -193,19 +210,6 @@ class Application
                                   ->parameter('chart-descendancy-box-x');
         $Dbheight    = Application::i()->getTheme()
                                   ->parameter('chart-descendancy-box-y');
-
-    }
-
-    /**
-     * @return \Webtrees\LegacyBundle\Legacy\Tree
-     */
-    public function getTree() {
-        return Globals::i()->WT_TREE;
-    }
-
-    public function getAuthService()
-    {
-        return $this->diContainer->get('fgt.auth');
     }
 
 }
