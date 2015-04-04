@@ -21,6 +21,7 @@ use Webtrees\LegacyBundle\Legacy\HitCounter;
 use Webtrees\LegacyBundle\Legacy\I18N;
 use Webtrees\LegacyBundle\Legacy\Log;
 use Webtrees\LegacyBundle\Legacy\Tree;
+use Fgt\Application as FgtApplication;
 
 class AppInitializer
 {
@@ -142,12 +143,13 @@ class AppInitializer
                 exit;
             }
         }
-
+        if (FgtApplication::i()->getAuthService()->isLoggedIn()) {
 // Update the login time every 5 minutes
-        if (WT_TIMESTAMP - Application::i()->getSession()->activity_time > 300) {
-            Auth::user()
-                ->setPreference('sessiontime', WT_TIMESTAMP);
-            Application::i()->getSession()->activity_time = WT_TIMESTAMP;
+            if (WT_TIMESTAMP - Application::i()->getSession()->activity_time > 300) {
+                Auth::user()
+                    ->setPreference('sessiontime', WT_TIMESTAMP);
+                Application::i()->getSession()->activity_time = WT_TIMESTAMP;
+            }
         }
 
 // Page hit counter - load after theme, as we need theme formatting
